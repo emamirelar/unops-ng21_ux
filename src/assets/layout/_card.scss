@@ -1,12 +1,8 @@
 .card {
     padding: 1.5rem;
     border: 1px solid var(--surface-border);
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     border-radius: 1rem;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
 }
 
 .layout-card-filled .card{

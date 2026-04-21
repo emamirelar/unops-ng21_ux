@@ -14,24 +14,23 @@ import { PartnerService } from './partner.service';
     imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, TagModule, ButtonModule, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <div class="card">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col gap-1 flex-1 min-w-0">
                     <h1 class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-8 m-0">Partners</h1>
                     <span class="text-surface-600 dark:text-surface-300 text-sm">{{ partnerService.allPartners().length }} organizations</span>
                 </div>
             </div>
 
-            <p-dataview [value]="partnerService.allPartners()" [layout]="layout">
-                <ng-template #header>
-                    <div class="flex justify-end">
-                        <p-select-button [(ngModel)]="layout" [options]="layoutOptions" [allowEmpty]="false">
-                            <ng-template #item let-option>
-                                <i class="pi" [class.pi-bars]="option === 'list'" [class.pi-table]="option === 'grid'"></i>
-                            </ng-template>
-                        </p-select-button>
-                    </div>
-                </ng-template>
+            <div class="card">
+                <div class="flex justify-end mb-4">
+                    <p-select-button [(ngModel)]="layout" [options]="layoutOptions" [allowEmpty]="false">
+                        <ng-template #item let-option>
+                            <i class="pi" [class.pi-bars]="option === 'list'" [class.pi-table]="option === 'grid'"></i>
+                        </ng-template>
+                    </p-select-button>
+                </div>
+            <p-dataview [value]="partnerService.allPartners()" [layout]="layout" [pt]="{ header: { class: 'p-0! hidden' } }">
 
                 <ng-template #list let-items>
                     <div class="flex flex-col">
@@ -134,6 +133,7 @@ import { PartnerService } from './partner.service';
                     </div>
                 </ng-template>
             </p-dataview>
+            </div>
         </div>
     `
 })

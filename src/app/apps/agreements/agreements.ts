@@ -64,12 +64,10 @@ interface Agreement {
     imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, TagModule, TextareaModule, ConfirmDialogModule],
     providers: [ConfirmationService],
     template: `
-        <div class="flex flex-col gap-6 card">
-            <div class="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
-                <div class="text-surface-900 dark:text-surface-0 text-2xl! font-medium leading-loose">Overview</div>
-
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-                    <p-button icon="pi pi-plus" label="Add New" severity="primary" [rounded]="true" styleClass="w-full sm:w-auto cursor-pointer" (onClick)="addAgreement()" />
+        <div class="flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col gap-1 flex-1 min-w-0">
+                    <h1 class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-8 m-0">Partnership Agreements</h1>
                 </div>
             </div>
 
@@ -128,22 +126,22 @@ interface Agreement {
                     <div class="lg:col-span-6 xl:col-span-8 flex flex-col gap-6">
                         <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700 flex flex-col gap-[18px] overflow-hidden">
                             <div class="flex justify-between items-center h-8">
-                                <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">By Type</h3>
+                                <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Agreement Types</h3>
                                 <div class="flex items-center gap-1">
                                     <span class="text-surface-950 dark:text-surface-0 text-xl font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
-                                    <span class="text-surface-500 text-sm leading-none">Total Agreements</span>
+                                    <span class="text-surface-500 text-base leading-none">Total Agreements</span>
                                 </div>
                             </div>
 
                             <div class="hidden md:flex items-end gap-1 w-full">
                                 @for (storage of storageData; track storage.id) {
                                     <div class="flex flex-col gap-2" [style.flex]="storage.flexValue">
-                                        <div class="h-4 rounded-lg" [ngClass]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
+                                        <div class="h-4 rounded-lg" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
                                         <div class="flex flex-col gap-1">
                                             <span class="text-surface-900 dark:text-surface-0 text-sm md:text-base xl:text-lg font-medium leading-tight md:leading-normal xl:leading-7">{{ storage.count.toLocaleString() }}</span>
                                             <div class="flex items-center gap-1">
-                                                <div class="w-2 h-2 rounded-sm" [ngClass]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                                <span class="text-surface-500 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
+                                                <div class="w-2 h-2 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
+                                                <span class="text-surface-600 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -154,7 +152,7 @@ interface Agreement {
                                 @for (storage of storageData; track storage.id) {
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-3 h-3 rounded-sm" [ngClass]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
+                                            <div class="w-3 h-3 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
                                             <span class="text-surface-500 text-sm leading-tight">{{ storage.type }}</span>
                                         </div>
                                         <span class="text-surface-900 dark:text-surface-0 text-lg font-medium leading-7">{{ storage.count.toLocaleString() }}</span>
@@ -170,7 +168,7 @@ interface Agreement {
                                 @for (pinned of pinnedItems; track pinned.id) {
                                     <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4">
                                         <div class="flex justify-between items-start">
-                                            <i class="pi text-2xl! text-surface-400" [ngClass]="pinned.icon"></i>
+                                            <i class="pi text-2xl! text-surface-500" [ngClass]="pinned.icon"></i>
                                             <div>
                                                 <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
                                                 <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
@@ -192,20 +190,16 @@ interface Agreement {
                 </div>
 
                 <div class="flex flex-col gap-6">
-                    <h2 class="text-surface-950 dark:text-surface-0 text-2xl font-medium leading-loose">Agreements</h2>
-
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-wrap gap-2">
                         @for (filter of filterOptions; track filter) {
-                            <button
+                            <p-tag
+                                [value]="filter"
+                                severity="secondary"
+                                [rounded]="true"
+                                styleClass="cursor-pointer"
+                                [class]="activeFilter() === filter ? 'agreement-filter-active' : ''"
                                 (click)="activeFilter.set(filter)"
-                                class="px-[18px] py-[9px] rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                                [ngClass]="{
-                                    'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm': activeFilter() === filter,
-                                    'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700': activeFilter() !== filter
-                                }"
-                            >
-                                {{ filter }}
-                            </button>
+                            />
                         }
                     </div>
 
@@ -235,27 +229,27 @@ interface Agreement {
                             <tr>
                                 <td>
                                     <div class="flex items-center gap-3 py-2">
-                                        <i class="pi text-xl text-surface-400" [ngClass]="doc.icon"></i>
-                                        <span class="text-surface-500 text-sm whitespace-nowrap">{{ doc.fileName }}</span>
+                                        <i class="pi text-xl text-surface-500" [ngClass]="doc.icon"></i>
+                                        <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.fileName }}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <p-tag [value]="doc.type" [severity]="getTagSeverity(doc.type)" styleClass="px-2 py-1" />
                                 </td>
                                 <td>
-                                    <span class="text-surface-500 text-sm whitespace-nowrap">{{ doc.fileSize }}</span>
+                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.fileSize }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-500 text-sm whitespace-nowrap">{{ doc.size }}</span>
+                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.size }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-500 text-sm whitespace-nowrap">{{ doc.uploadDate }}</span>
+                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.uploadDate }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-500 text-sm whitespace-nowrap">{{ doc.editDate }}</span>
+                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.editDate }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-500 text-sm whitespace-nowrap">{{ doc.owner }}</span>
+                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.owner }}</span>
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-1">
@@ -269,6 +263,7 @@ interface Agreement {
                     </p-table>
                 </div>
             </div>
+        </div>
 
             <p-drawer [(visible)]="showEditDrawer" position="right" styleClass="w-full! max-w-[417px]!" appendTo="body">
                 <ng-template #header>
@@ -386,7 +381,14 @@ interface Agreement {
             </p-drawer>
 
             <p-confirmdialog />
-        </div>
+    `,
+    styles: `
+        :host ::ng-deep .agreement-filter-active.p-tag {
+            background: var(--surface-0);
+            color: var(--gray-900);
+            outline: 1px solid var(--gray-900);
+            border: 1px solid var(--color-black);
+        }
     `
 })
 export class Agreements {
@@ -475,13 +477,13 @@ export class Agreements {
     ];
 
     storageData: StorageData[] = [
-        { id: 1, type: 'Service', count: 42, color: 'bg-green-500', shadowColor: 'rgba(34,197,94,0.16)', flexValue: 42 },
-        { id: 2, type: 'NDA', count: 38, color: 'bg-orange-500', shadowColor: 'rgba(249,115,22,0.16)', flexValue: 38 },
-        { id: 3, type: 'License', count: 27, color: 'bg-primary-500', shadowColor: 'rgba(59,130,246,0.16)', flexValue: 27 },
-        { id: 4, type: 'Vendor', count: 21, color: 'bg-violet-500', shadowColor: 'rgba(139,92,246,0.16)', flexValue: 21 },
-        { id: 5, type: 'Partnership', count: 15, color: 'bg-cyan-500', shadowColor: 'rgba(6,182,212,0.16)', flexValue: 15 },
-        { id: 6, type: 'Lease', count: 12, color: 'bg-yellow-500', shadowColor: 'rgba(234,179,8,0.16)', flexValue: 12 },
-        { id: 7, type: 'Other', count: 9, color: 'bg-rose-500', shadowColor: 'rgba(244,63,94,0.16)', flexValue: 9 }
+        { id: 1, type: 'Service', count: 42, color: '#0092d1', shadowColor: 'rgba(0,146,209,0.16)', flexValue: 42 },
+        { id: 2, type: 'NDA', count: 38, color: '#e85c0e', shadowColor: 'rgba(232,92,14,0.16)', flexValue: 38 },
+        { id: 3, type: 'License', count: 27, color: '#00a997', shadowColor: 'rgba(0,169,151,0.16)', flexValue: 27 },
+        { id: 4, type: 'Vendor', count: 21, color: '#991e66', shadowColor: 'rgba(153,30,102,0.16)', flexValue: 21 },
+        { id: 5, type: 'Partnership', count: 15, color: '#4c9f38', shadowColor: 'rgba(76,159,56,0.16)', flexValue: 15 },
+        { id: 6, type: 'Lease', count: 12, color: '#ffc215', shadowColor: 'rgba(255,194,21,0.16)', flexValue: 12 },
+        { id: 7, type: 'Other', count: 9, color: '#da291c', shadowColor: 'rgba(218,41,28,0.16)', flexValue: 9 }
     ];
 
     totalAgreements = computed(() => this.storageData.reduce((sum, item) => sum + item.count, 0));
@@ -599,20 +601,8 @@ export class Agreements {
         ];
     }
 
-    getTagSeverity(type: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined {
-        const severityMap: Record<string, 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast'> = {
-            PDF: 'info',
-            DOCX: 'secondary',
-            PNG: 'success',
-            XLS: 'warn',
-            EPS: 'info',
-            ZIP: 'warn',
-            CSS: 'info',
-            PPTX: 'secondary',
-            SVG: 'success',
-            SQL: 'contrast'
-        };
-        return severityMap[type] || 'secondary';
+    getTagSeverity(_type: string): 'secondary' {
+        return 'secondary';
     }
 
     editAgreement(agreement: Agreement) {

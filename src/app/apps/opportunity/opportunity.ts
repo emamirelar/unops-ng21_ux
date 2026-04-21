@@ -12,10 +12,12 @@ import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
+import { FileUploadModule } from 'primeng/fileupload';
 import { TaskDrawer } from '../tasklist/task-drawer';
 
 interface Member {
@@ -66,6 +68,7 @@ interface AiInsight {
 
 @Component({
     selector: 'app-opportunity',
+    host: { class: 'block w-full' },
     imports: [
         CommonModule,
         FormsModule,
@@ -80,8 +83,10 @@ interface AiInsight {
         AvatarGroupModule,
         AccordionModule,
         TableModule,
+        PaginatorModule,
         MenuModule,
         ConfirmDialogModule,
+        FileUploadModule,
         TaskDrawer
     ],
     providers: [ConfirmationService],
@@ -89,185 +94,30 @@ interface AiInsight {
         <div class="flex flex-col gap-6">
             <!-- Page Title -->
             <div class="flex items-center gap-4">
-                <div class="flex flex-col gap-1 flex-1 min-w-0">
+                <div class="flex flex-row gap-6 flex-1 min-w-0">
                     <h1 class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-8 m-0">Water Sanitization</h1>
                     <div class="flex items-center gap-3 text-sm text-surface-600 dark:text-surface-300">
-                        <span class="flex items-center gap-1.5"><i class="pi pi-briefcase text-xs"></i> Opportunity</span>
-                        <span class="w-1 h-1 rounded-full bg-surface-300 dark:bg-surface-600"></span>
-                        <span class="flex items-center gap-1.5"><i class="pi pi-flag text-xs"></i> ID &amp; Profile</span>
-                        <span class="w-1 h-1 rounded-full bg-surface-300 dark:bg-surface-600"></span>
-                        <p-tag value="Active" severity="success" />
+                        <p-tag value="ID &amp; Profile" severity="info" styleClass="!bg-blue-50 dark:!bg-blue-900/30" />
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col xl:flex-row gap-6 w-full">
             <!-- MAIN CONTENT: Tasks -->
-            <div class="w-full flex-1 flex flex-col gap-6 min-w-0">
-                <!-- AI Project Analysis Card -->
-                <div class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300">
-                    <div class="flex items-center justify-between cursor-pointer" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
-                        <div class="flex items-center gap-3">
-                            <div class="w-[34px] h-[34px] rounded-[10px] shadow-sm bg-white/80 dark:bg-surface-800 flex items-center justify-center shrink-0">
-                                <i class="pi pi-sparkles text-primary-500"></i>
-                            </div>
-                            @if (!isAiCardExpanded()) {
-                                <div class="flex flex-col">
-                                    <span class="text-deepsea-500 dark:text-surface-0 text-lg font-medium leading-7 tracking-tight">AI Project Analysis</span>
-                                    <span class="text-midnight-700 dark:text-surface-300 text-[13px] font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
-                                </div>
-                            } @else {
-                                <span class="text-deepsea-500 dark:text-surface-0 text-lg font-medium leading-7 tracking-tight">AI Project Analysis</span>
-                            }
-                        </div>
-                        <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-surface-800 border border-white dark:border-surface-700 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-surface-700 transition-colors">
-                            <i class="pi text-xs text-darkblue-500" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                        </button>
-                    </div>
-
-                    @if (isAiCardExpanded()) {
-                        <div class="flex flex-col gap-4 mt-4">
-                            <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5">
-                                <i class="pi pi-search text-surface-400 text-sm"></i>
-                                <input
-                                    type="text"
-                                    [ngModel]="aiSearchQuery()"
-                                    (ngModelChange)="aiSearchQuery.set($event)"
-                                    placeholder="Search AI insights, risks, or optimizations..."
-                                    class="bg-transparent border-none outline-none flex-1 text-[13px] font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-400"
-                                />
-                            </div>
-
-                            <div class="flex flex-col gap-3 max-h-[420px] overflow-y-auto">
-                                @for (insight of filteredAiInsights(); track insight.id) {
-                                    <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start">
-                                        <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
-                                        <div class="flex flex-col gap-2 flex-1 min-w-0">
-                                            <div class="flex flex-col gap-1">
-                                                <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
-                                                <p class="text-[#2b638b] dark:text-surface-300 text-[13px] leading-[21px]">{{ insight.description }}</p>
-                                            </div>
-                                            <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-[13px] font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
-                                                {{ insight.actionLabel }}
-                                                <i class="pi pi-arrow-right text-xs"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                <!-- Tasks Section -->
-                <div class="card">
-                    <div class="flex flex-col gap-4">
-                        <!-- Tasks Header -->
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium">Opportunity Tasks</h2>
-                            <div class="flex items-center gap-3">
-                                <p-iconfield class="flex-1 sm:flex-none">
-                                    <p-inputicon class="pi pi-search" />
-                                    <input pInputText [(ngModel)]="taskSearchQuery" placeholder="Search" />
-                                </p-iconfield>
-                                <p-button icon="pi pi-plus" label="New Task" severity="secondary" [outlined]="true" size="small" (onClick)="openNewTaskDrawer()" />
-                            </div>
-                        </div>
-
-                        <!-- Task Filter Tabs -->
-                        <div class="flex gap-2 overflow-x-auto">
-                            @for (filter of taskFilterOptions; track filter.key) {
-                                <button
-                                    (click)="activeTaskFilter.set(filter.key)"
-                                    class="px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer shrink-0"
-                                    [ngClass]="activeTaskFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700'"
-                                >
-                                    <i [class]="filter.icon + ' text-sm'"></i>
-                                    <span class="text-sm font-medium">{{ filter.label }}</span>
-                                    @if (taskCounts()[filter.countKey] > 0) {
-                                        <div class="px-2 py-0.5 rounded-sm text-xs font-semibold" [ngClass]="activeTaskFilter() === filter.key ? 'bg-white/90 text-primary-600' : 'bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-surface-100'">
-                                            {{ taskCounts()[filter.countKey] }}
-                                        </div>
-                                    }
-                                </button>
-                            }
-                        </div>
-
-                        <!-- Task Accordion -->
-                        <p-accordion [value]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none!' } }">
-                            @if (pendingTasks().length > 0) {
-                                <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none!' } }">
-                                    <p-accordionheader>
-                                        <div class="flex items-center gap-4 px-2">
-                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">{{ pendingTasks().length }} Pending</h3>
-                                        </div>
-                                    </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
-                                        <div class="flex flex-col">
-                                            @for (task of pendingTasks(); track task.id; let last = $last) {
-                                                <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
-                                            }
-                                        </div>
-                                    </p-accordioncontent>
-                                </p-accordionpanel>
-                            }
-
-                            @if (inProgressTasks().length > 0) {
-                                <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none!' } }">
-                                    <p-accordionheader>
-                                        <div class="flex items-center gap-4 px-2">
-                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">{{ inProgressTasks().length }} In Progress</h3>
-                                        </div>
-                                    </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
-                                        <div class="flex flex-col">
-                                            @for (task of inProgressTasks(); track task.id; let last = $last) {
-                                                <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
-                                            }
-                                        </div>
-                                    </p-accordioncontent>
-                                </p-accordionpanel>
-                            }
-
-                            @if (completedTasks().length > 0) {
-                                <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none!' } }">
-                                    <p-accordionheader>
-                                        <div class="flex items-center gap-4 px-2">
-                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">{{ completedTasks().length }} Completed</h3>
-                                        </div>
-                                    </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
-                                        <div class="flex flex-col">
-                                            @for (task of completedTasks(); track task.id; let last = $last) {
-                                                <ng-container *ngTemplateOutlet="taskItemCompleted; context: { task: task, isLast: last }"></ng-container>
-                                            }
-                                        </div>
-                                    </p-accordioncontent>
-                                </p-accordionpanel>
-                            }
-                        </p-accordion>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- RIGHT SIDEBAR: Activity -->
-            <div class="xl:w-[380px] flex flex-col gap-6 shrink-0">
+            <div class="w-full flex-1 flex flex-col gap-6 min-w-0 [&>.card]:mb-0">
                 <!-- Activity Feed -->
                 <div class="card">
-                    <div class="px-2 pb-4">
+                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isActivityExpanded()" (click)="isActivityExpanded.set(!isActivityExpanded())">
                         <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Activity</h3>
+                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isActivityExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                     </div>
 
-                    <div class="relative max-h-[350px]">
-                        <div class="absolute top-0 left-0 right-0 h-4 bg-linear-to-b from-surface-0 dark:from-surface-900 to-transparent pointer-events-none z-20"></div>
-                        <div class="absolute bottom-0 left-0 right-0 h-6 bg-linear-to-t from-surface-0 dark:from-surface-900 to-transparent pointer-events-none z-20"></div>
-
-                        <div class="pb-6 pt-3 px-2 max-h-[350px] overflow-y-auto">
+                    @if (isActivityExpanded()) {
+                        <div class="pb-3 pt-3 px-2">
                             <div class="relative">
                                 <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
                                 <div class="flex flex-col gap-4">
-                                    @for (activity of activityFeed; track activity.id; let last = $last) {
+                                    @for (activity of paginatedActivities(); track activity.id; let last = $last) {
                                         <div class="flex gap-3">
                                             <div class="flex items-start pt-2.5 w-6 justify-center">
                                                 <div class="w-2 h-2 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[activity.dotColor, activity.ringColor]"></div>
@@ -293,49 +143,219 @@ interface AiInsight {
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                        <p-paginator
+                            [rows]="activityRowsPerPage"
+                            [totalRecords]="activityFeed.length"
+                            [first]="activityFirst()"
+                            (onPageChange)="activityPage.set($event.page ?? 0)"
+                            styleClass="border-t border-surface-200 dark:border-surface-700"
+                        />
+                    }
                 </div>
 
-                <!-- Documents Section -->
+                <!-- Tasks Section -->
                 <div class="card">
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-6">
+                        <!-- Tasks Header -->
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium">Documents</h2>
+                            <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Tasks</h3>
+                            <p-button icon="pi pi-plus" label="New Task" [outlined]="true" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer()" />
                         </div>
 
-                        <div class="flex flex-wrap gap-3">
-                            @for (filter of docFilterOptions; track filter) {
+                        <!-- Task Filter Tabs -->
+                        <div class="flex flex-wrap gap-1">
+                            @for (filter of taskFilterOptions; track filter.key) {
                                 <button
-                                    (click)="activeDocFilter.set(filter)"
-                                    class="px-4 py-2 rounded-xl text-sm font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                                    [ngClass]="{
-                                        'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm': activeDocFilter() === filter,
-                                        'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700': activeDocFilter() !== filter
-                                    }"
+                                    (click)="activeTaskFilter.set(filter.key)"
+                                    class="px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer"
+                                    [ngClass]="activeTaskFilter() === filter.key ? 'bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0 ring-1 ring-surface-900 dark:ring-surface-0' : 'text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700'"
                                 >
-                                    {{ filter }}
+                                    <i [class]="filter.icon + ' text-sm'"></i>
+                                    <span class="text-sm font-medium">{{ filter.label }}</span>
+                                    @if (taskCounts()[filter.countKey] > 0) {
+                                        <div class="px-2 py-0.5 rounded-sm text-xs font-semibold" [ngClass]="activeTaskFilter() === filter.key ? 'bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-0' : filter.badgeClass">
+                                            {{ taskCounts()[filter.countKey] }}
+                                        </div>
+                                    }
                                 </button>
                             }
                         </div>
+
+                        <p-iconfield>
+                            <p-inputicon class="pi pi-search" />
+                            <input pInputText [(ngModel)]="taskSearchQuery" placeholder="Search tasks" class="w-full" />
+                        </p-iconfield>
+
+                        <!-- Task Accordion -->
+                        <p-accordion [value]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none!' } }">
+                            @if (pendingTasks().length > 0) {
+                                <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
+                                        <div class="flex items-center gap-3 px-2">
+                                            <i class="pi pi-inbox text-sm text-blue-500"></i>
+                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">Not Started</h3>
+                                        </div>
+                                    </p-accordionheader>
+                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
+                                        <div class="flex flex-col">
+                                            @for (task of pendingTasks(); track task.id; let last = $last) {
+                                                <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
+                                            }
+                                        </div>
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
+                            }
+
+                            @if (inProgressTasks().length > 0) {
+                                <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
+                                        <div class="flex items-center gap-3 px-2">
+                                            <i class="pi pi-clock text-sm text-yellow-500"></i>
+                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">In Progress</h3>
+                                        </div>
+                                    </p-accordionheader>
+                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
+                                        <div class="flex flex-col">
+                                            @for (task of inProgressTasks(); track task.id; let last = $last) {
+                                                <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
+                                            }
+                                        </div>
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
+                            }
+
+                            @if (completedTasks().length > 0) {
+                                <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
+                                        <div class="flex items-center gap-3 px-2">
+                                            <i class="pi pi-check-circle text-sm text-green-500"></i>
+                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">Completed</h3>
+                                        </div>
+                                    </p-accordionheader>
+                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
+                                        <div class="flex flex-col">
+                                            @for (task of completedTasks(); track task.id; let last = $last) {
+                                                <ng-container *ngTemplateOutlet="taskItemCompleted; context: { task: task, isLast: last }"></ng-container>
+                                            }
+                                        </div>
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
+                            }
+                        </p-accordion>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDEBAR -->
+            <div class="xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
+                <!-- AI Project Analysis Card -->
+                <div class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300">
+                    <div class="flex items-center justify-between cursor-pointer" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
+                        <div class="flex items-center gap-3">
+                            <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
+                            </div>
+                            @if (!isAiCardExpanded()) {
+                                <div class="flex flex-col">
+                                    <span class="text-deepsea-500 dark:text-surface-0 text-lg font-medium leading-7 tracking-tight">AI Project Analysis</span>
+                                    <span class="text-midnight-700 dark:text-surface-300 text-[13px] font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
+                                </div>
+                            } @else {
+                                <span class="text-deepsea-500 dark:text-surface-0 text-lg font-medium leading-7 tracking-tight">AI Project Analysis</span>
+                            }
+                        </div>
+                        <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-surface-800 border border-white dark:border-surface-700 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-surface-700 transition-colors">
+                            <i class="pi text-xs text-darkblue-500" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                        </button>
+                    </div>
+
+                    @if (isAiCardExpanded()) {
+                        <div class="flex flex-col gap-4 mt-4">
+                            <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5">
+                                <i class="pi pi-search text-surface-500 text-sm"></i>
+                                <input
+                                    type="text"
+                                    [ngModel]="aiSearchQuery()"
+                                    (ngModelChange)="aiSearchQuery.set($event)"
+                                    placeholder="Search AI insights, risks, or optimizations..."
+                                    class="bg-transparent border-none outline-none flex-1 text-[13px] font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-500"
+                                />
+                            </div>
+
+                            <div class="flex flex-col gap-3 max-h-[420px] overflow-y-auto">
+                                @for (insight of filteredAiInsights(); track insight.id) {
+                                    <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start">
+                                        <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
+                                        <div class="flex flex-col gap-2 flex-1 min-w-0">
+                                            <div class="flex flex-col gap-1">
+                                                <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
+                                                <p class="text-[#2b638b] dark:text-surface-300 text-[13px] leading-[21px]">{{ insight.description }}</p>
+                                            </div>
+                                            <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-[13px] font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
+                                                {{ insight.actionLabel }}
+                                                <i class="pi pi-arrow-right text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Documents Section -->
+                <div class="card flex flex-col">
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Documents</h3>
+
+                        <div class="flex flex-wrap gap-2">
+                            <p-tag
+                                value="All Files"
+                                severity="secondary"
+                                styleClass="cursor-pointer transition-colors px-2 py-1"
+                                [class]="activeDocFilter() === 'All Files' ? 'doc-filter-active' : ''"
+                                (click)="activeDocFilter.set('All Files')"
+                            />
+                            @for (type of docFileTypes(); track type) {
+                                <p-tag
+                                    [value]="type"
+                                    severity="secondary"
+                                    styleClass="cursor-pointer transition-colors px-2 py-1"
+                                    [class]="activeDocFilter() === type ? 'doc-filter-active' : ''"
+                                    (click)="activeDocFilter.set(type)"
+                                />
+                            }
+                            <p-tag
+                                value="Other"
+                                severity="secondary"
+                                styleClass="cursor-pointer transition-colors px-2 py-1"
+                                [class]="activeDocFilter() === 'Other' ? 'doc-filter-active' : ''"
+                                (click)="activeDocFilter.set('Other')"
+                            />
+                        </div>
+
+                        <p-iconfield>
+                            <p-inputicon class="pi pi-search" />
+                            <input pInputText [(ngModel)]="docSearchQuery" placeholder="Search documents" class="w-full" />
+                        </p-iconfield>
 
                         <p-table
                             [value]="filteredDocuments()"
                             [paginator]="true"
                             [rows]="5"
                             sortMode="multiple"
-                            styleClass="bg-surface-0 dark:bg-surface-800 rounded-2xl border border-surface-200 dark:border-surface-700 overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&_[data-pc-name=pcpaginator]]:rounded-none!"
+                            styleClass="flex flex-col bg-surface-0 dark:bg-surface-800 rounded-2xl overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&>[data-pc-section=paginatorcontainer]]:mt-auto [&_[data-pc-name=pcpaginator]]:rounded-none!"
                             tableStyleClass="w-full"
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
                             currentPageReportTemplate="Shows {first} to {last} of {totalRecords} results"
                         >
                             <ng-template #header>
                                 <tr>
-                                    <th pSortableColumn="fileName" class="w-40">File Name <p-sortIcon field="fileName" /></th>
-                                    <th pSortableColumn="type" class="w-32">Type <p-sortIcon field="type" /></th>
-                                    <th pSortableColumn="fileSize" class="w-32">Size <p-sortIcon field="fileSize" /></th>
-                                    <th pSortableColumn="uploadDate" class="flex-1">Upload Date <p-sortIcon field="uploadDate" /></th>
-                                    <th pSortableColumn="owner" class="flex-1">Owner <p-sortIcon field="owner" /></th>
-                                    <th class="w-24">Actions</th>
+                                    <th pSortableColumn="fileName">File Name <p-sortIcon field="fileName" /></th>
+                                    <th pSortableColumn="type">Type <p-sortIcon field="type" /></th>
+                                    <th>Actions</th>
                                 </tr>
                             </ng-template>
                             <ng-template #body let-doc>
@@ -347,16 +367,7 @@ interface AiInsight {
                                         </div>
                                     </td>
                                     <td>
-                                        <p-tag [value]="doc.type" [severity]="getTagSeverity(doc.type)" styleClass="px-2 py-1" />
-                                    </td>
-                                    <td>
-                                        <span class="text-surface-700 dark:text-surface-200 text-sm whitespace-nowrap">{{ doc.fileSize }}</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-surface-700 dark:text-surface-200 text-sm whitespace-nowrap">{{ doc.uploadDate }}</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-surface-700 dark:text-surface-200 text-sm whitespace-nowrap">{{ doc.owner }}</span>
+                                        <p-tag [value]="doc.type" [severity]="getTagSeverity()" styleClass="px-2 py-1" />
                                     </td>
                                     <td>
                                         <div class="flex items-center gap-1">
@@ -368,13 +379,32 @@ interface AiInsight {
                                 </tr>
                             </ng-template>
                         </p-table>
+
+                        <p-fileupload
+                            name="documents[]"
+                            [multiple]="true"
+                            maxFileSize="10000000"
+                            mode="advanced"
+                            [auto]="false"
+                            chooseLabel="Upload File"
+                            chooseIcon="pi pi-upload"
+                            [showUploadButton]="false"
+                            [showCancelButton]="false"
+                        >
+                            <ng-template #empty>
+                                <div class="flex flex-col items-center gap-2 py-4">
+                                    <i class="pi pi-cloud-upload text-2xl text-surface-400"></i>
+                                    <span class="text-surface-500 text-sm">Drag and drop files here</span>
+                                </div>
+                            </ng-template>
+                        </p-fileupload>
                     </div>
                 </div>
             </div>
-
-            <p-confirmdialog header="Confirmation" />
-            <app-task-drawer [(visible)]="isTaskDrawerVisible" [task]="selectedTask" [mode]="taskDrawerMode" (save)="handleTaskDrawerSave($event)" (cancel)="handleTaskDrawerCancel()" />
         </div>
+
+        <p-confirmdialog header="Confirmation" />
+        <app-task-drawer [(visible)]="isTaskDrawerVisible" [task]="selectedTask" [mode]="taskDrawerMode" (save)="handleTaskDrawerSave($event)" (cancel)="handleTaskDrawerCancel()" />
         </div>
 
         <!-- Task Item Template -->
@@ -457,6 +487,31 @@ interface AiInsight {
                 }
             </div>
         </ng-template>
+    `,
+    styles: `
+        :host ::ng-deep .doc-filter-active.p-tag {
+            background: var(--surface-0);
+            color: var(--primary-900);
+            outline: 1px solid var(--primary-900);
+        }
+
+        :host ::ng-deep .p-datatable th:first-child,
+        :host ::ng-deep .p-datatable td:first-child {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        :host ::ng-deep .p-datatable th,
+        :host ::ng-deep .p-datatable td {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        :host ::ng-deep .p-datatable th:nth-child(3),
+        :host ::ng-deep .p-datatable td:nth-child(3) {
+            padding-left: 0;
+            padding-right: 0;
+        }
     `
 })
 export class Opportunity implements OnInit {
@@ -469,6 +524,16 @@ export class Opportunity implements OnInit {
         { id: 5, title: 'Budget set to 15,000,000', icon: 'pi-dollar', description: 'Proposed budget of $15,000,000 approved for Water Sanitization opportunity.', author: 'Sarah Wilson', time: 'Apr 17, 2026', dotColor: 'bg-teal-500', ringColor: 'ring-teal-500' },
         { id: 6, title: 'SDGs linked', icon: 'pi-globe', description: '2 Sustainable Development Goals linked to this opportunity.', author: 'Emily Johnson', time: 'Apr 15, 2026', dotColor: 'bg-cherry-500', ringColor: 'ring-cherry-500' }
     ];
+
+    activityRowsPerPage = 3;
+    activityPage = signal(0);
+    activityTotalPages = computed(() => Math.ceil(this.activityFeed.length / this.activityRowsPerPage));
+    activityFirst = computed(() => this.activityPage() * this.activityRowsPerPage);
+    activityLast = computed(() => Math.min(this.activityFirst() + this.activityRowsPerPage, this.activityFeed.length));
+    paginatedActivities = computed(() => this.activityFeed.slice(this.activityFirst(), this.activityLast()));
+
+    // ─── Activity ───
+    isActivityExpanded = signal(true);
 
     // ─── AI Analysis ───
     isAiCardExpanded = signal(false);
@@ -500,16 +565,16 @@ export class Opportunity implements OnInit {
     // ─── Tasks ───
     activeTaskFilter = signal('All');
     taskSearchQuery = model('');
-    openTaskPanels = ['0', '1', '2'];
+    openTaskPanels: string[] = [];
     isTaskDrawerVisible = false;
     selectedTask: Task | null = null;
     taskDrawerMode: 'create' | 'edit' = 'create';
 
     taskFilterOptions = [
-        { key: 'All', label: 'All', icon: 'pi pi-list', countKey: 'all' as const },
-        { key: 'Pending', label: 'Pending', icon: 'pi pi-inbox', countKey: 'pending' as const },
-        { key: 'In Progress', label: 'In Progress', icon: 'pi pi-clock', countKey: 'inProgress' as const },
-        { key: 'Completed', label: 'Completed', icon: 'pi pi-check-circle', countKey: 'completed' as const }
+        { key: 'All', label: 'All', icon: 'pi pi-list', countKey: 'all' as const, badgeClass: 'bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-surface-100' },
+        { key: 'Pending', label: 'Not Started', icon: 'pi pi-inbox', countKey: 'pending' as const, badgeClass: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' },
+        { key: 'In Progress', label: 'In Progress', icon: 'pi pi-clock', countKey: 'inProgress' as const, badgeClass: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' },
+        { key: 'Completed', label: 'Completed', icon: 'pi pi-check-circle', countKey: 'completed' as const, badgeClass: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' }
     ];
 
     taskData = signal<Task[]>([
@@ -548,7 +613,12 @@ export class Opportunity implements OnInit {
 
     // ─── Documents ───
     activeDocFilter = signal('All Files');
-    docFilterOptions = ['All Files', 'Documents', 'Spreadsheets', 'Other'];
+    docSearchQuery = model('');
+    docFileTypes = computed(() => {
+        const types = [...new Set(this.documents().map(d => d.type))];
+        types.sort();
+        return types;
+    });
 
     documents = signal<Document[]>([
         { id: 1, fileName: 'PDF File Number One', type: 'DOCX', fileSize: '17.4 MB', uploadDate: 'Apr 21, 2026', owner: 'Olivia Martinez', icon: 'pi-file-word' },
@@ -562,13 +632,18 @@ export class Opportunity implements OnInit {
     ]);
 
     filteredDocuments = computed(() => {
-        const docs = this.documents();
-        switch (this.activeDocFilter()) {
-            case 'Documents': return docs.filter((d) => d.type === 'PDF' || d.type === 'DOCX');
-            case 'Spreadsheets': return docs.filter((d) => d.type === 'XLS');
-            case 'Other': return docs.filter((d) => d.type !== 'PDF' && d.type !== 'DOCX' && d.type !== 'XLS');
-            default: return docs;
+        let docs = this.documents();
+        const query = this.docSearchQuery().trim().toLowerCase();
+        if (query) {
+            docs = docs.filter(d => d.fileName.toLowerCase().includes(query) || d.owner.toLowerCase().includes(query));
         }
+        const filter = this.activeDocFilter();
+        if (filter === 'All Files') return docs;
+        if (filter === 'Other') {
+            const knownTypes = this.docFileTypes();
+            return docs.filter(d => !knownTypes.includes(d.type));
+        }
+        return docs.filter(d => d.type === filter);
     });
 
     docMenuItems: MenuItem[] = [];
@@ -665,14 +740,7 @@ export class Opportunity implements OnInit {
         });
     }
 
-    getTagSeverity(type: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined {
-        const map: Record<string, 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast'> = {
-            PDF: 'info',
-            DOCX: 'secondary',
-            XLS: 'warn',
-            EPS: 'success',
-            PNG: 'success'
-        };
-        return map[type] || 'secondary';
+    getTagSeverity(): 'secondary' {
+        return 'secondary';
     }
 }

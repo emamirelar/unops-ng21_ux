@@ -1,7 +1,9 @@
 import { LayoutService } from '@/app/layout/service/layout.service';
+import { brandPresets } from '@/app/layout/service/brand-theme';
 import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { $t } from '@primeuix/themes';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -29,15 +31,15 @@ interface NotificationsBars {
         </a>
         <img class="mobile-logo" src="/layout/images/logo-light-horizontal.svg" alt="unops-ng_ux-layout" />
         <div class="topbar-left">
-            <div app-breadcrumb [class.hidden]="searchActive()"></div>
+            <div app-breadcrumb></div>
             @if (searchActive()) {
-                <div class="flex items-center gap-2 flex-1">
-                    <p-iconfield class="flex-1">
+                <div class="flex items-center gap-2 ml-auto">
+                    <p-iconfield class="w-80">
                         <p-inputicon styleClass="pi pi-search" />
-                        <input #searchInput type="text" pInputText placeholder="Search..." class="w-full" (keydown.escape)="closeSearch()" />
+                        <input #searchInput type="text" pInputText placeholder="Search..." class="w-full !py-2 !text-sm" (keydown.escape)="closeSearch()" />
                     </p-iconfield>
-                    <a class="right-sidebar-button cursor-pointer" (click)="closeSearch()">
-                        <i class="pi pi-times"></i>
+                    <a class="flex items-center justify-center w-8 h-8 rounded-md cursor-pointer hover:bg-emphasis transition-colors" (click)="closeSearch()">
+                        <i class="pi pi-times text-sm"></i>
                     </a>
                 </div>
             }
@@ -163,7 +165,27 @@ interface NotificationsBars {
                                     <span>Inbox</span>
                                 </a>
                             </li>
-                            <li>
+                            <li class="border-t border-surface mt-1 pt-1">
+                                <span class="label-xsmall px-2.5 py-1 text-surface-400">Theme</span>
+                            </li>
+                            @for (preset of presetOptions; track preset) {
+                                <li>
+                                    <a
+                                        class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer"
+                                        [class.text-surface-950]="selectedPreset() === preset"
+                                        [class.dark:text-surface-0]="selectedPreset() === preset"
+                                        [class.font-semibold]="selectedPreset() === preset"
+                                        (click)="onPresetChange(preset)"
+                                    >
+                                        <i class="pi pi-palette"></i>
+                                        <span>{{ preset }}</span>
+                                        @if (selectedPreset() === preset) {
+                                            <i class="pi pi-check ml-auto text-xs"></i>
+                                        }
+                                    </a>
+                                </li>
+                            }
+                            <li class="border-t border-surface mt-1 pt-1">
                                 <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
                                     <i class="pi pi-power-off"></i>
                                     <span>Log out</span>
@@ -171,11 +193,6 @@ interface NotificationsBars {
                             </li>
                         </ul>
                     </div>
-                </li>
-                <li class="right-sidebar-item">
-                    <a tabindex="0" class="right-sidebar-button" (click)="showRightMenu()">
-                        <i class="pi pi-align-right"></i>
-                    </a>
                 </li>
             </ul>
         </div>
@@ -283,6 +300,10 @@ export class AppTopbar implements AfterViewChecked {
 
     selectedLanguage = signal('en');
 
+    presetOptions = Object.keys(brandPresets);
+
+    selectedPreset = computed(() => this.layoutService.layoutConfig().preset);
+
     selectedNotificationBar = model(this.notificationsBars()[0].id ?? 'inbox');
 
     selectedNotificationsBarData = computed(() => this.notifications().find((f) => f.id === this.selectedNotificationBar()).data);
@@ -301,6 +322,12 @@ export class AppTopbar implements AfterViewChecked {
 
     selectLanguage(code: string) {
         this.selectedLanguage.set(code);
+    }
+
+    onPresetChange(presetName: string) {
+        this.layoutService.layoutConfig.update((state) => ({ ...state, preset: presetName }));
+        const preset = brandPresets[presetName as keyof typeof brandPresets];
+        $t().preset(preset).use({ useDefaultOptions: true });
     }
 
     openSearch() {

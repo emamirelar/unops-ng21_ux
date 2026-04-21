@@ -20,8 +20,8 @@ import { AppMenuitem } from './app.menuitem';
 export class AppMenu {
     model: any[] = [
         {
-            label: 'Home',
-            icon: 'pi pi-home',
+            label: 'Dashboard',
+            icon: 'pi pi-objects-column',
             routerLink: ['/']
         },
         { separator: true },
@@ -41,6 +41,11 @@ export class AppMenu {
                     routerLink: ['/apps/partners']
                 },
                 {
+                    label: 'Agreements',
+                    icon: 'pi pi-fw pi-file-check',
+                    routerLink: ['/apps/agreements']
+                },
+                {
                     label: 'Contacts',
                     icon: 'pi pi-fw pi-users',
                     routerLink: ['/apps/contacts']
@@ -49,94 +54,44 @@ export class AppMenu {
                     label: 'Interactions',
                     icon: 'pi pi-fw pi-comments',
                     routerLink: ['/apps/interactions']
-                },
-                {
-                    label: 'Agreements',
-                    icon: 'pi pi-fw pi-file-check',
-                    routerLink: ['/apps/agreements']
                 }
             ]
         },
         { separator: true },
         {
             label: 'Offices',
-            icon: 'pi pi-fw pi-star-fill',
-            path: '/uikit',
+            icon: 'pi pi-fw pi-building',
+            path: '/apps/offices',
             items: [
                 {
-                    label: 'Form Layout',
-                    icon: 'pi pi-fw pi-id-card',
-                    routerLink: ['/uikit/formlayout']
+                    label: 'Headquarters',
+                    icon: 'pi pi-fw pi-home',
+                    routerLink: ['/apps/offices/hq']
                 },
                 {
-                    label: 'Input',
-                    icon: 'pi pi-fw pi-check-square',
-                    routerLink: ['/uikit/input']
+                    label: 'Multi-Country',
+                    icon: 'pi pi-fw pi-globe',
+                    routerLink: ['/apps/offices/mcos']
                 },
                 {
-                    label: 'Button',
-                    icon: 'pi pi-fw pi-box',
-                    routerLink: ['/uikit/button']
+                    label: 'Global Liaison',
+                    icon: 'pi pi-fw pi-link',
+                    routerLink: ['/apps/offices/liaison']
                 },
                 {
-                    label: 'Table',
-                    icon: 'pi pi-fw pi-table',
-                    routerLink: ['/uikit/table']
+                    label: 'Portfolio Hubs',
+                    icon: 'pi pi-fw pi-th-large',
+                    routerLink: ['/apps/offices/portfolios']
                 },
                 {
-                    label: 'List',
-                    icon: 'pi pi-fw pi-list',
-                    routerLink: ['/uikit/list']
+                    label: 'Project',
+                    icon: 'pi pi-fw pi-briefcase',
+                    routerLink: ['/apps/offices/project-centres']
                 },
                 {
-                    label: 'Tree',
-                    icon: 'pi pi-fw pi-share-alt',
-                    routerLink: ['/uikit/tree']
-                },
-                {
-                    label: 'Panel',
-                    icon: 'pi pi-fw pi-tablet',
-                    routerLink: ['/uikit/panel']
-                },
-                {
-                    label: 'Overlay',
-                    icon: 'pi pi-fw pi-clone',
-                    routerLink: ['/uikit/overlay']
-                },
-                {
-                    label: 'Media',
-                    icon: 'pi pi-fw pi-image',
-                    routerLink: ['/uikit/media']
-                },
-                {
-                    label: 'Menu',
-                    icon: 'pi pi-fw pi-bars',
-                    routerLink: ['/uikit/menu']
-                },
-                {
-                    label: 'Message',
-                    icon: 'pi pi-fw pi-comment',
-                    routerLink: ['/uikit/message']
-                },
-                {
-                    label: 'File',
-                    icon: 'pi pi-fw pi-file',
-                    routerLink: ['/uikit/file']
-                },
-                {
-                    label: 'Chart',
-                    icon: 'pi pi-fw pi-chart-bar',
-                    routerLink: ['/uikit/charts']
-                },
-                {
-                    label: 'Timeline',
-                    icon: 'pi pi-fw pi-calendar',
-                    routerLink: ['/uikit/timeline']
-                },
-                {
-                    label: 'Misc',
-                    icon: 'pi pi-fw pi-circle-off',
-                    routerLink: ['/uikit/misc']
+                    label: 'Shared Services',
+                    icon: 'pi pi-fw pi-server',
+                    routerLink: ['/apps/offices/shared-services']
                 }
             ]
         },

@@ -5,9 +5,6 @@ import { Component } from '@angular/core';
     standalone: true,
     template: `
         <div class="layout-footer">
-            <div class="footer-logo-container">
-                <span class="footer-app-name">UNOPS NG UX</span>
-            </div>
             <span class="footer-copyright">&#169; UNOPS 2026</span>
         </div>
     `

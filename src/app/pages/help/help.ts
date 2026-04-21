@@ -15,7 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
             <div class="flex flex-col items-center py-11">
                 <h1 class="title-h5 md:title-h4">
                     Advice and answers<br />
-                    from the <span class="text-primary">UNOPS NG UX team</span>
+                    from the <span class="text-primary">UNOPS team</span>
                 </h1>
                 <p class="mt-3 body-small">Get valuable advice and expert answers directly from the Genesis team.</p>
                 <p-iconfield class="mt-7">

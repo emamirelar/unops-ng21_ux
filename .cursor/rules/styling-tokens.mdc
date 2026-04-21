@@ -1,0 +1,42 @@
+---
+description: Enforces reuse of existing design tokens and CSS/SCSS variables. No hard-coded values, no new tokens, no modifications to existing variables.
+alwaysApply: true
+---
+
+# Styling: Reuse Existing Tokens Only
+
+## Core Rules
+
+1. **Always reuse existing defined variables and tokens.** Look up the project's SCSS variables, CSS custom properties, and design tokens before writing any style value.
+2. **No hard-coded values.** Never use raw color hex/rgb, pixel sizes, font stacks, shadows, border-radii, spacing, or z-index values directly. Always reference an existing variable or token.
+3. **No new variables or tokens.** Do not introduce new SCSS variables, CSS custom properties, or design tokens.
+4. **No modifications to existing variables.** Never change the value or name of an existing variable or token definition.
+5. **When no matching variable exists**, stop and ask the user what to do. Suggest best-practice options such as:
+   - Reusing the closest existing token with a brief explanation of the trade-off
+   - Deferring the change until the design system is updated
+   - Flagging it as a gap for the design team
+
+## Examples
+
+```scss
+// BAD — hard-coded color
+.header { background: #3B82F6; }
+
+// GOOD — reuses existing variable
+.header { background: var(--primary-color); }
+```
+
+```scss
+// BAD — hard-coded spacing
+.card { padding: 16px; margin-bottom: 24px; }
+
+// GOOD — reuses existing spacing token
+.card { padding: $spacing-4; margin-bottom: $spacing-6; }
+```
+
+```scss
+// BAD — adding a new variable
+$my-new-blue: #1E40AF;
+
+// GOOD — reuse what already exists or ask the user
+```
