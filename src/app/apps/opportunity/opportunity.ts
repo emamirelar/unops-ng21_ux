@@ -312,7 +312,7 @@ interface AiInsight {
                 <!-- Documents Section -->
                 <div class="card flex flex-col">
                     <div class="flex flex-col gap-4">
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-3">
                             <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
                             <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">Documents</h3>
                         </div>
@@ -401,7 +401,7 @@ interface AiInsight {
                             <ng-template #header let-chooseCallback="chooseCallback">
                                 <div class="flex items-center gap-2 w-full">
                                     <p-button icon="pi pi-upload" label="Upload File" (onClick)="chooseCallback()" />
-                                    <p-button icon="pi pi-link" label="Share Link" [outlined]="true" (onClick)="shareDocumentLink()" />
+                                    <p-button icon="pi pi-link" label="Share Link" [outlined]="true" styleClass="!text-primary-600 !border-primary-600" (onClick)="shareDocumentLink()" />
                                 </div>
                             </ng-template>
                             <ng-template #empty>
