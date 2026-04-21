@@ -1,0 +1,24 @@
+export interface Partner {
+    id?: string | null;
+    partnerDescription?: string | null;
+    partnerShortDescription?: string | null;
+    partnerLongDescription?: string | null;
+    partnerCategoryId?: number | null;
+    partnerCategoryName?: string | null;
+    partnerCategoryCode?: string | null;
+    partnerGroupId?: number | null;
+    partnerGroupName?: string | null;
+    liaisonOfficeId?: number | null;
+    liaisonOfficeName?: string | null;
+    partnerFocalPointName?: string | null;
+    name?: string | null;
+    shortName?: string | null;
+    status?: string | null;
+    partnerApprovalStatus?: string | null;
+    keyGlobalPartner?: boolean | null;
+    address1Country?: string | null;
+    address1City?: string | null;
+    logoUrl?: string | null;
+    createdDate?: Date | null;
+    lastModifiedDate?: Date | null;
+}
