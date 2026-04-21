@@ -91,6 +91,18 @@ const brandOverrides = {
         }
     },
     components: {
+        button: {
+            colorScheme: {
+                light: {
+                    root: {
+                        primary: {
+                            background: '{primary.600}',
+                            borderColor: '{primary.600}'
+                        }
+                    }
+                }
+            }
+        },
         tag: {
             colorScheme: {
                 light: {

@@ -1,4 +1,4 @@
-import { Component, computed, model, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, model, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,7 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TaskDrawer } from '../tasklist/task-drawer';
@@ -89,13 +89,13 @@ interface AiInsight {
         FileUploadModule,
         TaskDrawer
     ],
-    providers: [ConfirmationService],
+    providers: [ConfirmationService, MessageService],
     template: `
         <div class="flex flex-col gap-6">
             <!-- Page Title -->
             <div class="flex items-center gap-4">
                 <div class="flex flex-row gap-6 flex-1 min-w-0">
-                    <h1 class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-8 m-0">Water Sanitization</h1>
+                    <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Water Sanitization</h1>
                     <div class="flex items-center gap-3 text-sm text-surface-600 dark:text-surface-300">
                         <p-tag value="ID &amp; Profile" severity="info" styleClass="!bg-blue-50 dark:!bg-blue-900/30" />
                     </div>
@@ -108,7 +108,10 @@ interface AiInsight {
                 <!-- Activity Feed -->
                 <div class="card">
                     <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isActivityExpanded()" (click)="isActivityExpanded.set(!isActivityExpanded())">
-                        <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Activity</h3>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-history text-deepsea-500 dark:text-surface-0"></i>
+                            <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">Activity</h3>
+                        </div>
                         <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isActivityExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                     </div>
 
@@ -159,7 +162,10 @@ interface AiInsight {
                     <div class="flex flex-col gap-6">
                         <!-- Tasks Header -->
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Tasks</h3>
+                            <div class="flex items-center gap-2">
+                                <i class="pi pi-check-square text-deepsea-500 dark:text-surface-0"></i>
+                                <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">Tasks</h3>
+                            </div>
                             <p-button icon="pi pi-plus" label="New Task" [outlined]="true" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer()" />
                         </div>
 
@@ -257,14 +263,12 @@ interface AiInsight {
                             <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
                                 <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
                             </div>
-                            @if (!isAiCardExpanded()) {
-                                <div class="flex flex-col">
-                                    <span class="text-deepsea-500 dark:text-surface-0 text-lg font-medium leading-7 tracking-tight">AI Project Analysis</span>
-                                    <span class="text-midnight-700 dark:text-surface-300 text-[13px] font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
-                                </div>
-                            } @else {
-                                <span class="text-deepsea-500 dark:text-surface-0 text-lg font-medium leading-7 tracking-tight">AI Project Analysis</span>
-                            }
+                            <div class="flex flex-col">
+                                <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">AI Project Analysis</h3>
+                                @if (!isAiCardExpanded()) {
+                                    <span class="text-midnight-700 dark:text-surface-300 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
+                                }
+                            </div>
                         </div>
                         <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-surface-800 border border-white dark:border-surface-700 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-surface-700 transition-colors">
                             <i class="pi text-xs text-darkblue-500" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
@@ -280,7 +284,7 @@ interface AiInsight {
                                     [ngModel]="aiSearchQuery()"
                                     (ngModelChange)="aiSearchQuery.set($event)"
                                     placeholder="Search AI insights, risks, or optimizations..."
-                                    class="bg-transparent border-none outline-none flex-1 text-[13px] font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-500"
+                                    class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700"
                                 />
                             </div>
 
@@ -291,9 +295,9 @@ interface AiInsight {
                                         <div class="flex flex-col gap-2 flex-1 min-w-0">
                                             <div class="flex flex-col gap-1">
                                                 <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
-                                                <p class="text-[#2b638b] dark:text-surface-300 text-[13px] leading-[21px]">{{ insight.description }}</p>
+                                                <p class="text-[#2b638b] dark:text-surface-300 text-sm leading-normal">{{ insight.description }}</p>
                                             </div>
-                                            <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-[13px] font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
+                                            <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-sm font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
                                                 {{ insight.actionLabel }}
                                                 <i class="pi pi-arrow-right text-xs"></i>
                                             </button>
@@ -308,7 +312,10 @@ interface AiInsight {
                 <!-- Documents Section -->
                 <div class="card flex flex-col">
                     <div class="flex flex-col gap-4">
-                        <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Documents</h3>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
+                            <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">Documents</h3>
+                        </div>
 
                         <div class="flex flex-wrap gap-2">
                             <p-tag
@@ -391,6 +398,12 @@ interface AiInsight {
                             [showUploadButton]="false"
                             [showCancelButton]="false"
                         >
+                            <ng-template #header let-chooseCallback="chooseCallback">
+                                <div class="flex items-center gap-2 w-full">
+                                    <p-button icon="pi pi-upload" label="Upload File" (onClick)="chooseCallback()" />
+                                    <p-button icon="pi pi-link" label="Share Link" [outlined]="true" (onClick)="shareDocumentLink()" />
+                                </div>
+                            </ng-template>
                             <ng-template #empty>
                                 <div class="flex flex-col items-center gap-2 py-4">
                                     <i class="pi pi-cloud-upload text-2xl text-surface-400"></i>
@@ -648,6 +661,8 @@ export class Opportunity implements OnInit {
 
     docMenuItems: MenuItem[] = [];
 
+    private messageService = inject(MessageService);
+
     constructor(private confirmationService: ConfirmationService) {}
 
     ngOnInit() {}
@@ -738,6 +753,11 @@ export class Opportunity implements OnInit {
             acceptButtonProps: { label: 'Delete', severity: 'danger' },
             accept: () => this.documents.set(this.documents().filter((d) => d.id !== docId))
         });
+    }
+
+    shareDocumentLink() {
+        navigator.clipboard.writeText(window.location.href);
+        this.messageService.add({ severity: 'success', summary: 'Link Copied', detail: 'Document link copied to clipboard' });
     }
 
     getTagSeverity(): 'secondary' {

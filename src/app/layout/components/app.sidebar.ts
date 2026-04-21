@@ -15,7 +15,7 @@ const BREAKPOINT = 992;
     template: `<div class="layout-sidebar" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
         <div class="sidebar-header">
             <a class="logo" [routerLink]="['/']">
-                <img class="logo-image" [src]="menuTheme() === 'light' ? '/layout/images/logo-light-horizontal.svg' : '/layout/images/logo-dark-vertical.svg'" alt="Opportunity" />
+                <img class="logo-image" [src]="menuTheme() === 'light' ? 'layout/images/logo-light-horizontal.svg' : 'layout/images/logo-dark-vertical.svg'" alt="Opportunity" />
             </a>
             <button class="layout-sidebar-anchor z-2" type="button" (click)="onAnchorToggle()"></button>
         </div>

@@ -41,7 +41,7 @@ import { SelectModule } from 'primeng/select';
                 .p-select-label {
                     padding: 0.25rem 0.25rem 0.25rem 0.5rem;
                     font-weight: 500;
-                    font-size: 0.875rem;
+                    font-size: var(--font-size-sm);
                     color: var(--text-surface-950);
                 }
 
@@ -56,7 +56,7 @@ import { SelectModule } from 'primeng/select';
 
                 .p-select-option {
                     padding: 0.25rem 0.5rem;
-                    font-size: 0.875rem;
+                    font-size: var(--font-size-sm);
                     font-weight: 500;
                 }
             }

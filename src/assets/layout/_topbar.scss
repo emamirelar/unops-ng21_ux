@@ -97,7 +97,7 @@
                     height: auto;
                     display: flex;
                     align-items: center;
-                    font-size: 0.875rem;
+                    font-size: var(--font-size-sm);
                     font-weight: 600;
 
                     .p-avatar {
@@ -149,7 +149,7 @@
                     width: 1rem;
                     height: 1rem;
                     line-height: 1rem;
-                    font-size: 0.714rem;
+                    font-size: var(--font-size-sm);
                     border-radius: 50%;
                     font-weight: 600;
                     background: var(--primary-color);

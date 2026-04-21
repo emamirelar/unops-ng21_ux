@@ -41,7 +41,7 @@ interface Task {
             <!-- Mobile Header -->
             <div class="lg:hidden flex flex-col gap-4 p-4 border-b border-surface-200 dark:border-surface-700">
                 <div class="flex items-center justify-between">
-                    <h1 class="text-surface-900 dark:text-surface-0 text-lg font-semibold">Tasks</h1>
+                    <h1 class="text-deepsea-500 dark:text-surface-0 text-lg font-extrabold">Tasks</h1>
                     <p-button icon="pi pi-plus" label="New Task" severity="secondary" [outlined]="true" size="small" (onClick)="openNewTaskDrawer()" />
                 </div>
 

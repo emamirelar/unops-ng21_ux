@@ -77,7 +77,7 @@ import { SelectModule } from 'primeng/select';
         <div>
             <h2 class="title-h7 text-left">Shipment Tracking</h2>
             <p class="body-small mt-1 text-left">Track your ongoing shipments to customers.</p>
-            <img class="w-full h-full max-h-60 object-cover border border-surface rounded-2xl mt-4" src="/layout/images/sidebar-right/staticmap.png" alt="unops-ng_ux" />
+            <img class="w-full h-full max-h-60 object-cover border border-surface rounded-2xl mt-4" src="layout/images/sidebar-right/staticmap.png" alt="unops-ng_ux" />
         </div>
     </p-drawer>`
 })

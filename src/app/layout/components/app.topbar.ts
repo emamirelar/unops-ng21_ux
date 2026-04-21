@@ -29,7 +29,7 @@ interface NotificationsBars {
         <a class="mobile-menu-button" (click)="onMenuButtonClick()">
             <i class="pi pi-bars"></i>
         </a>
-        <img class="mobile-logo" src="/layout/images/logo-light-horizontal.svg" alt="unops-ng_ux-layout" />
+        <img class="mobile-logo" src="layout/images/logo-light-horizontal.svg" alt="unops-ng_ux-layout" />
         <div class="topbar-left">
             <div app-breadcrumb></div>
             @if (searchActive()) {

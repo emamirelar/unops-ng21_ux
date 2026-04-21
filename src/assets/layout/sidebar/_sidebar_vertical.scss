@@ -55,7 +55,7 @@
 
     .layout-root-menuitem {
         > .layout-menuitem-root-text {
-            font-size: 0.75rem;
+            font-size: var(--font-size-sm);
             text-transform: uppercase;
             font-weight: 500;
             letter-spacing: 0.05rem;
@@ -94,7 +94,7 @@
             }
 
             .layout-submenu-toggler {
-                font-size: 75%;
+                font-size: var(--font-size-sm);
                 margin-left: auto;
                 transition: transform var(--transition-duration);
             }

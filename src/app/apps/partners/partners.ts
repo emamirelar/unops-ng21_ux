@@ -17,7 +17,7 @@ import { PartnerService } from './partner.service';
         <div class="flex flex-col gap-6">
             <div class="flex items-center gap-4">
                 <div class="flex flex-col gap-1 flex-1 min-w-0">
-                    <h1 class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-8 m-0">Partners</h1>
+                    <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Partners</h1>
                     <span class="text-surface-600 dark:text-surface-300 text-sm">{{ partnerService.allPartners().length }} organizations</span>
                 </div>
             </div>
