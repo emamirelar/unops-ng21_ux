@@ -1,10 +1,15 @@
 .layout-footer {
     height: 4rem;
-    padding: 2rem 2rem;
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     text-align: right;
+
+    @media screen and (min-width: 992px) {
+        padding: 2rem;
+    }
+
     .footer-copyright {
         font-size: var(--font-size-sm);
         color: var(--text-muted-color);

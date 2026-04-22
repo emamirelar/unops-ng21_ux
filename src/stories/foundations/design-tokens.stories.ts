@@ -1,0 +1,220 @@
+import type { Meta, StoryObj } from '@storybook/angular';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { brandPrimitives } from '@/app/layout/service/brand-theme';
+
+interface ColorSwatch {
+    shade: string;
+    hex: string;
+}
+
+interface ColorPalette {
+    name: string;
+    swatches: ColorSwatch[];
+    role?: string;
+}
+
+const PALETTES: ColorPalette[] = Object.entries(brandPrimitives).map(([name, shades]) => ({
+    name,
+    swatches: Object.entries(shades).map(([shade, hex]) => ({ shade, hex })),
+    role: ({
+        darkblue: 'primary',
+        gray: 'surface (light)',
+        deepsea: 'surface (dark)',
+        red: 'danger / error',
+        orange: 'warning',
+        green: 'success',
+        blue: 'info'
+    } as Record<string, string>)[name]
+}));
+
+const SEMANTIC_VARS = [
+    { token: '--primary-color', maps: 'var(--p-primary-color)', usage: 'Primary brand actions' },
+    { token: '--primary-contrast-color', maps: 'var(--p-primary-contrast-color)', usage: 'Text on primary bg' },
+    { token: '--text-color', maps: 'var(--p-text-color)', usage: 'Default body text' },
+    { token: '--text-muted-color', maps: 'var(--p-text-muted-color)', usage: 'Secondary / muted text' },
+    { token: '--surface-border', maps: 'var(--p-content-border-color)', usage: 'Card / divider borders' },
+    { token: '--surface-card', maps: 'var(--p-content-background)', usage: 'Card backgrounds' },
+    { token: '--surface-hover', maps: 'var(--p-content-hover-background)', usage: 'Hover state bg' },
+    { token: '--surface-ground', maps: '#ffffff / surface-950', usage: 'Page background' },
+    { token: '--surface-overlay', maps: 'var(--p-overlay-popover-background)', usage: 'Popover / dialog bg' },
+    { token: '--transition-duration', maps: 'var(--p-transition-duration)', usage: 'Default animation speed' },
+    { token: '--border-radius', maps: 'var(--p-content-border-radius)', usage: 'Default border radius' },
+    { token: '--focus-ring-shadow', maps: 'var(--p-focus-ring-shadow)', usage: 'Focus indicator' }
+];
+
+const BREAKPOINTS = [
+    { name: 'sm', value: '576px', usage: 'Phones (landscape)' },
+    { name: 'md', value: '768px', usage: 'Tablets' },
+    { name: 'lg', value: '992px', usage: 'Small desktops / sidebar collapse' },
+    { name: 'xl', value: '1200px', usage: 'Desktops' },
+    { name: '2xl', value: '1920px', usage: 'Large displays' }
+];
+
+const TYPOGRAPHY = [
+    { util: 'title-h1', size: '7xl', weight: 'semibold', usage: 'Hero headlines' },
+    { util: 'title-h2', size: '4rem', weight: 'semibold', usage: 'Section titles' },
+    { util: 'title-h3', size: '3.5rem', weight: 'semibold', usage: 'Sub-section headings' },
+    { util: 'title-h4', size: '2.85rem', weight: 'semibold', usage: 'Card group headings' },
+    { util: 'title-h5', size: '4xl', weight: 'medium', usage: 'Feature titles' },
+    { util: 'title-h6', size: '3xl', weight: 'medium', usage: 'Widget headings' },
+    { util: 'title-h7', size: '2xl', weight: 'medium', usage: 'Small headings' },
+    { util: 'body-large', size: 'xl', weight: 'normal', usage: 'Hero body copy' },
+    { util: 'body-medium', size: 'lg', weight: 'normal', usage: 'Standard body copy' },
+    { util: 'body-small', size: 'base', weight: 'normal', usage: 'Secondary text' },
+    { util: 'body-xsmall', size: 'sm', weight: 'normal', usage: 'Captions' },
+    { util: 'label-large', size: 'xl', weight: 'medium', usage: 'Nav / large labels' },
+    { util: 'label-medium', size: 'lg', weight: 'medium', usage: 'Standard labels' },
+    { util: 'label-small', size: 'base', weight: 'medium', usage: 'Form labels' },
+    { util: 'label-xsmall', size: 'sm', weight: 'medium', usage: 'Micro labels / badges' }
+];
+
+@Component({
+    selector: 'sb-design-tokens',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: `
+        :host { display: block; padding: 2rem; color: var(--text-color, #1a1a1a); }
+        h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem; }
+        h2 { font-size: 1.5rem; font-weight: 600; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--surface-border, #e5e7eb); }
+        h3 { font-size: 1.125rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+        p.desc { color: var(--text-muted-color, #6b7280); margin: 0 0 2rem; }
+        .palette { margin-bottom: 1.5rem; }
+        .palette-name { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.375rem; }
+        .palette-name span { font-weight: 600; font-size: 0.875rem; text-transform: capitalize; }
+        .palette-name .role { font-weight: 400; color: var(--text-muted-color, #6b7280); font-size: 0.75rem; }
+        .swatches { display: flex; gap: 2px; border-radius: 0.5rem; overflow: hidden; }
+        .swatch { flex: 1; min-width: 0; height: 3rem; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; font-size: 0.5rem; font-weight: 500; cursor: default; position: relative; }
+        .swatch:hover::after { content: attr(data-hex); position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-size: 0.5625rem; font-weight: 600; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th { text-align: left; font-weight: 600; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--surface-border, #e5e7eb); }
+        td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--surface-border, #e5e7eb); }
+        td code, th code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8125rem; background: var(--surface-hover, #f3f4f6); padding: 1px 5px; border-radius: 4px; }
+        .bp-bar { height: 6px; border-radius: 3px; background: var(--primary-color, #00669a); margin-top: 4px; }
+        .type-sample { line-height: 1.3; }
+    `,
+    template: `
+        <h1>Design Tokens</h1>
+        <p class="desc">Complete token reference for the brand design system. All values defined in <code>brand-theme.ts</code>, <code>tailwind.css</code>, and layout SCSS variables.</p>
+
+        <h2>Color Palettes</h2>
+        <p style="margin-bottom: 1rem; font-size: 0.875rem; color: var(--text-muted-color, #6b7280)">
+            18 custom brand palettes, each with 11 shades (50 – 950). Hover a swatch to see the hex value.
+        </p>
+        @for (p of palettes; track p.name) {
+            <div class="palette">
+                <div class="palette-name">
+                    <span>{{ p.name }}</span>
+                    @if (p.role) { <span class="role">→ {{ p.role }}</span> }
+                </div>
+                <div class="swatches">
+                    @for (s of p.swatches; track s.shade) {
+                        <div class="swatch"
+                             [style.background]="s.hex"
+                             [style.color]="lightText(s.hex) ? '#fff' : '#000'"
+                             [attr.data-hex]="s.hex">
+                            {{ s.shade }}
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <h2>Semantic CSS Variables</h2>
+        <table>
+            <thead><tr><th>Token</th><th>Maps to</th><th>Usage</th></tr></thead>
+            <tbody>
+                @for (v of semanticVars; track v.token) {
+                    <tr>
+                        <td><code>{{ v.token }}</code></td>
+                        <td><code>{{ v.maps }}</code></td>
+                        <td>{{ v.usage }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h2>Breakpoints</h2>
+        <table>
+            <thead><tr><th>Name</th><th>Value</th><th>Usage</th><th style="width:40%">Relative</th></tr></thead>
+            <tbody>
+                @for (bp of breakpoints; track bp.name) {
+                    <tr>
+                        <td><code>{{ bp.name }}</code></td>
+                        <td><code>{{ bp.value }}</code></td>
+                        <td>{{ bp.usage }}</td>
+                        <td><div class="bp-bar" [style.width.%]="bpPercent(bp.value)"></div></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h2>Typography Utilities</h2>
+        <p style="margin-bottom: 1rem; font-size: 0.875rem; color: var(--text-muted-color, #6b7280)">
+            Tailwind <code>@utility</code> classes defined in <code>tailwind.css</code>. Apply via class name. Font: Noto Sans with OpenType features.
+        </p>
+        <table>
+            <thead><tr><th>Utility</th><th>Size</th><th>Weight</th><th>Usage</th><th style="width:30%">Sample</th></tr></thead>
+            <tbody>
+                @for (t of typography; track t.util) {
+                    <tr>
+                        <td><code>.{{ t.util }}</code></td>
+                        <td>{{ t.size }}</td>
+                        <td>{{ t.weight }}</td>
+                        <td>{{ t.usage }}</td>
+                        <td><span class="type-sample" [class]="t.util" style="font-size: clamp(0.75rem, 1vw, 1.125rem)">Aa Bb 123</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h2>Layout Variables</h2>
+        <table>
+            <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><code>$breakpoint</code></td><td><code>992px</code></td><td>Sidebar collapse point (SCSS)</td></tr>
+                <tr><td><code>$sidebarShadow</code></td><td><code>0px 1px 2px 0px rgba(18,18,23,0.05)</code></td><td>Sidebar elevation</td></tr>
+                <tr><td><code>--surface-card</code></td><td><code>var(--p-surface-50)</code> / <code>var(--p-surface-900)</code></td><td>Card backgrounds (light / dark)</td></tr>
+                <tr><td><code>--surface-ground</code></td><td><code>#ffffff</code> / <code>var(--p-surface-950)</code></td><td>Page background (light / dark)</td></tr>
+                <tr><td><code>--menu-bg-color</code></td><td><code>var(--p-primary-700)</code></td><td>Sidebar menu background</td></tr>
+                <tr><td><code>.card</code></td><td>padding 1rem, border-radius 1rem, 1px border</td><td>Standard card class</td></tr>
+                <tr><td><code>.layout-content</code></td><td>padding 2rem, max-width 1540px</td><td>Main content area</td></tr>
+            </tbody>
+        </table>
+    `
+})
+class DesignTokensComponent {
+    palettes = PALETTES;
+    semanticVars = SEMANTIC_VARS;
+    breakpoints = BREAKPOINTS;
+    typography = TYPOGRAPHY;
+
+    lightText(hex: string): boolean {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return (r * 299 + g * 587 + b * 114) / 1000 < 128;
+    }
+
+    bpPercent(value: string): number {
+        return (parseInt(value) / 1920) * 100;
+    }
+}
+
+const meta: Meta<DesignTokensComponent> = {
+    title: 'Foundations/DesignTokens',
+    component: DesignTokensComponent,
+    parameters: {
+        layout: 'fullscreen',
+        docs: {
+            description: {
+                component:
+                    'Complete reference of the brand design system tokens: 18 color palettes with semantic role mappings, ' +
+                    'CSS custom properties bridging PrimeNG to layout, Tailwind typography utility classes, responsive breakpoints, ' +
+                    'and SCSS layout variables. All values come from brand-theme.ts, tailwind.css, and layout SCSS files.'
+            }
+        }
+    }
+};
+export default meta;
+type Story = StoryObj<DesignTokensComponent>;
+
+export const Default: Story = {};

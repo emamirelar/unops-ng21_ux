@@ -54,7 +54,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         position: relative;
         width: 100%;
         padding: 0.75rem 1rem;
@@ -64,7 +64,11 @@
         }
 
         .topbar-right {
-            display: none;
+            display: flex;
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .menu-button {
@@ -77,6 +81,7 @@
             display: block;
             width: fit-content;
             height: auto;
+            max-height: 2rem;
         }
 
         .mobile-menu-button {
@@ -108,14 +113,11 @@
         }
 
         .topbar-menu {
-            justify-content: space-between;
-            gap: 1rem;
+            justify-content: flex-end;
+            gap: 0.25rem;
             > li {
                 margin-left: 0;
-                &:first-child {
-                    margin-right: auto;
-                    margin-left: 0;
-                }
+
                 &.profile-item {
                     border-left: 0;
                     border-right: 0;
@@ -163,7 +165,11 @@
 
     .layout-search {
         .search-container {
-            width: 75vw;
+            width: 90vw;
+
+            @media screen and (min-width: 576px) {
+                width: 75vw;
+            }
         }
     }
 }

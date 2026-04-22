@@ -124,8 +124,8 @@ interface Agreement {
                     </div>
 
                     <div class="lg:col-span-6 xl:col-span-8 flex flex-col gap-6">
-                        <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700 flex flex-col gap-[18px] overflow-hidden">
-                            <div class="flex justify-between items-center h-8">
+                        <div class="p-4 sm:p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700 flex flex-col gap-[18px] overflow-hidden">
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:h-8">
                                 <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Agreement Types</h3>
                                 <div class="flex items-center gap-1">
                                     <span class="text-surface-950 dark:text-surface-0 text-xl font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
@@ -164,7 +164,7 @@ interface Agreement {
                         <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700">
                             <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">Pinned</h3>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-3">
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6 gap-3">
                                 @for (pinned of pinnedItems; track pinned.id) {
                                     <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4">
                                         <div class="flex justify-between items-start">
@@ -207,9 +207,10 @@ interface Agreement {
                         [value]="filteredAgreements()"
                         [paginator]="true"
                         [rows]="rows"
+                        [scrollable]="true"
                         sortMode="multiple"
                         styleClass="bg-surface-0 dark:bg-surface-800 rounded-2xl border border-surface-200 dark:border-surface-700 overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&_[data-pc-name=pcpaginator]]:rounded-none!"
-                        tableStyleClass="w-full"
+                        tableStyleClass="w-full min-w-[50rem]"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
                         currentPageReportTemplate="Shows {first} to {last} of {totalRecords} results"
                     >

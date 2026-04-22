@@ -6,7 +6,7 @@ import { DividerModule } from 'primeng/divider';
 @Component({
     selector: 'pipeline-health-widget',
     imports: [DividerModule, ButtonModule, GaugeChart],
-    template: `<div class="card xl:w-auto w-full mb-0! min-w-80 px-6! pb-6! pt-4! rounded-3xl border border-surface">
+    template: `<div class="card xl:w-auto w-full mb-0! px-4! sm:px-6! pb-4! sm:pb-6! pt-4! rounded-3xl border border-surface">
         <div class="mb-2 flex items-start gap-2">
             <span class="flex-1 label-medium">Pipeline Health</span>
             <button class="hover:cursor-pointer"><i class="pi pi-ellipsis-h text-surface-500 hover:text-surface-950 dark:hover:text-surface-0 transition-all"></i></button>

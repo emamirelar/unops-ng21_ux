@@ -29,12 +29,12 @@ interface NotificationsBars {
         <a class="mobile-menu-button" (click)="onMenuButtonClick()">
             <i class="pi pi-bars"></i>
         </a>
-        <img class="mobile-logo" src="layout/images/logo-light-horizontal.svg" alt="unops-ng_ux-layout" />
+        <img class="mobile-logo" [src]="isDarkTheme() ? 'layout/images/logo-dark-horizontal.svg' : 'layout/images/logo-light-horizontal.svg'" alt="UNOPS" />
         <div class="topbar-left">
             <div app-breadcrumb></div>
             @if (searchActive()) {
                 <div class="flex items-center gap-2 ml-auto">
-                    <p-iconfield class="w-80">
+                    <p-iconfield class="w-48 sm:w-80">
                         <p-inputicon styleClass="pi pi-search" />
                         <input #searchInput type="text" pInputText placeholder="Search..." class="w-full !py-2 !text-sm" (keydown.escape)="closeSearch()" />
                     </p-iconfield>
@@ -58,8 +58,7 @@ interface NotificationsBars {
                         <i class="pi pi-bell"></i>
                     </a>
                     <div
-                        class="list-none m-0 rounded-2xl border border-surface absolute bg-surface-0 dark:bg-surface-900 overflow-hidden hidden origin-top min-w-72 sm:w-88 mt-2 z-50 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
-                        style="right: -100px"
+                        class="list-none m-0 rounded-2xl border border-surface fixed sm:absolute bg-surface-0 dark:bg-surface-900 overflow-hidden hidden origin-top w-[calc(100vw-2rem)] sm:w-88 mt-2 z-50 top-auto left-4 sm:left-auto sm:right-0 shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
                     >
                         <div class="p-4 flex items-center justify-between border-b border-surface">
                             <span class="label-small text-surface-950 dark:text-surface-0">Notifications</span>
@@ -80,7 +79,7 @@ interface NotificationsBars {
                         <ul class="flex flex-col divide-y divide-(--surface-border) max-h-80 overflow-auto">
                             @for (item of selectedNotificationsBarData(); track item.name; let i = $index) {
                                 <li>
-                                    <div class="flex items-center gap-3 px-6 py-3.5 cursor-pointer hover:bg-emphasis transition-all">
+                                    <div class="flex items-center gap-3 px-4 sm:px-6 py-3.5 cursor-pointer hover:bg-emphasis transition-all">
                                         <p-overlay-badge value="" severity="danger" class="inline-flex">
                                             <p-avatar size="large">
                                                 <img [src]="item.image" [alt]="item.name" class="rounded-lg" />
@@ -113,7 +112,7 @@ interface NotificationsBars {
                         </svg>
                     </a>
                     <div
-                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-44 mt-2 right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-44 mt-2 right-4 sm:right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
                     >
                         <ul class="flex flex-col gap-1">
                             @for (lang of languages(); track lang.code) {
@@ -138,7 +137,7 @@ interface NotificationsBars {
                         <p-avatar icon="pi pi-user" styleClass="w-10! h-10!" />
                     </a>
                     <div
-                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-52 mt-2 right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
                     >
                         <ul class="flex flex-col gap-1">
                             <li>

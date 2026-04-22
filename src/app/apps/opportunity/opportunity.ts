@@ -93,9 +93,9 @@ interface AiInsight {
     template: `
         <div class="flex flex-col gap-6">
             <!-- Page Title -->
-            <div class="flex items-center gap-4">
-                <div class="flex flex-row gap-6 flex-1 min-w-0">
-                    <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Water Sanitization</h1>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <div class="flex flex-wrap items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                    <h1 class="text-deepsea-500 dark:text-surface-0 text-xl sm:text-2xl font-extrabold leading-8 m-0">Water Sanitization</h1>
                     <div class="flex items-center gap-3 text-sm text-surface-600 dark:text-surface-300">
                         <p-tag value="ID &amp; Profile" severity="info" styleClass="!bg-blue-50 dark:!bg-blue-900/30" />
                     </div>
@@ -255,7 +255,7 @@ interface AiInsight {
             </div>
 
             <!-- RIGHT SIDEBAR -->
-            <div class="xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
+            <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
                 <!-- AI Project Analysis Card -->
                 <div class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300">
                     <div class="flex items-center justify-between cursor-pointer" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
