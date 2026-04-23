@@ -2,8 +2,7 @@
 
 .layout-sidebar {
     border-right: var(--d-sidebar-border);
-    background: var(--d-sidebar-bg-color);
-    background-image: linear-gradient(275deg, var(--d-sidebar-bg-color) 0%, var(--d-sidebar-bg-color-alt) 85%);
+    background: linear-gradient(355deg, var(--color-blue-400, #26a2d8) 7.69%, var(--color-midnight-850, #001E31) 89.42%);
     height: 100%;
     z-index: 10;
     .sidebar-header {
@@ -63,7 +62,6 @@
         position: fixed;
         bottom: 0;
         left: 0;
-        background-image: radial-gradient(circle at top left, color-mix(in srgb, var(--p-primary-950) 60%, transparent 40%) 0%, transparent 50%);
         width: 60rem;
         height: 100%;
         z-index: 9;
@@ -73,8 +71,8 @@
 @media screen and (min-width: $breakpoint) {
     .layout-horizontal {
         .layout-topbar {
-            background: var(--d-sidebar-bg-color);
-            color: var(--d-menuitem-text-color);
+            background: linear-gradient(356deg, var(--color-deepsea-700, #091521) -0.06%, var(--color-midnight-300, #4d809f) 25.26%, var(--color-blue-150, #99D3ED) 79.33%);
+            color: var(--p-surface-0);
 
             .topbar-separator {
                 border-left: var(--d-menu-separator-border);
@@ -141,9 +139,8 @@
     .app-dark {
         .layout-sidebar-primary {
             .layout-sidebar {
-                background: transparent;
-                background-image: none;
-                border: none;
+                background: var(--d-sidebar-bg-color);
+                background-image: linear-gradient(355deg, var(--d-sidebar-bg-color) 0%, var(--d-sidebar-bg-color-alt) 100%);
             }
         }
     }

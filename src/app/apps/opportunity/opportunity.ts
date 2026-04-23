@@ -110,7 +110,7 @@ interface AiInsight {
                     <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isActivityExpanded()" (click)="isActivityExpanded.set(!isActivityExpanded())">
                         <div class="flex items-center gap-2">
                             <i class="pi pi-history text-deepsea-500 dark:text-surface-0"></i>
-                            <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">Activity</h3>
+                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Activity</h4>
                         </div>
                         <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isActivityExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                     </div>
@@ -164,7 +164,7 @@ interface AiInsight {
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-check-square text-deepsea-500 dark:text-surface-0"></i>
-                                <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">Tasks</h3>
+                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Tasks</h4>
                             </div>
                             <p-button icon="pi pi-plus" label="New Task" [outlined]="true" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer()" />
                         </div>
@@ -200,7 +200,7 @@ interface AiInsight {
                                     <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-inbox text-sm text-blue-500"></i>
-                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">Not Started</h3>
+                                            <h4 class="title-h4 text-left!">Not Started</h4>
                                         </div>
                                     </p-accordionheader>
                                     <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
@@ -218,7 +218,7 @@ interface AiInsight {
                                     <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-clock text-sm text-yellow-500"></i>
-                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">In Progress</h3>
+                                            <h4 class="title-h4 text-left!">In Progress</h4>
                                         </div>
                                     </p-accordionheader>
                                     <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
@@ -236,7 +236,7 @@ interface AiInsight {
                                     <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-check-circle text-sm text-green-500"></i>
-                                            <h3 class="text-surface-900 dark:text-surface-0 text-base font-semibold">Completed</h3>
+                                            <h4 class="title-h4 text-left!">Completed</h4>
                                         </div>
                                     </p-accordionheader>
                                     <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
@@ -264,27 +264,27 @@ interface AiInsight {
                                 <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
                             </div>
                             <div class="flex flex-col">
-                                <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">AI Project Analysis</h3>
+                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">AI Project Analysis</h4>
                                 @if (!isAiCardExpanded()) {
-                                    <span class="text-midnight-700 dark:text-surface-300 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
+                                    <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
                                 }
                             </div>
                         </div>
-                        <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-surface-800 border border-white dark:border-surface-700 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-surface-700 transition-colors">
-                            <i class="pi text-xs text-darkblue-500" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                        <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-transparent border border-white dark:border-surface-300 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-white/10 transition-colors">
+                            <i class="pi text-xs text-darkblue-500 dark:text-surface-0" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                         </button>
                     </div>
 
                     @if (isAiCardExpanded()) {
                         <div class="flex flex-col gap-4 mt-4">
                             <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5">
-                                <i class="pi pi-search text-surface-500 text-sm"></i>
+                                <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
                                 <input
                                     type="text"
                                     [ngModel]="aiSearchQuery()"
                                     (ngModelChange)="aiSearchQuery.set($event)"
                                     placeholder="Search AI insights, risks, or optimizations..."
-                                    class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700"
+                                    class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700 dark:placeholder:text-surface-300"
                                 />
                             </div>
 
@@ -314,7 +314,7 @@ interface AiInsight {
                     <div class="flex flex-col gap-4">
                         <div class="flex items-center gap-3">
                             <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
-                            <h3 class="text-deepsea-500 dark:text-surface-0 text-xl font-medium leading-7">Documents</h3>
+                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Documents</h4>
                         </div>
 
                         <div class="flex flex-wrap gap-2">
@@ -353,7 +353,7 @@ interface AiInsight {
                             [paginator]="true"
                             [rows]="5"
                             sortMode="multiple"
-                            styleClass="flex flex-col bg-surface-0 dark:bg-surface-800 rounded-2xl overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&>[data-pc-section=paginatorcontainer]]:mt-auto [&_[data-pc-name=pcpaginator]]:rounded-none!"
+                            styleClass="flex flex-col rounded-2xl overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&>[data-pc-section=paginatorcontainer]]:mt-auto [&_[data-pc-name=pcpaginator]]:rounded-none!"
                             tableStyleClass="w-full"
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
                             currentPageReportTemplate="Shows {first} to {last} of {totalRecords} results"
@@ -406,8 +406,8 @@ interface AiInsight {
                             </ng-template>
                             <ng-template #empty>
                                 <div class="flex flex-col items-center gap-2 py-4">
-                                    <i class="pi pi-cloud-upload text-2xl text-surface-400"></i>
-                                    <span class="text-surface-500 text-sm">Drag and drop files here</span>
+                                    <i class="pi pi-cloud-upload text-2xl text-surface-400 dark:text-surface-300"></i>
+                                    <span class="text-surface-500 dark:text-surface-100 text-sm">Drag and drop files here</span>
                                 </div>
                             </ng-template>
                         </p-fileupload>
@@ -508,6 +508,13 @@ interface AiInsight {
             outline: 1px solid var(--primary-900);
         }
 
+        :host-context(.app-dark) ::ng-deep .doc-filter-active.p-tag {
+            background: var(--p-surface-800);
+            color: var(--p-surface-0);
+            outline: 1px solid var(--p-surface-400);
+            border-color: var(--p-surface-400);
+        }
+
         :host ::ng-deep .p-datatable th:first-child,
         :host ::ng-deep .p-datatable td:first-child {
             padding-left: 0;
@@ -524,6 +531,13 @@ interface AiInsight {
         :host ::ng-deep .p-datatable td:nth-child(3) {
             padding-left: 0;
             padding-right: 0;
+        }
+
+        :host ::ng-deep .p-datatable .p-datatable-thead > tr,
+        :host ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+        :host ::ng-deep .p-datatable .p-datatable-tbody > tr,
+        :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+            background: transparent;
         }
     `
 })
@@ -578,7 +592,7 @@ export class Opportunity implements OnInit {
     // ─── Tasks ───
     activeTaskFilter = signal('All');
     taskSearchQuery = model('');
-    openTaskPanels: string[] = [];
+    openTaskPanels: string[] = ['0', '1', '2'];
     isTaskDrawerVisible = false;
     selectedTask: Task | null = null;
     taskDrawerMode: 'create' | 'edit' = 'create';

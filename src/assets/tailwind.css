@@ -4,6 +4,24 @@
 
 @custom-variant dark (&:where([class*="app-dark"], [class*="app-dark"] *));
 
+/*
+  Default border color (Tailwind v4 migration note) + app-dark: use Prime content border
+  so implicit borders on dark surfaces are not left as light gray-200.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  :where([class*="app-dark"], [class*="app-dark"] *) {
+    border-color: var(--p-content-border-color, currentcolor);
+  }
+}
+
 @theme {
   --font-sans: "Noto Sans", sans-serif;
 
@@ -157,6 +175,7 @@
 
   --color-blue-50: #DEEFFF;
   --color-blue-100: #C9E8FF;
+  --color-blue-150: #99D3ED;
   --color-blue-200: #73c3e6;
   --color-blue-300: #4db3df;
   --color-blue-400: #26a2d8;
@@ -188,6 +207,7 @@
   --color-midnight-600: #003e64;
   --color-midnight-700: #003353;
   --color-midnight-800: #002841;
+  --color-midnight-850: #001E31;
   --color-midnight-900: #001d2f;
   --color-midnight-950: #00121e;
 
@@ -247,23 +267,6 @@
   }
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-}
 
 @utility landing-container {
   @apply px-6 w-full max-w-248 mx-auto;
@@ -276,7 +279,7 @@
 }
 
 @utility title-h1 {
-  @apply text-7xl font-semibold text-surface-900 dark:text-surface-0 text-center leading-tight;
+  @apply text-2xl font-semibold text-surface-900 dark:text-surface-0 text-center leading-tight;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,
@@ -292,13 +295,13 @@
 
 @utility title-h2 {
   @apply font-semibold text-surface-950 dark:text-surface-0 text-center leading-none;
-  font-size: 4rem;
+  font-size: 2rem;
   font-family: "Noto Sans", sans-serif;
 }
 
 @utility title-h3 {
   @apply font-semibold text-surface-900 dark:text-surface-0 leading-tight text-center;
-  font-size: 3.5rem;
+  font-size: 1.5rem;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv07" on,
@@ -314,7 +317,7 @@
 
 @utility title-h4 {
   @apply font-semibold text-surface-900 dark:text-surface-0 leading-tight text-center;
-  font-size: 2.85rem;
+  font-size: 1.2rem;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,
@@ -329,7 +332,7 @@
 }
 
 @utility title-h5 {
-  @apply text-4xl text-center font-medium text-surface-950 dark:text-surface-0 leading-snug;
+  @apply text-base text-center font-medium text-surface-950 dark:text-surface-0 leading-snug;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,
@@ -344,7 +347,7 @@
 }
 
 @utility title-h6 {
-  @apply text-3xl text-center font-medium text-surface-950 dark:text-surface-0;
+  @apply text-base text-center font-medium text-surface-950 dark:text-surface-0;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,
@@ -359,7 +362,7 @@
 }
 
 @utility title-h7 {
-  @apply text-2xl text-center font-medium text-surface-950 dark:text-surface-0;
+  @apply text-base text-center font-medium text-surface-950 dark:text-surface-0;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv09" on,
@@ -459,7 +462,7 @@
 }
 
 @utility label-small {
-  @apply text-surface-700 dark:text-surface-200 font-medium text-base text-center;
+  @apply text-surface-700 dark:text-surface-200 font-medium text-sm text-center;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv11" on,
@@ -474,7 +477,7 @@
 }
 
 @utility label-xsmall {
-  @apply text-surface-700 dark:text-surface-200 font-medium text-sm text-center;
+  @apply text-surface-700 dark:text-surface-200 font-medium text-xs text-center;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,
@@ -489,7 +492,7 @@
 }
 
 @utility paragraph-xsmall {
-  @apply text-sm text-center;
+  @apply text-xs text-center;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "ss11" on,

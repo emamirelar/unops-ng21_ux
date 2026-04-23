@@ -72,7 +72,7 @@ declare type SurfacesType = {
                                     'background-color': surface?.palette?.['500']
                                 }"
                             >
-                                <i *ngIf="selectedSurfaceColor() ? selectedSurfaceColor() === surface.name : darkTheme() ? surface.name === 'deepsea' : surface.name === 'gray'" class="pi pi-check text-white"></i>
+                                <i *ngIf="selectedSurfaceColor() ? selectedSurfaceColor() === surface.name : darkTheme() ? surface.name === 'darkblue' : surface.name === 'gray'" class="pi pi-check text-white"></i>
                             </button>
                         }
                     </div>
@@ -212,20 +212,20 @@ export class AppConfigurator implements OnInit {
             }
         },
         {
-            name: 'deepsea',
+            name: 'darkblue',
             palette: {
                 0: '#ffffff',
-                50: '#c3c7cb',
-                100: '#9ea5ac',
-                200: '#7a838d',
-                300: '#56626d',
-                400: '#31404e',
-                500: '#0d1e2f',
-                600: '#0b1a28',
-                700: '#091521',
-                800: '#07111a',
-                900: '#050c13',
-                950: '#03080c'
+                50: '#D0EEFF',
+                100: '#B7E2F9',
+                200: '#73abc7',
+                300: '#73abc7',
+                400: '#4d94b8',
+                500: '#267da9',
+                600: '#00669a',
+                700: '#005783',
+                800: '#00476c',
+                900: '#00293e',
+                950: '#001a27'
             }
         }
     ];

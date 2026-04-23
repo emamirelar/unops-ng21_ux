@@ -114,6 +114,7 @@ export class AppMenu {
                     label: 'Design System',
                     icon: 'pi pi-fw pi-sitemap',
                     path: '/design-system',
+                    preventAutoActivate: true,
                     items: [
                         {
                             label: 'Foundations',
@@ -203,7 +204,7 @@ export class AppMenu {
                             items: [
                                 { label: 'Agreements', icon: 'pi pi-fw pi-file-check', routerLink: ['/apps/agreements'] },
                                 { label: 'Detail Page', icon: 'pi pi-fw pi-file', routerLink: ['/apps/cms/detail'] },
-                                { label: 'Document Management', icon: 'pi pi-fw pi-folder', routerLink: ['/apps/files'] },
+                                { label: 'Files', icon: 'pi pi-fw pi-folder', routerLink: ['/apps/files'] },
                                 { label: 'Opportunity', icon: 'pi pi-fw pi-briefcase', routerLink: ['/apps/opportunity'] }
                             ]
                         },

@@ -120,6 +120,10 @@
             > li {
                 margin-left: 0;
 
+                &.right-sidebar-item {
+                    display: none;
+                }
+
                 &.profile-item {
                     border-left: 0;
                     border-right: 0;

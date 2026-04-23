@@ -94,9 +94,9 @@ interface BlogPost {
                                             <img [src]="post.image" [alt]="post.title" class="w-full h-full object-cover" />
                                         </div>
                                     }
-                                    <h3 class="text-surface-900 dark:text-surface-0 text-xl md:text-2xl font-medium leading-tight">
+                                    <h4 class="title-h4 text-left!">
                                         {{ post.title }}
-                                    </h3>
+                                    </h4>
                                 </div>
                                 <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
                                     {{ post.description }}
@@ -125,9 +125,9 @@ interface BlogPost {
                                         <span class="uppercase">{{ post.category }}</span> -
                                         <span class="uppercase">{{ post.date }}</span>
                                     </div>
-                                    <h3 class="text-surface-900 dark:text-surface-0 text-xl md:text-2xl font-medium leading-tight">
+                                    <h4 class="title-h4 text-left!">
                                         {{ post.title }}
-                                    </h3>
+                                    </h4>
                                 </div>
                                 @if (post.hasImage && post.image) {
                                     <div class="h-64 md:h-72 bg-surface-100 dark:bg-surface-800 rounded-2xl md:rounded-3xl overflow-hidden">
@@ -166,9 +166,9 @@ interface BlogPost {
                                             <img [src]="post.image" [alt]="post.title" class="w-full h-full object-cover" />
                                         </div>
                                     }
-                                    <h3 class="text-surface-900 dark:text-surface-0 text-xl md:text-2xl font-medium leading-tight">
+                                    <h4 class="title-h4 text-left!">
                                         {{ post.title }}
-                                    </h3>
+                                    </h4>
                                 </div>
                                 <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
                                     {{ post.description }}

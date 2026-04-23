@@ -250,7 +250,7 @@ interface Size {
                                         <img class="w-full h-full object-cover rounded-2xl shadow-sm" src="/demo/images/ecommerce/productoverview/ecommerce-productoverview-5.jpg" alt="Product thumbnail" />
                                     </div>
                                     <div class="flex-1 flex flex-col justify-start items-start gap-1">
-                                        <h3 class="text-surface-950 dark:text-surface-0 text-xl font-medium leading-7">AeroShield™ Storm Jacket</h3>
+                                        <h4 class="title-h4 text-left!">AeroShield™ Storm Jacket</h4>
                                         <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Storm-FIT Windproof & Water-Resistant Jacket</p>
                                     </div>
                                 </div>
@@ -264,7 +264,7 @@ interface Size {
                                 </div>
 
                                 <div class="w-full flex flex-col justify-start items-start gap-4">
-                                    <h3 class="text-surface-950 dark:text-surface-0 text-2xl font-medium leading-loose">Key Features:</h3>
+                                    <h4 class="title-h4 text-left!">Key Features:</h4>
                                     <div class="flex flex-col gap-3">
                                         <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>StormGuard™ Fabric</strong> – Advanced water-resistant coating to repel rain and snow.</p>
                                         <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>FeatherLight Insulation</strong> – Provides warmth without bulk, ensuring all-day comfort.</p>
@@ -276,7 +276,7 @@ interface Size {
                                 </div>
 
                                 <div class="w-full flex flex-col justify-start items-start gap-4">
-                                    <h3 class="text-surface-950 dark:text-surface-0 text-2xl font-medium leading-loose">Designed for Versatility</h3>
+                                    <h4 class="title-h4 text-left!">Designed for Versatility</h4>
                                     <div class="flex flex-col gap-3">
                                         <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7">Perfect for hiking, traveling, and daily wear</p>
                                         <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7">Durable, lightweight, and packable for easy storage</p>

@@ -62,7 +62,7 @@ interface ShippingAddress {
 
                                     <div class="flex-1 flex flex-col justify-between">
                                         <div>
-                                            <h3 class="text-surface-950 dark:text-surface-0 text-base font-medium mb-1">{{ item.name }}</h3>
+                                            <h4 class="title-h4 text-left! mb-1">{{ item.name }}</h4>
                                             <p class="text-surface-500 dark:text-surface-400 text-sm">{{ item.description }}</p>
                                         </div>
 
@@ -82,7 +82,7 @@ interface ShippingAddress {
                     <div class="xl:col-span-1">
                         <div class="bg-white dark:bg-surface-800 rounded-2xl shadow-lg p-6 space-y-6 xl:-mt-32">
                             <div class="space-y-2">
-                                <h3 class="text-surface-900 dark:text-surface-100 text-base font-medium">Credit Card</h3>
+                                <h4 class="title-h4 text-left!">Credit Card</h4>
 
                                 <div class="flex items-center gap-4">
                                     <div class="w-[80px] h-12 relative bg-linear-to-br from-primary to-primary-400/80 rounded-sm overflow-hidden backdrop-blur-sm">

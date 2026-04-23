@@ -73,9 +73,9 @@ interface Agreement {
 
             <div class="flex flex-col gap-8">
                 <div class="flex flex-col lg:grid lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-6 xl:col-span-4 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700 overflow-hidden">
+                    <div class="lg:col-span-6 xl:col-span-4 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 overflow-hidden">
                         <div class="px-6 pt-4 pb-4">
-                            <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Activity Feed</h3>
+                            <h4 class="title-h4 text-left!">Activity Feed</h4>
                         </div>
 
                         <div class="relative max-h-[350px] lg:max-h-[450px] 2xl:max-h-[330px]">
@@ -84,21 +84,21 @@ interface Agreement {
 
                             <div class="pb-6 pt-3 px-4 max-h-[350px] lg:max-h-[450px] 2xl:max-h-[330px] overflow-y-auto">
                                 <div class="relative">
-                                    <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
+                                    <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-500"></div>
 
                                     <div class="flex flex-col gap-4">
                                         @for (activity of activityFeed; track activity.id; let i = $index; let last = $last) {
                                             <div class="flex gap-3">
                                                 <div class="flex items-start pt-2.5 w-6 justify-center">
-                                                    <div class="w-2 h-2 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-800 relative z-10" [ngClass]="[activity.dotColor, activity.ringColor]"></div>
+                                                    <div class="w-2 h-2 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[activity.dotColor, activity.ringColor]"></div>
                                                 </div>
 
-                                                <div class="flex-1 pb-4" [class.border-b]="!last" [class.border-surface-200]="!last" [class.dark:border-surface-700]="!last">
+                                                <div class="flex-1 pb-4" [class.border-b]="!last" [class.border-surface-200]="!last" [class.dark:border-surface-600]="!last">
                                                     <div class="flex flex-col gap-2">
                                                         <div class="flex flex-col gap-1">
                                                             <div class="flex items-center justify-between">
                                                                 <div class="flex items-center gap-1">
-                                                                    <i class="pi text-sm text-surface-500" [ngClass]="activity.icon"></i>
+                                                                    <i class="pi text-sm text-surface-500 dark:text-surface-300" [ngClass]="activity.icon"></i>
                                                                     <span class="text-surface-950 dark:text-surface-0 text-base font-medium leading-normal">{{ activity.fileName }}</span>
                                                                 </div>
                                                                 <div>
@@ -106,12 +106,12 @@ interface Agreement {
                                                                     <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
                                                                 </div>
                                                             </div>
-                                                            <p class="text-surface-600 dark:text-surface-400 text-sm leading-tight">{{ activity.description }}</p>
+                                                            <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
                                                         </div>
                                                         <div class="flex items-center gap-2">
-                                                            <span class="text-surface-500 text-sm leading-tight">{{ activity.time }}</span>
-                                                            <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-700"></div>
-                                                            <span class="text-surface-500 text-sm leading-tight">{{ activity.author }}</span>
+                                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.time }}</span>
+                                                            <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-500"></div>
+                                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.author }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -124,12 +124,12 @@ interface Agreement {
                     </div>
 
                     <div class="lg:col-span-6 xl:col-span-8 flex flex-col gap-6">
-                        <div class="p-4 sm:p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700 flex flex-col gap-[18px] overflow-hidden">
+                        <div class="p-4 sm:p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col gap-[18px] overflow-hidden">
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:h-8">
-                                <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-7">Agreement Types</h3>
+                                <h4 class="title-h4 text-left!">Agreement Types</h4>
                                 <div class="flex items-center gap-1">
                                     <span class="text-surface-950 dark:text-surface-0 text-xl font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
-                                    <span class="text-surface-500 text-base leading-none">Total Agreements</span>
+                                    <span class="text-surface-500 dark:text-surface-400 text-base leading-none">Total Agreements</span>
                                 </div>
                             </div>
 
@@ -141,7 +141,7 @@ interface Agreement {
                                             <span class="text-surface-900 dark:text-surface-0 text-sm md:text-base xl:text-lg font-medium leading-tight md:leading-normal xl:leading-7">{{ storage.count.toLocaleString() }}</span>
                                             <div class="flex items-center gap-1">
                                                 <div class="w-2 h-2 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                                <span class="text-surface-600 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
+                                                <span class="text-surface-600 dark:text-surface-300 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -153,7 +153,7 @@ interface Agreement {
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-3">
                                             <div class="w-3 h-3 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                            <span class="text-surface-500 text-sm leading-tight">{{ storage.type }}</span>
+                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ storage.type }}</span>
                                         </div>
                                         <span class="text-surface-900 dark:text-surface-0 text-lg font-medium leading-7">{{ storage.count.toLocaleString() }}</span>
                                     </div>
@@ -161,14 +161,14 @@ interface Agreement {
                             </div>
                         </div>
 
-                        <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700">
-                            <h3 class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4">Pinned</h3>
+                        <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600">
+                            <h4 class="title-h4 text-left! mb-4">Pinned</h4>
 
                             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6 gap-3">
                                 @for (pinned of pinnedItems; track pinned.id) {
-                                    <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-700 flex flex-col gap-4">
+                                    <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-600 dark:bg-surface-800 flex flex-col gap-4">
                                         <div class="flex justify-between items-start">
-                                            <i class="pi text-2xl! text-surface-500" [ngClass]="pinned.icon"></i>
+                                            <i class="pi text-2xl! text-surface-500 dark:text-surface-300" [ngClass]="pinned.icon"></i>
                                             <div>
                                                 <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
                                                 <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
@@ -177,9 +177,9 @@ interface Agreement {
                                         <div class="flex flex-col gap-1">
                                             <span class="text-surface-900 dark:text-surface-0 text-base font-medium">{{ pinned.name }}</span>
                                             <div class="flex xl:items-center gap-1 xl:flex-row flex-col">
-                                                <span class="text-surface-500 text-sm">{{ pinned.type }}</span>
-                                                <div class="w-1 h-1 bg-surface-300 rounded-full hidden xl:block"></div>
-                                                <span class="text-surface-500 text-sm">{{ pinned.size }}</span>
+                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.type }}</span>
+                                                <div class="w-1 h-1 bg-surface-300 dark:bg-surface-500 rounded-full hidden xl:block"></div>
+                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.size }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -209,7 +209,7 @@ interface Agreement {
                         [rows]="rows"
                         [scrollable]="true"
                         sortMode="multiple"
-                        styleClass="bg-surface-0 dark:bg-surface-800 rounded-2xl border border-surface-200 dark:border-surface-700 overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&_[data-pc-name=pcpaginator]]:rounded-none!"
+                        styleClass="agreements-table bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&_[data-pc-name=pcpaginator]]:rounded-none!"
                         tableStyleClass="w-full min-w-[50rem]"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
                         currentPageReportTemplate="Shows {first} to {last} of {totalRecords} results"
@@ -230,27 +230,27 @@ interface Agreement {
                             <tr>
                                 <td>
                                     <div class="flex items-center gap-3 py-2">
-                                        <i class="pi text-xl text-surface-500" [ngClass]="doc.icon"></i>
-                                        <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.fileName }}</span>
+                                        <i class="pi text-xl text-surface-500 dark:text-surface-300" [ngClass]="doc.icon"></i>
+                                        <span class="text-surface-700 dark:text-surface-200 text-base whitespace-nowrap">{{ doc.fileName }}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <p-tag [value]="doc.type" [severity]="getTagSeverity(doc.type)" styleClass="px-2 py-1" />
                                 </td>
                                 <td>
-                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.fileSize }}</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.fileSize }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.size }}</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.size }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.uploadDate }}</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.uploadDate }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.editDate }}</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.editDate }}</span>
                                 </td>
                                 <td>
-                                    <span class="text-surface-600 text-base whitespace-nowrap">{{ doc.owner }}</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.owner }}</span>
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-1">
@@ -268,12 +268,12 @@ interface Agreement {
 
             <p-drawer [(visible)]="showEditDrawer" position="right" styleClass="w-full! max-w-[417px]!" appendTo="body">
                 <ng-template #header>
-                    <h3 class="text-surface-900 dark:text-surface-0 text-2xl font-medium">{{ isAddMode ? 'Add' : 'Edit' }}</h3>
+                    <h4 class="title-h4 text-left!">{{ isAddMode ? 'Add' : 'Edit' }}</h4>
                 </ng-template>
 
                 <div class="flex flex-col h-full">
                     <div class="flex-1 flex flex-col gap-6 overflow-y-auto">
-                        <div class="relative min-h-[180px] h-[180px] rounded-2xl bg-surface-100 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+                        <div class="relative min-h-[180px] h-[180px] rounded-2xl bg-surface-100 dark:bg-surface-800 border border-surface-200 dark:border-surface-600">
                             <div class="w-full h-full flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors rounded-2xl" (click)="triggerFileUpload()">
                                 <div class="flex items-center justify-center">
                                     <div class="w-12 h-12 rounded-full bg-surface-200 dark:bg-surface-600 flex items-center justify-center">
@@ -307,10 +307,10 @@ interface Agreement {
                             </div>
 
                             @if (!isAddMode || editForm.fileName) {
-                                <div class="bg-surface-50 dark:bg-surface-800 rounded-xl p-4 border border-surface-200 dark:border-surface-700">
+                                <div class="bg-surface-50 dark:bg-surface-800 rounded-xl p-4 border border-surface-200 dark:border-surface-600">
                                     <div class="grid grid-cols-2 gap-4">
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 text-xs font-medium uppercase tracking-wide">Type</label>
+                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Type</label>
                                             @if (editForm.type) {
                                                 <p-tag [value]="editForm.type" [severity]="getTagSeverity(editForm.type)" styleClass="px-2 py-1 text-xs w-fit" />
                                             } @else {
@@ -319,23 +319,23 @@ interface Agreement {
                                         </div>
 
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 text-xs font-medium uppercase tracking-wide">File Size</label>
+                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">File Size</label>
                                             <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.fileSize || '&nbsp;' }}</span>
                                         </div>
 
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 text-xs font-medium uppercase tracking-wide">Dimensions</label>
+                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Dimensions</label>
                                             <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.size || '&nbsp;' }}</span>
                                         </div>
 
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 text-xs font-medium uppercase tracking-wide">Uploaded</label>
+                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Uploaded</label>
                                             <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.uploadDate || '&nbsp;' }}</span>
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col gap-1 mt-3 pt-3 border-t border-surface-200 dark:border-surface-700 min-h-[44px]">
-                                        <label class="text-surface-500 text-xs font-medium uppercase tracking-wide">Last Modified</label>
+                                    <div class="flex flex-col gap-1 mt-3 pt-3 border-t border-surface-200 dark:border-surface-600 min-h-[44px]">
+                                        <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Last Modified</label>
                                         <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.editDate || '&nbsp;' }}</span>
                                     </div>
                                 </div>
@@ -353,8 +353,8 @@ interface Agreement {
                                                 <p-button icon="pi pi-ellipsis-h" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="commentMenu.toggle($event)" />
                                                 <p-menu #commentMenu [model]="createCommentMenuItems(comment.id)" [popup]="true" styleClass="w-48!" />
                                             </div>
-                                            <p class="text-surface-600 dark:text-surface-400 text-sm mb-2">{{ comment.content }}</p>
-                                            <span class="text-surface-500 text-sm">{{ comment.time }}</span>
+                                            <p class="text-surface-600 dark:text-surface-300 text-sm mb-2">{{ comment.content }}</p>
+                                            <span class="text-surface-500 dark:text-surface-400 text-sm">{{ comment.time }}</span>
                                         </div>
                                     }
                                 </div>
@@ -389,6 +389,23 @@ interface Agreement {
             color: var(--gray-900);
             outline: 1px solid var(--gray-900);
             border: 1px solid var(--color-black);
+        }
+
+        :host-context(.app-dark) ::ng-deep .agreement-filter-active.p-tag {
+            background: var(--p-surface-800);
+            color: var(--p-surface-0);
+            outline: 1px solid var(--p-surface-400);
+            border: 1px solid var(--p-surface-400);
+        }
+
+        :host-context(.app-dark) ::ng-deep .agreements-table .p-datatable-thead > tr > th {
+            color: var(--p-surface-0);
+            border-color: var(--p-content-border-color);
+        }
+
+        :host-context(.app-dark) ::ng-deep .agreements-table .p-datatable-tbody > tr > td {
+            color: var(--p-surface-200);
+            border-color: var(--p-content-border-color);
         }
     `
 })

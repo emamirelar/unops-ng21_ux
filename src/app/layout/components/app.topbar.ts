@@ -53,6 +53,15 @@ interface NotificationsBars {
                         <i class="pi pi-search"></i>
                     </a>
                 </li>
+                <li class="right-sidebar-item" [class.hidden]="searchActive()">
+                    <a
+                        class="right-sidebar-button"
+                        [attr.aria-label]="isDarkTheme() ? 'Switch to light mode' : 'Switch to dark mode'"
+                        (click)="toggleDarkMode()"
+                    >
+                        <i [class]="isDarkTheme() ? 'pi pi-sun' : 'pi pi-moon'"></i>
+                    </a>
+                </li>
                 <li class="right-sidebar-item static sm:relative z-50">
                     <a class="right-sidebar-button" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
                         <span class="w-2 h-2 rounded-full bg-red-500 absolute top-2 right-2.5"></span>
@@ -141,6 +150,45 @@ interface NotificationsBars {
                         class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
                     >
                         <ul class="flex flex-col gap-1">
+                            <div class="mobile-profile-actions">
+                                <li>
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="openSearch()">
+                                        <i class="pi pi-search"></i>
+                                        <span>Search</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="toggleDarkMode()">
+                                        <i [class]="isDarkTheme() ? 'pi pi-sun' : 'pi pi-moon'"></i>
+                                        <span>{{ isDarkTheme() ? 'Light Mode' : 'Dark Mode' }}</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer relative">
+                                        <i class="pi pi-bell"></i>
+                                        <span>Notifications</span>
+                                        <span class="w-2 h-2 rounded-full bg-red-500 ml-auto"></span>
+                                    </a>
+                                </li>
+                                <li class="border-b border-surface pb-1 mb-1">
+                                    <span class="label-xsmall px-2.5 py-1 text-surface-400">Language</span>
+                                    @for (lang of languages(); track lang.code) {
+                                        <a
+                                            class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer"
+                                            [class.text-surface-950]="selectedLanguage() === lang.code"
+                                            [class.dark:text-surface-0]="selectedLanguage() === lang.code"
+                                            [class.font-semibold]="selectedLanguage() === lang.code"
+                                            (click)="selectLanguage(lang.code)"
+                                        >
+                                            <span class="text-lg">{{ lang.flag }}</span>
+                                            <span>{{ lang.label }}</span>
+                                            @if (selectedLanguage() === lang.code) {
+                                                <i class="pi pi-check ml-auto text-xs"></i>
+                                            }
+                                        </a>
+                                    }
+                                </li>
+                            </div>
                             <li>
                                 <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
                                     <i class="pi pi-user"></i>
@@ -206,6 +254,8 @@ export class AppTopbar implements AfterViewChecked {
             ? 'assets/opp/AppLogo/AppLogo-onDark_H.svg'
             : 'assets/opp/AppLogo/AppLogo-onLight_H.svg'
     );
+
+    isDarkTheme = computed(() => this.layoutService.isDarkTheme());
 
     searchActive = signal(false);
     private shouldFocusSearch = false;
@@ -314,6 +364,14 @@ export class AppTopbar implements AfterViewChecked {
 
     onMenuButtonClick() {
         this.layoutService.toggleMenu();
+    }
+
+    toggleDarkMode() {
+        this.layoutService.layoutConfig.update((state) => ({
+            ...state,
+            darkTheme: !state.darkTheme,
+            menuTheme: !state.darkTheme ? 'dark' : state.menuTheme
+        }));
     }
 
     showRightMenu() {

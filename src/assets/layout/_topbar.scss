@@ -80,6 +80,16 @@
         font-size: 1.25rem;
     }
 
+    .mobile-profile-actions {
+        display: none;
+    }
+
+    @media screen and (max-width: 991px) {
+        .mobile-profile-actions {
+            display: block;
+        }
+    }
+
     .topbar-menu {
         margin: 0;
         padding: 0;

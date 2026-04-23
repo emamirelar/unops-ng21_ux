@@ -184,7 +184,7 @@ interface StatusOption {
 
             <p-drawer [(visible)]="sidebarVisible" position="right" styleClass="!w-full !max-w-md" appendTo="body">
                 <ng-template #header>
-                    <h3 class="text-surface-900 dark:text-surface-0 text-lg font-medium">Publishing Settings</h3>
+                    <h4 class="title-h4 text-left!">Publishing Settings</h4>
                 </ng-template>
 
                 <div class="flex flex-col gap-6 p-4 px-2">

@@ -140,7 +140,7 @@ interface Comment {
                                         <div class="flex-1 flex flex-col gap-3">
                                             <div class="text-surface-500 dark:text-surface-400 text-base">Jan 15, 2025 • 4 min read</div>
                                             <div class="flex flex-col gap-4">
-                                                <h3 class="text-surface-900 dark:text-surface-0 text-2xl font-medium leading-relaxed">Maritime Trade Finance: Navigating Global Commerce</h3>
+                                                <h4 class="title-h4 text-left!">Maritime Trade Finance: Navigating Global Commerce</h4>
                                                 <p class="text-surface-500 dark:text-surface-300 text-base leading-normal">
                                                     Discover how shipping infrastructure investments drive international trade, create economic opportunities, and establish vital supply chain connections.
                                                 </p>
@@ -162,7 +162,7 @@ interface Comment {
                                         <div class="flex-1 flex flex-col gap-3">
                                             <div class="text-surface-500 dark:text-surface-400 text-base">Jan 19, 2025 • 5 min read</div>
                                             <div class="flex flex-col gap-4">
-                                                <h3 class="text-surface-900 dark:text-surface-0 text-2xl font-medium leading-relaxed">Rail Infrastructure: The Backbone of Economic Growth</h3>
+                                                <h4 class="title-h4 text-left!">Rail Infrastructure: The Backbone of Economic Growth</h4>
                                                 <p class="text-surface-500 dark:text-surface-300 text-base leading-normal">Strategic rail investments connect markets, reduce logistics costs, and unlock regional development opportunities.</p>
                                                 <div class="flex items-center gap-3">
                                                     <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">

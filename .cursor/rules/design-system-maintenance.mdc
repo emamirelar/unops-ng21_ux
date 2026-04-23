@@ -38,4 +38,5 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 
 | Date | Change | Upstream target | Files affected |
 |------|--------|-----------------|----------------|
+| 2026-04-23 | Added `--font-size-xs: 0.75rem` to `:root` in `_common.scss` (was referenced but undefined). Both `--font-size-xs` and `--font-size-sm` now documented as aligned to Tailwind's scale, used only by layout SCSS. | N/A (layout layer) | `_common.scss` |
 | 2026-04-23 | Initial ledger created. Current state: PrimeNG `^21.0.4`, `@primeuix/themes` `^2.0.0`. Three base themes (Aura, Lara, Nora) wrapped with shared `brandOverrides`. Primitive aliases map brand palette onto upstream Tailwind-style names (`slate→gray`, `zinc→deepsea`, `emerald→green`, etc.). Semantic layer sets `darkblue` as primary and overrides `surface` scales per color scheme. Component overrides for `button` and `tag`. Tailwind CSS mirrors all brand primitives. | PrimeNG 21 / PrimeUIX Themes 2 | `brand-theme.ts`, `tailwind.css`, `app.config.ts`, `layout.service.ts` |

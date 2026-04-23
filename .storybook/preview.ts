@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/angular';
+import type { Decorator, Preview } from '@storybook/angular';
 import { applicationConfig } from '@storybook/angular';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -10,12 +10,38 @@ import docJson from '../documentation.json';
 
 setCompodocJson(docJson);
 
+const primeProviders = [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } })];
+
+/**
+ * Syncs `app-dark` on `document.documentElement` with the Storybook toolbar so
+ * `dark:` Tailwind utilities and Prime's `darkModeSelector` match the main app.
+ */
+const withAppDarkDocument: Decorator = (storyFn, context) => {
+    if (typeof document !== 'undefined') {
+        const useDark = context.globals?.['theme'] === 'dark';
+        document.documentElement.classList.toggle('app-dark', useDark);
+    }
+    return storyFn();
+};
+
 const preview: Preview = {
-    decorators: [
-        applicationConfig({
-            providers: [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } })]
-        })
-    ],
+    globalTypes: {
+        theme: {
+            name: 'App theme',
+            description: 'Toggles `app-dark` on the document (Tailwind `dark:` + Prime dark tokens), matching the app shell.',
+            defaultValue: 'light',
+            toolbar: {
+                icon: 'contrast',
+                title: 'App theme',
+                items: [
+                    { value: 'light', title: 'Light', icon: 'circlehollow' },
+                    { value: 'dark', title: 'Dark', icon: 'circle' }
+                ],
+                dynamicTitle: true
+            }
+        }
+    },
+    decorators: [withAppDarkDocument, applicationConfig({ providers: primeProviders })],
     parameters: {
         controls: {
             matchers: {

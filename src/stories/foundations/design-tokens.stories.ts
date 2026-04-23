@@ -62,10 +62,10 @@ const TYPOGRAPHY = [
     { util: 'body-medium', size: 'lg', weight: 'normal', usage: 'Standard body copy' },
     { util: 'body-small', size: 'base', weight: 'normal', usage: 'Secondary text' },
     { util: 'body-xsmall', size: 'sm', weight: 'normal', usage: 'Captions' },
-    { util: 'label-large', size: 'xl', weight: 'medium', usage: 'Nav / large labels' },
-    { util: 'label-medium', size: 'lg', weight: 'medium', usage: 'Standard labels' },
-    { util: 'label-small', size: 'base', weight: 'medium', usage: 'Form labels' },
-    { util: 'label-xsmall', size: 'sm', weight: 'medium', usage: 'Micro labels / badges' }
+    { util: 'label-large', size: 'lg', weight: 'medium', usage: 'Nav / large labels' },
+    { util: 'label-medium', size: 'base', weight: 'medium', usage: 'Standard labels' },
+    { util: 'label-small', size: 'sm', weight: 'medium', usage: 'Form labels' },
+    { util: 'label-xsmall', size: 'xs', weight: 'medium', usage: 'Micro labels / badges' }
 ];
 
 @Component({
@@ -73,9 +73,9 @@ const TYPOGRAPHY = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         :host { display: block; padding: 2rem; color: var(--text-color, #1a1a1a); }
-        h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem; }
-        h2 { font-size: 1.5rem; font-weight: 600; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--surface-border, #e5e7eb); }
-        h3 { font-size: 1.125rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+        h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 0.5rem; }
+        h2 { font-size: 1.25rem; font-weight: 600; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--surface-border, #e5e7eb); }
+        h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
         p.desc { color: var(--text-muted-color, #6b7280); margin: 0 0 2rem; }
         .palette { margin-bottom: 1.5rem; }
         .palette-name { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.375rem; }

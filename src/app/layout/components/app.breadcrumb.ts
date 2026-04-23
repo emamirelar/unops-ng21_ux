@@ -20,8 +20,8 @@ interface Breadcrumb {
         <span class="breadcrumb-divider"></span>
         <ol>
             <ng-template ngFor let-item let-last="last" [ngForOf]="breadcrumbs$ | async">
-                <li class="text-sm font-medium text-deepsea-500">{{ item.label }}</li>
-                <li *ngIf="!last" class="text-sm font-medium text-deepsea-500">/</li>
+                <li class="text-sm font-medium text-deepsea-500 dark:text-surface-0">{{ item.label }}</li>
+                <li *ngIf="!last" class="text-sm font-medium text-deepsea-500 dark:text-surface-0">/</li>
             </ng-template>
         </ol>
     </nav> `

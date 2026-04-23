@@ -60,7 +60,7 @@ import { TooltipModule } from 'primeng/tooltip';
         @if (hasChildren() && isVisible()) {
             <ul [animate.enter]="initialized() ? 'p-submenu-enter' : null" [animate.leave]="'p-submenu-leave'" [class.layout-root-submenulist]="root()">
                 @for (child of item().items; track child?.label) {
-                    <li app-menuitem [item]="child" [root]="false" [parentPath]="fullPath()" [class]="child['badgeClass']"></li>
+                    <li app-menuitem [item]="child" [root]="false" [parentPath]="fullPath()" [preventAutoActivate]="preventAutoActivate() || !!item()?.preventAutoActivate" [class]="child['badgeClass']"></li>
                 }
             </ul>
         }
@@ -112,6 +112,8 @@ export class AppMenuitem {
 
     parentPath = input<string | null>(null);
 
+    preventAutoActivate = input<boolean>(false);
+
     isDisabled = computed(() => this.item()?.disabled ?? false);
 
     isSlim = computed(() => this.layoutService.layoutConfig().menuMode === 'slim');
@@ -157,9 +159,11 @@ export class AppMenuitem {
     }
 
     updateActivePath() {
-        // Don't automatically set activePath for overlay submenu modes (slim, horizontal, compact)
-        // It should only be set through user interaction (hover, click)
         if (this.layoutService.hasOverlaySubmenu() && this.layoutService.isDesktop()) {
+            return;
+        }
+
+        if (this.preventAutoActivate()) {
             return;
         }
 
