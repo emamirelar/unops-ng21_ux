@@ -91,19 +91,8 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
     template: `
         <div class="flex flex-col gap-6">
             <div>
-                <ul class="list-none p-0 m-0 flex items-center font-medium mb-5">
-                    <li>
-                        <a class="text-surface-500 dark:text-surface-300 no-underline leading-normal cursor-pointer">Application</a>
-                    </li>
-                    <li class="px-2">
-                        <i class="pi pi-angle-right text-surface-500 dark:text-surface-300 text-sm! leading-normal!"></i>
-                    </li>
-                    <li>
-                        <span class="text-surface-900 dark:text-surface-0 leading-normal">Partners</span>
-                    </li>
-                </ul>
                 <div>
-                    <div class="font-bold text-3xl text-surface-900 dark:text-surface-0 mb-4">Partners</div>
+                    <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Partners</h1>
                     <div class="flex items-center text-surface-700 dark:text-surface-300 flex-wrap gap-8">
                         <div class="flex items-center gap-2">
                             <i class="pi pi-users text-base! leading-normal!"></i>
