@@ -12,3 +12,11 @@
     --d-menuitem-active-route-text-color: var(--p-surface-0);
     --d-menuitem-focus-shadow: 0 0 0 1px var(--p-primary-50);
 }
+
+.app-dark .layout-sidebar-dark {
+    --d-app-name-color: var(--p-surface-950);
+    --d-menuitem-root-text-color: var(--p-surface-950);
+    --d-menuitem-text-color: var(--p-surface-950);
+    --d-menuitem-active-text-color: var(--p-surface-950);
+    --d-menuitem-active-route-text-color: var(--p-surface-950);
+}
