@@ -4,7 +4,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
-import { BrandAura } from '@/app/layout/service/brand-theme';
+import { BrandSoft } from '@/app/layout/service/brand-theme';
 import { Opportunity } from '@/app/apps/opportunity/opportunity';
 
 const meta: Meta<Opportunity> = {
@@ -12,7 +12,7 @@ const meta: Meta<Opportunity> = {
     component: Opportunity,
     decorators: [
         applicationConfig({
-            providers: [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandAura, options: { darkModeSelector: '.app-dark' } } })]
+            providers: [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } })]
         })
     ],
     parameters: {

@@ -1,11 +1,20 @@
 import { definePreset } from '@primeuix/themes';
-import Aura from '@primeuix/themes/aura';
-import Lara from '@primeuix/themes/lara';
-import Nora from '@primeuix/themes/nora';
+import SoftBase from '@primeuix/themes/aura';
+import CrispBase from '@primeuix/themes/lara';
+import ContrastBase from '@primeuix/themes/nora';
+
+/**
+ * Brand theme presets built on top of PrimeUIX base presets.
+ *
+ * Upstream mapping (for PrimeNG docs, changelogs, and debugging):
+ *   Soft     <- @primeuix/themes/aura
+ *   Crisp    <- @primeuix/themes/lara
+ *   Contrast <- @primeuix/themes/nora
+ */
 
 export const brandPrimitives = {
     deepsea: { 50: '#c3c7cb', 100: '#9ea5ac', 200: '#7a838d', 300: '#56626d', 400: '#31404e', 500: '#0d1e2f', 600: '#0b1a28', 700: '#091521', 800: '#07111a', 900: '#050c13', 950: '#03080c' },
-    gray: { 50: '#e5e6e6', 100: '#ECF0F5', 200: '#c6c7c8', 300: '#b6b8b9', 400: '#a7a8aa', 500: '#97999b', 600: '#808284', 700: '#6a6b6d', 800: '#535455', 900: '#3c3d3e', 950: '#262627' },
+    gray: { 50: '#f0f3f4', 100: '#ECF0F5', 200: '#d8dadf', 300: '#b9bac1', 400: '#858c99', 500: '#808393', 600: '#808284', 700: '#6a6b6d', 800: '#535455', 900: '#3c3d3e', 950: '#262627' },
     red: { 50: '#f6cac6', 100: '#f0a9a4', 200: '#eb8982', 300: '#e56960', 400: '#e0493e', 500: '#da291c', 600: '#b92318', 700: '#991d14', 800: '#78170f', 900: '#57100b', 950: '#370a07' },
     orange: { 50: '#f9d6c3', 100: '#f6be9f', 200: '#f2a57a', 300: '#ef8d56', 400: '#eb7432', 500: '#e85c0e', 600: '#c54e0c', 700: '#a2400a', 800: '#803308', 900: '#5d2506', 950: '#3a1704' },
     yellow: { 50: '#fff0c5', 100: '#ffe7a1', 200: '#ffdd7e', 300: '#ffd45b', 400: '#ffcb38', 500: '#ffc215', 600: '#d9a512', 700: '#b3880f', 800: '#8c6b0c', 900: '#664e08', 950: '#403105' },
@@ -120,12 +129,12 @@ const brandOverrides = {
     }
 };
 
-export const BrandAura = definePreset(Aura, brandOverrides);
-export const BrandLara = definePreset(Lara, brandOverrides);
-export const BrandNora = definePreset(Nora, brandOverrides);
+export const BrandSoft = definePreset(SoftBase, brandOverrides);
+export const BrandCrisp = definePreset(CrispBase, brandOverrides);
+export const BrandContrast = definePreset(ContrastBase, brandOverrides);
 
 export const brandPresets = {
-    Aura: BrandAura,
-    Lara: BrandLara,
-    Nora: BrandNora
+    Soft: BrandSoft,
+    Crisp: BrandCrisp,
+    Contrast: BrandContrast
 } as const;

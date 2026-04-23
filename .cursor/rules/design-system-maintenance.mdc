@@ -1,0 +1,41 @@
+---
+description: Tracks design-system customisations that diverge from upstream PrimeNG / PrimeUIX defaults so future upgrades (e.g. PrimeNG 22) can be reconciled safely.
+globs: 
+alwaysApply: true
+---
+
+# Design-System Maintenance Ledger
+
+Whenever you add, rename, or override anything in the design-system layer, **append an entry to the compatibility log below** so the team can reconcile during the next PrimeNG / PrimeUIX major upgrade.
+
+## Files that form the design-system boundary
+
+| File | Role |
+|------|------|
+| `src/app/layout/service/brand-theme.ts` | Wraps upstream Aura / Lara / Nora presets with `brandOverrides`; exports `brandPresets` map |
+| `src/app.config.ts` | Bootstraps PrimeNG with `BrandAura` via `providePrimeNG` |
+| `src/app/layout/service/layout.service.ts` | Stores active preset name as string (`'Aura'`) |
+| `src/app/layout/components/app.topbar.ts` | Runtime preset switching via `$t().preset(...)` |
+| `src/app/layout/components/app.configurator.ts` | Runtime preset + surface switching via `$t()` |
+| `src/assets/tailwind.css` | Duplicates brand primitives as Tailwind `@theme` values |
+| `.storybook/preview.ts` | Uses `BrandAura` for Storybook PrimeNG provider |
+
+## Rules for making changes
+
+1. **If you rename or remove an upstream identifier** (e.g. the theme names `Aura`, `Lara`, `Nora`, or the `$t()` / `definePreset` API), update **every** file listed above and log the change below.
+2. **If you add or change a `brandOverrides` key** (primitive alias, semantic token, or component override), log it below so the upgrade diff can verify it still maps to valid upstream tokens.
+3. **If you add a new brand primitive color**, you must also add it to `src/assets/tailwind.css` under `@theme` — and log both here.
+4. **If upstream renames a base theme** (e.g. PrimeNG 22 renames `Aura` → something else), use this ledger to find every hardcoded reference that must change:
+   - String keys in `brandPresets` (`brand-theme.ts`)
+   - Default `preset: 'Aura'` in `layout.service.ts`
+   - Import paths `@primeuix/themes/aura`, `/lara`, `/nora` in `brand-theme.ts`
+   - Storybook stories that import `BrandAura` directly
+5. **Never silently absorb an upstream breaking change.** If a PrimeNG update alters token names, theme API, or preset structure, stop and flag it to the user before applying the update.
+
+## Compatibility log
+
+> Add entries in reverse-chronological order. Include the date, what changed, which upstream version it targets, and which files were affected.
+
+| Date | Change | Upstream target | Files affected |
+|------|--------|-----------------|----------------|
+| 2026-04-23 | Initial ledger created. Current state: PrimeNG `^21.0.4`, `@primeuix/themes` `^2.0.0`. Three base themes (Aura, Lara, Nora) wrapped with shared `brandOverrides`. Primitive aliases map brand palette onto upstream Tailwind-style names (`slate→gray`, `zinc→deepsea`, `emerald→green`, etc.). Semantic layer sets `darkblue` as primary and overrides `surface` scales per color scheme. Component overrides for `button` and `tag`. Tailwind CSS mirrors all brand primitives. | PrimeNG 21 / PrimeUIX Themes 2 | `brand-theme.ts`, `tailwind.css`, `app.config.ts`, `layout.service.ts` |

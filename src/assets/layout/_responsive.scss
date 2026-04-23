@@ -50,6 +50,10 @@
         overflow: hidden;
     }
 
+    [app-topbar] {
+        height: fit-content;
+    }
+
     .layout-topbar {
         display: flex;
         flex-direction: row;
@@ -58,6 +62,7 @@
         position: relative;
         width: 100%;
         padding: 0.75rem 1rem;
+        height: fit-content;
 
         .topbar-left {
             display: none;
@@ -65,10 +70,7 @@
 
         .topbar-right {
             display: flex;
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
+            align-items: center;
         }
 
         .menu-button {
@@ -79,19 +81,19 @@
 
         .mobile-logo {
             display: block;
-            width: fit-content;
-            height: auto;
-            max-height: 2rem;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: auto;
+            height: clamp(2.25rem, 2rem + 1vw, 2.5rem);
+            object-fit: contain;
         }
 
         .mobile-menu-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
             width: 2.5rem;
             height: 2.5rem;
             border-radius: var(--border-radius);
@@ -104,7 +106,7 @@
             }
 
             i {
-                font-size: 1.25rem;
+                font-size: 1rem;
             }
         }
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { brandPrimitives } from '@/app/layout/service/brand-theme';
 
 interface ColorSwatch {
@@ -82,36 +82,109 @@ const TYPOGRAPHY = [
         .palette-name span { font-weight: 600; font-size: 0.875rem; text-transform: capitalize; }
         .palette-name .role { font-weight: 400; color: var(--text-muted-color, #6b7280); font-size: 0.75rem; }
         .swatches { display: flex; gap: 2px; border-radius: 0.5rem; overflow: hidden; }
-        .swatch { flex: 1; min-width: 0; height: 3rem; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; font-size: 0.5rem; font-weight: 500; cursor: default; position: relative; }
-        .swatch:hover::after { content: attr(data-hex); position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-size: 0.5625rem; font-weight: 600; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
+        .swatch {
+            flex: 1; min-width: 0; height: 3rem;
+            display: flex; align-items: flex-end; justify-content: center;
+            padding-bottom: 4px; font-size: 0.5rem; font-weight: 500;
+            cursor: pointer; position: relative;
+            transition: box-shadow 0.15s ease;
+        }
+        .swatch:hover::after {
+            content: attr(data-hex); position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+            font-size: 0.5625rem; font-weight: 600; padding: 1px 4px; border-radius: 3px; white-space: nowrap;
+        }
+        .swatch.changed {
+            box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px rgba(0,0,0,0.35);
+        }
+        .swatch .color-input {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer; border: none; padding: 0;
+        }
         table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
         th { text-align: left; font-weight: 600; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--surface-border, #e5e7eb); }
         td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--surface-border, #e5e7eb); }
         td code, th code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8125rem; background: var(--surface-hover, #f3f4f6); padding: 1px 5px; border-radius: 4px; }
         .bp-bar { height: 6px; border-radius: 3px; background: var(--primary-color, #00669a); margin-top: 4px; }
         .type-sample { line-height: 1.3; }
+
+        .save-bar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.625rem 1.25rem;
+            margin: -2rem -2rem 1.5rem;
+            background: var(--primary-color, #00669a);
+            color: #fff; font-size: 0.875rem; font-weight: 500;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+        }
+        .save-bar .actions { display: flex; gap: 0.5rem; }
+        .save-bar button {
+            padding: 0.375rem 1rem; border-radius: 0.375rem;
+            font-size: 0.8125rem; font-weight: 600;
+            cursor: pointer; border: none; transition: opacity 0.15s;
+        }
+        .save-bar button:hover { opacity: 0.85; }
+        .save-bar .btn-save { background: #fff; color: var(--primary-color, #00669a); }
+        .save-bar .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+        .save-bar .btn-reset { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.45); }
+
+        .toast {
+            position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
+            padding: 0.75rem 1.25rem; border-radius: 0.5rem;
+            font-size: 0.875rem; font-weight: 500; color: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            animation: toastIn 0.3s ease;
+        }
+        .toast-success { background: #4c9f38; }
+        .toast-error { background: #da291c; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     `,
     template: `
+        @if (pendingCount() > 0) {
+            <div class="save-bar">
+                <span>{{ pendingCount() }} unsaved color change{{ pendingCount() > 1 ? 's' : '' }}</span>
+                <div class="actions">
+                    <button class="btn-reset" (click)="resetChanges()">Reset</button>
+                    <button class="btn-save" [disabled]="saving()" (click)="saveChanges()">
+                        {{ saving() ? 'Saving\u2026' : 'Save to Codebase' }}
+                    </button>
+                </div>
+            </div>
+        }
+
+        @if (toast()) {
+            <div class="toast" [class.toast-success]="!toast()!.error" [class.toast-error]="toast()!.error">
+                {{ toast()!.message }}
+            </div>
+        }
+
         <h1>Design Tokens</h1>
-        <p class="desc">Complete token reference for the brand design system. All values defined in <code>brand-theme.ts</code>, <code>tailwind.css</code>, and layout SCSS variables.</p>
+        <p class="desc">Complete token reference for the brand design system. Click any swatch to edit its color — changes save to <code>brand-theme.ts</code> and <code>tailwind.css</code>.</p>
 
         <h2>Color Palettes</h2>
         <p style="margin-bottom: 1rem; font-size: 0.875rem; color: var(--text-muted-color, #6b7280)">
-            18 custom brand palettes, each with 11 shades (50 – 950). Hover a swatch to see the hex value.
+            18 custom brand palettes, each with 11 shades (50 – 950). Click a swatch to open the color picker. Hover to see the hex value.
         </p>
         @for (p of palettes; track p.name) {
             <div class="palette">
                 <div class="palette-name">
                     <span>{{ p.name }}</span>
-                    @if (p.role) { <span class="role">→ {{ p.role }}</span> }
+                    @if (p.role) { <span class="role">\u2192 {{ p.role }}</span> }
                 </div>
                 <div class="swatches">
                     @for (s of p.swatches; track s.shade) {
                         <div class="swatch"
-                             [style.background]="s.hex"
-                             [style.color]="lightText(s.hex) ? '#fff' : '#000'"
-                             [attr.data-hex]="s.hex">
+                             [class.changed]="isChanged(p.name, s.shade)"
+                             [style.background]="getColor(p.name, s.shade, s.hex)"
+                             [style.color]="lightText(getColor(p.name, s.shade, s.hex)) ? '#fff' : '#000'"
+                             [attr.data-hex]="getColor(p.name, s.shade, s.hex)">
                             {{ s.shade }}
+                            <input type="color"
+                                   class="color-input"
+                                   [value]="getColor(p.name, s.shade, s.hex)"
+                                   (input)="onColorChange(p.name, s.shade, $event)" />
                         </div>
                     }
                 </div>
@@ -149,7 +222,7 @@ const TYPOGRAPHY = [
 
         <h2>Typography Utilities</h2>
         <p style="margin-bottom: 1rem; font-size: 0.875rem; color: var(--text-muted-color, #6b7280)">
-            Tailwind <code>@utility</code> classes defined in <code>tailwind.css</code>. Apply via class name. Font: Noto Sans with OpenType features.
+            Tailwind <code>&#64;utility</code> classes defined in <code>tailwind.css</code>. Apply via class name. Font: Noto Sans with OpenType features.
         </p>
         <table>
             <thead><tr><th>Utility</th><th>Size</th><th>Weight</th><th>Usage</th><th style="width:30%">Sample</th></tr></thead>
@@ -187,6 +260,71 @@ class DesignTokensComponent {
     breakpoints = BREAKPOINTS;
     typography = TYPOGRAPHY;
 
+    pending = signal<Record<string, string>>({});
+    saving = signal(false);
+    toast = signal<{ message: string; error: boolean } | null>(null);
+
+    pendingCount = computed(() => Object.keys(this.pending()).length);
+
+    getColor(palette: string, shade: string, original: string): string {
+        return this.pending()[`${palette}.${shade}`] ?? original;
+    }
+
+    isChanged(palette: string, shade: string): boolean {
+        return `${palette}.${shade}` in this.pending();
+    }
+
+    onColorChange(palette: string, shade: string, event: Event) {
+        const hex = (event.target as HTMLInputElement).value;
+        const key = `${palette}.${shade}`;
+        const original = this.palettes.find((p) => p.name === palette)?.swatches.find((s) => s.shade === shade)?.hex;
+
+        if (original && hex.toLowerCase() === original.toLowerCase()) {
+            this.pending.update((p) => {
+                const copy = { ...p };
+                delete copy[key];
+                return copy;
+            });
+        } else {
+            this.pending.update((p) => ({ ...p, [key]: hex }));
+        }
+    }
+
+    resetChanges() {
+        this.pending.set({});
+    }
+
+    async saveChanges() {
+        this.saving.set(true);
+        this.toast.set(null);
+
+        const changes = Object.entries(this.pending()).map(([key, hex]) => {
+            const [palette, shade] = key.split('.');
+            return { palette, shade, hex };
+        });
+
+        try {
+            const res = await fetch('/api/update-tokens', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ changes })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                this.pending.set({});
+                this.showToast(`${data.count} token(s) saved to brand-theme.ts & tailwind.css`, false);
+            } else {
+                const err = await res.json().catch(() => ({ error: 'Unknown error' }));
+                this.showToast(`Save failed: ${err.error}`, true);
+            }
+        } catch {
+            this.showToast('Network error — is Storybook dev server running?', true);
+        }
+
+        this.saving.set(false);
+    }
+
     lightText(hex: string): boolean {
         const r = parseInt(hex.slice(1, 3), 16);
         const g = parseInt(hex.slice(3, 5), 16);
@@ -196,6 +334,11 @@ class DesignTokensComponent {
 
     bpPercent(value: string): number {
         return (parseInt(value) / 1920) * 100;
+    }
+
+    private showToast(message: string, error: boolean) {
+        this.toast.set({ message, error });
+        setTimeout(() => this.toast.set(null), 4000);
     }
 }
 
@@ -207,9 +350,9 @@ const meta: Meta<DesignTokensComponent> = {
         docs: {
             description: {
                 component:
-                    'Complete reference of the brand design system tokens: 18 color palettes with semantic role mappings, ' +
-                    'CSS custom properties bridging PrimeNG to layout, Tailwind typography utility classes, responsive breakpoints, ' +
-                    'and SCSS layout variables. All values come from brand-theme.ts, tailwind.css, and layout SCSS files.'
+                    'Interactive reference of the brand design system tokens. Click any color swatch to edit it — ' +
+                    'changes are written back to brand-theme.ts and tailwind.css on save. Also documents CSS custom properties, ' +
+                    'Tailwind typography utilities, responsive breakpoints, and SCSS layout variables.'
             }
         }
     }

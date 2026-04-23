@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppMenuitem } from './app.menuitem';
+import { environment } from '../../../environments/environment';
+
+const SB = environment.storybookBaseUrl;
 
 @Component({
     selector: '[app-menu]',
@@ -104,7 +107,7 @@ export class AppMenu {
                 {
                     label: 'Storybook',
                     icon: 'pi pi-fw pi-book',
-                    url: 'http://localhost:6006',
+                    url: SB,
                     target: '_blank'
                 },
                 {
@@ -117,8 +120,8 @@ export class AppMenu {
                             icon: 'pi pi-fw pi-box',
                             path: '/foundations',
                             items: [
-                                { label: 'Accessibility', icon: 'pi pi-fw pi-eye', url: 'http://localhost:6006/?path=/docs/foundations-accessibility--docs', target: '_blank' },
-                                { label: 'Design Tokens', icon: 'pi pi-fw pi-palette', url: 'http://localhost:6006/?path=/docs/foundations-designtokens--docs', target: '_blank' }
+                                { label: 'Accessibility', icon: 'pi pi-fw pi-eye', url: `${SB}/?path=/docs/foundations-accessibility--docs`, target: '_blank' },
+                                { label: 'Design Tokens', icon: 'pi pi-fw pi-palette', url: `${SB}/?path=/docs/foundations-designtokens--docs`, target: '_blank' }
                             ]
                         },
                         {
@@ -126,27 +129,27 @@ export class AppMenu {
                             icon: 'pi pi-fw pi-objects-column',
                             path: '/components',
                             items: [
-                                { label: 'Avatar', icon: 'pi pi-fw pi-user', url: 'http://localhost:6006/?path=/docs/components-datadisplay-avatar--docs', target: '_blank' },
-                                { label: 'Button', icon: 'pi pi-fw pi-stop', url: 'http://localhost:6006/?path=/docs/components-forminputs-button--docs', target: '_blank' },
-                                { label: 'Confirm', icon: 'pi pi-fw pi-check-circle', url: 'http://localhost:6006/?path=/docs/components-overlays-confirmdialog--docs', target: '_blank' },
-                                { label: 'Data View', icon: 'pi pi-fw pi-table', url: 'http://localhost:6006/?path=/docs/components-datadisplay-dataview--docs', target: '_blank' },
-                                { label: 'Date Picker', icon: 'pi pi-fw pi-calendar', url: 'http://localhost:6006/?path=/docs/components-forminputs-datepicker--docs', target: '_blank' },
-                                { label: 'Dialog', icon: 'pi pi-fw pi-window-maximize', url: 'http://localhost:6006/?path=/docs/components-overlays-dialog--docs', target: '_blank' },
-                                { label: 'File Upload', icon: 'pi pi-fw pi-upload', url: 'http://localhost:6006/?path=/docs/components-forminputs-fileupload--docs', target: '_blank' },
-                                { label: 'Form Field', icon: 'pi pi-fw pi-pencil', url: 'http://localhost:6006/?path=/docs/components-forminputs-formfield--docs', target: '_blank' },
-                                { label: 'Input Text', icon: 'pi pi-fw pi-text-cursor', url: 'http://localhost:6006/?path=/docs/components-forminputs-inputtext--docs', target: '_blank' },
-                                { label: 'Media', icon: 'pi pi-fw pi-image', url: 'http://localhost:6006/?path=/docs/components-datadisplay-media--docs', target: '_blank' },
-                                { label: 'Menu', icon: 'pi pi-fw pi-bars', url: 'http://localhost:6006/?path=/docs/components-navigation-menu--docs', target: '_blank' },
-                                { label: 'Panels', icon: 'pi pi-fw pi-window-minimize', url: 'http://localhost:6006/?path=/docs/components-layout-panels--docs', target: '_blank' },
-                                { label: 'Popover & Tooltip', icon: 'pi pi-fw pi-comment', url: 'http://localhost:6006/?path=/docs/components-overlays-popover--docs', target: '_blank' },
-                                { label: 'Progress', icon: 'pi pi-fw pi-spinner', url: 'http://localhost:6006/?path=/docs/components-datadisplay-progress--docs', target: '_blank' },
-                                { label: 'Select', icon: 'pi pi-fw pi-chevron-down', url: 'http://localhost:6006/?path=/docs/components-forminputs-select--docs', target: '_blank' },
-                                { label: 'Slider & Knob', icon: 'pi pi-fw pi-sliders-h', url: 'http://localhost:6006/?path=/docs/components-forminputs-rangeinput--docs', target: '_blank' },
-                                { label: 'Table', icon: 'pi pi-fw pi-th-large', url: 'http://localhost:6006/?path=/docs/components-datadisplay-table--docs', target: '_blank' },
-                                { label: 'Tabs & Stepper', icon: 'pi pi-fw pi-bookmark', url: 'http://localhost:6006/?path=/docs/components-navigation-tabs--docs', target: '_blank' },
-                                { label: 'Tag, Chip & Badge', icon: 'pi pi-fw pi-tag', url: 'http://localhost:6006/?path=/docs/components-datadisplay-tag--docs', target: '_blank' },
-                                { label: 'Toast & Message', icon: 'pi pi-fw pi-bell', url: 'http://localhost:6006/?path=/docs/components-feedback-toast--docs', target: '_blank' },
-                                { label: 'Toggle', icon: 'pi pi-fw pi-toggle-on', url: 'http://localhost:6006/?path=/docs/components-forminputs-toggle--docs', target: '_blank' }
+                                { label: 'Avatar', icon: 'pi pi-fw pi-user', url: `${SB}/?path=/docs/components-datadisplay-avatar--docs`, target: '_blank' },
+                                { label: 'Button', icon: 'pi pi-fw pi-stop', url: `${SB}/?path=/docs/components-forminputs-button--docs`, target: '_blank' },
+                                { label: 'Confirm', icon: 'pi pi-fw pi-check-circle', url: `${SB}/?path=/docs/components-overlays-confirmdialog--docs`, target: '_blank' },
+                                { label: 'Data View', icon: 'pi pi-fw pi-table', url: `${SB}/?path=/docs/components-datadisplay-dataview--docs`, target: '_blank' },
+                                { label: 'Date Picker', icon: 'pi pi-fw pi-calendar', url: `${SB}/?path=/docs/components-forminputs-datepicker--docs`, target: '_blank' },
+                                { label: 'Dialog', icon: 'pi pi-fw pi-window-maximize', url: `${SB}/?path=/docs/components-overlays-dialog--docs`, target: '_blank' },
+                                { label: 'File Upload', icon: 'pi pi-fw pi-upload', url: `${SB}/?path=/docs/components-forminputs-fileupload--docs`, target: '_blank' },
+                                { label: 'Form Field', icon: 'pi pi-fw pi-pencil', url: `${SB}/?path=/docs/components-forminputs-formfield--docs`, target: '_blank' },
+                                { label: 'Input Text', icon: 'pi pi-fw pi-text-cursor', url: `${SB}/?path=/docs/components-forminputs-inputtext--docs`, target: '_blank' },
+                                { label: 'Media', icon: 'pi pi-fw pi-image', url: `${SB}/?path=/docs/components-datadisplay-media--docs`, target: '_blank' },
+                                { label: 'Menu', icon: 'pi pi-fw pi-bars', url: `${SB}/?path=/docs/components-navigation-menu--docs`, target: '_blank' },
+                                { label: 'Panels', icon: 'pi pi-fw pi-window-minimize', url: `${SB}/?path=/docs/components-layout-panels--docs`, target: '_blank' },
+                                { label: 'Popover & Tooltip', icon: 'pi pi-fw pi-comment', url: `${SB}/?path=/docs/components-overlays-popover--docs`, target: '_blank' },
+                                { label: 'Progress', icon: 'pi pi-fw pi-spinner', url: `${SB}/?path=/docs/components-datadisplay-progress--docs`, target: '_blank' },
+                                { label: 'Select', icon: 'pi pi-fw pi-chevron-down', url: `${SB}/?path=/docs/components-forminputs-select--docs`, target: '_blank' },
+                                { label: 'Slider & Knob', icon: 'pi pi-fw pi-sliders-h', url: `${SB}/?path=/docs/components-forminputs-rangeinput--docs`, target: '_blank' },
+                                { label: 'Table', icon: 'pi pi-fw pi-th-large', url: `${SB}/?path=/docs/components-datadisplay-table--docs`, target: '_blank' },
+                                { label: 'Tabs & Stepper', icon: 'pi pi-fw pi-bookmark', url: `${SB}/?path=/docs/components-navigation-tabs--docs`, target: '_blank' },
+                                { label: 'Tag, Chip & Badge', icon: 'pi pi-fw pi-tag', url: `${SB}/?path=/docs/components-datadisplay-tag--docs`, target: '_blank' },
+                                { label: 'Toast & Message', icon: 'pi pi-fw pi-bell', url: `${SB}/?path=/docs/components-feedback-toast--docs`, target: '_blank' },
+                                { label: 'Toggle', icon: 'pi pi-fw pi-toggle-on', url: `${SB}/?path=/docs/components-forminputs-toggle--docs`, target: '_blank' }
                             ]
                         },
                         {
@@ -154,43 +157,43 @@ export class AppMenu {
                             icon: 'pi pi-fw pi-prime',
                             path: '/blocks',
                             items: [
-                                { label: 'Avatar Data Table', icon: 'pi pi-fw pi-users', url: 'http://localhost:6006/?path=/docs/blocks-tables-avatardatatable--docs', target: '_blank' },
-                                { label: 'Budget Meter Panel', icon: 'pi pi-fw pi-chart-bar', url: 'http://localhost:6006/?path=/docs/blocks-gauges-budgetmeterpanel--docs', target: '_blank' },
-                                { label: 'Call to Action Band', icon: 'pi pi-fw pi-megaphone', url: 'http://localhost:6006/?path=/docs/blocks-landing-calltoactionband--docs', target: '_blank' },
-                                { label: 'Category Bar Panel', icon: 'pi pi-fw pi-chart-bar', url: 'http://localhost:6006/?path=/docs/blocks-charts-categorybarpanel--docs', target: '_blank' },
-                                { label: 'Compact Stat Card Grid', icon: 'pi pi-fw pi-th-large', url: 'http://localhost:6006/?path=/docs/blocks-metrics-compactstatcardgrid--docs', target: '_blank' },
-                                { label: 'Comparison Line Panel', icon: 'pi pi-fw pi-chart-line', url: 'http://localhost:6006/?path=/docs/blocks-charts-comparisonlinepanel--docs', target: '_blank' },
-                                { label: 'Contact Split Form', icon: 'pi pi-fw pi-envelope', url: 'http://localhost:6006/?path=/docs/blocks-landing-contactsplitform--docs', target: '_blank' },
-                                { label: 'FAQ Accordion', icon: 'pi pi-fw pi-question-circle', url: 'http://localhost:6006/?path=/docs/blocks-landing-faqaccordion--docs', target: '_blank' },
-                                { label: 'Feature Detail Left', icon: 'pi pi-fw pi-align-left', url: 'http://localhost:6006/?path=/docs/blocks-landing-featuredetailleft--docs', target: '_blank' },
-                                { label: 'Feature Detail Right', icon: 'pi pi-fw pi-align-right', url: 'http://localhost:6006/?path=/docs/blocks-landing-featuredetailright--docs', target: '_blank' },
-                                { label: 'Feature Showcase', icon: 'pi pi-fw pi-star', url: 'http://localhost:6006/?path=/docs/blocks-landing-featureshowcase--docs', target: '_blank' },
-                                { label: 'Feature Split Left', icon: 'pi pi-fw pi-align-left', url: 'http://localhost:6006/?path=/docs/blocks-landing-featuresplitleft--docs', target: '_blank' },
-                                { label: 'Feature Split Right', icon: 'pi pi-fw pi-align-right', url: 'http://localhost:6006/?path=/docs/blocks-landing-featuresplitright--docs', target: '_blank' },
-                                { label: 'Features Hero Banner', icon: 'pi pi-fw pi-flag', url: 'http://localhost:6006/?path=/docs/blocks-landing-featuresherobanner--docs', target: '_blank' },
-                                { label: 'Gauge Metrics Panel', icon: 'pi pi-fw pi-gauge', url: 'http://localhost:6006/?path=/docs/blocks-gauges-gaugemetricspanel--docs', target: '_blank' },
-                                { label: 'Gauge Table Panel', icon: 'pi pi-fw pi-table', url: 'http://localhost:6006/?path=/docs/blocks-gauges-gaugetablepanel--docs', target: '_blank' },
-                                { label: 'Hero Banner', icon: 'pi pi-fw pi-flag', url: 'http://localhost:6006/?path=/docs/blocks-landing-herobanner--docs', target: '_blank' },
-                                { label: 'Item List Panel', icon: 'pi pi-fw pi-list', url: 'http://localhost:6006/?path=/docs/blocks-tables-itemlistpanel--docs', target: '_blank' },
-                                { label: 'Landing Footer', icon: 'pi pi-fw pi-align-justify', url: 'http://localhost:6006/?path=/docs/blocks-landing-landingfooter--docs', target: '_blank' },
-                                { label: 'Landing Topbar', icon: 'pi pi-fw pi-align-justify', url: 'http://localhost:6006/?path=/docs/blocks-landing-landingtopbar--docs', target: '_blank' },
-                                { label: 'Location Card Grid', icon: 'pi pi-fw pi-map-marker', url: 'http://localhost:6006/?path=/docs/blocks-landing-locationcardgrid--docs', target: '_blank' },
-                                { label: 'Logo Marquee', icon: 'pi pi-fw pi-images', url: 'http://localhost:6006/?path=/docs/blocks-landing-logomarquee--docs', target: '_blank' },
-                                { label: 'Meter Breakdown List', icon: 'pi pi-fw pi-list', url: 'http://localhost:6006/?path=/docs/blocks-gauges-meterbreakdownlist--docs', target: '_blank' },
-                                { label: 'Meter Breakdown Panel', icon: 'pi pi-fw pi-chart-pie', url: 'http://localhost:6006/?path=/docs/blocks-gauges-meterbreakdownpanel--docs', target: '_blank' },
-                                { label: 'Meter Card Row', icon: 'pi pi-fw pi-chart-bar', url: 'http://localhost:6006/?path=/docs/blocks-metrics-metercardrow--docs', target: '_blank' },
-                                { label: 'Metric Meter Panel', icon: 'pi pi-fw pi-gauge', url: 'http://localhost:6006/?path=/docs/blocks-gauges-metricmeterpanel--docs', target: '_blank' },
-                                { label: 'Overview Line Panel', icon: 'pi pi-fw pi-chart-line', url: 'http://localhost:6006/?path=/docs/blocks-charts-overviewlinepanel--docs', target: '_blank' },
-                                { label: 'Pricing Cards', icon: 'pi pi-fw pi-dollar', url: 'http://localhost:6006/?path=/docs/blocks-landing-pricingcards--docs', target: '_blank' },
-                                { label: 'Pricing Comparison Table', icon: 'pi pi-fw pi-table', url: 'http://localhost:6006/?path=/docs/blocks-landing-pricingcomparisontable--docs', target: '_blank' },
-                                { label: 'Searchable Data Table', icon: 'pi pi-fw pi-search', url: 'http://localhost:6006/?path=/docs/blocks-tables-searchabledatatable--docs', target: '_blank' },
-                                { label: 'Segmented Meter Stack', icon: 'pi pi-fw pi-chart-bar', url: 'http://localhost:6006/?path=/docs/blocks-gauges-segmentedmeterstack--docs', target: '_blank' },
-                                { label: 'Stat Card Grid', icon: 'pi pi-fw pi-th-large', url: 'http://localhost:6006/?path=/docs/blocks-metrics-statcardgrid--docs', target: '_blank' },
-                                { label: 'Stat Column Panel', icon: 'pi pi-fw pi-chart-bar', url: 'http://localhost:6006/?path=/docs/blocks-metrics-statcolumnpanel--docs', target: '_blank' },
-                                { label: 'Status Data Table', icon: 'pi pi-fw pi-table', url: 'http://localhost:6006/?path=/docs/blocks-tables-statusdatatable--docs', target: '_blank' },
-                                { label: 'Testimonial Card', icon: 'pi pi-fw pi-comment', url: 'http://localhost:6006/?path=/docs/blocks-landing-testimonialcard--docs', target: '_blank' },
-                                { label: 'Testimonial Grid', icon: 'pi pi-fw pi-comments', url: 'http://localhost:6006/?path=/docs/blocks-landing-testimonialgrid--docs', target: '_blank' },
-                                { label: 'Trend Line Panel', icon: 'pi pi-fw pi-chart-line', url: 'http://localhost:6006/?path=/docs/blocks-charts-trendlinepanel--docs', target: '_blank' }
+                                { label: 'Avatar Data Table', icon: 'pi pi-fw pi-users', url: `${SB}/?path=/docs/blocks-tables-avatardatatable--docs`, target: '_blank' },
+                                { label: 'Budget Meter Panel', icon: 'pi pi-fw pi-chart-bar', url: `${SB}/?path=/docs/blocks-gauges-budgetmeterpanel--docs`, target: '_blank' },
+                                { label: 'Call to Action Band', icon: 'pi pi-fw pi-megaphone', url: `${SB}/?path=/docs/blocks-landing-calltoactionband--docs`, target: '_blank' },
+                                { label: 'Category Bar Panel', icon: 'pi pi-fw pi-chart-bar', url: `${SB}/?path=/docs/blocks-charts-categorybarpanel--docs`, target: '_blank' },
+                                { label: 'Compact Stat Card Grid', icon: 'pi pi-fw pi-th-large', url: `${SB}/?path=/docs/blocks-metrics-compactstatcardgrid--docs`, target: '_blank' },
+                                { label: 'Comparison Line Panel', icon: 'pi pi-fw pi-chart-line', url: `${SB}/?path=/docs/blocks-charts-comparisonlinepanel--docs`, target: '_blank' },
+                                { label: 'Contact Split Form', icon: 'pi pi-fw pi-envelope', url: `${SB}/?path=/docs/blocks-landing-contactsplitform--docs`, target: '_blank' },
+                                { label: 'FAQ Accordion', icon: 'pi pi-fw pi-question-circle', url: `${SB}/?path=/docs/blocks-landing-faqaccordion--docs`, target: '_blank' },
+                                { label: 'Feature Detail Left', icon: 'pi pi-fw pi-align-left', url: `${SB}/?path=/docs/blocks-landing-featuredetailleft--docs`, target: '_blank' },
+                                { label: 'Feature Detail Right', icon: 'pi pi-fw pi-align-right', url: `${SB}/?path=/docs/blocks-landing-featuredetailright--docs`, target: '_blank' },
+                                { label: 'Feature Showcase', icon: 'pi pi-fw pi-star', url: `${SB}/?path=/docs/blocks-landing-featureshowcase--docs`, target: '_blank' },
+                                { label: 'Feature Split Left', icon: 'pi pi-fw pi-align-left', url: `${SB}/?path=/docs/blocks-landing-featuresplitleft--docs`, target: '_blank' },
+                                { label: 'Feature Split Right', icon: 'pi pi-fw pi-align-right', url: `${SB}/?path=/docs/blocks-landing-featuresplitright--docs`, target: '_blank' },
+                                { label: 'Features Hero Banner', icon: 'pi pi-fw pi-flag', url: `${SB}/?path=/docs/blocks-landing-featuresherobanner--docs`, target: '_blank' },
+                                { label: 'Gauge Metrics Panel', icon: 'pi pi-fw pi-gauge', url: `${SB}/?path=/docs/blocks-gauges-gaugemetricspanel--docs`, target: '_blank' },
+                                { label: 'Gauge Table Panel', icon: 'pi pi-fw pi-table', url: `${SB}/?path=/docs/blocks-gauges-gaugetablepanel--docs`, target: '_blank' },
+                                { label: 'Hero Banner', icon: 'pi pi-fw pi-flag', url: `${SB}/?path=/docs/blocks-landing-herobanner--docs`, target: '_blank' },
+                                { label: 'Item List Panel', icon: 'pi pi-fw pi-list', url: `${SB}/?path=/docs/blocks-tables-itemlistpanel--docs`, target: '_blank' },
+                                { label: 'Landing Footer', icon: 'pi pi-fw pi-align-justify', url: `${SB}/?path=/docs/blocks-landing-landingfooter--docs`, target: '_blank' },
+                                { label: 'Landing Topbar', icon: 'pi pi-fw pi-align-justify', url: `${SB}/?path=/docs/blocks-landing-landingtopbar--docs`, target: '_blank' },
+                                { label: 'Location Card Grid', icon: 'pi pi-fw pi-map-marker', url: `${SB}/?path=/docs/blocks-landing-locationcardgrid--docs`, target: '_blank' },
+                                { label: 'Logo Marquee', icon: 'pi pi-fw pi-images', url: `${SB}/?path=/docs/blocks-landing-logomarquee--docs`, target: '_blank' },
+                                { label: 'Meter Breakdown List', icon: 'pi pi-fw pi-list', url: `${SB}/?path=/docs/blocks-gauges-meterbreakdownlist--docs`, target: '_blank' },
+                                { label: 'Meter Breakdown Panel', icon: 'pi pi-fw pi-chart-pie', url: `${SB}/?path=/docs/blocks-gauges-meterbreakdownpanel--docs`, target: '_blank' },
+                                { label: 'Meter Card Row', icon: 'pi pi-fw pi-chart-bar', url: `${SB}/?path=/docs/blocks-metrics-metercardrow--docs`, target: '_blank' },
+                                { label: 'Metric Meter Panel', icon: 'pi pi-fw pi-gauge', url: `${SB}/?path=/docs/blocks-gauges-metricmeterpanel--docs`, target: '_blank' },
+                                { label: 'Overview Line Panel', icon: 'pi pi-fw pi-chart-line', url: `${SB}/?path=/docs/blocks-charts-overviewlinepanel--docs`, target: '_blank' },
+                                { label: 'Pricing Cards', icon: 'pi pi-fw pi-dollar', url: `${SB}/?path=/docs/blocks-landing-pricingcards--docs`, target: '_blank' },
+                                { label: 'Pricing Comparison Table', icon: 'pi pi-fw pi-table', url: `${SB}/?path=/docs/blocks-landing-pricingcomparisontable--docs`, target: '_blank' },
+                                { label: 'Searchable Data Table', icon: 'pi pi-fw pi-search', url: `${SB}/?path=/docs/blocks-tables-searchabledatatable--docs`, target: '_blank' },
+                                { label: 'Segmented Meter Stack', icon: 'pi pi-fw pi-chart-bar', url: `${SB}/?path=/docs/blocks-gauges-segmentedmeterstack--docs`, target: '_blank' },
+                                { label: 'Stat Card Grid', icon: 'pi pi-fw pi-th-large', url: `${SB}/?path=/docs/blocks-metrics-statcardgrid--docs`, target: '_blank' },
+                                { label: 'Stat Column Panel', icon: 'pi pi-fw pi-chart-bar', url: `${SB}/?path=/docs/blocks-metrics-statcolumnpanel--docs`, target: '_blank' },
+                                { label: 'Status Data Table', icon: 'pi pi-fw pi-table', url: `${SB}/?path=/docs/blocks-tables-statusdatatable--docs`, target: '_blank' },
+                                { label: 'Testimonial Card', icon: 'pi pi-fw pi-comment', url: `${SB}/?path=/docs/blocks-landing-testimonialcard--docs`, target: '_blank' },
+                                { label: 'Testimonial Grid', icon: 'pi pi-fw pi-comments', url: `${SB}/?path=/docs/blocks-landing-testimonialgrid--docs`, target: '_blank' },
+                                { label: 'Trend Line Panel', icon: 'pi pi-fw pi-chart-line', url: `${SB}/?path=/docs/blocks-charts-trendlinepanel--docs`, target: '_blank' }
                             ]
                         },
                         {
@@ -214,7 +217,7 @@ export class AppMenu {
                             icon: 'pi pi-fw pi-play',
                             path: '/playground',
                             items: [
-                                { label: 'Page Builder', icon: 'pi pi-fw pi-pencil', url: 'http://localhost:6006/?path=/docs/playground-pagebuilder--docs', target: '_blank' }
+                                { label: 'Page Builder', icon: 'pi pi-fw pi-pencil', url: `${SB}/?path=/docs/playground-pagebuilder--docs`, target: '_blank' }
                             ]
                         }
                     ]

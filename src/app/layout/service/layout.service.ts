@@ -34,7 +34,7 @@ interface MenuChangeEvent {
 })
 export class LayoutService {
     layoutConfig = signal<LayoutConfig>({
-        preset: 'Aura',
+        preset: 'Soft',
         primary: 'blue',
         surface: null,
         darkTheme: false,

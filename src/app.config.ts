@@ -3,13 +3,13 @@ import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core
 import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
-import { BrandAura } from './app/layout/service/brand-theme';
+import { BrandSoft } from './app/layout/service/brand-theme';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(appRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation()),
         provideHttpClient(withFetch()),
         provideZonelessChangeDetection(),
-        providePrimeNG({ theme: { preset: BrandAura, options: { darkModeSelector: '.app-dark' } } })
+        providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } })
     ]
 };

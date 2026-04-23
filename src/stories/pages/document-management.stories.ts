@@ -4,7 +4,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
-import { BrandAura } from '@/app/layout/service/brand-theme';
+import { BrandSoft } from '@/app/layout/service/brand-theme';
 import { Agreements } from '@/app/apps/agreements/agreements';
 
 const meta: Meta<Agreements> = {
@@ -12,7 +12,7 @@ const meta: Meta<Agreements> = {
     component: Agreements,
     decorators: [
         applicationConfig({
-            providers: [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandAura, options: { darkModeSelector: '.app-dark' } } })]
+            providers: [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } })]
         })
     ],
     parameters: {

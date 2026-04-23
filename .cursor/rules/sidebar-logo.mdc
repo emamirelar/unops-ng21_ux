@@ -1,0 +1,21 @@
+---
+description: The sidebar logo must always use the OPP+ branded AppLogo asset, never the default template logos.
+globs: src/app/layout/components/app.sidebar.ts
+alwaysApply: false
+---
+
+# Sidebar Logo
+
+The sidebar header logo **must** always be `assets/opp/AppLogo-dark-vertical.svg`.
+
+- Do NOT use `layout/images/logo-dark-horizontal.svg` or `layout/images/logo-light-horizontal.svg`.
+- The logo source should be a static path — no theme-based switching is needed.
+- The `alt` text should remain `"UNOPS"`.
+
+```html
+<!-- ✅ Correct -->
+<img class="logo-image" src="assets/opp/AppLogo-dark-vertical.svg" alt="UNOPS" />
+
+<!-- ❌ Wrong — default template logos -->
+<img class="logo-image" [src]="menuTheme() === 'light' ? '...' : '...'" alt="UNOPS" />
+```

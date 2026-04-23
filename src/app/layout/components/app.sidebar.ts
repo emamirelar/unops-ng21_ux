@@ -15,7 +15,7 @@ const BREAKPOINT = 992;
     template: `<div class="layout-sidebar" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
         <div class="sidebar-header">
             <a class="logo" [routerLink]="['/']">
-                <img class="logo-image" [src]="menuTheme() === 'light' ? 'layout/images/logo-light-horizontal.svg' : 'layout/images/logo-dark-horizontal.svg'" alt="UNOPS" />
+                <img class="logo-image" [src]="sidebarLogo()" alt="UNOPS" />
             </a>
             <button class="layout-sidebar-anchor z-2" type="button" (click)="onAnchorToggle()"></button>
         </div>
@@ -28,6 +28,12 @@ const BREAKPOINT = 992;
 })
 export class AppSidebar implements OnInit, OnDestroy {
     layoutService = inject(LayoutService);
+
+    sidebarLogo = computed(() =>
+        this.layoutService.isDarkTheme()
+            ? 'assets/opp/AppLogo/AppLogo-onDark_V.svg'
+            : 'assets/opp/AppLogo/AppLogo-onLight_V.svg'
+    );
 
     router = inject(Router);
 
@@ -48,8 +54,6 @@ export class AppSidebar implements OnInit, OnDestroy {
     private destroy$ = new Subject<void>();
 
     isHorizontal = computed(() => this.layoutService.isHorizontal());
-
-    menuTheme = computed(() => this.layoutService.layoutConfig().menuTheme);
 
     constructor() {
         effect(() => {

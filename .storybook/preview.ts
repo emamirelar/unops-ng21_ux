@@ -4,7 +4,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
-import { BrandAura } from '@/app/layout/service/brand-theme';
+import { BrandSoft } from '@/app/layout/service/brand-theme';
 import { setCompodocJson } from '@storybook/addon-docs/angular';
 import docJson from '../documentation.json';
 
@@ -13,7 +13,7 @@ setCompodocJson(docJson);
 const preview: Preview = {
     decorators: [
         applicationConfig({
-            providers: [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandAura, options: { darkModeSelector: '.app-dark' } } })]
+            providers: [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } })]
         })
     ],
     parameters: {

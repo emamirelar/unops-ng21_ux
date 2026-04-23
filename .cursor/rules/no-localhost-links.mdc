@@ -1,0 +1,66 @@
+---
+description: Ensure no hardcoded localhost or dev URLs exist in application source code — use environment config instead
+alwaysApply: true
+---
+
+# No Hardcoded Localhost URLs
+
+Application source code must never contain hardcoded `localhost`, `127.0.0.1`, or other loopback URLs. Use Angular environment configuration so the correct base URL is resolved at build time.
+
+## Forbidden in application source (*.ts, *.html, *.scss)
+
+- `http://localhost` or `https://localhost` (with or without a port)
+- `http://127.0.0.1` or `https://127.0.0.1`
+- `http://0.0.0.0` or `https://0.0.0.0`
+
+## Where localhost IS allowed
+
+- `src/environments/environment.ts` — this is the **dev-only** config and is swapped out at build time
+- Proxy config files (`proxy.conf.json`, `proxy.conf.js`)
+- Test files (`*.spec.ts`, `*.test.ts`, `e2e/**`)
+- Documentation text explaining local dev setup (e.g. `documentation.ts`)
+- Docker / CI config files
+- Storybook config (`.storybook/**`)
+
+## How it works in this project
+
+External URLs (e.g. Storybook links) are driven by `src/environments/environment.ts`:
+
+```typescript
+// src/environments/environment.ts (dev — used by ng serve)
+export const environment = {
+    production: false,
+    storybookBaseUrl: 'http://localhost:6006'
+};
+
+// src/environments/environment.prod.ts (prod — used by ng build)
+export const environment = {
+    production: true,
+    storybookBaseUrl: ''
+};
+```
+
+Components import and use the environment constant:
+
+```typescript
+import { environment } from '../../../environments/environment';
+const SB = environment.storybookBaseUrl;
+
+// Then in menu items:
+{ label: 'Avatar', url: `${SB}/?path=/docs/components-datadisplay-avatar--docs` }
+```
+
+## Pre-commit check
+
+Before committing, scan staged files (excluding allowed locations) for violations:
+
+```bash
+git diff --cached --name-only \
+  | grep -v 'environment\.ts' \
+  | grep -v 'proxy\.conf' \
+  | grep -v '\.spec\.ts' \
+  | grep -v '\.storybook' \
+  | xargs grep -nE 'https?://(localhost|127\.0\.0\.1|0\.0\.0\.0)' || true
+```
+
+If matches are found, **stop the commit**, list every occurrence, and suggest moving the URL into environment config.

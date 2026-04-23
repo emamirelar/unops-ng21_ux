@@ -90,7 +90,7 @@ const CONTRAST_PAIRS: ContrastPair[] = [
         .focus-demo > * { flex: none; }
         .target-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem; }
         .target-box { border: 1px solid var(--surface-border, #e5e7eb); border-radius: 0.5rem; padding: 0.75rem; text-align: center; font-size: 0.75rem; }
-        .target-box .size { font-size: 1.25rem; font-weight: 700; display: block; margin-bottom: 0.25rem; }
+        .target-box .size { font-size: 1rem; font-weight: 700; display: block; margin-bottom: 0.25rem; }
         .badge-pass { background: #d2e7cd; color: #13280e; padding: 2px 8px; border-radius: 99px; font-size: 0.6875rem; font-weight: 600; }
         .badge-fail { background: #f6cac6; color: #370a07; padding: 2px 8px; border-radius: 99px; font-size: 0.6875rem; font-weight: 600; }
         .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }

@@ -29,7 +29,6 @@ interface NotificationsBars {
         <a class="mobile-menu-button" (click)="onMenuButtonClick()">
             <i class="pi pi-bars"></i>
         </a>
-        <img class="mobile-logo" [src]="isDarkTheme() ? 'layout/images/logo-dark-horizontal.svg' : 'layout/images/logo-light-horizontal.svg'" alt="UNOPS" />
         <div class="topbar-left">
             <div app-breadcrumb></div>
             @if (searchActive()) {
@@ -44,6 +43,8 @@ interface NotificationsBars {
                 </div>
             }
         </div>
+
+        <img class="mobile-logo" [src]="mobileLogo()" alt="UNOPS" />
 
         <div class="topbar-right">
             <ul class="topbar-menu">
@@ -200,7 +201,11 @@ interface NotificationsBars {
 export class AppTopbar implements AfterViewChecked {
     layoutService = inject(LayoutService);
 
-    isDarkTheme = computed(() => this.layoutService.isDarkTheme());
+    mobileLogo = computed(() =>
+        this.layoutService.isDarkTheme()
+            ? 'assets/opp/AppLogo/AppLogo-onDark_H.svg'
+            : 'assets/opp/AppLogo/AppLogo-onLight_H.svg'
+    );
 
     searchActive = signal(false);
     private shouldFocusSearch = false;
