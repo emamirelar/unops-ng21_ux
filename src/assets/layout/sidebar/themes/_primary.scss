@@ -18,14 +18,14 @@
     --d-sidebar-bg-color: var(--p-blue-200);
     --d-sidebar-bg-color-alt: var(--p-blue-50);
     --d-sidebar-border: 1px solid transparent;
-    --d-app-name-color: var(--p-surface-900);
-    --d-menu-separator-border: 1px solid rgba(0, 0, 0, 0.12);
-    --d-menuitem-root-text-color: var(--p-surface-700);
-    --d-menuitem-text-color: var(--p-surface-800);
+    --d-app-name-color: var(--p-surface-50);
+    --d-menu-separator-border: 1px solid rgba(0, 0, 0, 0.2);
+    --d-menuitem-root-text-color: var(--p-surface-0);
+    --d-menuitem-text-color: var(--p-surface-50);
     --d-menuitem-hover-bg: rgba(255, 255, 255, 0.3);
     --d-menuitem-active-bg: rgba(255, 255, 255, 0.35);
-    --d-menuitem-active-text-color: var(--p-surface-900);
-    --d-menuitem-active-route-text-color: var(--p-surface-900);
+    --d-menuitem-active-text-color: var(--color-ocean-50);
+    --d-menuitem-active-route-text-color: var(--p-surface-0);
     --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.3);
 }
 
@@ -33,10 +33,4 @@
 :root .layout-sidebar-dark .layout-sidebar,
 :root .layout-sidebar-light .layout-sidebar {
     background: linear-gradient(355deg, var(--color-blue-400, #26a2d8) 7.69%, var(--color-midnight-850, #001E31) 89.42%);
-}
-
-:root[class*='app-dark'] .layout-sidebar-primary .layout-sidebar,
-:root[class*='app-dark'] .layout-sidebar-dark .layout-sidebar,
-:root[class*='app-dark'] .layout-sidebar-light .layout-sidebar {
-    background: linear-gradient(356deg, var(--color-deepsea-700, #091521) -0.06%, var(--color-midnight-300, #4d809f) 25.26%, var(--color-blue-150, #99D3ED) 79.33%);
 }

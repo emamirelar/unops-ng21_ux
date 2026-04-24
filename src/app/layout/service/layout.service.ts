@@ -37,7 +37,7 @@ export class LayoutService {
         preset: 'Soft',
         primary: 'blue',
         surface: null,
-        darkTheme: false,
+        darkTheme: true,
         menuMode: 'static',
         menuTheme: 'primary',
         cardStyle: 'transparent'
