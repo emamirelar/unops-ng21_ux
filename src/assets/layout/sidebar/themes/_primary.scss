@@ -4,13 +4,13 @@
     --d-sidebar-border: 1px solid var(--surface-border);
     --d-app-name-color: var(--p-surface-0);
     --d-menu-separator-border: 1px solid rgba(36, 204, 255, 0.619);
-    --d-menuitem-root-text-color: rgba(255, 255, 255, 0.82);
-    --d-menuitem-text-color: rgba(255, 255, 255, 0.85);
-    --d-menuitem-hover-bg: rgba(255, 255, 255, 0.1);
+    --d-menuitem-root-text-color: var (--p-surface-0);
+    --d-menuitem-text-color: var (--p-surface-0);
+    --d-menuitem-hover-bg: rgba(0, 16, 41, 0.376);
     --d-menuitem-active-bg: var (--p-ocean-100);
     --d-menuitem-active-text-color: var (--p-surface-800);
-    --d-menuitem-active-route-text-color: #ffffff;
-    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+    --d-menuitem-active-route-text-color: var (--color-darkblue-700);
+    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
     --d-sidebar-border: 1px solid transparent;
 }
 
@@ -22,15 +22,15 @@
     --d-menu-separator-border: 1px solid rgba(0, 0, 0, 0.2);
     --d-menuitem-root-text-color: var(--p-surface-0);
     --d-menuitem-text-color: var(--p-surface-50);
-    --d-menuitem-hover-bg: rgba(255, 255, 255, 0.3);
-    --d-menuitem-active-bg: rgba(255, 255, 255, 0.35);
-    --d-menuitem-active-text-color: var(--color-ocean-50);
-    --d-menuitem-active-route-text-color: var(--p-surface-0);
-    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.3);
+    --d-menuitem-hover-bg: rgba(0, 16, 41, 0.376);
+    --d-menuitem-active-bg: var (--p-ocean-100);
+    --d-menuitem-active-text-color: var(--color-surface-700);
+    --d-menuitem-active-route-text-color: var(--color-darkblue-700);
+    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
 }
 
 :root .layout-sidebar-primary .layout-sidebar,
 :root .layout-sidebar-dark .layout-sidebar,
 :root .layout-sidebar-light .layout-sidebar {
-    background: linear-gradient(355deg, var(--color-blue-400, #26a2d8) 7.69%, var(--color-midnight-850, #001E31) 89.42%);
+    background: linear-gradient(355deg, var(--color-blue-600, #0988be) 7.69%, var(--color-midnight-850, #001E31) 89.42%);
 }

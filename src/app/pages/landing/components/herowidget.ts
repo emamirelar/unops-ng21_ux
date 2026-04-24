@@ -16,10 +16,11 @@ import { HorizontalGridWidget } from './horizontalgridwidget';
             <div class="relative z-10 mx-auto landing-container overflow-hidden">
                 <div class="flex flex-col items-center">
                     <h1 class="title-h4 lg:title-h1">
-                        Shaping the Future <br />
-                        <span class="text-primary-600">with Innovative Ideas</span>
+                        Welcome to the enhanced <br />
+                        <span class="text-primary-600">Partner and Opportunities platform, Opportunity +</span>
                     </h1>
-                    <p class="body-small lg:body-medium mt-4 lg:mt-6 max-w-lg">Through innovative ideas, we shape the future with creativity and foresight, driving progress forward.</p>
+                    <p class="body-small lg:body-medium mt-4 lg:mt-6 max-w-2xl">Your personalized dashboard for managing partnerships and opportunities</p>
+                    <p class="body-small mt-2 max-w-2xl text-surface-500 dark:text-surface-400">We've added new dashboard features, improved navigation, and streamlined workflows. Explore the updated interface and share your feedback with the admin team.</p>
                     <a routerLink="/" class="body-button mt-6 lg:mt-8">Get Started</a>
                 </div>
                 <div class="mb-20 lg:mb-28">

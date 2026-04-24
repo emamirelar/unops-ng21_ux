@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Sidebar Logo
 
-The sidebar header logo **must** always be `assets/opp/AppLogo/AppLogo-onLight_V.svg`.
+The sidebar header logo **must** always be `assets/opp/AppLogo/AppLogo-onDark_H.svg`.
 
 - Do NOT use `layout/images/logo-dark-horizontal.svg` or `layout/images/logo-light-horizontal.svg`.
 - The logo source should be a static path — no theme-based switching is needed.

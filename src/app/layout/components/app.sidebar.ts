@@ -29,7 +29,7 @@ const BREAKPOINT = 992;
 export class AppSidebar implements OnInit, OnDestroy {
     layoutService = inject(LayoutService);
 
-    sidebarLogo = 'assets/opp/AppLogo/AppLogo-onLight_V.svg';
+    sidebarLogo = 'assets/opp/AppLogo/AppLogo-onDark_H.svg';
 
     router = inject(Router);
 
