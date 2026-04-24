@@ -92,11 +92,11 @@ interface Contact {
 
                         @if (activeChat()?.type === 'group' && activeChat()?.avatar) {
                             <div class="w-8 h-8 xl:w-10 xl:h-10 cursor-pointer overflow-hidden" (click)="toggleContactInfo()">
-                                <img [src]="'/demo/images/chat/' + encodeURIComponent(activeChat()!.avatar!)" [alt]="activeChat()?.name" class="w-full h-full rounded-full object-contain" />
+                                <img [src]="'demo/images/chat/' + encodeURIComponent(activeChat()!.avatar!)" [alt]="activeChat()?.name" class="w-full h-full rounded-full object-contain" />
                             </div>
                         } @else if (activeChat()?.type === 'individual' && activeChat()?.avatar) {
                             <div class="w-8 h-8 xl:w-10 xl:h-10 cursor-pointer overflow-hidden" (click)="toggleContactInfo()">
-                                <img [src]="'/demo/images/avatar/' + activeChat()!.avatar" [alt]="activeChat()?.name" class="w-full h-full rounded-full object-cover" />
+                                <img [src]="'demo/images/avatar/' + activeChat()!.avatar" [alt]="activeChat()?.name" class="w-full h-full rounded-full object-cover" />
                             </div>
                         } @else {
                             <div class="w-8 h-8 xl:w-10 xl:h-10 bg-surface-900 dark:bg-surface-100 rounded-full flex items-center justify-center cursor-pointer" (click)="toggleContactInfo()">
@@ -191,7 +191,7 @@ export class Chat implements OnInit {
     constructor(private confirmationService: ConfirmationService) {}
 
     async ngOnInit() {
-        const response = await fetch('/demo/data/chatData.json');
+        const response = await fetch('demo/data/chatData.json');
         const data = await response.json();
         this.chatRooms.set(data.chatRooms);
         this.currentUser.set(data.currentUser);

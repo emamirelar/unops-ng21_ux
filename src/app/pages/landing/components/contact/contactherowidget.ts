@@ -24,8 +24,8 @@ import { TextareaModule } from 'primeng/textarea';
                     class="mt-12 lg:mt-28 mb-16 lg:mb-24 max-w-xl lg:max-w-6xl mx-auto flex lg:flex-row flex-col-reverse rounded-2xl overflow-hidden border border-surface-200 dark:border-surface-800 shadow-[0px_12px_24px_0px_rgba(0,0,0,0.04),0px_1px_2px_0px_rgba(18,18,23,0.05)]"
                 >
                     <div class="overflow-hidden relative min-h-120 lg:max-w-md w-full flex flex-col justify-between bg-primary-600 px-10 lg:px-11 py-10">
-                        <img src="/demo/images/landing/pattern-c.png" class="absolute top-80 lg:top-104 -left-64 lg:-left-64 w-2xl rotate-180 z-0 select-none" />
-                        <img src="/demo/images/landing/pattern-c.png" class="absolute rotate-45 -top-112 lg:-top-72 left-72 w-2xl z-0 select-none" />
+                        <img src="demo/images/landing/pattern-c.png" class="absolute top-80 lg:top-104 -left-64 lg:-left-64 w-2xl rotate-180 z-0 select-none" />
+                        <img src="demo/images/landing/pattern-c.png" class="absolute rotate-45 -top-112 lg:-top-72 left-72 w-2xl z-0 select-none" />
                         <div class="relative z-10">
                             <h6 class="title-h6 text-left text-surface-0">Contact Information</h6>
                             <p class="mt-2 body-large text-left text-surface-0/80">Say something to start a live chat!</p>

@@ -99,12 +99,12 @@ interface StatusOption {
                     >
                         <ng-template #selecteditem let-value>
                             <div class="flex items-center gap-2 bg-surface-50 dark:bg-surface-900 px-2 py-1 rounded">
-                                <img [src]="'/demo/images/avatar/' + value.image" [alt]="value.name" class="w-5 h-5 rounded-full border border-surface-200 dark:border-surface-700" />
+                                <img [src]="'demo/images/avatar/' + value.image" [alt]="value.name" class="w-5 h-5 rounded-full border border-surface-200 dark:border-surface-700" />
                             </div>
                         </ng-template>
                         <ng-template #item let-option>
                             <div class="flex items-center gap-3">
-                                <img [src]="'/demo/images/avatar/' + option.image" [alt]="option.name" class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700" />
+                                <img [src]="'demo/images/avatar/' + option.image" [alt]="option.name" class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700" />
                                 <span class="text-surface-900 dark:text-surface-0 font-medium">{{ option.name }}</span>
                             </div>
                         </ng-template>

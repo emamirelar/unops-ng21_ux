@@ -27,13 +27,13 @@ export class ContactAdressWidget {
             title: 'California',
             address: '3456 Lime Dr, Feigncity, FL, 33333',
             phone: '(400) 000 - 0000',
-            image: '/demo/images/landing/contact-address-1.jpg'
+            image: 'demo/images/landing/contact-address-1.jpg'
         },
         {
             title: 'Australia',
             address: 'Sydney, Australia, 2000',
             phone: '(400) 000 - 0000',
-            image: '/demo/images/landing/contact-address-2.jpg'
+            image: 'demo/images/landing/contact-address-2.jpg'
         }
     ];
 }

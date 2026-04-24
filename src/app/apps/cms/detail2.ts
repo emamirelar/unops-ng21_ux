@@ -25,7 +25,7 @@ interface Section {
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="flex items-center gap-2">
-                                <img src="/demo/images/cms/avatars/avatar-dianne.jpg" alt="Dianne Russell" class="w-6 h-6 rounded-full border border-surface-200 dark:border-surface-700" />
+                                <img src="demo/images/cms/avatars/avatar-dianne.jpg" alt="Dianne Russell" class="w-6 h-6 rounded-full border border-surface-200 dark:border-surface-700" />
                                 <div class="text-surface-500 dark:text-surface-400 text-base">Dianne Russell</div>
                             </div>
                             <div class="w-px h-3 bg-surface-200 dark:bg-surface-700"></div>
@@ -34,7 +34,7 @@ interface Section {
                             <div class="text-surface-500 dark:text-surface-400 text-base">6 minute read</div>
                         </div>
                         <div class="h-96 relative rounded-3xl overflow-hidden">
-                            <img src="/demo/images/cms/cms-hero-1.jpg" alt="How Manufacturing Giants Drive Economic Growth" class="w-full h-full object-cover" />
+                            <img src="demo/images/cms/cms-hero-1.jpg" alt="How Manufacturing Giants Drive Economic Growth" class="w-full h-full object-cover" />
                         </div>
                     </div>
                     <div class="flex flex-col gap-16">
@@ -57,7 +57,7 @@ interface Section {
                             </div>
                         </div>
 
-                        <img src="/demo/images/cms/cms-hero-3.jpg" alt="Industrial Infrastructure Investment" class="w-full max-w-full h-96 object-cover rounded-3xl" />
+                        <img src="demo/images/cms/cms-hero-3.jpg" alt="Industrial Infrastructure Investment" class="w-full max-w-full h-96 object-cover rounded-3xl" />
 
                         <div id="manufacturing-investment" class="flex flex-col gap-8">
                             <div class="flex flex-col gap-3">
@@ -162,7 +162,7 @@ interface Section {
 
                         <div class="flex items-start gap-3">
                             <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                <img src="/demo/images/cms/avatars/avatar-dianne.jpg" alt="Dianne Russell" class="w-8 h-8 rounded-full" />
+                                <img src="demo/images/cms/avatars/avatar-dianne.jpg" alt="Dianne Russell" class="w-8 h-8 rounded-full" />
                             </div>
                             <div class="flex-1 flex flex-col gap-3">
                                 <div class="flex justify-between items-center">
@@ -188,7 +188,7 @@ interface Section {
                                 <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium leading-relaxed">Keep Reading</h2>
                                 <div class="flex flex-col gap-12">
                                     <div class="flex flex-col md:flex-row gap-6 md:gap-8">
-                                        <img src="/demo/images/cms/cms-list-8.jpg" alt="Maritime Trade Finance" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl md:self-stretch" />
+                                        <img src="demo/images/cms/cms-list-8.jpg" alt="Maritime Trade Finance" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl md:self-stretch" />
                                         <div class="flex-1 flex flex-col gap-3">
                                             <div class="text-surface-500 dark:text-surface-400 text-base">Jan 15, 2025 • 4 min read</div>
                                             <div class="flex flex-col gap-4">
@@ -198,7 +198,7 @@ interface Section {
                                                 </p>
                                                 <div class="flex items-center gap-3">
                                                     <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                                        <img src="/demo/images/cms/avatars/avatar-sophia.jpg" alt="Sophia Bennett" class="w-8 h-8 rounded-full" />
+                                                        <img src="demo/images/cms/avatars/avatar-sophia.jpg" alt="Sophia Bennett" class="w-8 h-8 rounded-full" />
                                                     </div>
                                                     <div class="flex flex-col">
                                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Sophia Bennett</div>
@@ -210,7 +210,7 @@ interface Section {
                                     </div>
 
                                     <div class="flex flex-col md:flex-row gap-6 md:gap-8">
-                                        <img src="/demo/images/cms/cms-list-3.jpg" alt="Transportation Infrastructure Investment" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl" />
+                                        <img src="demo/images/cms/cms-list-3.jpg" alt="Transportation Infrastructure Investment" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl" />
                                         <div class="flex-1 flex flex-col gap-3">
                                             <div class="text-surface-500 dark:text-surface-400 text-base">Jan 19, 2025 • 5 min read</div>
                                             <div class="flex flex-col gap-4">
@@ -218,7 +218,7 @@ interface Section {
                                                 <p class="text-surface-500 dark:text-surface-300 text-base leading-normal">Strategic rail investments connect markets, reduce logistics costs, and unlock regional development opportunities.</p>
                                                 <div class="flex items-center gap-3">
                                                     <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                                        <img src="/demo/images/cms/avatars/avatar-ethan.jpg" alt="Ethan Clarke" class="w-8 h-8 rounded-full" />
+                                                        <img src="demo/images/cms/avatars/avatar-ethan.jpg" alt="Ethan Clarke" class="w-8 h-8 rounded-full" />
                                                     </div>
                                                     <div class="flex flex-col">
                                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Ethan Clarke</div>

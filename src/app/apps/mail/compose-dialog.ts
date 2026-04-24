@@ -35,7 +35,7 @@ interface ComposeData {
             <div>
                 <div class="p-3 md:p-4 border-b border-surface-200 dark:border-surface-700 flex items-center justify-between">
                     <div class="flex items-center gap-2 md:gap-3 min-w-0">
-                        <p-avatar image="/demo/images/avatar/avatar-square-m-2.jpg" shape="square" [pt]="{ image: { class: 'rounded-lg!' } }" />
+                        <p-avatar image="demo/images/avatar/avatar-square-m-2.jpg" shape="square" [pt]="{ image: { class: 'rounded-lg!' } }" />
                         <div class="min-w-0">
                             <div class="text-surface-900 dark:text-surface-0 font-medium text-sm md:text-base">Robert Fox</div>
                             <div class="text-xs md:text-sm text-surface-500 dark:text-surface-400">Compose</div>

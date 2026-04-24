@@ -221,7 +221,7 @@ export class ShoppingCart {
             earnings: 51.0,
             quantity: 1,
             deliveryDate: 'Saturday, January 18th',
-            image: '/demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-1.jpg'
+            image: 'demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-1.jpg'
         },
         {
             id: 2,
@@ -232,7 +232,7 @@ export class ShoppingCart {
             earnings: 30.5,
             quantity: 1,
             deliveryDate: 'Saturday, January 18th',
-            image: '/demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-2.jpg'
+            image: 'demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-2.jpg'
         },
         {
             id: 3,
@@ -243,7 +243,7 @@ export class ShoppingCart {
             earnings: 30.0,
             quantity: 1,
             deliveryDate: 'Saturday, January 18th',
-            image: '/demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-3.jpg'
+            image: 'demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-3.jpg'
         }
     ]);
 
@@ -253,21 +253,21 @@ export class ShoppingCart {
             name: 'SkyLum™ Urban Trench Coat',
             price: '$249.99',
             rating: 4.7,
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-1.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-1.jpg'
         },
         {
             id: 5,
             name: 'BreGD™ Lightweight Jacket',
             price: '$199.99',
             rating: 4.5,
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-5.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-5.jpg'
         },
         {
             id: 6,
             name: 'FlowMotion™ Cape Jacket',
             price: '$349.99',
             rating: 4.7,
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-6.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-6.jpg'
         }
     ];
 

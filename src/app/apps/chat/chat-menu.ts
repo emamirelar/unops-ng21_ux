@@ -84,7 +84,7 @@ interface OnlineUser {
                                     class="shrink-0 p-0.5 rounded-full outline outline-2 outline-offset-[-1px] cursor-pointer"
                                     [ngClass]="user.isViewed ? 'outline-surface-300 dark:outline-surface-600' : 'outline-primary-600 dark:outline-primary-400'"
                                 >
-                                    <img [src]="'/demo/images/avatar/' + user.avatar" [alt]="user.name" class="w-10 h-10 rounded-full" />
+                                    <img [src]="'demo/images/avatar/' + user.avatar" [alt]="user.name" class="w-10 h-10 rounded-full" />
                                 </div>
                             }
                         </div>
@@ -230,7 +230,7 @@ interface OnlineUser {
                         @for (contact of availableContacts(); track contact.id) {
                             <div class="p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors" (click)="selectContact(contact)">
                                 @if (contact.avatar) {
-                                    <p-avatar [image]="'/demo/images/avatar/' + contact.avatar" size="normal" shape="circle" styleClass="w-10 h-10" />
+                                    <p-avatar [image]="'demo/images/avatar/' + contact.avatar" size="normal" shape="circle" styleClass="w-10 h-10" />
                                 } @else {
                                     <p-avatar [label]="getAvatarInitials(contact.name)" size="normal" shape="circle" styleClass="w-10 h-10 bg-primary-100 text-primary-600" />
                                 }
@@ -259,7 +259,7 @@ interface OnlineUser {
                     <!-- Group Chat Avatar -->
                     @if (chat.type === 'group' && chat.avatar) {
                         <div class="w-10 h-10">
-                            <img [src]="'/demo/images/chat/' + encodeURIComponent(chat.avatar)" [alt]="chat.name" class="w-full h-full rounded-full object-contain" />
+                            <img [src]="'demo/images/chat/' + encodeURIComponent(chat.avatar)" [alt]="chat.name" class="w-full h-full rounded-full object-contain" />
                         </div>
                     } @else if (chat.type === 'group') {
                         <!-- Fallback Group Chat Avatar -->
@@ -276,7 +276,7 @@ interface OnlineUser {
                         <div class="w-10 h-10">
                             <p-overlaybadge styleClass="inline-flex">
                                 @if (chat.avatar) {
-                                    <p-avatar [image]="'/demo/images/avatar/' + chat.avatar" size="normal" shape="circle" styleClass="p-overlay-badge w-10 h-10" />
+                                    <p-avatar [image]="'demo/images/avatar/' + chat.avatar" size="normal" shape="circle" styleClass="p-overlay-badge w-10 h-10" />
                                 } @else {
                                     <p-avatar [label]="getAvatarInitials(chat.name)" size="normal" shape="circle" styleClass="p-overlay-badge w-10 h-10 bg-primary-100 text-primary-600" />
                                 }
@@ -318,7 +318,7 @@ interface OnlineUser {
                 <div class="relative">
                     @if (chat.type === 'group' && chat.avatar) {
                         <div class="w-10 h-10">
-                            <img [src]="'/demo/images/chat/' + encodeURIComponent(chat.avatar)" [alt]="chat.name" class="w-full h-full rounded-full object-contain" />
+                            <img [src]="'demo/images/chat/' + encodeURIComponent(chat.avatar)" [alt]="chat.name" class="w-full h-full rounded-full object-contain" />
                         </div>
                     } @else if (chat.type === 'group') {
                         <div class="w-10 h-10 bg-surface-900 dark:bg-surface-100 rounded-full flex items-center justify-center">
@@ -333,7 +333,7 @@ interface OnlineUser {
                         <div class="w-10 h-10">
                             <p-overlaybadge styleClass="inline-flex">
                                 @if (chat.avatar) {
-                                    <p-avatar [image]="'/demo/images/avatar/' + chat.avatar" size="normal" shape="circle" styleClass="p-overlay-badge w-10 h-10" />
+                                    <p-avatar [image]="'demo/images/avatar/' + chat.avatar" size="normal" shape="circle" styleClass="p-overlay-badge w-10 h-10" />
                                 } @else {
                                     <p-avatar [label]="getAvatarInitials(chat.name)" size="normal" shape="circle" styleClass="p-overlay-badge w-10 h-10 bg-primary-100 text-primary-600" />
                                 }
@@ -384,7 +384,7 @@ export class ChatMenu implements OnInit {
     ];
 
     async ngOnInit() {
-        const response = await fetch('/demo/data/chatData.json');
+        const response = await fetch('demo/data/chatData.json');
         const data = await response.json();
         this.userData.set(data.userData);
     }

@@ -83,7 +83,7 @@ interface SelectedUser {
                                 @for (participant of activeChat?.participants; track participant.id) {
                                     <div class="flex items-center gap-3">
                                         @if (participant.avatar) {
-                                            <p-avatar [image]="'/demo/images/avatar/' + participant.avatar" size="normal" shape="circle" styleClass="w-10 h-10 cursor-pointer" (click)="openUserProfile(participant.id)" />
+                                            <p-avatar [image]="'demo/images/avatar/' + participant.avatar" size="normal" shape="circle" styleClass="w-10 h-10 cursor-pointer" (click)="openUserProfile(participant.id)" />
                                         } @else {
                                             <p-avatar [label]="getAvatarInitials(participant.name)" size="normal" shape="circle" styleClass="w-10 h-10 bg-primary-100 text-primary-600 cursor-pointer" (click)="openUserProfile(participant.id)" />
                                         }
@@ -116,7 +116,7 @@ interface SelectedUser {
 
                             <div class="flex flex-col items-center gap-4">
                                 @if (selectedUser.avatar) {
-                                    <p-avatar [image]="'/demo/images/avatar/' + selectedUser.avatar" size="large" shape="circle" styleClass="w-16 h-16" />
+                                    <p-avatar [image]="'demo/images/avatar/' + selectedUser.avatar" size="large" shape="circle" styleClass="w-16 h-16" />
                                 } @else {
                                     <p-avatar [label]="getAvatarInitials(selectedUser.name)" size="large" shape="circle" styleClass="w-16 h-16 bg-primary-100 text-primary-600" />
                                 }

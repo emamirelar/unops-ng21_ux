@@ -12,13 +12,13 @@ import { Component, computed, inject } from '@angular/core';
                 <div class="relative lg:flex-1 h-108 lg:h-[34.6rem] w-full max-w-100 lg:max-w-lg">
                     <app-lazy-image-widget
                         className="w-76 lg:w-[24rem] z-0 rounded-2xl delay-300 h-auto absolute rotate-[-22deg] bottom-10 lg:bottom-12 left-12 lg:left-16 shadow-[0px_20px_52px_0px_rgba(0,0,0,0.04),0px_112px_31px_0px_rgba(0,0,0,0.00),0px_72px_29px_0px_rgba(0,0,0,0.01)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'spending-limit-dark.png' : 'spending-limit.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'spending-limit-dark.png' : 'spending-limit.png')"
                         alt="Features Section One Box Image"
                         style="display:contents"
                     />
                     <app-lazy-image-widget
                         className="w-[18rem] lg:w-92 rounded-2xl z-10 h-auto absolute top-0 right-0 shadow-[0px_20px_52px_0px_rgba(0,0,0,0.04),0px_112px_31px_0px_rgba(0,0,0,0.00),0px_72px_29px_0px_rgba(0,0,0,0.01)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'credit-score-dark.png' : 'credit-score.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'credit-score-dark.png' : 'credit-score.png')"
                         alt="Features Section One Box Image"
                         style="display:contents"
                     />

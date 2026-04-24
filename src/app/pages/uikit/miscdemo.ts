@@ -73,11 +73,11 @@ import { MeterGroupModule } from 'primeng/metergroup';
                     <div class="font-semibold text-xl mb-4">Avatar</div>
                     <div class="font-semibold mb-4">Group</div>
                     <p-avatar-group class="mb-4">
-                        <p-avatar image="/demo/images/avatar/amyelsner.png" size="large" shape="circle"></p-avatar>
-                        <p-avatar image="/demo/images/avatar/asiyajavayant.png" size="large" shape="circle"></p-avatar>
-                        <p-avatar image="/demo/images/avatar/onyamalimba.png" size="large" shape="circle"></p-avatar>
-                        <p-avatar image="/demo/images/avatar/ionibowcher.png" size="large" shape="circle"></p-avatar>
-                        <p-avatar image="/demo/images/avatar/xuxuefeng.png" size="large" shape="circle"></p-avatar>
+                        <p-avatar image="demo/images/avatar/amyelsner.png" size="large" shape="circle"></p-avatar>
+                        <p-avatar image="demo/images/avatar/asiyajavayant.png" size="large" shape="circle"></p-avatar>
+                        <p-avatar image="demo/images/avatar/onyamalimba.png" size="large" shape="circle"></p-avatar>
+                        <p-avatar image="demo/images/avatar/ionibowcher.png" size="large" shape="circle"></p-avatar>
+                        <p-avatar image="demo/images/avatar/xuxuefeng.png" size="large" shape="circle"></p-avatar>
                         <p-avatar
                             label="+2"
                             shape="circle"
@@ -193,16 +193,16 @@ import { MeterGroupModule } from 'primeng/metergroup';
                     <div class="font-semibold my-4">Image</div>
                     <div class="flex items-center flex-col sm:flex-row gap-2">
                         <p-chip label="Amy Elsner">
-                            <img src="/demo/images/avatar/amyelsner.png" class="w-8 h-8" alt="avatar" />
+                            <img src="demo/images/avatar/amyelsner.png" class="w-8 h-8" alt="avatar" />
                         </p-chip>
                         <p-chip label="Asiya Javayant">
-                            <img src="/demo/images/avatar/asiyajavayant.png" class="w-8 h-8" alt="avatar" />
+                            <img src="demo/images/avatar/asiyajavayant.png" class="w-8 h-8" alt="avatar" />
                         </p-chip>
                         <p-chip label="Onyama Limba">
-                            <img src="/demo/images/avatar/onyamalimba.png" class="w-8 h-8" alt="avatar" />
+                            <img src="demo/images/avatar/onyamalimba.png" class="w-8 h-8" alt="avatar" />
                         </p-chip>
                         <p-chip label="Xuxue Feng" [removable]="true">
-                            <img src="/demo/images/avatar/xuxuefeng.png" class="w-8 h-8" alt="avatar" />
+                            <img src="demo/images/avatar/xuxuefeng.png" class="w-8 h-8" alt="avatar" />
                         </p-chip>
                     </div>
                 </div>

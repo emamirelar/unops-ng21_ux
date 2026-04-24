@@ -298,7 +298,7 @@ export class MailInbox implements OnInit {
     async ngOnInit() {
         await this.mailService.loadEmails();
 
-        const response = await fetch('/demo/data/emailData.json');
+        const response = await fetch('demo/data/emailData.json');
         const data = await response.json();
         this.menuItems.set(data.menuItems);
         this.categoryItems.set(data.categoryItems);

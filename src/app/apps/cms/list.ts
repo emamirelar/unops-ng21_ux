@@ -198,18 +198,18 @@ export class List implements OnInit, OnDestroy {
     slides: Slide[] = [
         {
             id: 1,
-            image: '/demo/images/cms/cms-hero-1.jpg',
+            image: 'demo/images/cms/cms-hero-1.jpg',
             title: 'How Manufacturing Giants Drive Economic Growth',
             category: 'Newest Blog',
             author: {
                 name: 'Dianne Russell',
                 title: 'CEO @ucs.ai',
-                avatar: '/demo/images/cms/avatars/avatar-dianne.jpg'
+                avatar: 'demo/images/cms/avatars/avatar-dianne.jpg'
             }
         },
         {
             id: 2,
-            image: '/demo/images/cms/cms-hero-2.jpg',
+            image: 'demo/images/cms/cms-hero-2.jpg',
             title: 'Investment Strategies for Industrial Sectors',
             category: 'Newest Blog',
             author: {
@@ -220,7 +220,7 @@ export class List implements OnInit, OnDestroy {
         },
         {
             id: 3,
-            image: '/demo/images/cms/cms-hero-3.jpg',
+            image: 'demo/images/cms/cms-hero-3.jpg',
             title: `Why Blue-Collar Jobs Are Banking's Best Bet`,
             category: 'Newest Blog',
             author: {
@@ -251,7 +251,7 @@ export class List implements OnInit, OnDestroy {
                     'The energy transition is reshaping global markets, creating new opportunities for investors and businesses. From renewable infrastructure to traditional energy modernization, understanding financing trends helps you make informed decisions about portfolio diversification and long-term growth strategies.',
                 link: 'Explore energy sector financing',
                 hasImage: true,
-                image: '/demo/images/cms/cms-list-1.jpg'
+                image: 'demo/images/cms/cms-list-1.jpg'
             },
             {
                 id: 3,
@@ -282,7 +282,7 @@ export class List implements OnInit, OnDestroy {
                     'The space economy is experiencing unprecedented growth, driven by private sector innovation and government partnerships. From satellite communications to space tourism, understanding investment opportunities in aerospace requires strategic financial planning. Explore how emerging space technologies are creating new markets and generating substantial returns for forward-thinking investors.',
                 link: 'Explore aerospace investment opportunities',
                 hasImage: true,
-                image: '/demo/images/cms/cms-list-4.jpg'
+                image: 'demo/images/cms/cms-list-4.jpg'
             },
             {
                 id: 6,
@@ -293,7 +293,7 @@ export class List implements OnInit, OnDestroy {
                     'Effective corporate leadership requires mastering complex financial strategies that drive sustainable growth. From capital allocation to risk management, executive decision-making shapes company performance and shareholder value. Discover essential financial leadership principles that help executives navigate market volatility and capitalize on emerging opportunities.',
                 link: 'Master executive financial strategies',
                 hasImage: true,
-                image: '/demo/images/cms/cms-list-7.jpg'
+                image: 'demo/images/cms/cms-list-7.jpg'
             }
         ],
         [
@@ -324,7 +324,7 @@ export class List implements OnInit, OnDestroy {
                     'Strategic infrastructure investment is the cornerstone of economic development. Understanding how manufacturing facilities, energy systems, and industrial complexes create value helps investors identify long-term growth opportunities in the industrial sector.',
                 link: 'Check out infrastructure investment guide',
                 hasImage: true,
-                image: '/demo/images/cms/cms-list-6.jpg'
+                image: 'demo/images/cms/cms-list-6.jpg'
             }
         ]
     ];

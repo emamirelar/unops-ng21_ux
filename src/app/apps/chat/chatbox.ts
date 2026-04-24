@@ -75,7 +75,7 @@ interface CurrentUser {
                     } @else {
                         <div class="flex justify-start items-start gap-2 xl:gap-4 pr-8 xl:pr-16">
                             @if (message.senderAvatar) {
-                                <p-avatar [image]="'/demo/images/avatar/' + message.senderAvatar" size="normal" shape="circle" styleClass="w-6 h-6 xl:w-8 xl:h-8 cursor-pointer shrink-0!" (click)="openUserProfile(message.senderId)" />
+                                <p-avatar [image]="'demo/images/avatar/' + message.senderAvatar" size="normal" shape="circle" styleClass="w-6 h-6 xl:w-8 xl:h-8 cursor-pointer shrink-0!" (click)="openUserProfile(message.senderId)" />
                             } @else {
                                 <p-avatar [label]="getAvatarInitials(message.senderName)" size="normal" shape="circle" styleClass="w-6 h-6 xl:w-8 xl:h-8 bg-primary-100 text-primary-600 cursor-pointer" (click)="openUserProfile(message.senderId)" />
                             }

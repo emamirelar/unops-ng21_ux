@@ -12,13 +12,13 @@ import { Component, computed, inject } from '@angular/core';
                 <div class="relative lg:flex-1 w-full h-112 lg:h-160 max-w-100 lg:max-w-xl">
                     <app-lazy-image-widget
                         className="w-70 lg:w-100 z-0 rounded-2xl delay-300 h-auto absolute rotate-20 bottom-10 lg:bottom-16 left-18 lg:left-24 shadow-[0px_20px_52px_0px_rgba(0,0,0,0.04),0px_112px_31px_0px_rgba(0,0,0,0.00),0px_72px_29px_0px_rgba(0,0,0,0.01)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'social-media-users-dark.png' : 'social-media-users.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'social-media-users-dark.png' : 'social-media-users.png')"
                         alt="Features Section One Box Image"
                         style="display:contents"
                     />
                     <app-lazy-image-widget
                         className="w-70 lg:w-100 rounded-2xl z-10 h-auto absolute bottom-0 left-0 shadow-[0px_20px_52px_0px_rgba(0,0,0,0.04),0px_112px_31px_0px_rgba(0,0,0,0.00),0px_72px_29px_0px_rgba(0,0,0,0.01)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'social-media-revenue-dark.png' : 'social-media-revenue.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'social-media-revenue-dark.png' : 'social-media-revenue.png')"
                         alt="Features Section One Box Image"
                         style="display:contents"
                     />

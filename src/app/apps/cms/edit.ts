@@ -314,7 +314,7 @@ export class Edit {
     accordionContentPT = { content: { class: 'bg-transparent! border-0! p-0! pb-4!' } };
 
     sidebarVisible = signal(false);
-    coverImage = signal<string | null>('/demo/images/cms/cms-hero-1.jpg');
+    coverImage = signal<string | null>('demo/images/cms/cms-hero-1.jpg');
 
     title = model('The Smartest Ways to Earn Airline Miles');
     content = model(
@@ -323,7 +323,7 @@ export class Edit {
     status = model('Draft');
     visibility = model('Public');
     publishDate = model<Date | null>(new Date());
-    selectedAuthors = model<Author[]>([{ name: 'Dianne Russell', image: '/demo/images/cms/avatars/avatar-dianne.jpg' }]);
+    selectedAuthors = model<Author[]>([{ name: 'Dianne Russell', image: 'demo/images/cms/avatars/avatar-dianne.jpg' }]);
     selectedCategories = model<string[]>(['Lifestyle', 'Art', 'Banking']);
     selectedTags = model<string[]>(['World', 'Space']);
 
@@ -338,12 +338,12 @@ export class Edit {
     ];
 
     authorOptions: Author[] = [
-        { name: 'Dianne Russell', image: '/demo/images/cms/avatars/avatar-dianne.jpg' },
-        { name: 'Jane Smith', image: '/demo/images/cms/avatars/avatar-jane.jpg' },
-        { name: 'Darrell Steward', image: '/demo/images/cms/avatars/avatar-darrell.jpg' },
-        { name: 'Emma Wilson', image: '/demo/images/cms/avatars/avatar-emma.jpg' },
-        { name: 'Ethan Hunt', image: '/demo/images/cms/avatars/avatar-ethan.jpg' },
-        { name: 'Sophia Chen', image: '/demo/images/cms/avatars/avatar-sophia.jpg' }
+        { name: 'Dianne Russell', image: 'demo/images/cms/avatars/avatar-dianne.jpg' },
+        { name: 'Jane Smith', image: 'demo/images/cms/avatars/avatar-jane.jpg' },
+        { name: 'Darrell Steward', image: 'demo/images/cms/avatars/avatar-darrell.jpg' },
+        { name: 'Emma Wilson', image: 'demo/images/cms/avatars/avatar-emma.jpg' },
+        { name: 'Ethan Hunt', image: 'demo/images/cms/avatars/avatar-ethan.jpg' },
+        { name: 'Sophia Chen', image: 'demo/images/cms/avatars/avatar-sophia.jpg' }
     ];
 
     categories: string[] = ['Lifestyle', 'Sustainability', 'Culture', 'Art', 'Banking', 'Technology'];

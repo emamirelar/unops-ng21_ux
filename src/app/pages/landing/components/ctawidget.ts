@@ -101,7 +101,7 @@ import { RouterLink } from '@angular/router';
                         </defs>
                     </svg>
                     <app-lazy-image-widget
-                        [src]="'/demo/images/landing/' + (isDarkTheme() ? 'cta-dashboard-dark.png' : 'cta-dashboard.png')"
+                        [src]="'demo/images/landing/' + (isDarkTheme() ? 'cta-dashboard-dark.png' : 'cta-dashboard.png')"
                         alt="CTA Image"
                         className="absolute top-0 left-0 w-160 lg:w-3xl h-auto rounded-2xl shadow-[0px_3.267px_13.068px_0px_rgba(18,18,23,0.08),0px_0px_0px_1px_#E3E8EF] dark:shadow-[0px_2.668px_10.673px_0px_rgba(18,18,23,0.08),0px_0px_0px_0.817px_#27272A]"
                         style="display: contents;"

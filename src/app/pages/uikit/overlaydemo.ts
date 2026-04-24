@@ -53,7 +53,7 @@ import { TooltipModule } from 'primeng/tooltip';
                                 <tr [pSelectableRow]="product">
                                     <td>{{ product.name }}</td>
                                     <td>
-                                        <img [src]="'/demo/images/product/' + product.image" [alt]="product.name" class="w-16 shadow-sm" />
+                                        <img [src]="'demo/images/product/' + product.image" [alt]="product.name" class="w-16 shadow-sm" />
                                     </td>
                                     <td>{{ product.price }}</td>
                                 </tr>

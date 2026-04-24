@@ -21,22 +21,22 @@ export interface MockUser {
 }
 
 export const MOCK_PRODUCTS: MockProduct[] = [
-    { id: 1, name: 'Cloud Storage', category: 'Infrastructure', price: 65, status: 'Active', rating: 5, image: '/demo/images/avatar/amyelsner.png' },
-    { id: 2, name: 'API Gateway', category: 'Networking', price: 120, status: 'Active', rating: 4, image: '/demo/images/avatar/annafali.png' },
-    { id: 3, name: 'Data Pipeline', category: 'Analytics', price: 89, status: 'Draft', rating: 3, image: '/demo/images/avatar/asiyajavayant.png' },
-    { id: 4, name: 'Auth Service', category: 'Security', price: 45, status: 'Archived', rating: 4, image: '/demo/images/avatar/bernardodominic.png' },
-    { id: 5, name: 'CDN Edge', category: 'Networking', price: 200, status: 'Active', rating: 5, image: '/demo/images/avatar/amyelsner.png' },
-    { id: 6, name: 'Monitoring Suite', category: 'DevOps', price: 150, status: 'Active', rating: 4, image: '/demo/images/avatar/annafali.png' },
-    { id: 7, name: 'Message Queue', category: 'Infrastructure', price: 75, status: 'Draft', rating: 3, image: '/demo/images/avatar/asiyajavayant.png' },
-    { id: 8, name: 'Search Index', category: 'Analytics', price: 110, status: 'Active', rating: 5, image: '/demo/images/avatar/bernardodominic.png' }
+    { id: 1, name: 'Cloud Storage', category: 'Infrastructure', price: 65, status: 'Active', rating: 5, image: 'demo/images/avatar/amyelsner.png' },
+    { id: 2, name: 'API Gateway', category: 'Networking', price: 120, status: 'Active', rating: 4, image: 'demo/images/avatar/annafali.png' },
+    { id: 3, name: 'Data Pipeline', category: 'Analytics', price: 89, status: 'Draft', rating: 3, image: 'demo/images/avatar/asiyajavayant.png' },
+    { id: 4, name: 'Auth Service', category: 'Security', price: 45, status: 'Archived', rating: 4, image: 'demo/images/avatar/bernardodominic.png' },
+    { id: 5, name: 'CDN Edge', category: 'Networking', price: 200, status: 'Active', rating: 5, image: 'demo/images/avatar/amyelsner.png' },
+    { id: 6, name: 'Monitoring Suite', category: 'DevOps', price: 150, status: 'Active', rating: 4, image: 'demo/images/avatar/annafali.png' },
+    { id: 7, name: 'Message Queue', category: 'Infrastructure', price: 75, status: 'Draft', rating: 3, image: 'demo/images/avatar/asiyajavayant.png' },
+    { id: 8, name: 'Search Index', category: 'Analytics', price: 110, status: 'Active', rating: 5, image: 'demo/images/avatar/bernardodominic.png' }
 ];
 
 export const MOCK_USERS: MockUser[] = [
-    { id: 1, name: 'Amy Elsner', email: 'amy@example.com', role: 'Admin', avatar: '/demo/images/avatar/amyelsner.png', status: 'Active', date: 'Apr 21, 2026' },
-    { id: 2, name: 'Anna Fali', email: 'anna@example.com', role: 'Editor', avatar: '/demo/images/avatar/annafali.png', status: 'Active', date: 'Apr 20, 2026' },
-    { id: 3, name: 'Asiya Javayant', email: 'asiya@example.com', role: 'Viewer', avatar: '/demo/images/avatar/asiyajavayant.png', status: 'Inactive', date: 'Apr 19, 2026' },
-    { id: 4, name: 'Bernardo Dominic', email: 'bernardo@example.com', role: 'Editor', avatar: '/demo/images/avatar/bernardodominic.png', status: 'Active', date: 'Apr 18, 2026' },
-    { id: 5, name: 'Elwin Sharvill', email: 'elwin@example.com', role: 'Admin', avatar: '/demo/images/avatar/amyelsner.png', status: 'Active', date: 'Apr 17, 2026' }
+    { id: 1, name: 'Amy Elsner', email: 'amy@example.com', role: 'Admin', avatar: 'demo/images/avatar/amyelsner.png', status: 'Active', date: 'Apr 21, 2026' },
+    { id: 2, name: 'Anna Fali', email: 'anna@example.com', role: 'Editor', avatar: 'demo/images/avatar/annafali.png', status: 'Active', date: 'Apr 20, 2026' },
+    { id: 3, name: 'Asiya Javayant', email: 'asiya@example.com', role: 'Viewer', avatar: 'demo/images/avatar/asiyajavayant.png', status: 'Inactive', date: 'Apr 19, 2026' },
+    { id: 4, name: 'Bernardo Dominic', email: 'bernardo@example.com', role: 'Editor', avatar: 'demo/images/avatar/bernardodominic.png', status: 'Active', date: 'Apr 18, 2026' },
+    { id: 5, name: 'Elwin Sharvill', email: 'elwin@example.com', role: 'Admin', avatar: 'demo/images/avatar/amyelsner.png', status: 'Active', date: 'Apr 17, 2026' }
 ];
 
 export const MOCK_MENU_ITEMS: MenuItem[] = [

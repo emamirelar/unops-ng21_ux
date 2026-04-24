@@ -115,7 +115,7 @@ export const ImagePreview: Story = {
         template: `
 <div class="flex flex-col items-center gap-4">
   <p-image
-    src="/flags/us.svg"
+    src="flags/us.svg"
     alt="Flag preview"
     width="200"
     [preview]="true"
@@ -149,7 +149,7 @@ export const AllVariants: Story = {
   </section>
   <section>
     <h3 class="text-lg font-semibold mb-3">Image preview</h3>
-    <p-image src="/flags/jp.svg" alt="Japan flag" width="160" [preview]="true" (onImageError)="onImageError($event)" />
+    <p-image src="flags/jp.svg" alt="Japan flag" width="160" [preview]="true" (onImageError)="onImageError($event)" />
   </section>
 </div>
         `

@@ -14,31 +14,31 @@ import { RouterLink } from '@angular/router';
                 <div class="relative lg:flex-1 h-[26.2rem] lg:h-168 w-full max-w-100 lg:max-w-2xl">
                     <app-lazy-image-widget
                         className="lg:block hidden rounded-xl absolute h-full w-auto top-0 left-0"
-                        [src]="'/demo/images/landing/' + (isDarkTheme() ? 'landing-section-pattern-dark.png' : 'landing-section-pattern.png')"
+                        [src]="'demo/images/landing/' + (isDarkTheme() ? 'landing-section-pattern-dark.png' : 'landing-section-pattern.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
                     <app-lazy-image-widget
                         className="rounded-xl absolute rotate-[-22.6deg] lg:rotate-0 left-[3.28rem] lg:left-10 top-10 lg:top-56 w-[15.8rem] lg:w-[16.7rem] shadow-[0px_200.426px_55.957px_0px_rgba(0,0,0,0.00),0px_128.191px_50.87px_0px_rgba(0,0,0,0.00),0px_72.235px_42.73px_0px_rgba(0,0,0,0.01),0px_31.539px_31.539px_0px_rgba(0,0,0,0.02),0px_8.139px_17.296px_0px_rgba(0,0,0,0.02)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'social-media-users-dark.png' : 'social-media-users.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'social-media-users-dark.png' : 'social-media-users.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
                     <app-lazy-image-widget
                         className="rounded-xl absolute right-0 lg:right-auto lg:left-84 bottom-0 lg:bottom-auto lg:top-72 w-[17.3rem] lg:w-[14.6rem] shadow-[0px_200.426px_55.957px_0px_rgba(0,0,0,0.00),0px_128.191px_50.87px_0px_rgba(0,0,0,0.00),0px_72.235px_42.73px_0px_rgba(0,0,0,0.01),0px_31.539px_31.539px_0px_rgba(0,0,0,0.02),0px_8.139px_17.296px_0px_rgba(0,0,0,0.02)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'credit-score-dark.png' : 'credit-score.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'credit-score-dark.png' : 'credit-score.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
                     <app-lazy-image-widget
                         className="lg:block hidden rounded-xl absolute left-24 top-3.5 w-60 shadow-[0px_200.426px_55.957px_0px_rgba(0,0,0,0.00),0px_128.191px_50.87px_0px_rgba(0,0,0,0.00),0px_72.235px_42.73px_0px_rgba(0,0,0,0.01),0px_31.539px_31.539px_0px_rgba(0,0,0,0.02),0px_8.139px_17.296px_0px_rgba(0,0,0,0.02)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'new-customer-dark.png' : 'new-customer.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'new-customer-dark.png' : 'new-customer.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
                     <app-lazy-image-widget
                         className="lg:block hidden rounded-xl absolute left-96 top-24 w-56 shadow-[0px_179.87px_50.217px_0px_rgba(0,0,0,0.00),0px_115.043px_45.652px_0px_rgba(0,0,0,0.00),0px_64.826px_38.348px_0px_rgba(0,0,0,0.01),0px_28.304px_28.304px_0px_rgba(0,0,0,0.02),0px_7.304px_15.522px_0px_rgba(0,0,0,0.02)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'sales-rate-dark.png' : 'sales-rate.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'sales-rate-dark.png' : 'sales-rate.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />

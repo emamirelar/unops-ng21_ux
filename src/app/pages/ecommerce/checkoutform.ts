@@ -350,7 +350,7 @@ export class CheckoutForm {
             originalPrice: 330.99,
             savings: 51.0,
             discount: 15,
-            image: '/demo/images/ecommerce/checkoutform/ecommerce-checkoutform-1.jpg'
+            image: 'demo/images/ecommerce/checkoutform/ecommerce-checkoutform-1.jpg'
         },
         {
             id: 2,
@@ -359,7 +359,7 @@ export class CheckoutForm {
             originalPrice: 320.49,
             savings: 30.5,
             discount: 10,
-            image: '/demo/images/ecommerce/checkoutform/ecommerce-checkoutform-2.jpg'
+            image: 'demo/images/ecommerce/checkoutform/ecommerce-checkoutform-2.jpg'
         },
         {
             id: 3,
@@ -368,7 +368,7 @@ export class CheckoutForm {
             originalPrice: 349.99,
             savings: 30.0,
             discount: 10,
-            image: '/demo/images/ecommerce/checkoutform/ecommerce-checkoutform-3.jpg'
+            image: 'demo/images/ecommerce/checkoutform/ecommerce-checkoutform-3.jpg'
         }
     ];
 

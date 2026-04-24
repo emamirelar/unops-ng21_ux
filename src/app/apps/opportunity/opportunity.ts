@@ -448,7 +448,7 @@ interface AiInsight {
                         <div class="ml-auto">
                             <p-avatargroup>
                                 @for (member of task.members.slice(0, 3); track member.image) {
-                                    <p-avatar [image]="'/demo/images/avatar/' + member.image" shape="circle" styleClass="border border-surface-0 dark:border-surface-900 w-6 h-6" />
+                                    <p-avatar [image]="'demo/images/avatar/' + member.image" shape="circle" styleClass="border border-surface-0 dark:border-surface-900 w-6 h-6" />
                                 }
                                 @if (task.members.length > 3) {
                                     <p-avatar [label]="'+' + (task.members.length - 3)" shape="circle" styleClass="bg-primary-500 text-surface-0 border border-surface-0 dark:border-surface-900 w-6 h-6" />

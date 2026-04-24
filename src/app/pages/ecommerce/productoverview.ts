@@ -247,7 +247,7 @@ interface Size {
                             <div class="flex flex-col justify-start items-start gap-8">
                                 <div class="w-full flex justify-start items-center gap-4">
                                     <div class="w-18 h-18 rounded-3xl">
-                                        <img class="w-full h-full object-cover rounded-2xl shadow-sm" src="/demo/images/ecommerce/productoverview/ecommerce-productoverview-5.jpg" alt="Product thumbnail" />
+                                        <img class="w-full h-full object-cover rounded-2xl shadow-sm" src="demo/images/ecommerce/productoverview/ecommerce-productoverview-5.jpg" alt="Product thumbnail" />
                                     </div>
                                     <div class="flex-1 flex flex-col justify-start items-start gap-1">
                                         <h4 class="title-h4 text-left!">AeroShield™ Storm Jacket</h4>
@@ -628,17 +628,17 @@ export class ProductOverview {
     };
 
     images: string[] = [
-        '/demo/images/ecommerce/productoverview/ecommerce-productoverview-1.jpg',
-        '/demo/images/ecommerce/productoverview/ecommerce-productoverview-2.jpg',
-        '/demo/images/ecommerce/productoverview/ecommerce-productoverview-3.jpg',
-        '/demo/images/ecommerce/productoverview/ecommerce-productoverview-4.jpg'
+        'demo/images/ecommerce/productoverview/ecommerce-productoverview-1.jpg',
+        'demo/images/ecommerce/productoverview/ecommerce-productoverview-2.jpg',
+        'demo/images/ecommerce/productoverview/ecommerce-productoverview-3.jpg',
+        'demo/images/ecommerce/productoverview/ecommerce-productoverview-4.jpg'
     ];
 
     recommendations: Recommendation[] = [
-        { id: 1, image: '/demo/images/ecommerce/productoverview/ecommerce-productoverview-5.jpg', active: true },
-        { id: 2, image: '/demo/images/ecommerce/productoverview/ecommerce-productoverview-6.jpg', active: false },
-        { id: 3, image: '/demo/images/ecommerce/productoverview/ecommerce-productoverview-7.jpg', active: false },
-        { id: 4, image: '/demo/images/ecommerce/productoverview/ecommerce-productoverview-8.jpg', active: false }
+        { id: 1, image: 'demo/images/ecommerce/productoverview/ecommerce-productoverview-5.jpg', active: true },
+        { id: 2, image: 'demo/images/ecommerce/productoverview/ecommerce-productoverview-6.jpg', active: false },
+        { id: 3, image: 'demo/images/ecommerce/productoverview/ecommerce-productoverview-7.jpg', active: false },
+        { id: 4, image: 'demo/images/ecommerce/productoverview/ecommerce-productoverview-8.jpg', active: false }
     ];
 
     sizes: Size[] = [

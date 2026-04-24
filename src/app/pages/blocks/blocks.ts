@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { LayoutService } from '@/app/layout/service/layout.service';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockViewer } from './components/blockviewer';
 import { ButtonModule } from 'primeng/button';
@@ -17,7 +18,7 @@ import { FormsModule } from '@angular/forms';
     template: `<div>
         <!-- Page Hero Section -->
 
-        <div class="bg-surface-0 dark:bg-surface-900 border border-surface rounded-xl p-8 bg-[url('/demo/images/blocks/landing-blocks.jpg')] dark:bg-[url('/demo/images/blocks/landing-blocks-dark.jpg')] bg-cover bg-no-repeat h-[440px] flex mb-8">
+        <div class="bg-surface-0 dark:bg-surface-900 border border-surface rounded-xl p-8 bg-cover bg-no-repeat h-[440px] flex mb-8" [style.background-image]="heroBackground()">
             <div class="flex flex-col gap-4 items-center sm:items-start justify-center sm:max-w-144">
                 <span class="bg-surface-950 text-white px-2 py-1 font-bold rounded-md text-sm">TailwindCSS v4</span>
                 <div class="flex items-center gap-4">
@@ -566,6 +567,13 @@ import { FormsModule } from '@angular/forms';
     </div>`
 })
 export class Blocks {
+    private layoutService = inject(LayoutService);
+
+    heroBackground = computed(() => {
+        const img = this.layoutService.isDarkTheme() ? 'demo/images/blocks/landing-blocks-dark.jpg' : 'demo/images/blocks/landing-blocks.jpg';
+        return `url('${img}')`;
+    });
+
     password: string = '';
     checked: boolean = false;
 

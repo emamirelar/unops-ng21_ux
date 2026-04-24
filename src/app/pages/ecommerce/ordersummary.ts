@@ -321,7 +321,7 @@ export class OrderSummary {
             description: 'Storm-FIT Windproof & Water-Resistant Jacket',
             price: 279.99,
             estimatedDelivery: 'Saturday, January 18th',
-            image: '/demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-1.jpg'
+            image: 'demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-1.jpg'
         },
         {
             id: 2,
@@ -329,7 +329,7 @@ export class OrderSummary {
             description: 'Storm-FIT Windproof Coat Jacket',
             price: 289.99,
             estimatedDelivery: 'Saturday, January 18th',
-            image: '/demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-2.jpg'
+            image: 'demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-2.jpg'
         },
         {
             id: 3,
@@ -337,7 +337,7 @@ export class OrderSummary {
             description: 'Storm-FIT Linen Jacket',
             price: 319.99,
             estimatedDelivery: 'Saturday, January 18th',
-            image: '/demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-3.jpg'
+            image: 'demo/images/ecommerce/shopping-cart/ecommerce-shoppingcart-3.jpg'
         }
     ];
 

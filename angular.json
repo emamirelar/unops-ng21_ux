@@ -136,6 +136,13 @@
               "src/assets/tailwind.css"
             ]
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "/unops-ng21_ux/",
+            "dir": "dist/unops-ng_ux/browser"
+          }
         }
       }
     }

@@ -79,7 +79,7 @@ export class ContactUs {
 
     get mapStyle() {
         return {
-            'background-image': this.layoutService.isDarkTheme() ? "url('/demo/images/contact/map-dark.svg')" : "url('https://primefaces.org/cdn/v2/images/contact/map-light.svg')"
+            'background-image': this.layoutService.isDarkTheme() ? "url('demo/images/contact/map-dark.svg')" : "url('https://primefaces.org/cdn/v2/images/contact/map-light.svg')"
         };
     }
 }

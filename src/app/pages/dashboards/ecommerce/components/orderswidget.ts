@@ -35,12 +35,12 @@ import { TagModule } from 'primeng/tag';
 })
 export class OrdersWidget {
     orders = [
-        { title: 'iPhone 15 Pro 1T', date: 'Feb 20, 2024', image: '/demo/images/dashboard/order-1.png', status: 'Pending', id: '3543867' },
-        { title: 'iPhone 13 Pro 256GB', date: 'Feb 16, 2024', image: '/demo/images/dashboard/order-2.png', status: 'Pending', id: '6243789' },
-        { title: 'Apple Watch 7 41mm', date: 'Feb 11, 2024', image: '/demo/images/dashboard/order-3.png', status: 'Sent', id: '9763474' },
-        { title: 'AirPods Pro', date: 'Feb 09, 2024', image: '/demo/images/dashboard/order-4.png', status: 'Sent', id: '2538268' },
-        { title: 'Apple Watch 8 44mm', date: 'Feb 08, 2024', image: '/demo/images/dashboard/order-5.png', status: 'Sent', id: '9572345' },
-        { title: 'iPhone 13 Pro 128GB', date: 'Feb 07, 2024', image: '/demo/images/dashboard/order-6.png', status: 'Sent', id: '12471247' }
+        { title: 'iPhone 15 Pro 1T', date: 'Feb 20, 2024', image: 'demo/images/dashboard/order-1.png', status: 'Pending', id: '3543867' },
+        { title: 'iPhone 13 Pro 256GB', date: 'Feb 16, 2024', image: 'demo/images/dashboard/order-2.png', status: 'Pending', id: '6243789' },
+        { title: 'Apple Watch 7 41mm', date: 'Feb 11, 2024', image: 'demo/images/dashboard/order-3.png', status: 'Sent', id: '9763474' },
+        { title: 'AirPods Pro', date: 'Feb 09, 2024', image: 'demo/images/dashboard/order-4.png', status: 'Sent', id: '2538268' },
+        { title: 'Apple Watch 8 44mm', date: 'Feb 08, 2024', image: 'demo/images/dashboard/order-5.png', status: 'Sent', id: '9572345' },
+        { title: 'iPhone 13 Pro 128GB', date: 'Feb 07, 2024', image: 'demo/images/dashboard/order-6.png', status: 'Sent', id: '12471247' }
     ];
     protected readonly trackByFn = trackByFn;
 }

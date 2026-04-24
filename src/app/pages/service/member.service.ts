@@ -10,7 +10,7 @@ export class MemberService {
 
     getMembers() {
         return this.http
-            .get<any>('/demo/data/members.json')
+            .get<any>('demo/data/members.json')
             .toPromise()
             .then((res) => res.data as Member[])
             .then((data) => data);

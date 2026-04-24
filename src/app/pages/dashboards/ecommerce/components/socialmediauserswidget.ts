@@ -61,10 +61,10 @@ export class SocialMediaUsersWidget {
     bgColors = ['var(--p-primary-color)'];
 
     dataLabels: any = [
-        { title: 'Facebook', logo: '/demo/images/dashboard/logo-facebook.svg' },
-        { title: 'Instagram', logo: '/demo/images/dashboard/logo-instagram.svg' },
-        { title: 'X.com', logo: '/demo/images/dashboard/logo-x.svg', darkLogo: '/demo/images/dashboard/logo-x-dark.svg' },
-        { title: 'Reddit', logo: '/demo/images/dashboard/logo-reddit.svg' }
+        { title: 'Facebook', logo: 'demo/images/dashboard/logo-facebook.svg' },
+        { title: 'Instagram', logo: 'demo/images/dashboard/logo-instagram.svg' },
+        { title: 'X.com', logo: 'demo/images/dashboard/logo-x.svg', darkLogo: 'demo/images/dashboard/logo-x-dark.svg' },
+        { title: 'Reddit', logo: 'demo/images/dashboard/logo-reddit.svg' }
     ];
 
     meterOptionsProps = {

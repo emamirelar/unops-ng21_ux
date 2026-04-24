@@ -96,7 +96,7 @@ interface expandedRows {
                                         <p-multi-select [ngModel]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" styleClass="w-full">
                                             <ng-template let-option #item>
                                                 <div class="flex items-center gap-2 w-44">
-                                                    <img [alt]="option.label" src="/demo/images/avatar/{{ option.image }}" width="32" />
+                                                    <img [alt]="option.label" src="demo/images/avatar/{{ option.image }}" width="32" />
                                                     <span>{{ option.name }}</span>
                                                 </div>
                                             </ng-template>
@@ -166,7 +166,7 @@ interface expandedRows {
                         </td>
                         <td>
                             <div class="flex items-center gap-2">
-                                <img [alt]="customer.representative.name" src="/demo/images/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
+                                <img [alt]="customer.representative.name" src="demo/images/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
                                 <span class="image-text">{{ customer.representative.name }}</span>
                             </div>
                         </td>
@@ -366,7 +366,7 @@ interface expandedRows {
                     <tr pRowGroupHeader>
                         <td colspan="5">
                             <div class="flex items-center gap-2">
-                                <img [alt]="customer.representative.name" src="/demo/images/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
+                                <img [alt]="customer.representative.name" src="demo/images/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
                                 <span class="font-bold">{{ customer.representative.name }}</span>
                             </div>
                         </td>

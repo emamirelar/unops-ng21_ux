@@ -31,7 +31,7 @@ const meta: Meta<TestimonialCardStoryArgs> = {
                 'The platform cut our reporting time in half and gave leadership a clear, live view of operations. Support has been outstanding from day one.',
             name: 'Alex Morgan',
             title: 'Director of Programs, North Region',
-            avatar: '/demo/images/avatar/amyelsner.png'
+            avatar: 'demo/images/avatar/amyelsner.png'
         },
         className: ''
     },

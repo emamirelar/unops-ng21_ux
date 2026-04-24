@@ -102,7 +102,7 @@ export class ProductList {
             rating: 4.7,
             category: 'new',
             dateAdded: new Date('2024-01-15'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-1.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-1.jpg'
         },
         {
             id: 2,
@@ -112,7 +112,7 @@ export class ProductList {
             rating: 4.8,
             category: 'featured',
             dateAdded: new Date('2024-01-10'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-2.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-2.jpg'
         },
         {
             id: 3,
@@ -122,7 +122,7 @@ export class ProductList {
             rating: 4.6,
             category: 'sale',
             dateAdded: new Date('2024-01-12'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-3.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-3.jpg'
         },
         {
             id: 4,
@@ -132,7 +132,7 @@ export class ProductList {
             rating: 4.9,
             category: 'featured',
             dateAdded: new Date('2024-01-08'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-4.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-4.jpg'
         },
         {
             id: 5,
@@ -142,7 +142,7 @@ export class ProductList {
             rating: 4.5,
             category: 'sale',
             dateAdded: new Date('2024-01-14'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-5.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-5.jpg'
         },
         {
             id: 6,
@@ -152,7 +152,7 @@ export class ProductList {
             rating: 4.7,
             category: 'new',
             dateAdded: new Date('2024-01-16'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-6.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-6.jpg'
         },
         {
             id: 7,
@@ -162,7 +162,7 @@ export class ProductList {
             rating: 4.4,
             category: 'featured',
             dateAdded: new Date('2024-01-09'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-7.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-7.jpg'
         },
         {
             id: 8,
@@ -172,7 +172,7 @@ export class ProductList {
             rating: 4.8,
             category: 'new',
             dateAdded: new Date('2024-01-17'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-8.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-8.jpg'
         },
         {
             id: 9,
@@ -182,7 +182,7 @@ export class ProductList {
             rating: 4.3,
             category: 'sale',
             dateAdded: new Date('2024-01-11'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-9.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-9.jpg'
         },
         {
             id: 10,
@@ -192,7 +192,7 @@ export class ProductList {
             rating: 4.6,
             category: 'featured',
             dateAdded: new Date('2024-01-13'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-10.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-10.jpg'
         },
         {
             id: 11,
@@ -202,7 +202,7 @@ export class ProductList {
             rating: 4.7,
             category: 'new',
             dateAdded: new Date('2024-01-18'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-11.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-11.jpg'
         },
         {
             id: 12,
@@ -212,7 +212,7 @@ export class ProductList {
             rating: 4.2,
             category: 'sale',
             dateAdded: new Date('2024-01-07'),
-            image: '/demo/images/ecommerce/product-list/ecommerce-productlist-12.jpg'
+            image: 'demo/images/ecommerce/product-list/ecommerce-productlist-12.jpg'
         }
     ];
 

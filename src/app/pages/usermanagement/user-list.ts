@@ -181,7 +181,7 @@ export class UserList {
         {
             id: 1,
             name: 'Brook Simmons',
-            avatar: '/demo/images/avatar/avatar-f-3.png',
+            avatar: 'demo/images/avatar/avatar-f-3.png',
             role: 'Admin',
             department: 'Sales',
             joinDate: 'Feb 5th, 2025',
@@ -191,7 +191,7 @@ export class UserList {
         {
             id: 2,
             name: 'Dianne Russell',
-            avatar: '/demo/images/avatar/avatar-f-5.png',
+            avatar: 'demo/images/avatar/avatar-f-5.png',
             role: 'Manager',
             department: 'HR',
             joinDate: 'Feb 24th, 2025',
@@ -201,7 +201,7 @@ export class UserList {
         {
             id: 3,
             name: 'Amy Elsner',
-            avatar: '/demo/images/avatar/amyelsner.png',
+            avatar: 'demo/images/avatar/amyelsner.png',
             role: 'Admin',
             department: 'Marketing',
             joinDate: 'Feb 24th, 2025',
@@ -211,7 +211,7 @@ export class UserList {
         {
             id: 4,
             name: 'Guy Hawkins',
-            avatar: '/demo/images/avatar/avatar-m-2.png',
+            avatar: 'demo/images/avatar/avatar-m-2.png',
             role: 'Admin',
             department: 'Marketing',
             joinDate: 'Jan 28th, 2025',
@@ -221,7 +221,7 @@ export class UserList {
         {
             id: 5,
             name: 'Darrell Steward',
-            avatar: '/demo/images/avatar/avatar-m-4.png',
+            avatar: 'demo/images/avatar/avatar-m-4.png',
             role: 'Employee',
             department: 'Sales',
             joinDate: 'Jan 21th, 2025',
@@ -231,7 +231,7 @@ export class UserList {
         {
             id: 6,
             name: 'Onyama Limba',
-            avatar: '/demo/images/avatar/onyamalimba.png',
+            avatar: 'demo/images/avatar/onyamalimba.png',
             role: 'Manager',
             department: 'HR',
             joinDate: 'Jan 21th, 2025',
@@ -241,7 +241,7 @@ export class UserList {
         {
             id: 7,
             name: 'Arlene McCoy',
-            avatar: '/demo/images/avatar/avatar-f-7.png',
+            avatar: 'demo/images/avatar/avatar-f-7.png',
             role: 'Manager',
             department: 'HR',
             joinDate: 'Jan 21th, 2025',
@@ -251,7 +251,7 @@ export class UserList {
         {
             id: 8,
             name: 'Annette Black',
-            avatar: '/demo/images/avatar/annafali.png',
+            avatar: 'demo/images/avatar/annafali.png',
             role: 'Employee',
             department: 'Marketing',
             joinDate: 'Jan 28th, 2025',

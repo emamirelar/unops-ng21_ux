@@ -14,42 +14,42 @@ import { RouterLink } from '@angular/router';
                 <div class="relative lg:flex-1 h-92 lg:h-168 w-full max-w-100 lg:max-w-2xl">
                     <app-lazy-image-widget
                         className="lg:block hidden rounded-xl absolute h-full w-auto top-0 left-0 scale-x-[-1]"
-                        [src]="'/demo/images/landing/' + (isDarkTheme() ? 'landing-section-pattern-dark.png' : 'landing-section-pattern.png')"
+                        [src]="'demo/images/landing/' + (isDarkTheme() ? 'landing-section-pattern-dark.png' : 'landing-section-pattern.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
 
                     <app-lazy-image-widget
                         className="rounded-2xl absolute left-0 lg:left-14 top-0 lg:top-[16.6rem] w-[20rem] shadow-[0px_200.426px_55.957px_0px_rgba(0,0,0,0.00),0px_128.191px_50.87px_0px_rgba(0,0,0,0.00),0px_72.235px_42.73px_0px_rgba(0,0,0,0.01),0px_31.539px_31.539px_0px_rgba(0,0,0,0.02),0px_8.139px_17.296px_0px_rgba(0,0,0,0.02)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'spending-limit-dark.png' : 'spending-limit.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'spending-limit-dark.png' : 'spending-limit.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
 
                     <app-lazy-image-widget
                         className="lg:block hidden rounded-xl absolute left-100 top-104 w-[10.7rem] shadow-[0px_0.581px_1.163px_0px_rgba(18,18,23,0.05)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'try-chart-dark.png' : 'try-chart.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'try-chart-dark.png' : 'try-chart.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
 
                     <app-lazy-image-widget
                         className="rounded-xl absolute left-48 lg:left-104 top-20 lg:top-60 w-[12.8rem] shadow-[0px_179.091px_50px_0px_rgba(0,0,0,0.00),0px_114.545px_45.455px_0px_rgba(0,0,0,0.00),0px_64.545px_38.182px_0px_rgba(0,0,0,0.01),0px_28.182px_28.182px_0px_rgba(0,0,0,0.02),0px_7.273px_15.455px_0px_rgba(0,0,0,0.02),0px_0.698px_1.395px_0px_rgba(18,18,23,0.05)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'eur-chart-dark.png' : 'eur-chart.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'eur-chart-dark.png' : 'eur-chart.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
 
                     <app-lazy-image-widget
                         className="lg:block hidden rounded-xl absolute left-86 top-22 w-50 shadow-[0px_179.557px_50.13px_0px_rgba(0,0,0,0.00),0px_114.844px_45.573px_0px_rgba(0,0,0,0.00),0px_64.714px_38.281px_0px_rgba(0,0,0,0.01),0px_28.255px_28.255px_0px_rgba(0,0,0,0.02),0px_7.292px_15.495px_0px_rgba(0,0,0,0.02),0px_0.678px_1.357px_0px_rgba(18,18,23,0.05)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'gbp-chart-dark.png' : 'gbp-chart.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'gbp-chart-dark.png' : 'gbp-chart.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />
 
                     <app-lazy-image-widget
                         className="rounded-xl absolute left-51 lg:left-30 bottom-0 lg:bottom-auto lg:top-28 w-[11.6rem] shadow-[0px_167.245px_46.693px_0px_rgba(0,0,0,0.00),0px_106.969px_42.448px_0px_rgba(0,0,0,0.00),0px_60.276px_35.656px_0px_rgba(0,0,0,0.01),0px_26.318px_26.318px_0px_rgba(0,0,0,0.02),0px_6.792px_14.432px_0px_rgba(0,0,0,0.02),0px_0.632px_1.264px_0px_rgba(18,18,23,0.05)]"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'usd-chart-dark.png' : 'usd-chart.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'usd-chart-dark.png' : 'usd-chart.png')"
                         alt="Features Section One Box Image"
                         style="display: contents;"
                     />

@@ -42,7 +42,7 @@ export class MailService {
     async loadEmails() {
         if (this._loaded()) return;
 
-        const response = await fetch('/demo/data/emailData.json');
+        const response = await fetch('demo/data/emailData.json');
         const data = await response.json();
         this._emailsData.set(data.emails);
         this._loaded.set(true);

@@ -24,19 +24,19 @@ import { RouterLink } from '@angular/router';
                 <div class="relative mb-16 md:mb-20 lg:mb-28 mt-14 xl:-mt-1 md:h-108 w-fit mx-auto md:w-full">
                     <app-lazy-image-widget
                         className="md:block hidden w-104 rounded-2xl h-auto absolute top-0 md:left-[15%] lg:left-0 shadow-[0px_5px_20px_0px_rgba(0,0,0,0.03),0px_117.091px_32.409px_0px_rgba(0,0,0,0.00),0px_75.273px_30.318px_0px_rgba(0,0,0,0.01)] transition-all"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'new-customer-dark.png' : 'new-customer.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'new-customer-dark.png' : 'new-customer.png')"
                         alt="Features Hero Box Image"
                         style="display: contents;"
                     />
                     <app-lazy-image-widget
                         className="w-100 md:w-104 rounded-2xl h-auto md:absolute bottom-0 left-1/2 md:left-[65%] lg:left-1/2 md:-translate-x-1/2 shadow-[0px_10px_40px_0px_rgba(0,0,0,0.06),0px_117.091px_32.409px_0px_rgba(0,0,0,0.00),0px_75.273px_30.318px_0px_rgba(0,0,0,0.01)] transition-all"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'avg-monthly-order-dark.png' : 'avg-monthly-order.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'avg-monthly-order-dark.png' : 'avg-monthly-order.png')"
                         alt="Features Hero Box Image"
                         style="display: contents;"
                     />
                     <app-lazy-image-widget
                         className="lg:block hidden w-104 rounded-2xl h-auto absolute top-11 right-0 shadow-[0px_5px_20px_0px_rgba(0,0,0,0.03),0px_117.091px_32.409px_0px_rgba(0,0,0,0.00),0px_75.273px_30.318px_0px_rgba(0,0,0,0.01)] transition-all"
-                        [src]="'/demo/images/landing/boxes/' + (isDarkTheme() ? 'sales-rate-dark.png' : 'sales-rate.png')"
+                        [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'sales-rate-dark.png' : 'sales-rate.png')"
                         alt="Features Hero Box Image"
                         style="display: contents;"
                     />

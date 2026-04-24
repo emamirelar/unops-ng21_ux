@@ -23,7 +23,7 @@ import { Component } from '@angular/core';
                     <div class="border border-dashed rounded-2xl border-surface-200 dark:border-surface-800">
                         <app-testimonial-card-widget
                             [testimonial]="{
-                                avatar: '/demo/images/avatar/avatar-f-2.png',
+                                avatar: 'demo/images/avatar/avatar-f-2.png',
                                 name: 'Bessie Cooper',
                                 title: 'Product Manager',
                                 message:
@@ -70,31 +70,31 @@ import { Component } from '@angular/core';
 export class TestimonialWidget {
     testimonial1 = [
         {
-            avatar: '/demo/images/avatar/avatar-f-1.png',
+            avatar: 'demo/images/avatar/avatar-f-1.png',
             name: 'Jane Cooper',
             title: 'Product Designer',
             message: 'Orci a scelerisque purus semper eget. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Eu nisl nunc mi ipsum faucibus. Non diam phasellus vestibulum lorem.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-f-4.png',
+            avatar: 'demo/images/avatar/avatar-f-4.png',
             name: 'Olivia Holt',
             title: 'Product Manager',
             message: 'Magna eget est lorem ipsum dolor. Malesuada fames ac turpis egestas maecenas pharetra convallis.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-m-2.png',
+            avatar: 'demo/images/avatar/avatar-m-2.png',
             name: 'Robert Fox',
             title: 'Product Designer',
             message: 'Leo vel fringilla est ullamcorper eget nulla facilisi. Ultrices eros in cursus turpis massa tincidunt dui ut. Ultricies mi eget mauris pharetra et ultrices.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-m-3.png',
+            avatar: 'demo/images/avatar/avatar-m-3.png',
             name: 'Jacob Jones',
             title: 'Product Manager',
             message: 'Nunc consequat interdum varius sit amet mattis vulputate. Praesent semper feugiat nibh sed. Augue neque gravida in fermentum et sollicitudin ac orci phasellus.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-f-6.png',
+            avatar: 'demo/images/avatar/avatar-f-6.png',
             name: 'Cristina Lean',
             title: 'Product Designer',
             message: 'Varius morbi enim nunc faucibus a pellentesque sit amet. Lobortis mattis aliquam faucibus purus in massa tempor'
@@ -103,19 +103,19 @@ export class TestimonialWidget {
 
     testimonial2 = [
         {
-            avatar: '/demo/images/avatar/avatar-f-5.png',
+            avatar: 'demo/images/avatar/avatar-f-5.png',
             name: 'Eleanor Pena',
             title: 'Product Designer',
             message: 'Sapien eget mi proin sed. Ultrices gravida dictum fusce ut placerat. Adipiscing tristique risus nec feugiat in fermentum. Nunc sed blandit libero volutpat. Praesent tristique magna sit amet purus gravida quis.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-f-6.png',
+            avatar: 'demo/images/avatar/avatar-f-6.png',
             name: 'Cristina Lean',
             title: 'Product Designer',
             message: 'Varius morbi enim nunc faucibus a pellentesque sit amet. Lobortis mattis aliquam faucibus purus in massa tempor'
         },
         {
-            avatar: '/demo/images/avatar/avatar-m-2.png',
+            avatar: 'demo/images/avatar/avatar-m-2.png',
             name: 'Robert Fox',
             title: 'Product Designer',
             message: 'Leo vel fringilla est ullamcorper eget nulla facilisi. Ultrices eros in cursus turpis massa tincidunt dui ut. Ultricies mi eget mauris pharetra et ultrices.'
@@ -124,19 +124,19 @@ export class TestimonialWidget {
 
     testimonial3 = [
         {
-            avatar: '/demo/images/avatar/avatar-m-1.png',
+            avatar: 'demo/images/avatar/avatar-m-1.png',
             name: 'Darrell Steward',
             title: 'Product Manager',
             message: 'Nulla pharetra diam sit amet nisl suscipit adipiscing. Gravida quis blandit turpis cursus.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-f-7.png',
+            avatar: 'demo/images/avatar/avatar-f-7.png',
             name: 'Wade Warren',
             title: 'Product Designer',
             message: 'Tempus imperdiet nulla malesuada pellentesque elit eget gravida cum. Elit duis tristique sollicitudin nibh sit amet. Proin sed libero enim sed faucibus.Sagittis eu volutpat odio facilisis.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-f-3.png',
+            avatar: 'demo/images/avatar/avatar-f-3.png',
             name: 'Taylor Jonas',
             title: 'Product Designer',
             message: 'Habitant morbi tristique senectus et netus et malesuada fames ac. Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Faucibus pulvinar elementum integer enim.'
@@ -145,26 +145,26 @@ export class TestimonialWidget {
 
     testimonial4 = [
         {
-            avatar: '/demo/images/avatar/avatar-f-3.png',
+            avatar: 'demo/images/avatar/avatar-f-3.png',
             name: 'Taylor Jonas',
             title: 'Product Designer',
             message: 'Habitant morbi tristique senectus et netus et malesuada fames ac. Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Faucibus pulvinar elementum integer enim.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-m-2.png',
+            avatar: 'demo/images/avatar/avatar-m-2.png',
             name: 'Cole Bemis',
             title: 'Product Manager',
             message:
                 'Libero volutpat sed cras ornare arcu dui vivamus arcu. Augue neque gravida in fermentum et sollicitudin ac. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt.Amet cursus sit amet dictum sit amet justo donec. Neque convallis a cras semper auctor.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-f-8.png',
+            avatar: 'demo/images/avatar/avatar-f-8.png',
             name: 'Emma Stone',
             title: 'Product Designer',
             message: 'Amet dictum sit amet justo. Lacus luctus accumsan tortor posuere ac ut consequat semper viverra. Velit egestas dui id ornare arcu odio ut sem.'
         },
         {
-            avatar: '/demo/images/avatar/avatar-m-5.png',
+            avatar: 'demo/images/avatar/avatar-m-5.png',
             name: 'Kyra Assaad',
             title: 'Product Manager',
             message: 'Dolor morbi non arcu risus quis varius. Quis imperdiet massa tincidunt nunc pulvinar sapien et. Tellus mauris a diam maecenas.'
