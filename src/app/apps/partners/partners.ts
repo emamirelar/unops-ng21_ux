@@ -1,10 +1,13 @@
 import { Partner } from '@/app/types/partner';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
 import { PartnerService } from './partner.service';
@@ -84,19 +87,53 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
     'serbia': 'rs'
 };
 
+interface FilterTag {
+    group: 'status' | 'category';
+    label: string;
+    value: string;
+}
+
 @Component({
     selector: 'app-partners',
-    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, TagModule, ButtonModule, RouterModule],
+    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, TagModule, ButtonModule, RouterModule, InputTextModule, IconFieldModule, InputIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="flex flex-col gap-6">
-            <div>
-                <div>
-                    <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Partners</h1>
-                    <div class="flex items-center text-surface-700 dark:text-surface-300 flex-wrap gap-8">
+            <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Partners</h1>
+
+            <div class="flex flex-col items-start justify-start gap-3">
+                <p-iconfield class="w-full sm:w-72">
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input pInputText [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search partners..." class="w-full! py-2! rounded-xl!" />
+                </p-iconfield>
+
+                <div class="flex items-center flex-wrap gap-2">
+                    @for (tag of filterTags(); track tag.value) {
+                        <button
+                            type="button"
+                            class="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border transition-colors"
+                            [class]="isTagActive(tag) ? 'bg-primary text-primary-contrast border-primary' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-surface-200 dark:hover:bg-surface-700'"
+                            (click)="toggleTag(tag)">
+                            {{ tag.label }}
+                        </button>
+                    }
+                    @if (hasActiveFilters()) {
+                        <button
+                            type="button"
+                            class="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border border-surface-200 dark:border-surface-700 text-surface-500 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
+                            (click)="clearFilters()">
+                            <i class="pi pi-times text-xs mr-1"></i>Clear
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center text-surface-700 dark:text-surface-300 flex-wrap gap-6 text-sm">
                         <div class="flex items-center gap-2">
                             <i class="pi pi-users text-base! leading-normal!"></i>
-                            <span>{{ partnerService.allPartners().length }} Partners</span>
+                            <span>{{ filteredPartners().length }} Partners</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <i class="pi pi-check-circle text-base! leading-normal!"></i>
@@ -107,18 +144,13 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             <span>{{ keyGlobalCount() }} Key Global</span>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="flex justify-end mb-4">
                     <p-select-button [(ngModel)]="layout" [options]="layoutOptions" [allowEmpty]="false">
                         <ng-template #item let-option>
                             <i class="pi" [class.pi-bars]="option === 'list'" [class.pi-table]="option === 'grid'"></i>
                         </ng-template>
                     </p-select-button>
                 </div>
-            <p-dataview [value]="partnerService.allPartners()" [layout]="layout" [pt]="{ header: { class: 'p-0! hidden' } }">
+            <p-dataview [value]="filteredPartners()" [layout]="layout" [pt]="{ header: { class: 'p-0! hidden' } }">
 
                 <ng-template #list let-items>
                     <div class="flex flex-col">
@@ -229,11 +261,66 @@ export class Partners implements OnInit {
     partnerService = inject(PartnerService);
     layout: 'list' | 'grid' = 'list';
     layoutOptions = ['list', 'grid'];
-    activeCount = computed(() => this.partnerService.allPartners().filter(p => p.status === 'Active').length);
-    keyGlobalCount = computed(() => this.partnerService.allPartners().filter(p => p.keyGlobalPartner).length);
+
+    searchQuery = signal('');
+    activeStatusFilters = signal<Set<string>>(new Set());
+    activeCategoryFilters = signal<Set<string>>(new Set());
+
+    filterTags = computed<FilterTag[]>(() => {
+        const partners = this.partnerService.allPartners();
+        const statuses = [...new Set(partners.map(p => p.status).filter((s): s is string => !!s))];
+        const categories = [...new Set(partners.map(p => p.partnerCategoryName).filter((c): c is string => !!c))];
+        return [
+            ...statuses.map(s => ({ group: 'status' as const, label: s, value: s })),
+            ...categories.map(c => ({ group: 'category' as const, label: c, value: c }))
+        ];
+    });
+
+    filteredPartners = computed(() => {
+        const query = this.searchQuery().toLowerCase().trim();
+        const statusFilters = this.activeStatusFilters();
+        const categoryFilters = this.activeCategoryFilters();
+
+        return this.partnerService.allPartners().filter(p => {
+            if (query) {
+                const searchable = [p.name, p.shortName, p.address1Country, p.address1City, p.partnerCategoryName, p.partnerFocalPointName, p.liaisonOfficeName].filter(Boolean).join(' ').toLowerCase();
+                if (!searchable.includes(query)) return false;
+            }
+            if (statusFilters.size > 0 && (!p.status || !statusFilters.has(p.status))) return false;
+            if (categoryFilters.size > 0 && (!p.partnerCategoryName || !categoryFilters.has(p.partnerCategoryName))) return false;
+            return true;
+        });
+    });
+
+    activeCount = computed(() => this.filteredPartners().filter(p => p.status === 'Active').length);
+    keyGlobalCount = computed(() => this.filteredPartners().filter(p => p.keyGlobalPartner).length);
+    hasActiveFilters = computed(() => this.searchQuery().length > 0 || this.activeStatusFilters().size > 0 || this.activeCategoryFilters().size > 0);
 
     ngOnInit() {
         this.partnerService.getPartners();
+    }
+
+    isTagActive(tag: FilterTag): boolean {
+        const set = tag.group === 'status' ? this.activeStatusFilters() : this.activeCategoryFilters();
+        return set.has(tag.value);
+    }
+
+    toggleTag(tag: FilterTag) {
+        const signalRef = tag.group === 'status' ? this.activeStatusFilters : this.activeCategoryFilters;
+        const current = signalRef();
+        const next = new Set(current);
+        if (next.has(tag.value)) {
+            next.delete(tag.value);
+        } else {
+            next.add(tag.value);
+        }
+        signalRef.set(next);
+    }
+
+    clearFilters() {
+        this.searchQuery.set('');
+        this.activeStatusFilters.set(new Set());
+        this.activeCategoryFilters.set(new Set());
     }
 
     getFlagUrl(partner: Partner): string {
