@@ -1,7 +1,7 @@
 import { LayoutService } from '@/app/layout/service/layout.service';
 import { brandPresets } from '@/app/layout/service/brand-theme';
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { $t } from '@primeuix/themes';
 import { AvatarModule } from 'primeng/avatar';
@@ -142,29 +142,32 @@ interface NotificationsBars {
                         </ul>
                     </div>
                 </li>
-                <li class="profile-item static sm:relative">
-                    <a class="right-sidebar-button relative z-50" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
+                <li class="profile-item static sm:relative" #profileItem>
+                    <a class="right-sidebar-button relative z-50" (click)="toggleProfileMenu($event)">
                         <p-avatar icon="pi pi-user" styleClass="w-10! h-10!" />
                     </a>
                     <div
-                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                        #profilePanel
+                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                        [class.hidden]="!profileMenuOpen()"
+                        [class.animate-scalein]="profileMenuOpen()"
                     >
                         <ul class="flex flex-col gap-1">
                             <div class="mobile-profile-actions">
                                 <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="openSearch()">
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false); openSearch()">
                                         <i class="pi pi-search"></i>
                                         <span>Search</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="toggleDarkMode()">
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false); toggleDarkMode()">
                                         <i [class]="isDarkTheme() ? 'pi pi-sun' : 'pi pi-moon'"></i>
                                         <span>{{ isDarkTheme() ? 'Light Mode' : 'Dark Mode' }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer relative">
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer relative" (click)="profileMenuOpen.set(false)">
                                         <i class="pi pi-bell"></i>
                                         <span>Notifications</span>
                                         <span class="w-2 h-2 rounded-full bg-red-500 ml-auto"></span>
@@ -178,7 +181,7 @@ interface NotificationsBars {
                                             [class.text-surface-950]="selectedLanguage() === lang.code"
                                             [class.dark:text-surface-0]="selectedLanguage() === lang.code"
                                             [class.font-semibold]="selectedLanguage() === lang.code"
-                                            (click)="selectLanguage(lang.code)"
+                                            (click)="profileMenuOpen.set(false); selectLanguage(lang.code)"
                                         >
                                             <span class="text-lg">{{ lang.flag }}</span>
                                             <span>{{ lang.label }}</span>
@@ -190,25 +193,25 @@ interface NotificationsBars {
                                 </li>
                             </div>
                             <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
+                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
                                     <i class="pi pi-user"></i>
                                     <span>Profile</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
+                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
                                     <i class="pi pi-cog"></i>
                                     <span>Settings</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
+                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
                                     <i class="pi pi-calendar"></i>
                                     <span>Calendar</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
+                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
                                     <i class="pi pi-inbox"></i>
                                     <span>Inbox</span>
                                 </a>
@@ -223,7 +226,7 @@ interface NotificationsBars {
                                         [class.text-surface-950]="selectedPreset() === preset"
                                         [class.dark:text-surface-0]="selectedPreset() === preset"
                                         [class.font-semibold]="selectedPreset() === preset"
-                                        (click)="onPresetChange(preset)"
+                                        (click)="profileMenuOpen.set(false); onPresetChange(preset)"
                                     >
                                         <i class="pi pi-palette"></i>
                                         <span>{{ preset }}</span>
@@ -234,7 +237,7 @@ interface NotificationsBars {
                                 </li>
                             }
                             <li class="border-t border-surface mt-1 pt-1">
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
+                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
                                     <i class="pi pi-power-off"></i>
                                     <span>Log out</span>
                                 </a>
@@ -258,10 +261,13 @@ export class AppTopbar implements AfterViewChecked {
     isDarkTheme = computed(() => this.layoutService.isDarkTheme());
 
     searchActive = signal(false);
+    profileMenuOpen = signal(false);
     private shouldFocusSearch = false;
 
     @ViewChild('menubutton') menuButton!: ElementRef;
     @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+    @ViewChild('profileItem') profileItem!: ElementRef;
+    @ViewChild('profilePanel') profilePanel!: ElementRef;
 
     notificationsBars = signal<NotificationsBars[]>([
         {
@@ -390,6 +396,22 @@ export class AppTopbar implements AfterViewChecked {
         this.layoutService.layoutConfig.update((state) => ({ ...state, preset: presetName }));
         const preset = brandPresets[presetName as keyof typeof brandPresets];
         $t().preset(preset).use({ useDefaultOptions: true });
+    }
+
+    toggleProfileMenu(event: Event) {
+        event.stopPropagation();
+        this.profileMenuOpen.update((open) => !open);
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent) {
+        if (!this.profileMenuOpen()) return;
+
+        const target = event.target as Node;
+        const insideProfile = this.profileItem?.nativeElement?.contains(target);
+        if (!insideProfile) {
+            this.profileMenuOpen.set(false);
+        }
     }
 
     openSearch() {
