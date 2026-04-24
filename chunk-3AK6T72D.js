@@ -1,0 +1,1 @@
+import"./chunk-DAQOROHW.js";var a=[{path:"",redirectTo:"inbox",pathMatch:"full"},{path:"inbox",loadComponent:()=>import("./chunk-4LXK6SNB.js").then(t=>t.MailInbox),data:{breadcrumb:"Inbox"}},{path:"detail/:id",loadComponent:()=>import("./chunk-IIW5WAJE.js").then(t=>t.MailDetail),data:{breadcrumb:"Detail"}}];export{a as default};
