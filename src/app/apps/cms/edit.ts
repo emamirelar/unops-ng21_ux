@@ -26,7 +26,7 @@ interface StatusOption {
     selector: 'app-edit',
     imports: [FormsModule, AccordionModule, ButtonModule, CheckboxModule, ChipModule, DatePickerModule, DrawerModule, EditorModule, InputTextModule, MultiSelectModule, RadioButtonModule, SelectModule],
     template: `
-        <div class="flex flex-col min-h-screen overflow-hidden card">
+        <div class="flex flex-col min-h-screen overflow-hidden card animate-fade-in-up">
             <div class="p-6 border-b border-surface-200 dark:border-surface-700 flex justify-between items-center gap-4">
                 <h1 class="flex-1 text-surface-900 dark:text-surface-0 text-lg font-medium">Create a new post</h1>
                 <p-button icon="pi pi-bars" severity="secondary" styleClass="!flex xl:!hidden" (onClick)="sidebarVisible.set(true)" />

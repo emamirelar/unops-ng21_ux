@@ -22,7 +22,11 @@ import { CommonModule } from '@angular/common';
             </div>
 
             <div class="flex flex-wrap gap-7 mx-auto max-w-lg md:max-w-4xl xl:max-w-full">
-                <div *ngFor="let data of pricingData" class="w-full min-w-full sm:min-w-100 flex-1 p-6 border border-surface-200 dark:border-surface-800 rounded-3xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+                <div
+                    *ngFor="let data of pricingData; let i = index"
+                    class="w-full min-w-full sm:min-w-100 flex-1 p-6 border border-surface-200 dark:border-surface-800 rounded-3xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)] animate-fade-in-up"
+                    [style.animation-delay.ms]="i * 80"
+                >
                     <div class="w-fit py-1 px-4 rounded-full bg-surface-200 dark:bg-surface-800 font-medium uppercase text-surface-950 dark:text-surface-0">
                         {{ data.type }}
                     </div>

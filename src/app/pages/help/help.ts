@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
     standalone: true,
     imports: [CommonModule, IconFieldModule, InputIconModule, InputTextModule, AccordionModule, FormsModule],
     template: `
-        <div>
+        <div class="animate-fade-in-up">
             <div class="flex flex-col items-center py-11">
                 <h1 class="title-h5 md:title-h4">
                     Advice and answers<br />

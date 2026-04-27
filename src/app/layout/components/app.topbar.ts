@@ -1,9 +1,7 @@
 import { LayoutService } from '@/app/layout/service/layout.service';
-import { brandPresets } from '@/app/layout/service/brand-theme';
 import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { $t } from '@primeuix/themes';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -217,26 +215,6 @@ interface NotificationsBars {
                                 </a>
                             </li>
                             <li class="border-t border-surface mt-1 pt-1">
-                                <span class="label-xsmall px-2.5 py-1 text-surface-400">Theme</span>
-                            </li>
-                            @for (preset of presetOptions; track preset) {
-                                <li>
-                                    <a
-                                        class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer"
-                                        [class.text-surface-950]="selectedPreset() === preset"
-                                        [class.dark:text-surface-0]="selectedPreset() === preset"
-                                        [class.font-semibold]="selectedPreset() === preset"
-                                        (click)="profileMenuOpen.set(false); onPresetChange(preset)"
-                                    >
-                                        <i class="pi pi-palette"></i>
-                                        <span>{{ preset }}</span>
-                                        @if (selectedPreset() === preset) {
-                                            <i class="pi pi-check ml-auto text-xs"></i>
-                                        }
-                                    </a>
-                                </li>
-                            }
-                            <li class="border-t border-surface mt-1 pt-1">
                                 <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
                                     <i class="pi pi-power-off"></i>
                                     <span>Log out</span>
@@ -360,10 +338,6 @@ export class AppTopbar implements AfterViewChecked {
 
     selectedLanguage = signal('en');
 
-    presetOptions = Object.keys(brandPresets);
-
-    selectedPreset = computed(() => this.layoutService.layoutConfig().preset);
-
     selectedNotificationBar = model(this.notificationsBars()[0].id ?? 'inbox');
 
     selectedNotificationsBarData = computed(() => this.notifications().find((f) => f.id === this.selectedNotificationBar()).data);
@@ -390,12 +364,6 @@ export class AppTopbar implements AfterViewChecked {
 
     selectLanguage(code: string) {
         this.selectedLanguage.set(code);
-    }
-
-    onPresetChange(presetName: string) {
-        this.layoutService.layoutConfig.update((state) => ({ ...state, preset: presetName }));
-        const preset = brandPresets[presetName as keyof typeof brandPresets];
-        $t().preset(preset).use({ useDefaultOptions: true });
     }
 
     toggleProfileMenu(event: Event) {

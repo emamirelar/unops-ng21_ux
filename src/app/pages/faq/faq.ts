@@ -7,7 +7,7 @@ import { RippleModule } from 'primeng/ripple';
     selector: 'app-faq',
     imports: [AccordionModule, CommonModule, RippleModule],
     template: `
-        <div>
+        <div class="animate-fade-in-up">
             <div>
                 <h1 class="title-h4">
                     Frequently<br />

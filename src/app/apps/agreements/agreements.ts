@@ -64,7 +64,7 @@ interface Agreement {
     imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, TagModule, TextareaModule, ConfirmDialogModule],
     providers: [ConfirmationService],
     template: `
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-6 animate-fade-in-up">
             <div class="flex items-center gap-4">
                 <div class="flex flex-col gap-1 flex-1 min-w-0">
                     <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Partnership Agreements</h1>

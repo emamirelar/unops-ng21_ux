@@ -28,7 +28,7 @@ interface MenuItemData {
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, TableModule, AvatarModule, TagModule, MenuModule, PaginatorModule, DrawerModule, InputTextModule, IconFieldModule, InputIconModule, ComposeDialog],
     template: `
-        <div class="flex h-full relative card">
+        <div class="flex h-full relative card animate-fade-in-up">
             <!-- Desktop Sidebar -->
             <div class="hidden lg:flex w-[244px] bg-surface-0 dark:bg-surface-900 border-r border-surface-200 dark:border-surface-700 flex-col">
                 <div class="px-4 py-5 border-b border-surface-200 dark:border-surface-700 h-[4.28rem]">

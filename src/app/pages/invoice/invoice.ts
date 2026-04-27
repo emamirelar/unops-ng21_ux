@@ -8,7 +8,7 @@ import { LogoWidget } from "@/app/pages/landing/components/logowidget";
     standalone: true,
     imports: [DividerModule, TableModule, LogoWidget],
     template: `
-        <div class="card p-5 overflow-auto shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="card p-5 overflow-auto shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)] animate-fade-in">
             <div class="flex items-start pt-6 px-6 pb-9 gap-6 flex-wrap-reverse">
                 <div class="flex-1">
                     <logo-widget/>

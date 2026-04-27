@@ -128,8 +128,8 @@ interface FilterTag {
                 </div>
             </div>
 
-            <div class="card">
-                <div class="flex items-center justify-between mb-4">
+            <div class="p-4 border border-surface rounded-2xl">
+                <div class="flex items-center justify-between mb-4 animate-fade-in">
                     <div class="flex items-center text-surface-700 dark:text-surface-300 flex-wrap gap-6 text-sm">
                         <div class="flex items-center gap-2">
                             <i class="pi pi-users text-base! leading-normal!"></i>
@@ -150,12 +150,18 @@ interface FilterTag {
                         </ng-template>
                     </p-select-button>
                 </div>
-            <p-dataview [value]="filteredPartners()" [layout]="layout" [pt]="{ header: { class: 'p-0! hidden' } }">
+            <p-dataview [value]="filteredPartners()" [layout]="layout" [pt]="{ header: { class: 'p-0! hidden' }, content: { class: 'bg-transparent!' } }">
 
                 <ng-template #list let-items>
                     <div class="flex flex-col">
                         @for (item of items; track item.id; let i = $index) {
-                            <a [routerLink]="['/apps/partners', item.id]" class="flex flex-col sm:flex-row sm:items-center p-4 gap-4 no-underline text-inherit cursor-pointer hover:bg-emphasis transition-colors" [class.border-t]="i !== 0" [class.border-surface]="i !== 0">
+                            <a
+                                [routerLink]="['/apps/partners', item.id]"
+                                class="flex flex-col sm:flex-row sm:items-center p-4 gap-4 no-underline text-inherit cursor-pointer hover:bg-emphasis transition-colors animate-fade-in-up"
+                                [style.animation-delay.ms]="i * 50"
+                                [class.border-t]="i !== 0"
+                                [class.border-surface]="i !== 0"
+                            >
                                 <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 shrink-0 overflow-hidden">
                                     <img [src]="getFlagUrl(item)" [alt]="item.address1Country || 'Global'" class="w-8 h-8 object-contain" />
                                 </div>
@@ -204,9 +210,12 @@ interface FilterTag {
 
                 <ng-template #grid let-items>
                     <div class="grid grid-cols-12 gap-4">
-                        @for (item of items; track item.id) {
+                        @for (item of items; track item.id; let i = $index) {
                             <a [routerLink]="['/apps/partners', item.id]" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2 no-underline text-inherit">
-                                <div class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-emphasis transition-colors">
+                                <div
+                                    class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-emphasis transition-colors animate-fade-in-up"
+                                    [style.animation-delay.ms]="i * 50"
+                                >
                                     <div class="flex items-start justify-between">
                                         <div class="flex items-center gap-3">
                                             <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 shrink-0 overflow-hidden">

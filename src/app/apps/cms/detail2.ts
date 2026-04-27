@@ -12,7 +12,7 @@ interface Section {
     selector: 'app-detail2',
     imports: [NgClass, ButtonModule, TagModule],
     template: `
-        <div class="p-6 card h-[calc(100vh-9rem)] flex flex-col overflow-hidden">
+        <div class="p-6 card h-[calc(100vh-9rem)] flex flex-col overflow-hidden animate-fade-in-up">
             <div #scrollContainer class="grid grid-cols-12 gap-6 xl:gap-11 overflow-y-auto flex-1">
                 <div class="col-span-12 xl:col-span-8 min-w-0">
                     <div class="flex flex-col gap-6 mb-8">

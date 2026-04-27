@@ -30,7 +30,7 @@ interface BlogPost {
     selector: 'app-list',
     imports: [NgClass],
     template: `
-        <div class="p-4 md:p-6 card">
+        <div class="p-4 md:p-6 card animate-fade-in-up">
             <div class="relative w-full h-80 md:h-96 lg:h-[525px] rounded-2xl md:rounded-3xl overflow-hidden" (mouseenter)="stopAutoSlide()" (mouseleave)="startAutoSlide()">
                 <div class="relative w-full h-full">
                     @for (slide of slides; track slide.id; let index = $index) {

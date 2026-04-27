@@ -91,7 +91,7 @@ interface AiInsight {
     ],
     providers: [ConfirmationService, MessageService],
     template: `
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-6 animate-fade-in-up">
             <!-- Page Title -->
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                 <div class="flex flex-wrap items-center gap-2 sm:gap-4 flex-1 min-w-0">
@@ -257,7 +257,9 @@ interface AiInsight {
             <!-- RIGHT SIDEBAR -->
             <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
                 <!-- AI Project Analysis Card -->
-                <div class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300">
+                <div
+                    class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 motion-safe:animate-enter-liquid [animation-delay:80ms]"
+                >
                     <div class="flex items-center justify-between cursor-pointer" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
                         <div class="flex items-center gap-3">
                             <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
@@ -276,7 +278,7 @@ interface AiInsight {
                     </div>
 
                     @if (isAiCardExpanded()) {
-                        <div class="flex flex-col gap-4 mt-4">
+                        <div class="flex flex-col gap-4 mt-4 motion-safe:animate-enter-liquid-reveal [animation-delay:20ms]">
                             <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5">
                                 <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
                                 <input

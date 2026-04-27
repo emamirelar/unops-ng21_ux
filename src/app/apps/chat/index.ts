@@ -80,7 +80,7 @@ interface Contact {
     imports: [CommonModule, ButtonModule, MenuModule, ConfirmDialogModule, ChatMenu, ChatBox, ChatSidebar],
     providers: [ConfirmationService],
     template: `
-        <div class="flex card overflow-hidden" style="height: 70vh; min-height: 500px; max-height: 800px">
+        <div class="flex card overflow-hidden animate-fade-in-up" style="height: 70vh; min-height: 500px; max-height: 800px">
             <div [ngClass]="{ 'hidden md:block': showChatView, 'block w-full md:w-auto': !showChatView }" class="md:block h-full overflow-hidden">
                 <app-chat-menu [chatRooms]="chatRooms()" [activeChatId]="activeChatId()" (selectChatEvent)="selectChat($event)" (newChatEvent)="createNewChat($event)" />
             </div>

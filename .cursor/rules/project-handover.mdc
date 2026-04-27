@@ -118,7 +118,7 @@ These three layers must stay in sync. See the Design-System Maintenance Ledger r
 | **Crisp** | Lara | `@primeuix/themes/lara` |
 | **Contrast** | Nora | `@primeuix/themes/nora` |
 
-Default preset is **Soft** (set in `layout.service.ts` and `app.config.ts`).
+Default preset is **Soft** (set in `layout.service.ts` and `app.config.ts`). Theme presets are **not** exposed in the topbar profile menu — only the configurator panel (accessed via the menu) provides preset switching.
 
 ### Brand Primitives
 
@@ -135,6 +135,33 @@ The semantic primary is **darkblue** (UNOPS cerulean). This is set in `brandOver
 - Single CSS class: `.app-dark` on `document.documentElement`.
 - `LayoutService` toggles it via an `effect()` with View Transitions API support.
 - Both PrimeNG (`darkModeSelector: '.app-dark'`) and Tailwind (`@custom-variant dark (.app-dark)`) use the same selector.
+- Default theme is **dark** (`darkTheme: true` in `LayoutService`).
+
+## Sidebar Theme System
+
+The sidebar supports three visual themes controlled by `menuTheme` in `LayoutService`:
+
+| Theme | Class | Description |
+|-------|-------|-------------|
+| **primary** | `.layout-sidebar-primary` | Brand gradient background (default) |
+| **light** | `.layout-sidebar-light` | Light surface background |
+| **dark** | `.layout-sidebar-dark` | Dark surface background |
+
+Theme variables are defined as `--d-*` custom properties in `src/assets/layout/sidebar/themes/`:
+
+- `_primary.scss`, `_light.scss`, `_dark.scss` — each sets `--d-sidebar-bg-color`, `--d-menuitem-text-color`, `--d-menuitem-active-bg`, etc.
+- `_sidebar_theme_core.scss` — consumes `--d-*` variables for the actual sidebar styles.
+- All three themes include `:root[class*='app-dark']` overrides for dark mode.
+- The default sidebar uses a **gradient background**: `linear-gradient(355deg, blue-400 → midnight-850)`.
+
+### Sidebar Active State Colors
+
+- **Compact active icon**: `var(--color-ocean-300)` for the `layout-menuitem-icon`
+- **Compact active-route background**: `var(--d-menuitem-active-bg)` with `var(--p-primary-400)` icon
+- **Compact flyout popover icons**: `var(--color-blue-500)`
+- **Expanded active-route**: background highlight + text color from `--d-menuitem-active-route-text-color`
+- Active route items should have a **visible background**, not just text color change.
+- Root items with children in compact mode show a **chevron indicator** (`.layout-submenu-toggler`).
 
 ## Styling Rules
 
@@ -149,7 +176,9 @@ The semantic primary is **darkblue** (UNOPS cerulean). This is set in `brandOver
 - All color overrides must meet **WCAG AA contrast** (4.5:1 for normal text, 3:1 for large text/UI).
 - Use semantic HTML elements and ARIA attributes where PrimeNG does not provide them.
 - Tag component text colors are explicitly overridden in `brand-theme.ts` to meet contrast ratios.
+- Stat card icon chips, delta badges, p-tags in tables, and pipeline widget badges must all be verified for contrast.
 - Storybook has the **a11y addon** enabled — check it when building components.
+- Verify accessibility on **mobile** as well as desktop — colors and touch targets.
 
 ## Branding
 
@@ -161,11 +190,29 @@ The semantic primary is **darkblue** (UNOPS cerulean). This is set in `brandOver
 - Do NOT use default template logos (`layout/images/logo-*`).
 - Alt text: `"UNOPS"`.
 
-### Menu Icons
+### Menu Structure and Icons
 
-- Icons should be **semantically appropriate** for the entity/action they represent.
-- "Administration" uses an entity-style icon, not a settings cog.
-- Partnership-related items use business/people icons.
+The menu (`app.menu.ts`) has a fixed information architecture:
+
+1. **Home** — `pi-home`, routes to `/`
+2. **Partnerships** — `pi-th-large`, children: Partners, Contacts, Interactions, Agreements, Opportunities
+3. **Operation Tools** — `pi-wrench`, children: Offices
+4. **Administration** — `pi-building-columns` (entity icon, NOT settings cog), children: Entity Manager, Partner Tree
+5. **UNOPS-ng21_UX** — `pi-palette`, children: Theme Configurator (command), Storybook (external URL), Design System (deep Storybook links + router links)
+
+Rules:
+- Icons must be **semantically appropriate** for the entity/action they represent.
+- Administration represents an organizational entity, not app settings.
+- Menu `path` properties must be **unique per item** to prevent compact flyout overlap.
+- The Theme Configurator opens as a **sidebar panel** via `layoutService.toggleConfigSidebar()`, not a route.
+- Storybook URLs use the `environment.storybookBaseUrl` constant, never hardcoded.
+
+### Labels and Copy
+
+- First sidebar item is **"Home"**, not "Dashboard".
+- Breadcrumb root is **"Home"**, not "Dashboard".
+- Not-found page: heading **"Under Construction"**, body **"Come back later!"**, CTA **"Go to the Homepage"**.
+- Partner detail back link: label **"Back to list"**, no arrow icon.
 
 ## Environment Configuration
 
@@ -174,6 +221,18 @@ The semantic primary is **darkblue** (UNOPS cerulean). This is set in `brandOver
 - The `storybookBaseUrl` property drives Storybook deep-links in the menu.
 - **Never hard-code** `localhost`, `127.0.0.1`, or `0.0.0.0` in application source (`.ts`, `.html`, `.scss`). Use environment config instead.
 
+## Tables and Data Display
+
+- **No pagination page report text** — table components use paginator but do not display the "Showing X to Y of Z" report string. This was intentionally removed across all tables.
+- **p-tag** styling for status/type badges must be accessible in both light and dark mode — verify contrast.
+- Partner list rows are **clickable** to navigate to the detail page (row-level navigation, not action buttons).
+
+## Motion and Transitions
+
+- Sidebar static ↔ compact switching uses **subtle, fluid animation** (CSS transitions).
+- Page transitions and panel expand/collapse should use **subtle animations** — avoid abrupt state changes.
+- `LayoutService` dark mode toggle uses the **View Transitions API** when available.
+
 ## Storybook
 
 - Stories live in `src/stories/`.
@@ -181,6 +240,7 @@ The semantic primary is **darkblue** (UNOPS cerulean). This is set in `brandOver
 - Static assets from `public/` are served by Storybook.
 - Storybook is deployed alongside the app at `{baseHref}/storybook` on GitHub Pages.
 - When adding a PrimeNG component story, import `BrandSoft` from `brand-theme.ts` in the story's `applicationConfig`.
+- New feature pages (partners, dashboards, etc.) should have corresponding Storybook page stories in `src/stories/pages/`.
 
 ## GitHub Pages Deployment
 
@@ -205,3 +265,19 @@ When upgrading PrimeNG or `@primeuix/themes`:
 - Selectors: `kebab-case` (e.g. `app-dashboard`, `opportunity-stat-card-widget`)
 - SCSS partials: `_kebab-case.scss` (e.g. `_sidebar_compact.scss`)
 - Route files: `*.routes.ts` with `export default` route arrays
+
+## Feature Page Patterns
+
+When building a new feature page (e.g. partners, opportunity):
+
+- **Self-contained demo data** — pages use mock data within the component or a local service, decoupled from other apps.
+- **Service with signals** — create a feature service using `signal` / `asReadonly()` pattern (e.g. `PartnerService`).
+- **List → detail navigation** — list pages route to detail pages via `routerLink`; rows should be clickable.
+- **Detail page back navigation** — use a text-only "Back to list" link (no icon arrow).
+- **Reuse established patterns** — activity feeds from the Files page, inline filter tabs from Tasks, `p-table` + chips from Documents.
+- **Dashboard stat cards** — icons on stat cards should be **consistent** with sidebar menu icons for the same entity (e.g. Partners uses globe in both).
+- **Mobile** — feature pages should have collapsible/responsive sections.
+
+## Consistency Principle
+
+When making a change to a repeating UI pattern (stat card, tag style, icon, table column, badge), **apply the same change to all similar instances** across the codebase. Do not fix one instance and leave others inconsistent.

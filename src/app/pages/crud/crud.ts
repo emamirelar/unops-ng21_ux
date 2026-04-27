@@ -55,7 +55,7 @@ interface ExportColumn {
         ConfirmDialogModule
     ],
     template: `
-        <div class="card">
+        <div class="card animate-fade-in">
             <p-toolbar styleClass="mb-12">
                 <ng-template #start>
                     <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />

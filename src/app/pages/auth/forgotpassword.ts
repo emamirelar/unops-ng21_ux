@@ -17,7 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
                         <logo-widget />
                     </a>
                     <div class="flex flex-col justify-center grow">
-                        <div class="max-w-md mx-auto w-full">
+                        <div class="max-w-md mx-auto w-full animate-scale-in-subtle">
                             <h5 class="title-h5 text-center lg:text-left">Forgot Password</h5>
                             <p class="body-small mt-3.5 text-center lg:text-left">Enter your email to reset your password</p>
                             <form>

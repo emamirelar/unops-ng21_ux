@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
     standalone: true,
     imports: [CommonModule],
     template: `
-        <div class="card">
+        <div class="card animate-fade-in">
             <div class="font-semibold text-2xl mb-4">Documentation</div>
             <div class="font-semibold text-xl mb-4">Get Started</div>
             <p class="text-lg mb-4">UNOPS is an application template for Angular and is distributed as a CLI project. Current versions are Angular v21 with PrimeNG v21. In case CLI is not installed already, use the command below to set it up.</p>

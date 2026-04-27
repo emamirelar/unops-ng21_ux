@@ -9,7 +9,7 @@ import { Component, computed, inject } from '@angular/core';
     template: `
         <section class="landing-container relative py-12 lg:py-24">
             <div class="max-w-272 mx-auto flex items-center flex-col lg:flex-row-reverse gap-14 xl:gap-20">
-                <div class="relative lg:flex-1 w-full h-112 lg:h-160 max-w-100 lg:max-w-xl">
+                <div class="relative lg:flex-1 w-full h-112 lg:h-160 max-w-100 lg:max-w-xl animate-fade-in-up stagger-1">
                     <app-lazy-image-widget
                         className="w-70 lg:w-100 z-0 rounded-2xl delay-300 h-auto absolute rotate-20 bottom-10 lg:bottom-16 left-18 lg:left-24 shadow-[0px_20px_52px_0px_rgba(0,0,0,0.04),0px_112px_31px_0px_rgba(0,0,0,0.00),0px_72px_29px_0px_rgba(0,0,0,0.01)]"
                         [src]="'demo/images/landing/boxes/' + (isDarkTheme() ? 'social-media-users-dark.png' : 'social-media-users.png')"
@@ -23,7 +23,7 @@ import { Component, computed, inject } from '@angular/core';
                         style="display:contents"
                     />
                 </div>
-                <div class="max-w-100 mx-auto lg:max-w-md w-full flex flex-col items-center lg:items-start">
+                <div class="max-w-100 mx-auto lg:max-w-md w-full flex flex-col items-center lg:items-start animate-fade-in-up stagger-2">
                     <div class="badge mx-0">Feature</div>
                     <h4 class="title-h5 lg:title-h4 text-center lg:text-left mt-4">Interactive Finance Tracking Tool</h4>
                     <p class="body-medium text-center lg:text-left mt-6">

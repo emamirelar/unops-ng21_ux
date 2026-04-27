@@ -12,7 +12,7 @@ import { TextareaModule } from 'primeng/textarea';
     selector: 'app-contact-us',
     imports: [CommonModule, FormsModule, InputTextModule, TextareaModule, ButtonModule, IconField, InputIcon],
     template: `
-        <div class="grid grid-cols-12 gap-4 card grid-nogutter" style="column-gap: 2rem; row-gap: 2rem;">
+        <div class="grid grid-cols-12 gap-4 card grid-nogutter animate-fade-in-up" style="column-gap: 2rem; row-gap: 2rem;">
             <div class="col-span-12">
                 <p class="text-surface-900 dark:text-surface-0 font-bold">Contact Us</p>
             </div>

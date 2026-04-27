@@ -18,7 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
                         <logo-widget />
                     </a>
                     <div class="flex flex-col justify-center grow">
-                        <div class="max-w-md mx-auto w-full">
+                        <div class="max-w-md mx-auto w-full animate-scale-in-subtle">
                             <h5 class="title-h5 text-center lg:text-left">Screen Locked</h5>
                             <p class="body-small mt-3.5 text-center lg:text-left">Please enter your password</p>
                             <form class="mt-8">

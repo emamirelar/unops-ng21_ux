@@ -37,7 +37,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
             <div class="flex flex-col gap-6">
 
                 <!-- Back + Actions Bar -->
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between animate-fade-in">
                     <p-button
                         label="Back to list"
                         [text]="true"
@@ -51,7 +51,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                 </div>
 
                 <!-- Header Card -->
-                <div class="card">
+                <div class="card animate-fade-in">
                     <div class="flex flex-col sm:flex-row sm:items-start gap-5">
                         <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 shrink-0 overflow-hidden">
                             <img [src]="flagUrl()" [alt]="p.address1Country || 'Global'" class="w-10 h-10 object-contain" />
@@ -107,7 +107,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                     <div class="flex-1 flex flex-col gap-6 min-w-0">
 
                         <!-- Partner Details -->
-                        <div class="card flex flex-col gap-5">
+                        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-1">
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Partner Details</h4>
@@ -141,7 +141,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         </div>
 
                         <!-- Classification -->
-                        <div class="card flex flex-col gap-5">
+                        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-2">
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-sitemap text-deepsea-500 dark:text-surface-0"></i>
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Classification</h4>
@@ -205,7 +205,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                     <div class="w-full xl:w-[340px] flex flex-col gap-6 shrink-0">
 
                         <!-- Contact -->
-                        <div class="card flex flex-col gap-4">
+                        <div class="card flex flex-col gap-4 animate-fade-in-up stagger-1">
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-user text-deepsea-500 dark:text-surface-0"></i>
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Focal Point</h4>
@@ -227,7 +227,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         </div>
 
                         <!-- Location & Office -->
-                        <div class="card flex flex-col gap-4">
+                        <div class="card flex flex-col gap-4 animate-fade-in-up stagger-2">
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-map-marker text-deepsea-500 dark:text-surface-0"></i>
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Location</h4>
@@ -264,7 +264,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         </div>
 
                         <!-- Metadata -->
-                        <div class="card flex flex-col gap-4">
+                        <div class="card flex flex-col gap-4 animate-fade-in-up stagger-3">
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-clock text-deepsea-500 dark:text-surface-0"></i>
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Record Info</h4>

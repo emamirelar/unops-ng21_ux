@@ -37,7 +37,7 @@ interface Task {
     imports: [CommonModule, FormsModule, ButtonModule, CheckboxModule, InputTextModule, IconFieldModule, InputIconModule, TagModule, DividerModule, AvatarModule, AvatarGroupModule, AccordionModule, ConfirmDialogModule, TaskDrawer],
     providers: [ConfirmationService],
     template: `
-        <div class="flex flex-col lg:flex-row h-full bg-surface-0 dark:bg-surface-900 card">
+        <div class="flex flex-col lg:flex-row h-full bg-surface-0 dark:bg-surface-900 card animate-fade-in-up">
             <!-- Mobile Header -->
             <div class="lg:hidden flex flex-col gap-4 p-4 border-b border-surface-200 dark:border-surface-600">
                 <div class="flex items-center justify-between">

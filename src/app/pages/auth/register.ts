@@ -19,7 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
                         <logo-widget></logo-widget>
                     </a>
                     <div class="flex flex-col justify-center grow">
-                        <div class="max-w-md mx-auto w-full">
+                        <div class="max-w-md mx-auto w-full animate-scale-in-subtle">
                             <h5 class="title-h5 text-center lg:text-left">Register</h5>
                             <p class="body-small mt-3.5 text-center lg:text-left">Let's get started</p>
                             <button class="social-button mt-8"><app-google-widget></app-google-widget> Register with Google</button>

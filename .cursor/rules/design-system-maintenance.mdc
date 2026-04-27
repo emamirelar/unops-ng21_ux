@@ -17,7 +17,8 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 | `src/app/layout/service/layout.service.ts` | Stores active preset name as string (`'Aura'`) |
 | `src/app/layout/components/app.topbar.ts` | Runtime preset switching via `$t().preset(...)` |
 | `src/app/layout/components/app.configurator.ts` | Runtime preset + surface switching via `$t()` |
-| `src/assets/tailwind.css` | Duplicates brand primitives as Tailwind `@theme` values |
+| `src/assets/tailwind.css` | Duplicates brand primitives as Tailwind `@theme` values; app-level motion keyframes and animation tokens |
+| `src/assets/layout/_animations.scss` | App-wide page entrance (`router-outlet + *`), `.card` hover micro-interaction, and `prefers-reduced-motion` override |
 | `.storybook/preview.ts` | Uses `BrandAura` for Storybook PrimeNG provider |
 
 ## Rules for making changes
@@ -38,6 +39,8 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 
 | Date | Change | Upstream target | Files affected |
 |------|--------|-----------------|----------------|
+| 2026-04-27 | **Motion (supplement):** `tailwind.css` — added `enter-liquid` / `enter-liquid-reveal` keyframes and `--animate-enter-liquid` / `--animate-enter-liquid-reveal` for AI Project Analysis card on `opportunity.ts` (sidebar settle-in + expand panel). Uses `motion-safe:` so reduced-motion users skip heavy blur. | N/A (Tailwind v4) | `tailwind.css`, `opportunity.ts` |
+| 2026-04-27 | **Motion layer (CSS-only):** (1) `tailwind.css` — added `@theme` keyframes `fade-in`, `fade-in-up`, `fade-in-down`, `scale-in-subtle`, `slide-in-right` and matching `--animate-*` tokens; added `stagger-1`…`stagger-6` utilities. (2) `_animations.scss` — `router-outlet + *` page enter animation; `.card` hover lift using existing `$sidebarShadow`; `prefers-reduced-motion: reduce` guard. Templates use Tailwind `animate-*` / `stagger-*` on dashboards, feature apps, auth forms, landing/pricing, e-commerce grid, and misc pages. | N/A (Tailwind v4 + layout SCSS) | `tailwind.css`, `layout.scss`, `_animations.scss`, numerous `*.ts` page templates |
 | 2026-04-27 | Sidebar theme accessibility fixes: (1) `_dark.scss` — fixed `.app-dark .layout-sidebar-dark` app name from `--p-surface-950` (invisible on same-color bg) to `--p-surface-0`; (2) `_primary.scss` — fixed invalid `var (--p-ocean-100)` syntax (space after `var`), changed dark mode bg from light tints (`blue-200/50`) to dark tints (`blue-800/900`) for proper contrast, fixed app name to `--p-surface-0`; (3) `_light.scss` — fixed bg from `--d-menuitem-focus-shadow` (a box-shadow value) to `--p-surface-0`, set text/name colors for proper contrast on light background. | N/A (layout SCSS layer) | `_dark.scss`, `_primary.scss`, `_light.scss` |
 | 2026-04-27 | Added `success: { color: '{green.800}' }` to tag light-mode overrides in `brandOverrides` to fix WCAG AA contrast (green.100 bg / green.700 text was 3.92:1, now green.800 gives 5.46:1). | PrimeNG 21 / PrimeUIX Themes 2 | `brand-theme.ts` |
 | 2026-04-23 | Added `--font-size-xs: 0.75rem` to `:root` in `_common.scss` (was referenced but undefined). Both `--font-size-xs` and `--font-size-sm` now documented as aligned to Tailwind's scale, used only by layout SCSS. | N/A (layout layer) | `_common.scss` |

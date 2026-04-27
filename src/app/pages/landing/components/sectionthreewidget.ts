@@ -99,7 +99,11 @@ import { Component, computed, inject } from '@angular/core';
                 </div>
             </div>
             <div class="-mt-32 md:-mt-56 lg:-mt-64 max-w-md px-6 md:landing-container w-full mx-auto relative z-50 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-7">
-                <div *ngFor="let data of details; let index = index" class="p-2.5 lg:p-3.5 flex items-start gap-3.5">
+                <div
+                    *ngFor="let data of details; let index = index"
+                    class="p-2.5 lg:p-3.5 flex items-start gap-3.5 animate-fade-in-up"
+                    [style.animation-delay.ms]="index * 60"
+                >
                     <div class="bg-primary w-12 h-10" [ngStyle]="{ mask: 'url(' + data.icon + ') no-repeat center' }"></div>
 
                     <div class="flex-1">

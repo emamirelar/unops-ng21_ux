@@ -13,7 +13,7 @@ interface Comment {
     selector: 'app-detail',
     imports: [ButtonModule, DividerModule, TagModule],
     template: `
-        <div class="p-6 card overflow-hidden">
+        <div class="p-6 card overflow-hidden animate-fade-in-up">
             <div class="h-110 relative bg-linear-to-b from-transparent to-black/30 rounded-3xl overflow-hidden mb-8">
                 <img src="demo/images/cms/cms-hero-1.jpg" alt="How Manufacturing Giants Drive Economic Growth" class="w-full h-full object-cover absolute inset-0" />
                 <div class="absolute bottom-6 left-6 right-6">

@@ -35,13 +35,13 @@ import { TagModule } from 'primeng/tag';
                 <ng-template #body let-data>
                     <tr>
                         <td>
-                            <div class="label-xsmall text-surface-950 dark:text-surface-0">{{ data.name }}</div>
+                            <div class="body-xsmall text-surface-950 dark:text-surface-0 text-left">{{ data.name }}</div>
                         </td>
                         <td>
                             <div class="body-xsmall text-left">{{ data.partner }}</div>
                         </td>
                         <td>
-                            <div class="label-xsmall text-surface-950 dark:text-surface-0">{{ data.value }}</div>
+                            <div class="body-xsmall text-surface-950 dark:text-surface-0 text-left">{{ data.value }}</div>
                         </td>
                         <td>
                             <p-tag [value]="data.stage" [severity]="stageSeverity(data.stage)" />

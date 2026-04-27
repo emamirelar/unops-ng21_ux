@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-blocks',
     standalone: true,
     imports: [CommonModule, BlockViewer, ButtonModule, Chip, InputText, Checkbox, Password, IconField, InputIcon, FormsModule],
-    template: `<div>
+    template: `<div class="animate-fade-in-up">
         <!-- Page Hero Section -->
 
         <div class="bg-surface-0 dark:bg-surface-900 border border-surface rounded-xl p-8 bg-cover bg-no-repeat h-[440px] flex mb-8" [style.background-image]="heroBackground()">

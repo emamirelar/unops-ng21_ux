@@ -65,7 +65,7 @@ interface Document {
     imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, TagModule, TextareaModule, ConfirmDialogModule],
     providers: [ConfirmationService],
     template: `
-        <div class="flex flex-col gap-6 card">
+        <div class="flex flex-col gap-6 card animate-fade-in-up">
             <div class="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
                 <div class="text-surface-900 dark:text-surface-0 text-2xl! font-medium leading-loose">Overview</div>
 

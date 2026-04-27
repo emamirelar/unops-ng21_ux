@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
     template: `<section>
         <div class="flex flex-col gap-7">
             <!-- Hero Header -->
-            <div class="px-6 sm:px-10 py-10 rounded-b-2xl text-center flex flex-col items-center">
+            <div class="px-6 sm:px-10 py-10 rounded-b-2xl text-center flex flex-col items-center animate-fade-in-down">
                 <div class="max-w-3xl">
                     <h1 class="text-surface-900 dark:text-surface-0 text-3xl sm:text-4xl font-semibold leading-tight m-0 mb-4">
                         Welcome to the enhanced Partner and Opportunities platform, Opportunity +
@@ -25,12 +25,12 @@ import { Component } from '@angular/core';
                 </div>
             </div>
 
-            <opportunity-stat-card-widget />
-            <div class="w-full flex xl:flex-row flex-col gap-6">
+            <opportunity-stat-card-widget class="animate-fade-in-up stagger-1" />
+            <div class="w-full flex xl:flex-row flex-col gap-6 animate-fade-in-up stagger-2">
                 <opportunity-trends-widget />
                 <opportunity-pipeline-widget />
             </div>
-            <div class="flex xl:flex-row flex-col gap-6">
+            <div class="flex xl:flex-row flex-col gap-6 animate-fade-in-up stagger-3">
                 <pipeline-health-widget />
                 <recent-opportunities-widget />
             </div>

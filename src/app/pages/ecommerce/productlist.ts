@@ -26,7 +26,7 @@ interface SelectOption {
     selector: 'app-product-list',
     imports: [FormsModule, IconFieldModule, InputIconModule, InputTextModule, SelectModule, TagModule],
     template: `
-        <div class="p-6 card">
+        <div class="p-6 card animate-fade-in-up">
             <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-7 mb-7">
                 <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-4 w-full ml-auto">
                     <div class="w-full sm:w-[217px]">
@@ -47,8 +47,11 @@ interface SelectOption {
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                @for (product of filteredAndSortedProducts; track product.id) {
-                    <div class="h-120 p-4 rounded-3xl flex flex-col justify-end items-start gap-2 overflow-hidden relative group cursor-pointer">
+                @for (product of filteredAndSortedProducts; track product.id; let i = $index) {
+                    <div
+                        class="h-120 p-4 rounded-3xl flex flex-col justify-end items-start gap-2 overflow-hidden relative group cursor-pointer animate-fade-in-up"
+                        [style.animation-delay.ms]="i * 50"
+                    >
                         <div class="absolute inset-0 rounded-3xl overflow-hidden">
                             <img [src]="product.image" class="w-full h-full object-cover" [alt]="product.name" />
                             <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"></div>

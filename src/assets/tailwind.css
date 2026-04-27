@@ -276,6 +276,93 @@
       transform: rotate(1deg);
     }
   }
+
+  --animate-fade-in: fade-in 0.35s ease-out both;
+  --animate-fade-in-up: fade-in-up 0.4s ease-out both;
+  --animate-fade-in-down: fade-in-down 0.35s ease-out both;
+  --animate-scale-in-subtle: scale-in-subtle 0.35s ease-out both;
+  --animate-slide-in-right: slide-in-right 0.4s ease-out both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in-down {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes scale-in-subtle {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Smooth, liquid settle-in (opacity + drift + de-blur) */
+  --animate-enter-liquid: enter-liquid 0.8s cubic-bezier(0.2, 0.85, 0.15, 1) both;
+  @keyframes enter-liquid {
+    0% {
+      opacity: 0;
+      filter: blur(5px);
+      transform: translateY(14px) scale(0.99);
+    }
+    45% {
+      opacity: 1;
+      filter: blur(0.5px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Child panel: gentle vertical reveal when expanding in place */
+  --animate-enter-liquid-reveal: enter-liquid-reveal 0.55s cubic-bezier(0.2, 0.85, 0.2, 1) both;
+  @keyframes enter-liquid-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 
@@ -545,4 +632,23 @@
     "liga" off,
     "calt" off;
   box-shadow: 0px 1px 2px 0px rgba(18, 18, 23, 0.05);
+}
+
+@utility stagger-1 {
+  animation-delay: 50ms;
+}
+@utility stagger-2 {
+  animation-delay: 100ms;
+}
+@utility stagger-3 {
+  animation-delay: 150ms;
+}
+@utility stagger-4 {
+  animation-delay: 200ms;
+}
+@utility stagger-5 {
+  animation-delay: 250ms;
+}
+@utility stagger-6 {
+  animation-delay: 300ms;
 }
