@@ -24,7 +24,7 @@ jobs:
                   scope: '@emamirelar'
 
             - name: Install dependencies
-              run: npm ci
+              run: npm install --no-audit
 
             - name: Build library
               run: npm run build:lib
