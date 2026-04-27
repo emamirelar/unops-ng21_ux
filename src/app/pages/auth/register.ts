@@ -30,9 +30,12 @@ import { InputTextModule } from 'primeng/inputtext';
                                 <span class="flex-1 h-px bg-surface-200 dark:bg-surface-800"></span>
                             </div>
                             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-                                <input type="text" pInputText formControlName="username" class="w-full" placeholder="Username" />
-                                <input type="text" pInputText formControlName="email" class="w-full mt-4" placeholder="Email" />
-                                <input type="password" pInputText formControlName="password" class="w-full mt-4" placeholder="Password" />
+                                <label for="register-username" class="sr-only">Username</label>
+                                <input id="register-username" type="text" pInputText formControlName="username" class="w-full" placeholder="Username" />
+                                <label for="register-email" class="sr-only">Email</label>
+                                <input id="register-email" type="text" pInputText formControlName="email" class="w-full mt-4" placeholder="Email" />
+                                <label for="register-password" class="sr-only">Password</label>
+                                <input id="register-password" type="password" pInputText formControlName="password" class="w-full mt-4" placeholder="Password" />
                                 <div class="my-8 flex items-center justify-between">
                                     <div class="flex items-center gap-2">
                                         <p-checkbox binary="true" inputId="remember" formControlName="remember"></p-checkbox>

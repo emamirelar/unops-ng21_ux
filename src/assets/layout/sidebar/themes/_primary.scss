@@ -1,31 +1,31 @@
 .layout-sidebar-primary {
-    --d-sidebar-bg-color: var(--menu-bg-color);
-    --d-sidebar-bg-color-alt: var(--p-violet-800);
+    --d-sidebar-bg-color: var(--color-deepsea-500);
+    --d-sidebar-bg-color-alt: var(--color-deepsea-600);
     --d-sidebar-border: 1px solid var(--surface-border);
     --d-app-name-color: var(--p-surface-0);
     --d-menu-separator-border: 1px solid rgba(36, 204, 255, 0.619);
     --d-menuitem-root-text-color: var(--p-surface-0);
     --d-menuitem-text-color: var(--p-surface-0);
-    --d-menuitem-hover-bg: rgba(0, 16, 41, 0.376);
-    --d-menuitem-active-bg: var(--p-ocean-300);
-    --d-menuitem-active-text-color: var(--color-ocean-100);
-    --d-menuitem-active-route-text-color: var(--color-ocean-400);
+    --d-menuitem-hover-bg: rgba(58, 183, 255, 0.376);
+    --d-menuitem-active-bg: rgba(1, 74, 116, 0.3);
+    --d-menuitem-active-text-color: var(--p-surface-0);
+    --d-menuitem-active-route-text-color: var(--p-surface-0);
     --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
     --d-sidebar-border: 1px solid transparent;
 }
 
 :root[class*='app-dark'] .layout-sidebar-primary {
-    --d-sidebar-bg-color: var(--p-blue-200);
-    --d-sidebar-bg-color-alt: var(--p-blue-50);
+    --d-sidebar-bg-color: var(--color-blue-500);
+    --d-sidebar-bg-color-alt: var(--color-blue-600);
     --d-sidebar-border: 1px solid transparent;
-    --d-app-name-color: var(--p-surface-50);
-    --d-menu-separator-border: 1px solid rgba(0, 0, 0, 0.2);
+    --d-app-name-color: var(--p-surface-0);
+    --d-menu-separator-border: 1px solid rgba(255, 255, 255, 0.15);
     --d-menuitem-root-text-color: var(--p-surface-0);
     --d-menuitem-text-color: var(--p-surface-50);
     --d-menuitem-hover-bg: rgba(0, 16, 41, 0.376);
-    --d-menuitem-active-bg: var (--p-ocean-100);
-    --d-menuitem-active-text-color: var(--color-ocean-100);
-    --d-menuitem-active-route-text-color: var(--color-ocean-400);
+    --d-menuitem-active-bg: rgba(0, 16, 41, 0.7);
+    --d-menuitem-active-text-color: var(--p-surface-0);
+    --d-menuitem-active-route-text-color: var(--p-surface-0);
     --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
 }
 

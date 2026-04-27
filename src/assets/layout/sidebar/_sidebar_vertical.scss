@@ -18,9 +18,9 @@
     .logo {
         text-align: center;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         outline: 0 none;
-        padding: 1rem;
+        padding: 1rem 1rem 2rem 2rem;
         transition:
             padding 0.45s cubic-bezier(0.32, 0.72, 0, 1),
             background-color var(--transition-duration),
@@ -29,7 +29,7 @@
 
     .logo-image {
         margin-top: 0.2rem;
-        width: 12rem;
+        width: 10rem;
         max-width: 100%;
         height: auto;
         vertical-align: left;
@@ -109,6 +109,7 @@
 
             .layout-menuitem-text {
                 overflow: hidden;
+                color: var(--d-menuitem-text-color);
                 white-space: nowrap;
                 opacity: 1;
                 max-width: 12rem;
@@ -162,6 +163,7 @@
             }
 
             .layout-submenu-toggler {
+                color: var(--color-ocean-300);
                 font-size: var(--text-sm);
                 margin-left: auto;
                 opacity: 1;

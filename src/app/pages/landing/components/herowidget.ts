@@ -27,7 +27,7 @@ import { HorizontalGridWidget } from './horizontalgridwidget';
                     <app-lazy-image-widget
                         [src]="'demo/images/landing/' + (isDarkTheme() ? 'hero-dashboard-dark.png' : 'hero-dashboard.png')"
                         alt="Hero Image"
-                        className="mt-16 min-w-2xl max-w-284! w-full h-auto mx-auto rounded-xl lg:rounded-3xl shadow-[0px_4px_16px_0px_rgba(18,18,23,0.08),0px_0px_0px_8px_#E3E8EF] dark:shadow-[0px_4px_16px_0px_rgba(18,18,23,0.08),0px_0px_0px_8px_#27272A]"
+                        className="mt-16 max-w-284! w-full h-auto mx-auto rounded-xl lg:rounded-3xl shadow-[0px_4px_16px_0px_rgba(18,18,23,0.08),0px_0px_0px_8px_#E3E8EF] dark:shadow-[0px_4px_16px_0px_rgba(18,18,23,0.08),0px_0px_0px_8px_#27272A]"
                     ></app-lazy-image-widget>
                 </div>
                 <app-customers-logo-widget></app-customers-logo-widget>

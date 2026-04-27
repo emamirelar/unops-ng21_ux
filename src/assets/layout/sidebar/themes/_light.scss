@@ -1,15 +1,14 @@
 .layout-sidebar-light {
     --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(90, 184, 255, 0.218);
-    --d-sidebar-bg-color: var(--d-menuitem-focus-shadow);
+    --d-sidebar-bg-color: var(--p-surface-0);
     --d-sidebar-bg-color-alt: var(--color-ocean-100);
     --d-sidebar-border: 1px solid var(--surface-border);
-    --d-app-name-color: var(--p-surface-0);
+    --d-app-name-color: var(--p-primary-800);
     --d-menu-separator-border: 1px solid var(--surface-border);
-    --d-menuitem-root-text-color: var(--p-surface-0);
-    --d-menuitem-text-color: var(--p-surface-0);
+    --d-menuitem-root-text-color: var(--p-primary-700);
+    --d-menuitem-text-color: var(--p-primary-700);
     --d-menuitem-hover-bg: var(--surface-hover);
-    --d-menuitem-active-bg: var(--p-surface-50);
-    --d-menuitem-active-text-color: var(--color-ocean-100);
-    --d-menuitem-active-route-text-color: var(--p-surface-0);
-    
+    --d-menuitem-active-bg: rgba(2, 44, 78, 0.177);
+    --d-menuitem-active-text-color: var(--p-primary-600);
+    --d-menuitem-active-route-text-color: var(--p-primary-700);
 }

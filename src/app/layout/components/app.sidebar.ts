@@ -12,19 +12,19 @@ const BREAKPOINT = 992;
     selector: '[app-sidebar]',
     standalone: true,
     imports: [CommonModule, AppMenu, RouterModule, AppTopbar],
-    template: `<div class="layout-sidebar" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+    template: `<nav class="layout-sidebar" aria-label="Main navigation" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
         <div class="sidebar-header">
             <a class="logo" [routerLink]="['/']">
                 <img class="logo-image" [src]="sidebarLogo()" alt="UNOPS" />
             </a>
-            <button class="layout-sidebar-anchor z-2" type="button" (click)="onAnchorToggle()"></button>
+            <button class="layout-sidebar-anchor z-2" type="button" aria-label="Pin sidebar" (click)="onAnchorToggle()"></button>
         </div>
 
         <div #menuContainer class="layout-menu-container" (scroll)="onMenuScroll()">
             <div app-menu></div>
         </div>
         <div app-topbar *ngIf="isHorizontal()"></div>
-    </div>`
+    </nav>`
 })
 export class AppSidebar implements OnInit, OnDestroy {
     layoutService = inject(LayoutService);
@@ -181,7 +181,7 @@ export class AppSidebar implements OnInit, OnDestroy {
     }
 
     private isOutsideClicked(event: MouseEvent): boolean {
-        const topbarButtonEl = document.querySelector('.topbar-left > a');
+        const topbarButtonEl = document.querySelector('.mobile-menu-button');
         const sidebarEl = this.el.nativeElement;
 
         return !(sidebarEl?.isSameNode(event.target as Node) || sidebarEl?.contains(event.target as Node) || topbarButtonEl?.isSameNode(event.target as Node) || topbarButtonEl?.contains(event.target as Node));

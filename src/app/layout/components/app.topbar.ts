@@ -26,20 +26,20 @@ interface NotificationsBars {
     standalone: true,
     imports: [RouterModule, CommonModule, StyleClassModule, AppBreadcrumb, InputTextModule, ButtonModule, IconFieldModule, InputIconModule, RippleModule, BadgeModule, OverlayBadgeModule, AvatarModule],
     template: `<div class="layout-topbar">
-        <a class="mobile-menu-button" (click)="onMenuButtonClick()">
+        <button type="button" class="mobile-menu-button" aria-label="Toggle navigation menu" (click)="onMenuButtonClick()">
             <i class="pi pi-bars"></i>
-        </a>
+        </button>
         <div class="topbar-left">
             <div app-breadcrumb></div>
             @if (searchActive()) {
                 <div class="flex items-center gap-2 ml-auto">
                     <p-iconfield class="w-48 sm:w-80">
                         <p-inputicon styleClass="pi pi-search" />
-                        <input #searchInput type="text" pInputText placeholder="Search..." class="w-full !py-2 !text-sm" (keydown.escape)="closeSearch()" />
+                        <input #searchInput type="text" pInputText placeholder="Search..." aria-label="Search" class="w-full !py-2 !text-sm" (keydown.escape)="closeSearch()" />
                     </p-iconfield>
-                    <a class="flex items-center justify-center w-8 h-8 rounded-md cursor-pointer hover:bg-emphasis transition-colors" (click)="closeSearch()">
+                    <button type="button" class="flex items-center justify-center w-8 h-8 rounded-md cursor-pointer hover:bg-emphasis transition-colors" aria-label="Close search" (click)="closeSearch()">
                         <i class="pi pi-times text-sm"></i>
-                    </a>
+                    </button>
                 </div>
             }
         </div>
@@ -49,7 +49,7 @@ interface NotificationsBars {
         <div class="topbar-right">
             <ul class="topbar-menu">
                 <li class="right-sidebar-item" [class.hidden]="searchActive()">
-                    <a class="right-sidebar-button" (click)="openSearch()">
+                    <a class="right-sidebar-button" aria-label="Open search" (click)="openSearch()">
                         <i class="pi pi-search"></i>
                     </a>
                 </li>
@@ -63,7 +63,7 @@ interface NotificationsBars {
                     </a>
                 </li>
                 <li class="right-sidebar-item static sm:relative z-50">
-                    <a class="right-sidebar-button" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
+                    <a class="right-sidebar-button" aria-label="Notifications" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
                         <span class="w-2 h-2 rounded-full bg-red-500 absolute top-2 right-2.5"></span>
                         <i class="pi pi-bell"></i>
                     </a>
@@ -111,8 +111,8 @@ interface NotificationsBars {
                     </div>
                 </li>
                 <li class="right-sidebar-item static sm:relative">
-                    <a class="right-sidebar-button relative z-50" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <a class="right-sidebar-button relative z-50" aria-label="Change language" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="m5 8 6 6"/>
                             <path d="m4 14 6-6 2-3"/>
                             <path d="M2 5h12"/>
@@ -143,7 +143,7 @@ interface NotificationsBars {
                     </div>
                 </li>
                 <li class="profile-item static sm:relative" #profileItem>
-                    <a class="right-sidebar-button relative z-50" (click)="toggleProfileMenu($event)">
+                    <a class="right-sidebar-button relative z-50" aria-label="User profile menu" (click)="toggleProfileMenu($event)">
                         <p-avatar icon="pi pi-user" styleClass="w-10! h-10!" />
                     </a>
                     <div

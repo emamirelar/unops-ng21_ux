@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
     selector: '[app-footer]',
     standalone: true,
     template: `
-        <div class="layout-footer">
+        <footer class="layout-footer">
             <span class="footer-copyright">&#169; UNOPS 2026</span>
-        </div>
+        </footer>
     `
 })
 export class AppFooter {}

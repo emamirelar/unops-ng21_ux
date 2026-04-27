@@ -32,8 +32,10 @@ import { InputTextModule } from 'primeng/inputtext';
                                 <span class="flex-1 h-px bg-surface-200 dark:bg-surface-800"></span>
                             </div>
                             <form [formGroup]="loginForm">
-                                <input type="text" formControlName="email" pInputText class="w-full" placeholder="Email" required />
-                                <input type="password" formControlName="password" pInputText class="w-full mt-4" placeholder="Password" required />
+                                <label for="login-email" class="sr-only">Email</label>
+                                <input id="login-email" type="text" formControlName="email" pInputText class="w-full" placeholder="Email" required />
+                                <label for="login-password" class="sr-only">Password</label>
+                                <input id="login-password" type="password" formControlName="password" pInputText class="w-full mt-4" placeholder="Password" required />
                                 <div class="my-8 flex items-center justify-between">
                                     <div class="flex items-center gap-2">
                                         <p-checkbox inputId="remember" formControlName="remember" [binary]="true" />

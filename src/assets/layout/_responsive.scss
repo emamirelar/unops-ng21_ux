@@ -86,7 +86,7 @@
             top: 50%;
             transform: translate(-50%, -50%);
             width: auto;
-            height: clamp(2.25rem, 2rem + 1vw, 2.5rem);
+            height: clamp(1.25rem, 2rem + 1vw, 2.5rem);
             object-fit: contain;
         }
 
@@ -94,10 +94,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
+            width: 2.75rem;
+            height: 2.75rem;
             border-radius: var(--border-radius);
-            color: var(--text-color);
+            border: none;
+            background: transparent;
+            padding: 0;
+            color: var(--p-primary-600);
             cursor: pointer;
             transition: background-color var(--transition-duration);
 

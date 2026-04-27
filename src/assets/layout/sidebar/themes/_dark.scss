@@ -6,15 +6,14 @@
     --d-menu-separator-border: 1px solid var(--p-surface-100);
     --d-menuitem-root-text-color: var(--p-surface-200);
     --d-menuitem-text-color: var(--p-surface-100);
-    --d-menuitem-hover-bg: rgba(65, 195, 255, 0.188);
-    --d-menuitem-active-bg: rgba(73, 213, 252, 0.182);
+
     --d-menuitem-active-text-color: var(--p-surface-100);
     --d-menuitem-active-route-text-color: var(--p-surface-0);
     --d-menuitem-focus-shadow: 0 0 0 1px var(--p-primary-50);
 }
 
 .app-dark .layout-sidebar-dark {
-    --d-app-name-color: var(--p-surface-950);
+    --d-app-name-color: var(--p-surface-0);
     --d-menuitem-root-text-color: var(--p-surface-0);
     --d-menuitem-text-color: var(--p-surface-0);
     --d-menuitem-active-text-color: var(--p-surface-0);

@@ -9,6 +9,12 @@
     --transition-duration: var(--p-transition-duration);
     --border-radius: var(--p-content-border-radius);
     --focus-ring-shadow: var(--p-focus-ring-shadow);
-    --font-size-xs: 0.75rem;
-    --font-size-sm: 0.875rem;
+        --font-size-xs:   clamp(0.7rem,   0.65rem + 0.25vw, 0.75rem);
+        --font-size-sm:   clamp(0.8rem,   0.75rem + 0.25vw, 0.875rem);
+        --font-size-base: clamp(0.9rem,   0.85rem + 0.25vw, 1rem);
+        --font-size-lg:   clamp(1rem,     0.925rem + 0.35vw, 1.125rem);
+        --font-size-xl:   clamp(1.1rem,   1rem + 0.5vw, 1.25rem);
+        --font-size-2xl:  clamp(1.3rem,   1.1rem + 0.75vw, 1.5rem);
+        --font-size-3xl:  clamp(1.6rem,   1.3rem + 1vw, 1.875rem);
+        --font-size-4xl:  clamp(1.9rem,   1.5rem + 1.25vw, 2.25rem);
 }

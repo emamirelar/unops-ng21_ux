@@ -23,7 +23,18 @@
 }
 
 @theme {
+
   --font-sans: "Noto Sans", sans-serif;
+  
+  --text-xs: var(--font-size-xs);
+  --text-sm: var(--font-size-sm);
+  --text-base: var(--font-size-base);
+  --text-lg: var(--font-size-lg);
+  --text-xl: var(--font-size-xl);
+  --text-2xl: var(--font-size-2xl);
+  --text-3xl: var(--font-size-3xl);
+  --text-4xl: var(--font-size-4xl);
+
 
   --color-*: initial;
   --color-black: #000;
@@ -295,13 +306,13 @@
 
 @utility title-h2 {
   @apply font-semibold text-surface-950 dark:text-surface-0 text-center leading-none;
-  font-size: 2rem;
+  font-size: var(--font-size-4xl);
   font-family: "Noto Sans", sans-serif;
 }
 
 @utility title-h3 {
   @apply font-semibold text-surface-900 dark:text-surface-0 leading-tight text-center;
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl); 
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv07" on,
@@ -317,7 +328,7 @@
 
 @utility title-h4 {
   @apply font-semibold text-surface-900 dark:text-surface-0 leading-tight text-center;
-  font-size: 1.2rem;
+  font-size: var(--font-size-xl); 
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,

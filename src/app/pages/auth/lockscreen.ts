@@ -22,12 +22,13 @@ import { InputTextModule } from 'primeng/inputtext';
                             <h5 class="title-h5 text-center lg:text-left">Screen Locked</h5>
                             <p class="body-small mt-3.5 text-center lg:text-left">Please enter your password</p>
                             <form class="mt-8">
-                                <input pInputText type="password" [formControl]="passwordControl" class="w-full" placeholder="Password" />
+                                <label for="lock-password" class="sr-only">Password</label>
+                                <input id="lock-password" pInputText type="password" [formControl]="passwordControl" class="w-full" placeholder="Password" />
                                 <div class="flex items-center gap-4 mt-6">
                                     <button type="submit" class="body-button w-full">Unlock</button>
                                 </div>
                             </form>
-                            <div class="mt-8 body-small text-center lg:text-left">A problem? <a class="text-primary-500 hover:underline cursor-pointer">Click here</a> and let us help you.</div>
+                            <div class="mt-8 body-small text-center lg:text-left">A problem? <a class="text-primary-500 hover:underline cursor-pointer">Contact support</a> and let us help you.</div>
                         </div>
                     </div>
                     <div class="mt-8 text-center lg:text-start block relative text-surface-400 dark:text-surface-500 text-sm">©{{ currentYear }} PrimeTek</div>

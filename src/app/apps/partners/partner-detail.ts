@@ -39,8 +39,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                 <!-- Back + Actions Bar -->
                 <div class="flex items-center justify-between">
                     <p-button
-                        icon="pi pi-arrow-left"
-                        label="Partners"
+                        label="Back to list"
                         [text]="true"
                         severity="secondary"
                         routerLink="/apps/partners"

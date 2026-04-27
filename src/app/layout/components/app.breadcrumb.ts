@@ -14,8 +14,8 @@ interface Breadcrumb {
     selector: '[app-breadcrumb]',
     standalone: true,
     imports: [CommonModule, RouterModule],
-    template: `<nav class="layout-breadcrumb">
-        <button type="button" class="breadcrumb-back" (click)="toggleSidebar()">
+    template: `<nav class="layout-breadcrumb" aria-label="Breadcrumb">
+        <button type="button" class="breadcrumb-back" [attr.aria-label]="sidebarCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'" (click)="toggleSidebar()">
             <i [class]="sidebarCollapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
         </button>
         <span class="breadcrumb-divider"></span>

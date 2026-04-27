@@ -20,15 +20,17 @@ import { InputTextModule } from 'primeng/inputtext';
                         <h5 class="title-h5 text-center lg:text-left">Create a new password</h5>
                         <p class="body-small mt-3.5 text-center lg:text-left">Lorem ipsum dolor sit amet</p>
                         <form [formGroup]="passwordForm">
-                            <input pInputText formControlName="password" type="password" class="w-full mt-7" placeholder="Password" />
-                            <input pInputText formControlName="repeatPassword" type="password" class="w-full mt-4" placeholder="Repeat Password" />
+                            <label for="new-password" class="sr-only">Password</label>
+                            <input id="new-password" pInputText formControlName="password" type="password" class="w-full mt-7" placeholder="Password" />
+                            <label for="repeat-password" class="sr-only">Repeat Password</label>
+                            <input id="repeat-password" pInputText formControlName="repeatPassword" type="password" class="w-full mt-4" placeholder="Repeat Password" />
 
                             <div class="flex items-center gap-4 mt-8">
                                 <button type="button" class="body-button border border-surface-200 dark:border-surface-800 bg-transparent hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-950 dark:text-surface-0 flex-1">Cancel</button>
                                 <button type="submit" class="body-button flex-1">Submit</button>
                             </div>
                         </form>
-                        <div class="mt-8 body-small text-center lg:text-left">A problem? <a class="underline cursor-pointer hover:opacity-75 transition-all">Click here</a> and let us help you.</div>
+                        <div class="mt-8 body-small text-center lg:text-left">A problem? <a class="underline cursor-pointer hover:opacity-75 transition-all">Contact support</a> and let us help you.</div>
                     </div>
                 </div>
                 <div class="mt-8 text-center lg:text-start block relative text-surface-400 dark:text-surface-500 text-sm">©{{ currentYear }} PrimeTek</div>

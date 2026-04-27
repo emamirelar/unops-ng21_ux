@@ -20,6 +20,7 @@ import { InputOtpModule } from 'primeng/inputotp';
                         <h5 class="title-h5 text-center lg:text-left">Verification</h5>
                         <p class="body-small mt-3.5 text-center lg:text-left">We have sent a code to your email: <span class="text-primary">um******gn&#64;gmail.com</span></p>
                         <div class="mt-8">
+                            <label class="sr-only">Verification code</label>
                             <p-input-otp [(ngModel)]="value" [length]="6" class="w-full!" />
                             <div class="flex items-center gap-4 mt-8">
                                 <button

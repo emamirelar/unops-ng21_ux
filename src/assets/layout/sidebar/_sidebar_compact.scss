@@ -30,7 +30,7 @@
             }
 
             .logo-image {
-                width: 3rem;
+                width: 2rem;
                 margin-right: 0;
             }
 
@@ -100,6 +100,7 @@
                     position: relative;
 
                     .layout-submenu-toggler {
+                        color: var(--color-ocean-300);
                         position: absolute;
                         right: 0.25rem;
                         opacity: 0.5;
@@ -127,10 +128,10 @@
                     }
 
                     &.active-route {
-                        background: var(--d-menuitem-hover-bg);
+                        background: var(--d-menuitem-active-bg);
 
                         .layout-menuitem-icon {
-                            color: var(--color-blue-500);
+                            color: var(--p-primary-400);
                         }
                     }
                 }
