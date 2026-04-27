@@ -4,7 +4,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
-import { BrandSoft } from '@/app/layout/service/brand-theme';
+import { BrandSoft } from '@emamirelar/ux';
 import { MarketingDashboard } from '@/app/pages/dashboards/marketing/marketingdashboard';
 
 const meta: Meta<MarketingDashboard> = {

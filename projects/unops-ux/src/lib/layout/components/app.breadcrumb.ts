@@ -1,4 +1,4 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '../layout.service';
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -12,7 +12,6 @@ interface Breadcrumb {
 
 @Component({
     selector: '[app-breadcrumb]',
-    standalone: true,
     imports: [CommonModule, RouterModule],
     template: `<nav class="layout-breadcrumb" aria-label="Breadcrumb">
         <button type="button" class="breadcrumb-back" [attr.aria-label]="sidebarCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'" (click)="toggleSidebar()">

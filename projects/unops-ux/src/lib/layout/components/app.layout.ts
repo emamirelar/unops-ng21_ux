@@ -1,18 +1,17 @@
-import { AppBreadcrumb } from '@/app/layout/components/app.breadcrumb';
-import { AppFooter } from '@/app/layout/components/app.footer';
-import { AppRightMenu } from '@/app/layout/components/app.rightmenu';
-import { AppSearch } from '@/app/layout/components/app.search';
-import { LayoutService } from '@/app/layout/service/layout.service';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { LayoutService } from '../layout.service';
+import { AppBreadcrumb } from './app.breadcrumb';
 import { AppConfigurator } from './app.configurator';
+import { AppFooter } from './app.footer';
+import { AppRightMenu } from './app.rightmenu';
+import { AppSearch } from './app.search';
 import { AppSidebar } from './app.sidebar';
 import { AppTopbar } from './app.topbar';
 
 @Component({
     selector: 'app-layout',
-    standalone: true,
     imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppConfigurator, AppBreadcrumb, AppFooter, AppSearch, AppRightMenu],
     template: `<div class="layout-wrapper" [ngClass]="containerClass()">
         <div app-sidebar></div>

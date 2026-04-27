@@ -1,11 +1,10 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '../layout.service';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppConfigurator } from './app.configurator';
 
 @Component({
     selector: 'auth-layout',
-    standalone: true,
     imports: [RouterModule, AppConfigurator],
     template: `
         <main>

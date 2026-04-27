@@ -1,4 +1,4 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '@emamirelar/ux';
 import { CtaWidget } from '@/app/pages/landing/components/ctawidget';
 import { FaqWidget } from '@/app/pages/landing/components/faqwidget';
 import { HeroWidget } from '@/app/pages/landing/components/herowidget';
@@ -7,7 +7,7 @@ import { SectionThreeWidget } from '@/app/pages/landing/components/sectionthreew
 import { SectionTwoWidget } from '@/app/pages/landing/components/sectiontwowidget';
 import { TestimonialWidget } from '@/app/pages/landing/components/testimonialwidget';
 import { Component, inject } from '@angular/core';
-import { AppConfigurator } from '../../layout/components/app.configurator';
+import { AppConfigurator } from '@emamirelar/ux';
 
 @Component({
     selector: 'app-landing-page',

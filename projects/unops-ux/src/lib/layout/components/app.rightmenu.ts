@@ -1,4 +1,4 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '../layout.service';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -9,7 +9,6 @@ import { SelectModule } from 'primeng/select';
 
 @Component({
     selector: '[app-rightmenu]',
-    standalone: true,
     imports: [DrawerModule, DividerModule, SelectModule, InputTextModule, FormsModule, ButtonModule],
     template: ` <p-drawer header="Menu" [(visible)]="rightMenuVisible" position="right" styleClass="layout-rightmenu w-full! sm:w-xl!">
         <div>

@@ -1,4 +1,4 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '@emamirelar/ux';
 import { sampleDataByFixedLength, trackByFn } from '@/app/lib/utils';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostBinding, inject, input, output, untracked, viewChild } from '@angular/core';

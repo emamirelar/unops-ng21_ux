@@ -1,4 +1,4 @@
-import { Partner } from '@/app/types/partner';
+import { Partner } from '@emamirelar/ux';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';

@@ -1,4 +1,4 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '@emamirelar/ux';
 import { sampleDataReductionByArray } from '@/app/lib/utils';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, HostBinding, inject, input, untracked } from '@angular/core';

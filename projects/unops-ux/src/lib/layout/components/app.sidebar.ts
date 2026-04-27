@@ -1,21 +1,21 @@
-import { AppTopbar } from '@/app/layout/components/app.topbar';
-import { LayoutService } from '@/app/layout/service/layout.service';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { LayoutService } from '../layout.service';
+import { SIDEBAR_LOGO } from '../tokens';
 import { AppMenu } from './app.menu';
+import { AppTopbar } from './app.topbar';
 
 const BREAKPOINT = 992;
 
 @Component({
     selector: '[app-sidebar]',
-    standalone: true,
     imports: [CommonModule, AppMenu, RouterModule, AppTopbar],
     template: `<nav class="layout-sidebar" aria-label="Main navigation" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
         <div class="sidebar-header">
             <a class="logo" [routerLink]="['/']">
-                <img class="logo-image" [src]="sidebarLogo()" alt="UNOPS" />
+                <img class="logo-image" [src]="sidebarLogo()" [attr.alt]="logoConfig.alt" />
             </a>
             <button class="layout-sidebar-anchor z-2" type="button" aria-label="Pin sidebar" (click)="onAnchorToggle()"></button>
         </div>
@@ -29,11 +29,9 @@ const BREAKPOINT = 992;
 export class AppSidebar implements OnInit, OnDestroy {
     layoutService = inject(LayoutService);
 
-    sidebarLogo = computed(() =>
-        this.layoutService.isCompact()
-            ? 'assets/opp/AppLogo/AppLogo-onDark_compact.svg'
-            : 'assets/opp/AppLogo/AppLogo-onDark_H.svg'
-    );
+    readonly logoConfig = inject(SIDEBAR_LOGO);
+
+    sidebarLogo = computed(() => (this.layoutService.isCompact() ? this.logoConfig.compact : this.logoConfig.expanded));
 
     router = inject(Router);
 
@@ -43,7 +41,7 @@ export class AppSidebar implements OnInit, OnDestroy {
 
     @ViewChild('sidebarRef') sidebarRef!: ElementRef;
 
-    private timeout: any = null;
+    private timeout: ReturnType<typeof setTimeout> | null = null;
 
     private observer: IntersectionObserver | null = null;
 
@@ -184,7 +182,12 @@ export class AppSidebar implements OnInit, OnDestroy {
         const topbarButtonEl = document.querySelector('.mobile-menu-button');
         const sidebarEl = this.el.nativeElement;
 
-        return !(sidebarEl?.isSameNode(event.target as Node) || sidebarEl?.contains(event.target as Node) || topbarButtonEl?.isSameNode(event.target as Node) || topbarButtonEl?.contains(event.target as Node));
+        return !(
+            sidebarEl?.isSameNode(event.target as Node) ||
+            sidebarEl?.contains(event.target as Node) ||
+            topbarButtonEl?.isSameNode(event.target as Node) ||
+            topbarButtonEl?.contains(event.target as Node)
+        );
     }
 
     onMouseEnter() {
@@ -251,7 +254,12 @@ export class AppSidebar implements OnInit, OnDestroy {
         this.observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (this.layoutService.isDesktop() && !entry.isIntersecting && this.layoutService.hasOverlaySubmenu() && this.layoutService.layoutState().activePath) {
+                    if (
+                        this.layoutService.isDesktop() &&
+                        !entry.isIntersecting &&
+                        this.layoutService.hasOverlaySubmenu() &&
+                        this.layoutService.layoutState().activePath
+                    ) {
                         this.layoutService.layoutState.update((val) => ({
                             ...val,
                             activePath: null

@@ -1,4 +1,5 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '../layout.service';
+import { TOPBAR_MOBILE_LOGO } from '../tokens';
 import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -21,7 +22,6 @@ interface NotificationsBars {
 
 @Component({
     selector: '[app-topbar]',
-    standalone: true,
     imports: [RouterModule, CommonModule, StyleClassModule, AppBreadcrumb, InputTextModule, ButtonModule, IconFieldModule, InputIconModule, RippleModule, BadgeModule, OverlayBadgeModule, AvatarModule],
     template: `<div class="layout-topbar">
         <button type="button" class="mobile-menu-button" aria-label="Toggle navigation menu" (click)="onMenuButtonClick()">
@@ -42,7 +42,7 @@ interface NotificationsBars {
             }
         </div>
 
-        <img class="mobile-logo" [src]="mobileLogo()" alt="UNOPS" />
+        <img class="mobile-logo" [src]="mobileLogo()" [attr.alt]="mobileLogoConfig.alt" />
 
         <div class="topbar-right">
             <ul class="topbar-menu">
@@ -230,10 +230,10 @@ interface NotificationsBars {
 export class AppTopbar implements AfterViewChecked {
     layoutService = inject(LayoutService);
 
+    readonly mobileLogoConfig = inject(TOPBAR_MOBILE_LOGO);
+
     mobileLogo = computed(() =>
-        this.layoutService.isDarkTheme()
-            ? 'assets/opp/AppLogo/AppLogo-onDark_H.svg'
-            : 'assets/opp/AppLogo/AppLogo-onLight_H.svg'
+        this.layoutService.isDarkTheme() ? this.mobileLogoConfig.dark : this.mobileLogoConfig.light
     );
 
     isDarkTheme = computed(() => this.layoutService.isDarkTheme());

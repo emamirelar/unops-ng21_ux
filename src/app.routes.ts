@@ -1,6 +1,5 @@
-import { AuthLayout } from '@/app/layout/components/app.authlayout';
+import { AppLayout, AuthLayout } from '@emamirelar/ux';
 import { LandingLayout } from '@/app/layout/components/app.landinglayout';
-import { AppLayout } from '@/app/layout/components/app.layout';
 import { Notfound } from '@/app/pages/notfound/notfound';
 import { Routes } from '@angular/router';
 

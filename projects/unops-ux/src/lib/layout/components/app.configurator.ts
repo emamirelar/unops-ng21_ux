@@ -1,17 +1,15 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { booleanAttribute, Component, computed, inject, Input, model, OnInit, PLATFORM_ID, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { $t, updatePreset, updateSurfacePalette } from '@primeuix/themes';
-import { brandPresets } from '@/app/layout/service/brand-theme';
+import { brandPresets as brandPresetMap } from '../../theme/brand-theme';
 import { PrimeNG } from 'primeng/config';
 import { DrawerModule } from 'primeng/drawer';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-
-const presets = brandPresets;
+import { LayoutService } from '../layout.service';
 
 declare type KeyOfType<T> = keyof T extends infer U ? U : never;
 
@@ -35,7 +33,6 @@ declare type SurfacesType = {
 
 @Component({
     selector: 'app-configurator',
-    standalone: true,
     imports: [CommonModule, FormsModule, SelectButtonModule, DrawerModule, ToggleSwitchModule, RadioButtonModule],
     template: `
         <p-drawer [visible]="visible()" (onHide)="onDrawerHide()" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" header="Settings">
@@ -80,7 +77,7 @@ declare type SurfacesType = {
                 <div>
                     <div class="flex flex-col gap-2">
                         <span class="text-lg text-muted-color font-semibold">Presets</span>
-                        <p-selectbutton [options]="presets" [ngModel]="selectedPreset()" (ngModelChange)="onPresetChange($event)" [allowEmpty]="false"></p-selectbutton>
+                        <p-selectbutton [options]="presetKeys" [ngModel]="selectedPreset()" (ngModelChange)="onPresetChange($event)" [allowEmpty]="false"></p-selectbutton>
                     </div>
                 </div>
                 <div>
@@ -162,7 +159,7 @@ export class AppConfigurator implements OnInit {
 
     primeng = inject(PrimeNG);
 
-    presets = Object.keys(presets);
+    presetKeys = Object.keys(brandPresetMap) as (keyof typeof brandPresetMap)[];
 
     themeOptions = [
         { name: 'Light', value: false },
@@ -254,7 +251,7 @@ export class AppConfigurator implements OnInit {
     ];
 
     primaryColors = computed<SurfacesType[]>(() => {
-        const presetPalette = presets[this.layoutService.layoutConfig().preset as KeyOfType<typeof presets>].primitive;
+        const presetPalette = brandPresetMap[this.layoutService.layoutConfig().preset as KeyOfType<typeof brandPresetMap>].primitive;
         const colors = ['red', 'orange', 'yellow', 'lemon', 'lime', 'babygreen', 'green', 'olive', 'teal', 'ocean', 'blue', 'darkblue', 'midnight', 'cherry'];
         const palettes: SurfacesType[] = [{ name: 'noir', palette: {} }];
 
@@ -390,7 +387,7 @@ export class AppConfigurator implements OnInit {
             ...state,
             preset: event
         }));
-        const preset = presets[event as KeyOfType<typeof presets>];
+        const preset = brandPresetMap[event as KeyOfType<typeof brandPresetMap>];
         const surfacePalette = this.surfaces.find((s) => s.name === this.selectedSurfaceColor())?.palette;
         $t().preset(preset).preset(this.getPresetExt()).surfacePalette(surfacePalette).use({ useDefaultOptions: true });
     }

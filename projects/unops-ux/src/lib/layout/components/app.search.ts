@@ -1,4 +1,4 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '../layout.service';
 import { Component, inject } from '@angular/core';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { DialogModule } from 'primeng/dialog';
@@ -6,7 +6,6 @@ import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: '[app-search]',
-    standalone: true,
     imports: [DialogModule, InputTextModule, AutoFocusModule],
     template: ` <p-dialog [(visible)]="searchBarActive" [breakpoints]="{ '992px': '75vw', '576px': '90vw' }" modal dismissableMask styleClass="w-1/2 search-container">
         <ng-template #headless>

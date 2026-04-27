@@ -29,13 +29,13 @@
               },
               {
                 "glob": "**/*",
-                "input": "src/assets/opp",
+                "input": "projects/unops-ux/src/assets/opp",
                 "output": "assets/opp"
               }
             ],
             "styles": [
               "src/assets/styles.scss",
-              "src/assets/tailwind.css"
+              "projects/unops-ux/src/assets/tailwind.css"
             ],
             "scripts": []
           },
@@ -114,7 +114,7 @@
             "port": 6006,
             "styles": [
               "src/assets/styles.scss",
-              "src/assets/tailwind.css"
+              "projects/unops-ux/src/assets/tailwind.css"
             ]
           }
         },
@@ -133,7 +133,7 @@
             "outputDir": "storybook-static",
             "styles": [
               "src/assets/styles.scss",
-              "src/assets/tailwind.css"
+              "projects/unops-ux/src/assets/tailwind.css"
             ]
           }
         },
@@ -143,6 +143,29 @@
             "baseHref": "/unops-ng21_ux/",
             "dir": "dist/unops-ng_ux/browser"
           }
+        }
+      }
+    },
+    "unops-ux": {
+      "projectType": "library",
+      "root": "projects/unops-ux",
+      "sourceRoot": "projects/unops-ux/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/unops-ux/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/unops-ux/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/unops-ux/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

@@ -1,0 +1,24 @@
+{
+    "name": "@emamirelar/ux",
+    "version": "21.0.0",
+    "description": "UNOPS Angular 21 layout shell, brand theme (PrimeNG / PrimeUIX), and shared types",
+    "keywords": ["angular", "unops", "primeng", "layout"],
+    "license": "UNLICENSED",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/opp_plus/unops-ng21_ux.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "peerDependencies": {
+        "@angular/common": "^21",
+        "@angular/core": "^21",
+        "@angular/forms": "^21",
+        "@angular/router": "^21",
+        "@primeuix/themes": "^2.0.0",
+        "primeng": "^21.0.4",
+        "primeicons": "^7.0.0",
+        "rxjs": "~7.8.0"
+    }
+}

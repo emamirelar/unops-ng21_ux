@@ -1,5 +1,5 @@
-import { AppConfigurator } from '@/app/layout/components/app.configurator';
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { AppConfigurator } from '@emamirelar/ux';
+import { LayoutService } from '@emamirelar/ux';
 import { CtaWidget } from '@/app/pages/landing/components/ctawidget';
 import { FaqWidget } from '@/app/pages/landing/components/faqwidget';
 import { FeaturesHeroWidget } from '@/app/pages/landing/components/features/featuresherowidget';

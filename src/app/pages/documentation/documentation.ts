@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-documentation',
-    standalone: true,
     imports: [CommonModule],
     template: `
         <div class="card animate-fade-in">
@@ -28,27 +27,27 @@ ng serve</code></pre>
             <div class="font-semibold text-xl mb-4">Structure</div>
             <p class="text-lg mb-4">Templates consists of a couple folders, demos and layout have been separated so that you can easily remove what is not necessary for your application.</p>
             <ul class="leading-normal list-disc pl-8 text-lg mb-4">
-                <li><span class="text-primary font-medium">src/app/layout</span>: Main layout files, required.</li>
+                <li><span class="text-primary font-medium">projects/unops-ux</span>: Publishable <code>&#64;unops/ux</code> library (layout shell, brand theme, types, SCSS/Tailwind), required.</li>
+                <li><span class="text-primary font-medium">src/app/layout</span>: App-only shell (e.g. marketing <code>LandingLayout</code>).</li>
                 <li><span class="text-primary font-medium">src/app/pages</span>: Demo pages like Dashboard, optional.</li>
                 <li><span class="text-primary font-medium">public/demo/</span>: Public asssets used in demos, optional.</li>
                 <li><span class="text-primary font-medium">public/layout/</span>: Public asssets used for the main layout, required.</li>
                 <li><span class="text-primary font-medium">src/assets/demo</span>: Resources used in demos, optional.</li>
-                <li><span class="text-primary font-medium">src/assets/layout</span>: Resources of the main layout, required.</li>
             </ul>
 
             <div class="font-semibold text-xl mb-4">Menu</div>
             <p class="text-lg mb-4">
-                Main menu is defined at
-                <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">src/app/layout/components/app.menu.ts</span>
-                file. Update the
-                <i class="bg-highlight px-2 py-1 rounded-border not-italic text-base">model</i>
-                property to define your own menu items.
+                The sidebar menu is provided via the
+                <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">MENU_MODEL</span>
+                injection token. In this demo app, items are built in
+                <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">src/app/config/app-menu.ts</span>
+                and registered in <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">src/app.config.ts</span>.
             </p>
 
             <div class="font-semibold text-xl mb-4">Layout Service</div>
             <p class="text-lg mb-4">
-                <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">src/app/layout/service/layout.service.ts</span>
-                is a service that manages layout state changes, including dark mode, PrimeNG theme, menu modes, and states.
+                <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">projects/unops-ux/src/lib/layout/layout.service.ts</span>
+                (<code>LayoutService</code> from <code>&#64;unops/ux</code>) manages layout state changes, including dark mode, PrimeNG theme, menu modes, and states.
             </p>
 
             <div class="font-semibold text-xl mb-4">Tailwind CSS</div>
@@ -57,7 +56,7 @@ ng serve</code></pre>
             <div class="font-semibold text-xl mb-4">Variables</div>
             <p class="text-lg mb-4">
                 CSS variables used in the template are derived from the default theme. Customize them through the CSS variables in
-                <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">src/assets/layout/variables</span>.
+                <span class="bg-highlight px-2 py-1 rounded-border not-italic text-base">projects/unops-ux/src/assets/variables</span>.
             </p>
         </div>
     `,

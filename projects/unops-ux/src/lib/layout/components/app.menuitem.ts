@@ -1,30 +1,32 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
+import { LayoutService } from '../layout.service';
+import type { MenuItem } from '../tokens';
 
 @Component({
     selector: '[app-menuitem]',
-    imports: [CommonModule, RouterModule, TooltipModule],
+    imports: [CommonModule, RouterModule, TooltipModule, RippleModule],
     template: `
         @if (root() && isVisible() && hasChildren()) {
-            <div class="layout-menuitem-root-text">{{ item().label }}</div>
+            <div class="layout-menuitem-root-text">{{ item()?.label }}</div>
         }
         @if ((!hasRouterLink() || hasChildren()) && isVisible()) {
             <a
-                [attr.href]="item().url"
+                [attr.href]="item()?.url"
                 (click)="itemClick($event)"
                 (mouseenter)="onMouseEnter()"
-                [ngClass]="item().class"
-                [attr.target]="item().target"
+                [ngClass]="item()?.class"
+                [attr.target]="item()?.target"
                 tabindex="0"
                 pRipple
-                [pTooltip]="item().label"
+                [pTooltip]="item()?.label"
                 [tooltipDisabled]="!(isCompact() && !isActive() && root())"
             >
-                <i [ngClass]="item().icon" class="layout-menuitem-icon"></i>
-                <span class="layout-menuitem-text label-small text-inherit">{{ item().label }}</span>
+                <i [ngClass]="item()?.icon" class="layout-menuitem-icon"></i>
+                <span class="layout-menuitem-text label-small text-inherit">{{ item()?.label }}</span>
                 @if (hasChildren()) {
                     <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
                 }
@@ -34,24 +36,24 @@ import { TooltipModule } from 'primeng/tooltip';
             <a
                 (click)="itemClick($event)"
                 (mouseenter)="onMouseEnter()"
-                [ngClass]="item().class"
-                [routerLink]="item().routerLink"
+                [ngClass]="item()?.class"
+                [routerLink]="item()?.routerLink"
                 routerLinkActive="active-route"
-                [routerLinkActiveOptions]="item().routerLinkActiveOptions || { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' }"
-                [fragment]="item().fragment"
-                [queryParamsHandling]="item().queryParamsHandling"
-                [preserveFragment]="item().preserveFragment"
-                [skipLocationChange]="item().skipLocationChange"
-                [replaceUrl]="item().replaceUrl"
-                [state]="item().state"
-                [queryParams]="item().queryParams"
-                [attr.target]="item().target"
+                [routerLinkActiveOptions]="item()?.routerLinkActiveOptions || { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' }"
+                [fragment]="item()?.fragment"
+                [queryParamsHandling]="item()?.queryParamsHandling"
+                [preserveFragment]="item()?.preserveFragment"
+                [skipLocationChange]="item()?.skipLocationChange"
+                [replaceUrl]="item()?.replaceUrl"
+                [state]="item()?.state"
+                [queryParams]="item()?.queryParams"
+                [attr.target]="item()?.target"
                 tabindex="0"
-                [pTooltip]="item().label"
+                [pTooltip]="item()?.label"
                 [tooltipDisabled]="!(isCompact() && !isActive() && root())"
             >
-                <i [ngClass]="item().icon" class="layout-menuitem-icon"></i>
-                <span class="layout-menuitem-text label-small text-inherit">{{ item().label }}</span>
+                <i [ngClass]="item()?.icon" class="layout-menuitem-icon"></i>
+                <span class="layout-menuitem-text label-small text-inherit">{{ item()?.label }}</span>
                 @if (hasChildren()) {
                     <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
                 }
@@ -59,8 +61,8 @@ import { TooltipModule } from 'primeng/tooltip';
         }
         @if (hasChildren() && isVisible()) {
             <ul [animate.enter]="initialized() ? 'p-submenu-enter' : null" [animate.leave]="'p-submenu-leave'" [class.layout-root-submenulist]="root()">
-                @for (child of item().items; track child?.label) {
-                    <li app-menuitem [item]="child" [root]="false" [parentPath]="fullPath()" [preventAutoActivate]="preventAutoActivate() || !!item()?.preventAutoActivate" [class]="child['badgeClass']"></li>
+                @for (child of item()?.items; track child?.label) {
+                    <li app-menuitem [item]="child" [root]="false" [parentPath]="fullPath()" [preventAutoActivate]="preventAutoActivate() || !!item()?.preventAutoActivate" [class]="child?.['badgeClass']"></li>
                 }
             </ul>
         }
@@ -102,12 +104,12 @@ import { TooltipModule } from 'primeng/tooltip';
         `
     ]
 })
-export class AppMenuitem {
+export class AppMenuitem implements AfterViewInit {
     layoutService = inject(LayoutService);
 
     router = inject(Router);
 
-    item = input<any>(null);
+    item = input<MenuItem | null>(null);
 
     root = input<boolean>(true);
 
@@ -125,7 +127,7 @@ export class AppMenuitem {
 
     isVisible = computed(() => this.item()?.visible !== false);
 
-    hasChildren = computed(() => this.item()?.items && this.item()?.items.length > 0);
+    hasChildren = computed(() => !!this.item()?.items && (this.item()?.items?.length ?? 0) > 0);
 
     hasCommand = computed(() => typeof this.item()?.command === 'function');
 
@@ -207,7 +209,7 @@ export class AppMenuitem {
         }
 
         if (this.hasCommand()) {
-            this.item().command({ originalEvent: event, item: this.item() });
+            this.item()?.command?.({ originalEvent: event, item: this.item() ?? undefined });
         }
 
         if (this.hasChildren()) {
@@ -252,7 +254,7 @@ export class AppMenuitem {
         }
     }
 
-    private hasMatchingChildRoute(item: any): boolean {
+    private hasMatchingChildRoute(item: MenuItem | null | undefined): boolean {
         if (!item) return false;
         if (item.routerLink) {
             return this.router.isActive(item.routerLink[0], {
@@ -262,6 +264,6 @@ export class AppMenuitem {
                 fragment: 'ignored'
             });
         }
-        return item.items?.some((child: any) => this.hasMatchingChildRoute(child)) ?? false;
+        return item.items?.some((child) => this.hasMatchingChildRoute(child)) ?? false;
     }
 }

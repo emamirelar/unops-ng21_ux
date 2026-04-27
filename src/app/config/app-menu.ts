@@ -1,30 +1,8 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { AppMenuitem } from './app.menuitem';
-import { environment } from '../../../environments/environment';
+import { LayoutService, type MenuItem } from '@emamirelar/ux';
 
-const SB = environment.storybookBaseUrl;
-
-@Component({
-    selector: '[app-menu]',
-    standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule],
-    template: `<ul class="layout-menu">
-        @for (item of model; track $index) {
-            @if (!item.separator) {
-                <li app-menuitem [item]="item" [root]="true"></li>
-            } @else {
-                <li class="menu-separator"></li>
-            }
-        }
-    </ul> `
-})
-export class AppMenu {
-    private layoutService = inject(LayoutService);
-
-    model: any[] = [
+/** Demo shell menu for the UNOPS-ng21_UX reference application. */
+export function createDemoAppMenu(layoutService: LayoutService, storybookBaseUrl: string): MenuItem[] {
+    return [
         {
             label: 'Home',
             icon: 'pi pi-home',
@@ -103,12 +81,12 @@ export class AppMenu {
                 {
                     label: 'Theme Configurator',
                     icon: 'pi pi-fw pi-cog',
-                    command: () => this.layoutService.toggleConfigSidebar()
+                    command: () => layoutService.toggleConfigSidebar()
                 },
                 {
                     label: 'Storybook',
                     icon: 'pi pi-fw pi-book',
-                    url: SB,
+                    url: storybookBaseUrl,
                     target: '_blank'
                 },
                 {
@@ -122,8 +100,8 @@ export class AppMenu {
                             icon: 'pi pi-fw pi-box',
                             path: '/foundations',
                             items: [
-                                { label: 'Accessibility', icon: 'pi pi-fw pi-eye', url: `${SB}/?path=/docs/foundations-accessibility--docs`, target: '_blank' },
-                                { label: 'Design Tokens', icon: 'pi pi-fw pi-palette', url: `${SB}/?path=/docs/foundations-designtokens--docs`, target: '_blank' }
+                                { label: 'Accessibility', icon: 'pi pi-fw pi-eye', url: `${storybookBaseUrl}/?path=/docs/foundations-accessibility--docs`, target: '_blank' },
+                                { label: 'Design Tokens', icon: 'pi pi-fw pi-palette', url: `${storybookBaseUrl}/?path=/docs/foundations-designtokens--docs`, target: '_blank' }
                             ]
                         },
                         {

@@ -12,14 +12,14 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 
 | File | Role |
 |------|------|
-| `src/app/layout/service/brand-theme.ts` | Wraps upstream Aura / Lara / Nora presets with `brandOverrides`; exports `brandPresets` map |
-| `src/app.config.ts` | Bootstraps PrimeNG with `BrandAura` via `providePrimeNG` |
-| `src/app/layout/service/layout.service.ts` | Stores active preset name as string (`'Aura'`) |
-| `src/app/layout/components/app.topbar.ts` | Runtime preset switching via `$t().preset(...)` |
-| `src/app/layout/components/app.configurator.ts` | Runtime preset + surface switching via `$t()` |
-| `src/assets/tailwind.css` | Duplicates brand primitives as Tailwind `@theme` values; app-level motion keyframes and animation tokens |
-| `src/assets/layout/_animations.scss` | App-wide page entrance (`router-outlet + *`), `.card` hover micro-interaction, and `prefers-reduced-motion` override |
-| `.storybook/preview.ts` | Uses `BrandAura` for Storybook PrimeNG provider |
+| `projects/unops-ux/src/lib/theme/brand-theme.ts` | Wraps upstream Aura / Lara / Nora presets with `brandOverrides`; exports `brandPresets` map |
+| `src/app.config.ts` | Bootstraps PrimeNG with `BrandSoft` via `providePrimeNG` |
+| `projects/unops-ux/src/lib/layout/layout.service.ts` | Stores active preset name as string (`'Soft'`) and layout shell state |
+| `projects/unops-ux/src/lib/layout/components/app.topbar.ts` | Top bar shell (profile, notifications, etc.) |
+| `projects/unops-ux/src/lib/layout/components/app.configurator.ts` | Runtime preset + surface switching via `$t()` |
+| `projects/unops-ux/src/assets/tailwind.css` | Duplicates brand primitives as Tailwind `@theme` values; app-level motion keyframes and animation tokens |
+| `projects/unops-ux/src/assets/_animations.scss` | App-wide page entrance (`router-outlet + *`), `.card` hover micro-interaction, and `prefers-reduced-motion` override |
+| `.storybook/preview.ts` | Uses `BrandSoft` for Storybook PrimeNG provider |
 
 ## Rules for making changes
 
@@ -27,8 +27,8 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 2. **If you add or change a `brandOverrides` key** (primitive alias, semantic token, or component override), log it below so the upgrade diff can verify it still maps to valid upstream tokens.
 3. **If you add a new brand primitive color**, you must also add it to `src/assets/tailwind.css` under `@theme` — and log both here.
 4. **If upstream renames a base theme** (e.g. PrimeNG 22 renames `Aura` → something else), use this ledger to find every hardcoded reference that must change:
-   - String keys in `brandPresets` (`brand-theme.ts`)
-   - Default `preset: 'Aura'` in `layout.service.ts`
+   - String keys in `brandPresets` (`projects/unops-ux/src/lib/theme/brand-theme.ts`)
+   - Default `preset: 'Soft'` in `layout.service.ts`
    - Import paths `@primeuix/themes/aura`, `/lara`, `/nora` in `brand-theme.ts`
    - Storybook stories that import `BrandAura` directly
 5. **Never silently absorb an upstream breaking change.** If a PrimeNG update alters token names, theme API, or preset structure, stop and flag it to the user before applying the update.
@@ -39,6 +39,7 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 
 | Date | Change | Upstream target | Files affected |
 |------|--------|-----------------|----------------|
+| 2026-04-28 | **Publishable library:** Extracted `@emamirelar/ux` Angular library under `projects/unops-ux/` (`ng-packagr`), moved `brand-theme`, layout shell components, `LayoutService`, shared `types`, and layout SCSS/Tailwind/logo assets into the library. App consumes via `tsconfig` path `@emamirelar/ux` → `public-api.ts`; `MENU_MODEL` / `SIDEBAR_LOGO` / `TOPBAR_MOBILE_LOGO` injection tokens for host configuration. Added `npm run build:lib`, GitHub Actions workflow on `v*` tags for GitHub Packages. `LandingLayout` remains in `src/app/layout/` (page-specific). | PrimeNG 21 / ng-packagr 21 | `projects/unops-ux/**`, `angular.json`, `tsconfig.json`, `package.json`, `src/app.config.ts`, `src/assets/styles.scss`, `src/app/config/app-menu.ts`, `.github/workflows/publish-unops-ux.yml`, `.storybook/preview.ts` |
 | 2026-04-27 | **Motion (supplement):** `tailwind.css` — added `enter-liquid` / `enter-liquid-reveal` keyframes and `--animate-enter-liquid` / `--animate-enter-liquid-reveal` for AI Project Analysis card on `opportunity.ts` (sidebar settle-in + expand panel). Uses `motion-safe:` so reduced-motion users skip heavy blur. | N/A (Tailwind v4) | `tailwind.css`, `opportunity.ts` |
 | 2026-04-27 | **Motion layer (CSS-only):** (1) `tailwind.css` — added `@theme` keyframes `fade-in`, `fade-in-up`, `fade-in-down`, `scale-in-subtle`, `slide-in-right` and matching `--animate-*` tokens; added `stagger-1`…`stagger-6` utilities. (2) `_animations.scss` — `router-outlet + *` page enter animation; `.card` hover lift using existing `$sidebarShadow`; `prefers-reduced-motion: reduce` guard. Templates use Tailwind `animate-*` / `stagger-*` on dashboards, feature apps, auth forms, landing/pricing, e-commerce grid, and misc pages. | N/A (Tailwind v4 + layout SCSS) | `tailwind.css`, `layout.scss`, `_animations.scss`, numerous `*.ts` page templates |
 | 2026-04-27 | Sidebar theme accessibility fixes: (1) `_dark.scss` — fixed `.app-dark .layout-sidebar-dark` app name from `--p-surface-950` (invisible on same-color bg) to `--p-surface-0`; (2) `_primary.scss` — fixed invalid `var (--p-ocean-100)` syntax (space after `var`), changed dark mode bg from light tints (`blue-200/50`) to dark tints (`blue-800/900`) for proper contrast, fixed app name to `--p-surface-0`; (3) `_light.scss` — fixed bg from `--d-menuitem-focus-shadow` (a box-shadow value) to `--p-surface-0`, set text/name colors for proper contrast on light background. | N/A (layout SCSS layer) | `_dark.scss`, `_primary.scss`, `_light.scss` |

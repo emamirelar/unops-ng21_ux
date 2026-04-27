@@ -8,7 +8,7 @@ import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
-import { brandPrimitives } from '@/app/layout/service/brand-theme';
+import { brandPrimitives } from '@emamirelar/ux';
 
 interface ContrastPair {
     name: string;

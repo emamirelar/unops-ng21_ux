@@ -21,19 +21,22 @@ alwaysApply: true
 ## Project Structure
 
 ```
+projects/
+  unops-ux/          # Publishable Angular library (@emamirelar/ux): layout shell, brand theme, types, SCSS/Tailwind, logos
+    src/
+      lib/theme/     # brand-theme.ts (PrimeUIX presets + UNOPS overrides)
+      lib/layout/    # LayoutService, AppLayout, sidebar, topbar, menu, configurator, etc.
+      lib/types/     # Shared TypeScript interfaces (also re-exported from @emamirelar/ux)
+      assets/        # layout SCSS partials, tailwind.css, styles.scss, opp/ SVGs
 src/
   app/
-    layout/          # App shell: sidebar, topbar, menu, configurator, breadcrumb
-      components/    # AppLayout, AppSidebar, AppTopbar, AppMenu, AppMenuitem, AppConfigurator
-      service/       # LayoutService (state), brand-theme.ts (design tokens)
+    layout/          # App-only shell: LandingLayout (marketing topbar/footer widgets)
+    config/          # app-menu.ts — demo MENU_MODEL factory for this reference app
     pages/           # Demo/template pages: dashboards, UI kit, auth, landing, blocks
     apps/            # Product feature areas: partners, opportunity, CMS, mail, chat, etc.
-    types/           # Shared TypeScript interfaces
   assets/
-    layout/          # SCSS for layout shell (variables, sidebar, topbar, responsive)
-    opp/             # UNOPS brand assets (AppLogo SVGs)
-    tailwind.css     # Tailwind v4 theme: brand colors, utilities, dark mode
-    styles.scss      # SCSS entry point
+    styles.scss      # @use layout from library + primeicons + demo SCSS
+    demo/            # Demo-only SCSS
   environments/      # Build-time env config (dev vs prod)
   stories/           # Storybook stories (components, foundations, pages)
 public/              # Static assets (demo images, layout images, flags)
@@ -86,16 +89,16 @@ Legacy code still uses `@Input()` / `@Output()` / `EventEmitter` — do not intr
 
 ### Path Alias
 
-All deep imports use the `@/` alias (mapped to `src/` in `tsconfig.json`):
+Application code uses the `@/` alias (mapped to `src/` in `tsconfig.json`). The publishable layout library is imported via `@emamirelar/ux` (mapped to `projects/unops-ux/src/public-api.ts` in this workspace; from npm after install):
 
 ```typescript
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService, BrandSoft, MENU_MODEL } from '@emamirelar/ux';
 ```
 
 ### Routing
 
 - Central route table in `src/app.routes.ts`.
-- Three layout shells: `AppLayout` (main), `LandingLayout`, `AuthLayout`.
+- Three layout shells: `AppLayout` and `AuthLayout` from `@emamirelar/ux`, plus app-local `LandingLayout`.
 - **Lazy loading** via `loadComponent` (single pages) and `loadChildren` (route arrays).
 - Child route files export `default` route arrays.
 - Use `data: { breadcrumb: 'Label' }` on routes for the breadcrumb component.
@@ -104,9 +107,9 @@ import { LayoutService } from '@/app/layout/service/layout.service';
 
 ### Three-Layer Token System
 
-1. **PrimeNG / PrimeUIX** — `brand-theme.ts` wraps upstream Aura/Lara/Nora with `brandOverrides`
-2. **Tailwind CSS** — `tailwind.css` mirrors the same brand primitives as `@theme` values
-3. **Layout SCSS** — `src/assets/layout/variables/_common.scss` bridges to PrimeNG CSS custom properties
+1. **PrimeNG / PrimeUIX** — `projects/unops-ux/src/lib/theme/brand-theme.ts` wraps upstream Aura/Lara/Nora with `brandOverrides`
+2. **Tailwind CSS** — `projects/unops-ux/src/assets/tailwind.css` mirrors the same brand primitives as `@theme` values
+3. **Layout SCSS** — `projects/unops-ux/src/assets/variables/_common.scss` bridges to PrimeNG CSS custom properties
 
 These three layers must stay in sync. See the Design-System Maintenance Ledger rule for change logging.
 
@@ -122,7 +125,7 @@ Default preset is **Soft** (set in `layout.service.ts` and `app.config.ts`). The
 
 ### Brand Primitives
 
-17 UNOPS color families (deepsea, gray, red, orange, yellow, lemon, lime, babygreen, green, olive, teal, ocean, blue, darkblue, midnight, cherry, neutral) with 50–950 scales. These are defined in `brand-theme.ts` and duplicated in `tailwind.css`.
+17 UNOPS color families (deepsea, gray, red, orange, yellow, lemon, lime, babygreen, green, olive, teal, ocean, blue, darkblue, midnight, cherry, neutral) with 50–950 scales. These are defined in the library `brand-theme.ts` and duplicated in library `tailwind.css`.
 
 Upstream Tailwind defaults are disabled (`--color-*: initial`). Only brand colors are available.
 
@@ -147,7 +150,7 @@ The sidebar supports three visual themes controlled by `menuTheme` in `LayoutSer
 | **light** | `.layout-sidebar-light` | Light surface background |
 | **dark** | `.layout-sidebar-dark` | Dark surface background |
 
-Theme variables are defined as `--d-*` custom properties in `src/assets/layout/sidebar/themes/`:
+Theme variables are defined as `--d-*` custom properties in `projects/unops-ux/src/assets/sidebar/themes/`:
 
 - `_primary.scss`, `_light.scss`, `_dark.scss` — each sets `--d-sidebar-bg-color`, `--d-menuitem-text-color`, `--d-menuitem-active-bg`, etc.
 - `_sidebar_theme_core.scss` — consumes `--d-*` variables for the actual sidebar styles.
@@ -175,7 +178,7 @@ Theme variables are defined as `--d-*` custom properties in `src/assets/layout/s
 
 - All color overrides must meet **WCAG AA contrast** (4.5:1 for normal text, 3:1 for large text/UI).
 - Use semantic HTML elements and ARIA attributes where PrimeNG does not provide them.
-- Tag component text colors are explicitly overridden in `brand-theme.ts` to meet contrast ratios.
+- Tag component text colors are explicitly overridden in library `brand-theme.ts` to meet contrast ratios.
 - Stat card icon chips, delta badges, p-tags in tables, and pipeline widget badges must all be verified for contrast.
 - Storybook has the **a11y addon** enabled — check it when building components.
 - Verify accessibility on **mobile** as well as desktop — colors and touch targets.
@@ -239,7 +242,7 @@ Rules:
 - `.storybook/preview.ts` mirrors the app's providers: zoneless CD, PrimeNG with `BrandSoft`, `.app-dark` dark mode toggle.
 - Static assets from `public/` are served by Storybook.
 - Storybook is deployed alongside the app at `{baseHref}/storybook` on GitHub Pages.
-- When adding a PrimeNG component story, import `BrandSoft` from `brand-theme.ts` in the story's `applicationConfig`.
+- When adding a PrimeNG component story, import `BrandSoft` from `@emamirelar/ux` in the story's `applicationConfig`.
 - New feature pages (partners, dashboards, etc.) should have corresponding Storybook page stories in `src/stories/pages/`.
 
 ## GitHub Pages Deployment

@@ -4,13 +4,25 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
-import { BrandSoft } from '@/app/layout/service/brand-theme';
+import { BrandSoft, LayoutService, MENU_MODEL } from '@emamirelar/ux';
 import { setCompodocJson } from '@storybook/addon-docs/angular';
 import docJson from '../documentation.json';
+import { createDemoAppMenu } from '../src/app/config/app-menu';
+import { environment } from '../src/environments/environment';
 
 setCompodocJson(docJson);
 
-const primeProviders = [provideRouter([]), provideHttpClient(withFetch()), provideZonelessChangeDetection(), providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } })];
+const primeProviders = [
+    provideRouter([]),
+    provideHttpClient(withFetch()),
+    provideZonelessChangeDetection(),
+    providePrimeNG({ theme: { preset: BrandSoft, options: { darkModeSelector: '.app-dark' } } }),
+    {
+        provide: MENU_MODEL,
+        useFactory: (layoutService: LayoutService) => createDemoAppMenu(layoutService, environment.storybookBaseUrl),
+        deps: [LayoutService]
+    }
+];
 
 /**
  * Syncs `app-dark` on `document.documentElement` with the Storybook toolbar so

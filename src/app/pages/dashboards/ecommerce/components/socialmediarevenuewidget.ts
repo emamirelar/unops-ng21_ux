@@ -1,4 +1,4 @@
-import { LayoutService } from '@/app/layout/service/layout.service';
+import { LayoutService } from '@emamirelar/ux';
 import { generateRandomMultiData, trackByFn } from '@/app/lib/utils';
 import { MeterChart } from '@/app/pages/dashboards/charts/meterchart';
 import { CommonModule } from '@angular/common';

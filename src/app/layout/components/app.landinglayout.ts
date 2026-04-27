@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-landing-layout',
-    standalone: true,
     imports: [CommonModule, TopbarWidget, RouterModule, FooterWidget],
     template: ` <app-topbar-widget />
         <main>

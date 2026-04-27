@@ -21,6 +21,9 @@
         "paths": {
             "@/*": [
                 "src/*"
+            ],
+            "@emamirelar/ux": [
+                "projects/unops-ux/src/public-api.ts"
             ]
         }
     },

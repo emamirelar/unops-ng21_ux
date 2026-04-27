@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
-import { brandPrimitives } from '@/app/layout/service/brand-theme';
+import { brandPrimitives } from '@emamirelar/ux';
 
 interface ColorSwatch {
     shade: string;

@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Partner } from '@/app/types/partner';
+import { Partner } from '@emamirelar/ux';
 
 const STATUS_CLASSES: Record<string, string> = {
     Active: '!bg-babygreen-100 !text-babygreen-900 dark:!bg-babygreen-900 dark:!text-babygreen-300',
