@@ -155,7 +155,7 @@ interface FilterTag {
                 <ng-template #list let-items>
                     <div class="flex flex-col">
                         @for (item of items; track item.id; let i = $index) {
-                            <div class="flex flex-col sm:flex-row sm:items-center p-4 gap-4" [class.border-t]="i !== 0" [class.border-surface]="i !== 0">
+                            <a [routerLink]="['/apps/partners', item.id]" class="flex flex-col sm:flex-row sm:items-center p-4 gap-4 no-underline text-inherit cursor-pointer hover:bg-emphasis transition-colors" [class.border-t]="i !== 0" [class.border-surface]="i !== 0">
                                 <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 shrink-0 overflow-hidden">
                                     <img [src]="getFlagUrl(item)" [alt]="item.address1Country || 'Global'" class="w-8 h-8 object-contain" />
                                 </div>
@@ -194,10 +194,10 @@ interface FilterTag {
                                         @if (item.partnerApprovalStatus) {
                                             <p-tag [value]="item.partnerApprovalStatus" [style]="getApprovalStyle(item.partnerApprovalStatus)" />
                                         }
-                                        <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="secondary" [routerLink]="['/apps/partners', item.id]" />
+                                        <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         }
                     </div>
                 </ng-template>
@@ -205,8 +205,8 @@ interface FilterTag {
                 <ng-template #grid let-items>
                     <div class="grid grid-cols-12 gap-4">
                         @for (item of items; track item.id) {
-                            <div class="col-span-12 sm:col-span-6 lg:col-span-4 p-2">
-                                <div class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4">
+                            <a [routerLink]="['/apps/partners', item.id]" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2 no-underline text-inherit">
+                                <div class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-emphasis transition-colors">
                                     <div class="flex items-start justify-between">
                                         <div class="flex items-center gap-3">
                                             <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 shrink-0 overflow-hidden">
@@ -245,10 +245,10 @@ interface FilterTag {
                                                 <p-tag [value]="item.partnerApprovalStatus" [style]="getApprovalStyle(item.partnerApprovalStatus)" />
                                             }
                                         </div>
-                                        <p-button icon="pi pi-eye" label="View" [text]="true" severity="secondary" size="small" [routerLink]="['/apps/partners', item.id]" />
+                                        <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         }
                     </div>
                 </ng-template>
