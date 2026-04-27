@@ -20,8 +20,6 @@ import { AvatarModule } from 'primeng/avatar';
                 [value]="transactions"
                 [rows]="7"
                 [paginator]="true"
-                [showCurrentPageReport]="true"
-                currentPageReportTemplate="Showing page {currentPage} of {totalPages} pages"
                 [(selection)]="selectedTransactions"
                 dataKey="id"
                 [tableStyle]="{ 'min-width': '50rem' }"

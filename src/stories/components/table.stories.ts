@@ -137,8 +137,6 @@ export const Paginated: Story = {
   [paginator]="true"
   [rows]="5"
   [tableStyle]="{ 'min-width': '40rem' }"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-  [showCurrentPageReport]="true"
   (onPage)="onPage($event)"
 >
   <ng-template #header>
@@ -176,8 +174,6 @@ export const AllVariants: Story = {
   [rows]="4"
   [rowsPerPageOptions]="[4, 8]"
   [tableStyle]="{ 'min-width': '40rem' }"
-  currentPageReportTemplate="{first}-{last} of {totalRecords}"
-  [showCurrentPageReport]="true"
   (onPage)="onPage($event)"
   (onSort)="onSort($event)"
 >

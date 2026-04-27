@@ -19,8 +19,6 @@ import { TagModule } from 'primeng/tag';
                 [value]="opportunities"
                 [rows]="7"
                 [paginator]="true"
-                [showCurrentPageReport]="true"
-                currentPageReportTemplate="Showing page {currentPage} of {totalPages} pages"
                 dataKey="id"
                 [tableStyle]="{ 'min-width': '50rem' }"
             >

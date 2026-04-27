@@ -78,8 +78,6 @@ interface ExportColumn {
                 [(selection)]="selectedProducts"
                 [rowHover]="true"
                 dataKey="id"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                [showCurrentPageReport]="true"
                 [rowsPerPageOptions]="[10, 20, 30]"
             >
                 <ng-template #caption>

@@ -217,8 +217,7 @@ interface Document {
                         sortMode="multiple"
                         styleClass="files-table bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&_[data-pc-name=pcpaginator]]:rounded-none!"
                         tableStyleClass="w-full"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
-                        currentPageReportTemplate="Shows {first} to {last} of {totalRecords} results"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
                     >
                         <ng-template #header>
                             <tr>

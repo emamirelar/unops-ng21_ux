@@ -355,8 +355,7 @@ interface AiInsight {
                             sortMode="multiple"
                             styleClass="flex flex-col rounded-2xl overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&>[data-pc-section=paginatorcontainer]]:mt-auto [&_[data-pc-name=pcpaginator]]:rounded-none!"
                             tableStyleClass="w-full"
-                            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
-                            currentPageReportTemplate="Shows {first} to {last} of {totalRecords} results"
+                            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
                         >
                             <ng-template #header>
                                 <tr>
