@@ -18,7 +18,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 9;
-    transition: all 0.2s ease;
+    transition: all 0.45s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .layout-content-wrapper-inside {
     width: 100%;

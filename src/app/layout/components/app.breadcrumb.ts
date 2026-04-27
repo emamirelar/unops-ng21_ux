@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { LayoutService } from '@/app/layout/service/layout.service';
+import { Component, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterModule } from '@angular/router';
 
 import { BehaviorSubject, filter } from 'rxjs';
@@ -14,8 +15,8 @@ interface Breadcrumb {
     standalone: true,
     imports: [CommonModule, RouterModule],
     template: `<nav class="layout-breadcrumb">
-        <button type="button" class="breadcrumb-back" (click)="goBack()">
-            <i class="pi pi-chevron-left"></i>
+        <button type="button" class="breadcrumb-back" (click)="toggleSidebar()">
+            <i [class]="sidebarCollapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
         </button>
         <span class="breadcrumb-divider"></span>
         <ol>
@@ -27,10 +28,12 @@ interface Breadcrumb {
     </nav> `
 })
 export class AppBreadcrumb {
-    private readonly location = inject(Location);
+    private readonly layoutService = inject(LayoutService);
     private readonly _breadcrumbs$ = new BehaviorSubject<Breadcrumb[]>([]);
 
     readonly breadcrumbs$ = this._breadcrumbs$.asObservable();
+
+    sidebarCollapsed = computed(() => this.layoutService.isCompact());
 
     constructor(private router: Router) {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
@@ -59,7 +62,8 @@ export class AppBreadcrumb {
         }
     }
 
-    goBack() {
-        this.location.back();
+    toggleSidebar() {
+        const currentMode = this.layoutService.layoutConfig().menuMode;
+        this.layoutService.changeMenuMode(currentMode === 'compact' ? 'static' : 'compact');
     }
 }

@@ -23,8 +23,8 @@ const SB = environment.storybookBaseUrl;
 export class AppMenu {
     model: any[] = [
         {
-            label: 'Dashboard',
-            icon: 'pi pi-objects-column',
+            label: 'Home',
+            icon: 'pi pi-home',
             routerLink: ['/']
         },
         { separator: true },
@@ -34,19 +34,9 @@ export class AppMenu {
             path: '/apps',
             items: [
                 {
-                    label: 'Opportunities',
-                    icon: 'pi pi-fw pi-briefcase',
-                    routerLink: ['/apps/opportunity']
-                },
-                {
                     label: 'Partners',
                     icon: 'pi pi-fw pi-building',
                     routerLink: ['/apps/partners']
-                },
-                {
-                    label: 'Agreements',
-                    icon: 'pi pi-fw pi-file-check',
-                    routerLink: ['/apps/agreements']
                 },
                 {
                     label: 'Contacts',
@@ -57,44 +47,47 @@ export class AppMenu {
                     label: 'Interactions',
                     icon: 'pi pi-fw pi-comments',
                     routerLink: ['/apps/interactions']
+                },
+                {
+                    label: 'Agreements',
+                    icon: 'pi pi-fw pi-file-check',
+                    routerLink: ['/apps/agreements']
+                },
+                {
+                    label: 'Opportunities',
+                    icon: 'pi pi-fw pi-briefcase',
+                    routerLink: ['/apps/opportunity']
                 }
             ]
         },
         { separator: true },
         {
-            label: 'Offices',
-            icon: 'pi pi-fw pi-building',
-            path: '/apps/offices',
+            label: 'Operation Tools',
+            icon: 'pi pi-fw pi-wrench',
+            path: '/apps',
             items: [
                 {
-                    label: 'Headquarters',
-                    icon: 'pi pi-fw pi-home',
-                    routerLink: ['/apps/offices/hq']
+                    label: 'Offices',
+                    icon: 'pi pi-fw pi-building',
+                    routerLink: ['/apps/offices']
+                }
+            ]
+        },
+        { separator: true },
+        {
+            label: 'Administration',
+            icon: 'pi pi-fw pi-cog',
+            path: '/admin',
+            items: [
+                {
+                    label: 'Entity Manager',
+                    icon: 'pi pi-fw pi-sitemap',
+                    routerLink: ['/admin/entity-manager']
                 },
                 {
-                    label: 'Multi-Country',
-                    icon: 'pi pi-fw pi-globe',
-                    routerLink: ['/apps/offices/mcos']
-                },
-                {
-                    label: 'Global Liaison',
-                    icon: 'pi pi-fw pi-link',
-                    routerLink: ['/apps/offices/liaison']
-                },
-                {
-                    label: 'Portfolio Hubs',
-                    icon: 'pi pi-fw pi-th-large',
-                    routerLink: ['/apps/offices/portfolios']
-                },
-                {
-                    label: 'Project',
-                    icon: 'pi pi-fw pi-briefcase',
-                    routerLink: ['/apps/offices/project-centres']
-                },
-                {
-                    label: 'Shared Services',
-                    icon: 'pi pi-fw pi-server',
-                    routerLink: ['/apps/offices/shared-services']
+                    label: 'Partner Tree',
+                    icon: 'pi pi-fw pi-share-alt',
+                    routerLink: ['/admin/partner-tree']
                 }
             ]
         },

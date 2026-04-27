@@ -39,8 +39,18 @@ export default [
     },
     {
         path: 'partners',
-        loadComponent: () => import('./partners').then((c) => c.Partners),
-        data: { breadcrumb: 'Partners' }
+        data: { breadcrumb: 'Partners' },
+        children: [
+            {
+                path: '',
+                loadComponent: () => import('./partners').then((c) => c.Partners)
+            },
+            {
+                path: ':id',
+                loadComponent: () => import('./partners/partner-detail').then((c) => c.PartnerDetail),
+                data: { breadcrumb: 'Details' }
+            }
+        ]
     },
     {
         path: 'agreements',
