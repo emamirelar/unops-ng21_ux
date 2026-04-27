@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { LayoutService } from '@/app/layout/service/layout.service';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppMenuitem } from './app.menuitem';
@@ -21,6 +22,8 @@ const SB = environment.storybookBaseUrl;
     </ul> `
 })
 export class AppMenu {
+    private layoutService = inject(LayoutService);
+
     model: any[] = [
         {
             label: 'Home',
@@ -35,7 +38,7 @@ export class AppMenu {
             items: [
                 {
                     label: 'Partners',
-                    icon: 'pi pi-fw pi-building',
+                    icon: 'pi pi-fw pi-globe',
                     routerLink: ['/apps/partners']
                 },
                 {
@@ -97,6 +100,11 @@ export class AppMenu {
             icon: 'pi pi-fw pi-palette',
             path: '/ux',
             items: [
+                {
+                    label: 'Theme Configurator',
+                    icon: 'pi pi-fw pi-cog',
+                    command: () => this.layoutService.toggleConfigSidebar()
+                },
                 {
                     label: 'Storybook',
                     icon: 'pi pi-fw pi-book',

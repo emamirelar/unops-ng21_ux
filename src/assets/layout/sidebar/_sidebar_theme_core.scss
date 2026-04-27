@@ -33,6 +33,7 @@
                 color: var(--d-menuitem-text-color);
 
                 &.active-route {
+                    background: var(--d-menuitem-active-bg);
                     color: var(--d-menuitem-active-route-text-color);
                 }
 
