@@ -10,7 +10,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
-import { PartnerService } from './partner.service';
+import { getPartnerApprovalClass, getPartnerStatusClass, PartnerService } from './partner.service';
 
 const COUNTRY_TO_FLAG: Record<string, string> = {
     'japan': 'jp',
@@ -189,10 +189,10 @@ interface FilterTag {
                                             <p-tag [value]="item.partnerCategoryName" severity="info" />
                                         }
                                         @if (item.status) {
-                                            <p-tag [value]="item.status" [style]="getStatusStyle(item.status)" />
+                                            <p-tag [value]="item.status" [styleClass]="getStatusClass(item.status)" />
                                         }
                                         @if (item.partnerApprovalStatus) {
-                                            <p-tag [value]="item.partnerApprovalStatus" [style]="getApprovalStyle(item.partnerApprovalStatus)" />
+                                            <p-tag [value]="item.partnerApprovalStatus" [styleClass]="getApprovalClass(item.partnerApprovalStatus)" />
                                         }
                                         <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
                                     </div>
@@ -239,10 +239,10 @@ interface FilterTag {
                                     <div class="flex items-center justify-between pt-2 border-t border-surface-200 dark:border-surface-700">
                                         <div class="flex items-center gap-2">
                                             @if (item.status) {
-                                                <p-tag [value]="item.status" [style]="getStatusStyle(item.status)" />
+                                                <p-tag [value]="item.status" [styleClass]="getStatusClass(item.status)" />
                                             }
                                             @if (item.partnerApprovalStatus) {
-                                                <p-tag [value]="item.partnerApprovalStatus" [style]="getApprovalStyle(item.partnerApprovalStatus)" />
+                                                <p-tag [value]="item.partnerApprovalStatus" [styleClass]="getApprovalClass(item.partnerApprovalStatus)" />
                                             }
                                         </div>
                                         <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
@@ -334,21 +334,6 @@ export class Partners implements OnInit {
         return code ? `flags/${code}.svg` : 'flags/globe.svg';
     }
 
-    getStatusStyle(status: string): Record<string, string> {
-        const styles: Record<string, Record<string, string>> = {
-            Active: { background: 'var(--color-babygreen-100)', color: 'var(--color-babygreen-700)' },
-            Draft: { background: 'var(--color-yellow-100)', color: 'var(--color-yellow-700)' },
-            Closed: { background: 'var(--color-deepsea-100)', color: 'var(--color-deepsea-500)' },
-            Archived: { background: 'var(--color-gray-100)', color: 'var(--color-gray-600)' }
-        };
-        return styles[status] ?? { background: 'var(--color-gray-100)', color: 'var(--color-gray-600)' };
-    }
-
-    getApprovalStyle(status: string): Record<string, string> {
-        const styles: Record<string, Record<string, string>> = {
-            Approved: { background: 'var(--color-olive-100)', color: 'var(--color-olive-700)' },
-            NotApproved: { background: 'var(--color-red-100)', color: 'var(--color-red-700)' }
-        };
-        return styles[status] ?? { background: 'var(--color-gray-100)', color: 'var(--color-gray-600)' };
-    }
+    getStatusClass = getPartnerStatusClass;
+    getApprovalClass = getPartnerApprovalClass;
 }

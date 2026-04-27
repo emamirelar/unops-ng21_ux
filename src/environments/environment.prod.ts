@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    storybookBaseUrl: ''
+    storybookBaseUrl: '/unops-ng21_ux/storybook'
 };

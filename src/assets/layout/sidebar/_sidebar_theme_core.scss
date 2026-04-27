@@ -25,7 +25,7 @@
         li {
             &.active-menuitem {
                 > a {
-                    color: var(--d-menuitem-active-text-color);
+                    color: var(--color-ocean-400);
                 }
             }
 
@@ -35,6 +35,10 @@
                 &.active-route {
                     background: var(--d-menuitem-active-bg);
                     color: var(--d-menuitem-active-route-text-color);
+
+                    .layout-menuitem-text {
+                        color: inherit;
+                    }
                 }
 
                 &:hover {
@@ -49,7 +53,7 @@
             }
 
             > ul {
-                z-index: 10;
+                z-index: 1000;
                 > li.active-menuitem {
                     background: var(--d-menuitem-active-bg);
                 }

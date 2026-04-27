@@ -58,6 +58,8 @@ export class LayoutService {
 
     router = inject(Router);
 
+    currentUrl = signal<string>('');
+
     isDarkTheme = computed(() => this.layoutConfig().darkTheme);
 
     isSlim = computed(() => this.layoutConfig().menuMode === 'slim');

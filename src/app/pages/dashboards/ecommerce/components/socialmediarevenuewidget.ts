@@ -42,7 +42,7 @@ import { TagModule } from 'primeng/tag';
                 .p-tag-label {
                     line-height: 1.5;
                     font-weight: 600;
-                    font-size: var(--font-size-sm) !important;
+                    font-size: var(--text-xs)
                 }
             }
         }

@@ -24,7 +24,7 @@ import { DividerModule } from 'primeng/divider';
                 <p-divider class="m-0!" />
                 <div class="flex items-center justify-between gap-4">
                     <span class="body-xsmall">Conversion Rate</span>
-                    <span class="px-2 py-1 rounded-lg text-green-700 bg-green-50 text-sm font-semibold">72%</span>
+                    <span class="px-2 py-1 rounded-lg text-green-700 bg-green-50 dark:bg-green-900 dark:text-green-300 text-sm font-semibold">72%</span>
                 </div>
                 <p-divider class="m-0!" />
                 <div class="flex items-center justify-between gap-4">

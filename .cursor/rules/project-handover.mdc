@@ -1,0 +1,207 @@
+---
+description: Comprehensive project conventions and architecture guide for the UNOPS OPP+ UX library. Read this first when onboarding.
+alwaysApply: true
+---
+
+# UNOPS OPP+ UX Library — Project Guide
+
+## Tech Stack
+
+| Layer | Version / Package |
+|-------|------------------|
+| Angular | 21 (standalone, zoneless) |
+| TypeScript | 5.9 (strict mode) |
+| PrimeNG | 21 (`@primeuix/themes` 2.x) |
+| Tailwind CSS | 4 (CSS-first, no `tailwind.config.js`) |
+| Storybook | 10 (with Compodoc, a11y addon) |
+| Charts | Chart.js 4.4 |
+| Icons | PrimeIcons 7 |
+| Font | Noto Sans (set in brand-theme semantic layer) |
+
+## Project Structure
+
+```
+src/
+  app/
+    layout/          # App shell: sidebar, topbar, menu, configurator, breadcrumb
+      components/    # AppLayout, AppSidebar, AppTopbar, AppMenu, AppMenuitem, AppConfigurator
+      service/       # LayoutService (state), brand-theme.ts (design tokens)
+    pages/           # Demo/template pages: dashboards, UI kit, auth, landing, blocks
+    apps/            # Product feature areas: partners, opportunity, CMS, mail, chat, etc.
+    types/           # Shared TypeScript interfaces
+  assets/
+    layout/          # SCSS for layout shell (variables, sidebar, topbar, responsive)
+    opp/             # UNOPS brand assets (AppLogo SVGs)
+    tailwind.css     # Tailwind v4 theme: brand colors, utilities, dark mode
+    styles.scss      # SCSS entry point
+  environments/      # Build-time env config (dev vs prod)
+  stories/           # Storybook stories (components, foundations, pages)
+public/              # Static assets (demo images, layout images, flags)
+.storybook/          # Storybook config (preview.ts, main.ts)
+```
+
+## Angular Conventions
+
+### Standalone-Only Architecture
+
+- **No NgModules.** All components, directives, and pipes are standalone.
+- `standalone: true` is implicit in Angular 21 — do NOT set it explicitly in decorators.
+- Import dependencies directly in each component's `imports` array.
+
+### Zoneless Change Detection
+
+- The app uses `provideZonelessChangeDetection()` globally in `app.config.ts`.
+- Do NOT add `NgZone` or Zone.js. Do NOT rely on zone-based change detection triggers.
+- `ChangeDetectionStrategy.OnPush` is used selectively (chart widgets, feature pages). Most components rely on zoneless + signals.
+
+### Signals-First State Management
+
+New and refactored code must use Angular signals:
+
+```typescript
+// Services — private signal, public readonly
+private _items = signal<Item[]>([]);
+readonly items = this._items.asReadonly();
+
+// Components — input, output, computed
+userId = input<string>('');
+userSelected = output<string>();
+fullName = computed(() => `${this.first()} ${this.last()}`);
+```
+
+Legacy code still uses `@Input()` / `@Output()` / `EventEmitter` — do not introduce new instances of these.
+
+### Dependency Injection
+
+- Prefer `inject()` over constructor injection for all new code.
+- Services that are app-wide use `providedIn: 'root'`.
+- Demo/data services without `providedIn` are registered in the component's `providers`.
+
+### Templates
+
+- **Inline templates** (`template: \`...\``) — this project does not use `templateUrl`.
+- Use modern control flow: `@if`, `@for`, `@switch` — do NOT use `*ngIf`, `*ngFor`, `*ngSwitch`.
+- Use `[class.active]="condition"` — do NOT use `ngClass`.
+- Use `[style.font-size.px]="value"` — do NOT use `ngStyle`.
+
+### Path Alias
+
+All deep imports use the `@/` alias (mapped to `src/` in `tsconfig.json`):
+
+```typescript
+import { LayoutService } from '@/app/layout/service/layout.service';
+```
+
+### Routing
+
+- Central route table in `src/app.routes.ts`.
+- Three layout shells: `AppLayout` (main), `LandingLayout`, `AuthLayout`.
+- **Lazy loading** via `loadComponent` (single pages) and `loadChildren` (route arrays).
+- Child route files export `default` route arrays.
+- Use `data: { breadcrumb: 'Label' }` on routes for the breadcrumb component.
+
+## Design System Architecture
+
+### Three-Layer Token System
+
+1. **PrimeNG / PrimeUIX** — `brand-theme.ts` wraps upstream Aura/Lara/Nora with `brandOverrides`
+2. **Tailwind CSS** — `tailwind.css` mirrors the same brand primitives as `@theme` values
+3. **Layout SCSS** — `src/assets/layout/variables/_common.scss` bridges to PrimeNG CSS custom properties
+
+These three layers must stay in sync. See the Design-System Maintenance Ledger rule for change logging.
+
+### Brand Presets
+
+| User-facing name | Upstream base | Import path |
+|-----------------|---------------|-------------|
+| **Soft** | Aura | `@primeuix/themes/aura` |
+| **Crisp** | Lara | `@primeuix/themes/lara` |
+| **Contrast** | Nora | `@primeuix/themes/nora` |
+
+Default preset is **Soft** (set in `layout.service.ts` and `app.config.ts`).
+
+### Brand Primitives
+
+17 UNOPS color families (deepsea, gray, red, orange, yellow, lemon, lime, babygreen, green, olive, teal, ocean, blue, darkblue, midnight, cherry, neutral) with 50–950 scales. These are defined in `brand-theme.ts` and duplicated in `tailwind.css`.
+
+Upstream Tailwind defaults are disabled (`--color-*: initial`). Only brand colors are available.
+
+### Primary Color
+
+The semantic primary is **darkblue** (UNOPS cerulean). This is set in `brandOverrides.semantic.primary`.
+
+### Dark Mode
+
+- Single CSS class: `.app-dark` on `document.documentElement`.
+- `LayoutService` toggles it via an `effect()` with View Transitions API support.
+- Both PrimeNG (`darkModeSelector: '.app-dark'`) and Tailwind (`@custom-variant dark (.app-dark)`) use the same selector.
+
+## Styling Rules
+
+1. **Never hard-code** color hex, spacing px, font-family, shadows, border-radius, or z-index values.
+2. **Always reference** existing SCSS variables, CSS custom properties (`var(--p-*)`, `var(--*)`) or Tailwind utilities.
+3. **Never create** new SCSS variables or CSS custom properties without explicit approval.
+4. **Never modify** existing variable definitions.
+5. If no matching token exists, **stop and ask** — suggest the closest existing token or flag it for the design team.
+
+## Accessibility
+
+- All color overrides must meet **WCAG AA contrast** (4.5:1 for normal text, 3:1 for large text/UI).
+- Use semantic HTML elements and ARIA attributes where PrimeNG does not provide them.
+- Tag component text colors are explicitly overridden in `brand-theme.ts` to meet contrast ratios.
+- Storybook has the **a11y addon** enabled — check it when building components.
+
+## Branding
+
+### Sidebar Logo
+
+- Expanded sidebar: `assets/opp/AppLogo/AppLogo-onDark_H.svg`
+- Compact sidebar: `assets/opp/AppLogo/AppLogo-onDark_compact.svg`
+- Do NOT switch logo based on light/dark theme — only by sidebar mode.
+- Do NOT use default template logos (`layout/images/logo-*`).
+- Alt text: `"UNOPS"`.
+
+### Menu Icons
+
+- Icons should be **semantically appropriate** for the entity/action they represent.
+- "Administration" uses an entity-style icon, not a settings cog.
+- Partnership-related items use business/people icons.
+
+## Environment Configuration
+
+- `src/environments/environment.ts` — dev config (localhost URLs allowed here only)
+- `src/environments/environment.prod.ts` — production config
+- The `storybookBaseUrl` property drives Storybook deep-links in the menu.
+- **Never hard-code** `localhost`, `127.0.0.1`, or `0.0.0.0` in application source (`.ts`, `.html`, `.scss`). Use environment config instead.
+
+## Storybook
+
+- Stories live in `src/stories/`.
+- `.storybook/preview.ts` mirrors the app's providers: zoneless CD, PrimeNG with `BrandSoft`, `.app-dark` dark mode toggle.
+- Static assets from `public/` are served by Storybook.
+- Storybook is deployed alongside the app at `{baseHref}/storybook` on GitHub Pages.
+- When adding a PrimeNG component story, import `BrandSoft` from `brand-theme.ts` in the story's `applicationConfig`.
+
+## GitHub Pages Deployment
+
+- `npm run build:ghpages` builds with `--base-href /unops-ng21_ux/`.
+- Storybook is built into `dist/.../storybook`.
+- Production `storybookBaseUrl` is `/unops-ng21_ux/storybook`.
+
+## Upstream Upgrade Safety
+
+When upgrading PrimeNG or `@primeuix/themes`:
+
+1. Check the Design-System Maintenance Ledger for all customizations.
+2. Verify token names, theme API, and preset structure haven't changed.
+3. **Never silently absorb a breaking change** — flag it before applying.
+4. Test all three presets (Soft, Crisp, Contrast) in both light and dark mode.
+5. Verify Storybook theming still works.
+
+## File Naming Conventions
+
+- Component files: `kebab-case.ts` (e.g. `app.sidebar.ts`, `partner-detail.ts`)
+- No `.component.ts` suffix — follows Sakai/PrimeNG template convention.
+- Selectors: `kebab-case` (e.g. `app-dashboard`, `opportunity-stat-card-widget`)
+- SCSS partials: `_kebab-case.scss` (e.g. `_sidebar_compact.scss`)
+- Route files: `*.routes.ts` with `export default` route arrays

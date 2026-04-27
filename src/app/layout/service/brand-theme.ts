@@ -116,6 +116,7 @@ const brandOverrides = {
             colorScheme: {
                 light: {
                     secondary: { color: '{surface.800}' },
+                    success: { color: '{green.800}' },
                     info: { color: '{blue.800}' },
                     warn: { color: '{orange.800}' }
                 },

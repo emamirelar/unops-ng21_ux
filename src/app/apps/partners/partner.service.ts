@@ -1,6 +1,28 @@
 import { Injectable, signal } from '@angular/core';
 import { Partner } from '@/app/types/partner';
 
+const STATUS_CLASSES: Record<string, string> = {
+    Active: '!bg-babygreen-100 !text-babygreen-900 dark:!bg-babygreen-900 dark:!text-babygreen-300',
+    Draft: '!bg-yellow-100 !text-yellow-900 dark:!bg-yellow-900 dark:!text-yellow-300',
+    Closed: '!bg-deepsea-100 !text-deepsea-500 dark:!bg-deepsea-800 dark:!text-deepsea-100',
+    Archived: '!bg-gray-100 !text-gray-700 dark:!bg-gray-900 dark:!text-gray-300'
+};
+
+const APPROVAL_CLASSES: Record<string, string> = {
+    Approved: '!bg-olive-100 !text-olive-700 dark:!bg-olive-900 dark:!text-olive-300',
+    NotApproved: '!bg-red-100 !text-red-800 dark:!bg-red-950 dark:!text-red-300'
+};
+
+const FALLBACK_CLASS = '!bg-gray-100 !text-gray-700 dark:!bg-gray-900 dark:!text-gray-300';
+
+export function getPartnerStatusClass(status: string): string {
+    return STATUS_CLASSES[status] ?? FALLBACK_CLASS;
+}
+
+export function getPartnerApprovalClass(status: string): string {
+    return APPROVAL_CLASSES[status] ?? FALLBACK_CLASS;
+}
+
 @Injectable({
     providedIn: 'root'
 })

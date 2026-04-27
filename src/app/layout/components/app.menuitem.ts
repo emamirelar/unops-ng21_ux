@@ -67,7 +67,8 @@ import { TooltipModule } from 'primeng/tooltip';
     `,
     host: {
         '[class.active-menuitem]': 'isActive()',
-        '[class.layout-root-menuitem]': 'root()'
+        '[class.layout-root-menuitem]': 'root()',
+        '[class.route-active-within]': 'isRouteWithin()'
     },
     styles: [
         `
@@ -148,6 +149,12 @@ export class AppMenuitem {
             return activePath?.startsWith(this.fullPath() ?? '') ?? false;
         }
         return false;
+    });
+
+    isRouteWithin = computed(() => {
+        this.layoutService.currentUrl();
+        if (!this.root() || !this.hasChildren()) return false;
+        return this.hasMatchingChildRoute(this.item());
     });
 
     initialized = signal<boolean>(false);
@@ -243,5 +250,18 @@ export class AppMenuitem {
                 menuHoverActive: true
             }));
         }
+    }
+
+    private hasMatchingChildRoute(item: any): boolean {
+        if (!item) return false;
+        if (item.routerLink) {
+            return this.router.isActive(item.routerLink[0], {
+                paths: 'exact',
+                queryParams: 'ignored',
+                matrixParams: 'ignored',
+                fragment: 'ignored'
+            });
+        }
+        return item.items?.some((child: any) => this.hasMatchingChildRoute(child)) ?? false;
     }
 }

@@ -67,7 +67,7 @@ export class AppMenu {
         {
             label: 'Operation Tools',
             icon: 'pi pi-fw pi-wrench',
-            path: '/apps',
+            path: '/ops',
             items: [
                 {
                     label: 'Offices',
@@ -79,7 +79,7 @@ export class AppMenu {
         { separator: true },
         {
             label: 'Administration',
-            icon: 'pi pi-fw pi-cog',
+            icon: 'pi pi-fw pi-building-columns',
             path: '/admin',
             items: [
                 {

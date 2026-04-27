@@ -112,6 +112,8 @@ export class AppSidebar implements OnInit, OnDestroy {
     }
 
     private onRouteChange(path: string) {
+        this.layoutService.currentUrl.set(path);
+
         let newActivePath: string | null;
 
         if (this.layoutService.hasOverlaySubmenu() && this.layoutService.isDesktop()) {

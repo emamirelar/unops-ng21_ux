@@ -65,6 +65,16 @@
                 > ul {
                     display: block;
                 }
+
+                > a .layout-menuitem-icon {
+                    color: var(--color-ocean-300);
+                }
+            }
+
+            li.route-active-within {
+                > a .layout-menuitem-icon {
+                    color: var(--color-ocean-300);
+                }
             }
 
             .layout-root-menuitem {
@@ -87,22 +97,41 @@
                     height: 2.75rem;
                     cursor: pointer;
                     outline: none;
+                    position: relative;
 
                     .layout-submenu-toggler {
-                        opacity: 0;
-                        max-width: 0;
-                        overflow: hidden;
+                        position: absolute;
+                        right: 0.25rem;
+                        opacity: 0.5;
+                        max-width: none;
+                        overflow: visible;
+                        font-size: 0.625rem;
+                        transform: rotate(-90deg);
+                        transition: opacity 0.2s;
+                    }
+
+                    &:hover .layout-submenu-toggler {
+                        opacity: 1;
                     }
 
                     .layout-menuitem-icon {
                         font-size: 1rem;
                         margin-right: 0;
+                        color: inherit;
                     }
 
                     .layout-menuitem-text {
                         opacity: 0;
                         max-width: 0;
                         overflow: hidden;
+                    }
+
+                    &.active-route {
+                        background: var(--d-menuitem-hover-bg);
+
+                        .layout-menuitem-icon {
+                            color: var(--color-blue-500);
+                        }
                     }
                 }
 
@@ -125,15 +154,23 @@
                     max-height: 20rem;
                     overflow: auto;
                     .active-menuitem {
-                        background-color: transparent !important;
+                        background-color: transparent;
                         > a {
                             color: var(--popover-item-active-text-color);
+
+                            .layout-menuitem-icon {
+                                color: var(--color-blue-500);
+                            }
                         }
                     }
                     a {
                         color: var(--popover-item-text-color);
                         border-radius: 0.5rem;
                         margin: 0.25rem 0;
+
+                        .layout-menuitem-icon {
+                            color: var(--color-blue-500);
+                        }
 
                         &.active-route {
                             color: var(--popover-item-active-route-text-color);

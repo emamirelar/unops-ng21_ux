@@ -17,7 +17,7 @@ import { Component } from '@angular/core';
                 </div>
                 <div class="mt-2 flex items-center gap-3">
                     <span class="label-large">{{ data.cardData.value }}</span>
-                    <div class="px-2 py-0.5 rounded-lg text-sm font-semibold" [ngClass]="data.cardData.changePositive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'">
+                    <div class="px-2 py-0.5 rounded-lg text-sm font-semibold" [ngClass]="data.cardData.changePositive ? 'bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300'">
                         {{ data.cardData.change }}
                     </div>
                 </div>
@@ -41,7 +41,7 @@ export class OpportunityStatCardWidget {
                 subtitle: 'vs. previous quarter'
             },
             icon: 'pi-briefcase',
-            iconBg: 'bg-blue-50 text-blue-500',
+            iconBg: 'bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
             data: [142, 168, 195, 210, 238, 252, 261, 278, 284],
             borderColor: 'rgb(0, 146, 209)',
             bgColor: ['rgba(0,146,209,0.3)', 'rgba(0,146,209,0)']
@@ -55,7 +55,7 @@ export class OpportunityStatCardWidget {
                 subtitle: 'across active opportunities'
             },
             icon: 'pi-dollar',
-            iconBg: 'bg-green-50 text-green-500',
+            iconBg: 'bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300',
             data: [680, 750, 820, 910, 980, 1050, 1120, 1180, 1240],
             borderColor: 'rgb(76, 159, 56)',
             bgColor: ['rgba(76,159,56,0.3)', 'rgba(76,159,56,0)']
@@ -68,8 +68,8 @@ export class OpportunityStatCardWidget {
                 changePositive: true,
                 subtitle: 'contributing organizations'
             },
-            icon: 'pi-building',
-            iconBg: 'bg-ocean-50 text-ocean-500',
+            icon: 'pi-globe',
+            iconBg: 'bg-ocean-50 text-ocean-700 dark:bg-ocean-900 dark:text-ocean-300',
             data: [42, 45, 48, 52, 55, 58, 61, 64, 67],
             borderColor: 'rgb(78, 195, 224)',
             bgColor: ['rgba(78,195,224,0.3)', 'rgba(78,195,224,0)']
@@ -83,7 +83,7 @@ export class OpportunityStatCardWidget {
                 subtitle: 'conversion to signed'
             },
             icon: 'pi-chart-line',
-            iconBg: 'bg-cherry-50 text-cherry-500',
+            iconBg: 'bg-cherry-50 text-cherry-700 dark:bg-cherry-900 dark:text-cherry-300',
             data: [78, 76, 80, 74, 77, 73, 75, 71, 72],
             borderColor: 'rgb(153, 30, 102)',
             bgColor: ['rgba(153,30,102,0.3)', 'rgba(153,30,102,0)']

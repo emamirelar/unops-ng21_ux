@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
-import { PartnerService } from './partner.service';
+import { getPartnerApprovalClass, getPartnerStatusClass, PartnerService } from './partner.service';
 
 const COUNTRY_TO_FLAG: Record<string, string> = {
     japan: 'jp', switzerland: 'ch', denmark: 'dk', belgium: 'be',
@@ -91,10 +91,10 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                     <p-tag [value]="p.partnerCategoryName" severity="info" />
                                 }
                                 @if (p.status) {
-                                    <p-tag [value]="p.status" [style]="getStatusStyle(p.status)" />
+                                    <p-tag [value]="p.status" [styleClass]="getStatusClass(p.status)" />
                                 }
                                 @if (p.partnerApprovalStatus) {
-                                    <p-tag [value]="p.partnerApprovalStatus" [style]="getApprovalStyle(p.partnerApprovalStatus)" />
+                                    <p-tag [value]="p.partnerApprovalStatus" [styleClass]="getApprovalClass(p.partnerApprovalStatus)" />
                                 }
                             </div>
                         </div>
@@ -174,7 +174,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                     <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Status</span>
                                     <div>
                                         @if (p.status) {
-                                            <p-tag [value]="p.status" [style]="getStatusStyle(p.status)" />
+                                            <p-tag [value]="p.status" [styleClass]="getStatusClass(p.status)" />
                                         }
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                     <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Approval Status</span>
                                     <div>
                                         @if (p.partnerApprovalStatus) {
-                                            <p-tag [value]="p.partnerApprovalStatus" [style]="getApprovalStyle(p.partnerApprovalStatus)" />
+                                            <p-tag [value]="p.partnerApprovalStatus" [styleClass]="getApprovalClass(p.partnerApprovalStatus)" />
                                         }
                                     </div>
                                 </div>
@@ -325,21 +325,6 @@ export class PartnerDetail implements OnInit {
         this.partnerId.set(this.route.snapshot.paramMap.get('id'));
     }
 
-    getStatusStyle(status: string): Record<string, string> {
-        const styles: Record<string, Record<string, string>> = {
-            Active: { background: 'var(--color-babygreen-100)', color: 'var(--color-babygreen-700)' },
-            Draft: { background: 'var(--color-yellow-100)', color: 'var(--color-yellow-700)' },
-            Closed: { background: 'var(--color-deepsea-100)', color: 'var(--color-deepsea-500)' },
-            Archived: { background: 'var(--color-gray-100)', color: 'var(--color-gray-600)' }
-        };
-        return styles[status] ?? { background: 'var(--color-gray-100)', color: 'var(--color-gray-600)' };
-    }
-
-    getApprovalStyle(status: string): Record<string, string> {
-        const styles: Record<string, Record<string, string>> = {
-            Approved: { background: 'var(--color-olive-100)', color: 'var(--color-olive-700)' },
-            NotApproved: { background: 'var(--color-red-100)', color: 'var(--color-red-700)' }
-        };
-        return styles[status] ?? { background: 'var(--color-gray-100)', color: 'var(--color-gray-600)' };
-    }
+    getStatusClass = getPartnerStatusClass;
+    getApprovalClass = getPartnerApprovalClass;
 }
