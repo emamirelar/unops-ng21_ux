@@ -170,13 +170,7 @@ export class LayoutService {
 
     toggleMenu() {
         if (this.isDesktop()) {
-            if (this.layoutConfig().menuMode === 'static') {
-                this.layoutState.update((prev) => ({ ...prev, staticMenuInactive: !prev.staticMenuInactive }));
-            }
-
-            if (this.layoutConfig().menuMode === 'overlay') {
-                this.layoutState.update((prev) => ({ ...prev, overlayMenuActive: !prev.overlayMenuActive }));
-            }
+            this.toggleSidebarPin();
         } else {
             this.layoutState.update((prev) => ({ ...prev, mobileMenuActive: !prev.mobileMenuActive }));
         }

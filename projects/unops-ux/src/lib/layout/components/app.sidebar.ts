@@ -11,7 +11,7 @@ const BREAKPOINT = 992;
 @Component({
     selector: '[app-sidebar]',
     imports: [CommonModule, AppMenu, RouterModule, AppTopbar],
-    template: `<nav class="layout-sidebar" aria-label="Main navigation" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+    template: `<nav class="layout-sidebar" aria-label="Main navigation" (mouseleave)="onMouseLeave()">
         <div #menuContainer class="layout-menu-container" (scroll)="onMenuScroll()">
             <div app-menu></div>
         </div>
@@ -178,28 +178,19 @@ export class AppSidebar implements OnInit, OnDestroy {
         );
     }
 
-    onMouseEnter() {
-        if (!this.layoutService.layoutState().sidebarPinned) {
-            if (this.timeout) {
-                clearTimeout(this.timeout);
-                this.timeout = null;
-            }
-            this.layoutService.layoutState.update((state) => ({
-                ...state,
-                sidebarExpanded: true
-            }));
-        }
-    }
+    onMouseEnter() {}
 
     onMouseLeave() {
-        if (!this.layoutService.layoutState().sidebarPinned && !this.timeout) {
-            this.timeout = setTimeout(() => {
-                this.layoutService.layoutState.update((state) => ({
-                    ...state,
-                    sidebarExpanded: false
-                }));
-            }, 300);
-        }
+        if (!this.layoutService.isDesktop() || !this.layoutService.isRail()) return;
+        if (this.layoutService.layoutState().sidebarPinned) return;
+
+        if (this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.layoutService.layoutState.update((val) => ({
+                ...val,
+                sidebarExpanded: false
+            }));
+        }, 300);
     }
 
     onAnchorToggle() {

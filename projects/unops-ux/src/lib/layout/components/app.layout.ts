@@ -60,7 +60,6 @@ export class AppLayout {
             'layout-drawer': layoutConfig.menuMode === 'drawer',
             'layout-overlay-active': layoutState.overlayMenuActive,
             'layout-mobile-active': layoutState.mobileMenuActive,
-            'layout-static-inactive': layoutState.staticMenuInactive,
             'layout-sidebar-expanded': layoutState.sidebarExpanded,
             'layout-sidebar-rail': !layoutState.sidebarPinned && layoutConfig.menuMode === 'static',
             'layout-sidebar-anchored': layoutState.anchored,

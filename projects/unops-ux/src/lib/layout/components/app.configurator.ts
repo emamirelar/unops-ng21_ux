@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { booleanAttribute, Component, computed, inject, Input, model, OnInit, PLATFORM_ID, Signal } from '@angular/core';
+import { booleanAttribute, Component, computed, inject, Input, model, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { $t, updatePreset, updateSurfacePalette } from '@primeuix/themes';
@@ -35,7 +35,7 @@ declare type SurfacesType = {
     selector: 'app-configurator',
     imports: [CommonModule, FormsModule, SelectButtonModule, DrawerModule, ToggleSwitchModule, RadioButtonModule],
     template: `
-        <p-drawer [visible]="visible()" (onHide)="onDrawerHide()" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" header="Settings">
+        <p-drawer [(visible)]="configSidebarVisible" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" header="Settings" appendTo="body">
             <div class="flex flex-col gap-6">
                 <div>
                     <span class="text-lg text-muted-color font-semibold">Primary</span>
@@ -102,38 +102,41 @@ declare type SurfacesType = {
                         <div class="flex flex-wrap flex-col gap-3">
                             <div class="flex">
                                 <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="static" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('static')" inputId="static"></p-radiobutton>
+                                    <p-radiobutton name="menuMode" value="static" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('static')" inputId="static"></p-radiobutton>
                                     <label for="static">Static</label>
                                 </div>
-
                                 <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="overlay" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('overlay')" inputId="overlay"></p-radiobutton>
+                                    <p-radiobutton name="menuMode" value="rail" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('rail')" inputId="rail"></p-radiobutton>
+                                    <label for="rail">Rail</label>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="flex items-center gap-2 w-6/12">
+                                    <p-radiobutton name="menuMode" value="overlay" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('overlay')" inputId="overlay"></p-radiobutton>
                                     <label for="overlay">Overlay</label>
                                 </div>
-                            </div>
-                            <div class="flex">
                                 <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="slim" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('slim')" inputId="slim"></p-radiobutton>
+                                    <p-radiobutton name="menuMode" value="slim" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('slim')" inputId="slim"></p-radiobutton>
                                     <label for="slim">Slim</label>
                                 </div>
+                            </div>
+                            <div class="flex">
                                 <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="compact" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('compact')" inputId="compact"></p-radiobutton>
+                                    <p-radiobutton name="menuMode" value="compact" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('compact')" inputId="compact"></p-radiobutton>
                                     <label for="compact">Compact</label>
                                 </div>
-                            </div>
-                            <div class="flex">
                                 <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="reveal" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('reveal')" inputId="reveal"></p-radiobutton>
+                                    <p-radiobutton name="menuMode" value="reveal" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('reveal')" inputId="reveal"></p-radiobutton>
                                     <label for="reveal">Reveal</label>
                                 </div>
-                                <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="drawer" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('drawer')" inputId="drawer"></p-radiobutton>
-                                    <label for="drawer">Drawer</label>
-                                </div>
                             </div>
                             <div class="flex">
                                 <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="horizontal" [(ngModel)]="menuMode" (ngModelChange)="setMenuMode('horizontal')" inputId="horizontal"></p-radiobutton>
+                                    <p-radiobutton name="menuMode" value="drawer" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('drawer')" inputId="drawer"></p-radiobutton>
+                                    <label for="drawer">Drawer</label>
+                                </div>
+                                <div class="flex items-center gap-2 w-6/12">
+                                    <p-radiobutton name="menuMode" value="horizontal" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('horizontal')" inputId="horizontal"></p-radiobutton>
                                     <label for="horizontal">Horizontal</label>
                                 </div>
                             </div>
@@ -235,11 +238,21 @@ export class AppConfigurator implements OnInit {
 
     selectedPreset = computed(() => this.layoutService.layoutConfig().preset);
 
-    menuMode = model(this.layoutService.layoutConfig().menuMode);
+    menuMode = computed(() => {
+        const mode = this.layoutService.layoutConfig().menuMode;
+        const pinned = this.layoutService.layoutState().sidebarPinned;
+        return mode === 'static' && !pinned ? 'rail' : mode;
+    });
 
     cardStyle = model(this.layoutService.layoutConfig().cardStyle);
 
-    visible: Signal<boolean> = computed(() => this.layoutService.layoutState().configSidebarVisible);
+    get configSidebarVisible(): boolean {
+        return this.layoutService.layoutState().configSidebarVisible;
+    }
+
+    set configSidebarVisible(val: boolean) {
+        this.layoutService.layoutState.update((prev) => ({ ...prev, configSidebarVisible: val }));
+    }
 
     darkTheme = computed(() => this.layoutService.layoutConfig().darkTheme);
 
@@ -392,10 +405,6 @@ export class AppConfigurator implements OnInit {
         $t().preset(preset).preset(this.getPresetExt()).surfacePalette(surfacePalette).use({ useDefaultOptions: true });
     }
 
-    onDrawerHide() {
-        this.layoutService.layoutState.update((prev) => ({ ...prev, configSidebarVisible: false }));
-    }
-
     onCardStyleChange(value: string) {
         this.layoutService.layoutConfig.update((state) => ({
             ...state,
@@ -411,17 +420,24 @@ export class AppConfigurator implements OnInit {
     }
 
     setMenuMode(mode: string) {
+        const isRail = mode === 'rail';
+        const actualMode = isRail ? 'static' : mode;
+
         this.layoutService.layoutConfig.update((state) => ({
             ...state,
-            menuMode: mode
+            menuMode: actualMode
         }));
 
-        if (this.menuMode() === 'static') {
-            this.layoutService.layoutState.update((state) => ({
-                ...state,
-                staticMenuDesktopInactive: false
-            }));
-        }
+        this.layoutService.layoutState.update((state) => ({
+            ...state,
+            staticMenuInactive: false,
+            overlayMenuActive: false,
+            mobileMenuActive: false,
+            sidebarExpanded: false,
+            sidebarPinned: !isRail,
+            menuHoverActive: false,
+            anchored: false
+        }));
     }
 
     toggleDarkMode() {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, input, OnDestroy, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
@@ -18,6 +18,7 @@ import type { MenuItem } from '../tokens';
                 [attr.href]="item()?.url"
                 (click)="itemClick($event)"
                 (mouseenter)="onMouseEnter()"
+                (mouseleave)="onMouseLeave()"
                 [ngClass]="item()?.class"
                 [attr.target]="item()?.target"
                 tabindex="0"
@@ -36,6 +37,7 @@ import type { MenuItem } from '../tokens';
             <a
                 (click)="itemClick($event)"
                 (mouseenter)="onMouseEnter()"
+                (mouseleave)="onMouseLeave()"
                 [ngClass]="item()?.class"
                 [routerLink]="item()?.routerLink"
                 routerLinkActive="active-route"
@@ -75,12 +77,12 @@ import type { MenuItem } from '../tokens';
     styles: [
         `
             .p-submenu-enter {
-                animation: p-animate-submenu-expand 450ms cubic-bezier(0.86, 0, 0.07, 1) forwards;
+                animation: p-animate-submenu-expand 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
                 overflow: hidden;
             }
 
             .p-submenu-leave {
-                animation: p-animate-submenu-collapse 450ms cubic-bezier(0.86, 0, 0.07, 1) forwards;
+                animation: p-animate-submenu-collapse 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
                 overflow: hidden;
             }
 
@@ -104,10 +106,12 @@ import type { MenuItem } from '../tokens';
         `
     ]
 })
-export class AppMenuitem implements AfterViewInit {
+export class AppMenuitem implements AfterViewInit, OnDestroy {
     layoutService = inject(LayoutService);
 
     router = inject(Router);
+
+    private hoverExpandTimer: ReturnType<typeof setTimeout> | null = null;
 
     item = input<MenuItem | null>(null);
 
@@ -244,6 +248,10 @@ export class AppMenuitem implements AfterViewInit {
                 }));
             }
         }
+
+        if (this.layoutService.isDesktop() && this.layoutService.isRail() && !this.layoutService.layoutState().sidebarExpanded) {
+            this.layoutService.toggleSidebarPin();
+        }
     }
 
     onMouseEnter() {
@@ -253,6 +261,29 @@ export class AppMenuitem implements AfterViewInit {
                 activePath: this.fullPath(),
                 menuHoverActive: true
             }));
+        }
+    }
+
+    onMouseLeave() {}
+
+    ngOnDestroy() {
+        this.clearHoverTimer();
+    }
+
+    private scheduleRailExpand() {
+        this.clearHoverTimer();
+        this.hoverExpandTimer = setTimeout(() => {
+            this.layoutService.layoutState.update((val) => ({
+                ...val,
+                sidebarExpanded: true
+            }));
+        }, 500);
+    }
+
+    private clearHoverTimer() {
+        if (this.hoverExpandTimer !== null) {
+            clearTimeout(this.hoverExpandTimer);
+            this.hoverExpandTimer = null;
         }
     }
 

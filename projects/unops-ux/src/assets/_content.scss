@@ -43,7 +43,7 @@
     
 }
 .layout-content {
-    padding: 1rem;
+    padding: 2rem;
     flex: 1 1 auto;
     position: relative;
 
@@ -52,6 +52,6 @@
     }
 
     @media screen and (min-width: 992px) {
-        padding: 2rem;
+        padding: 1.5rem 3rem;
     }
 }
