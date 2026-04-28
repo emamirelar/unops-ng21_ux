@@ -168,6 +168,15 @@
         }
     }
 
+    :root:not(.app-dark) .layout-sidebar {
+        background: var(--surface-ground);
+    }
+
+    .app-dark .layout-sidebar-dark .layout-sidebar,
+    .app-dark .layout-sidebar-light .layout-sidebar {
+        background: var(--d-sidebar-bg-color);
+    }
+
     .layout-mobile-active {
         .layout-sidebar {
             transform: translateX(0);

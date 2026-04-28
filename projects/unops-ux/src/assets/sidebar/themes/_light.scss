@@ -1,5 +1,4 @@
 .layout-sidebar-light {
-    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(90, 184, 255, 0.218);
     --d-sidebar-bg-color: var(--p-surface-0);
     --d-sidebar-bg-color-alt: var(--color-ocean-100);
     --d-sidebar-border: 1px solid var(--surface-border);
@@ -13,4 +12,5 @@
     --d-menuitem-active-text-color: var(--p-primary-600);
     --d-menuitem-active-route-text-color: var(--p-primary-700);
     --d-menuitem-active-border: 0.5px solid var(--p-primary-200);
+    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(90, 184, 255, 0.218);
 }
