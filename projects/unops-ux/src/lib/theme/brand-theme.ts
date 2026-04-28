@@ -122,19 +122,26 @@ const brandOverrides = {
                 padding: '0.25rem 0.5rem'
             },
             label: {
-                fontWeight: '600'
+                fontWeight: '400'
             },
             colorScheme: {
                 light: {
                     secondary: { color: '{surface.800}' },
                     success: { color: '{green.800}' },
+                    active: { color: '{green.800}' },
+                    inactive: { color: '{gray.800}' },
                     info: { color: '{blue.800}' },
                     warn: { color: '{orange.800}' }
                 },
                 dark: {
                     secondary: { color: '{surface.100}' },
+
+                    success: { color: '{green.100}' },
+                    active: { color: '{green.100}' },
                     info: { color: '{blue.100}' },
-                    warn: { color: '{orange.100}' }
+                    inactive: { color: '{gray.100}' },
+                    warn: { color: '{orange.100}' },
+                    error: { color: '{red.100}' }
                 }
             }
         }

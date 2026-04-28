@@ -25,9 +25,9 @@
         li {
             &.active-menuitem {
                 > a {
-                    color: var(--p-primary-200);
-                    background-color: var(--p-surface-900);
-                    border: solid 0.5px var(--p-primary-500);
+                    color: var(--d-menuitem-active-text-color);
+                    background-color: var(--d-menuitem-active-bg);
+                    border: var(--d-menuitem-active-border, 0.5px solid transparent);
                 }
             }
 

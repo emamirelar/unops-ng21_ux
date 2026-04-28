@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     selector: 'opportunity-stat-card-widget',
     imports: [CommonModule, MiniLineChart],
     template: `@for (data of datasets; track trackByFn()) {
-        <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
             <div class="px-4 pt-3.5 pb-1">
                 <div class="flex items-start gap-2">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center" [ngClass]="data.iconBg">

@@ -25,7 +25,6 @@ export const appRoutes: Routes = [
             },
             {
                 path: 'uikit',
-                data: { breadcrumb: 'UI Kit' },
                 loadChildren: () => import('@/app/pages/uikit/uikit.routes')
             },
             {
@@ -35,24 +34,20 @@ export const appRoutes: Routes = [
             },
             {
                 path: 'pages',
-                loadChildren: () => import('@/app/pages/pages.routes'),
-                data: { breadcrumb: 'Pages' }
+                loadChildren: () => import('@/app/pages/pages.routes')
             },
             {
                 path: 'apps',
-                loadChildren: () => import('@/app/apps/apps.routes'),
-                data: { breadcrumb: 'Partnerships' }
+                loadChildren: () => import('@/app/apps/apps.routes')
             },
 
             {
                 path: 'blocks',
-                data: { breadcrumb: 'Free Blocks' },
                 loadChildren: () => import('@/app/pages/blocks/blocks.routes')
             },
             {
                 path: 'ecommerce',
-                loadChildren: () => import('@/app/pages/ecommerce/ecommerce.routes'),
-                data: { breadcrumb: 'E-Commerce' }
+                loadChildren: () => import('@/app/pages/ecommerce/ecommerce.routes')
             },
             {
                 path: 'profile',

@@ -173,6 +173,17 @@ export class AppMenuitem implements AfterViewInit, OnDestroy {
         });
     }
 
+    private readonly defaultMatchOptions: import('@angular/router').IsActiveMatchOptions = {
+        paths: 'exact',
+        queryParams: 'ignored',
+        matrixParams: 'ignored',
+        fragment: 'ignored'
+    };
+
+    private itemMatchOptions(item: MenuItem | null | undefined): import('@angular/router').IsActiveMatchOptions {
+        return item?.routerLinkActiveOptions ?? this.defaultMatchOptions;
+    }
+
     updateActivePath() {
         if (this.layoutService.hasOverlaySubmenu() && this.layoutService.isDesktop()) {
             return;
@@ -186,12 +197,7 @@ export class AppMenuitem implements AfterViewInit, OnDestroy {
         const parentPath = this.parentPath();
 
         if (item?.routerLink && !item?.items) {
-            const isRouteActive = this.router.isActive(item.routerLink[0], {
-                paths: 'exact',
-                queryParams: 'ignored',
-                matrixParams: 'ignored',
-                fragment: 'ignored'
-            });
+            const isRouteActive = this.router.isActive(item.routerLink[0], this.itemMatchOptions(item));
 
             if (isRouteActive && parentPath) {
                 this.layoutService.layoutState.update((val) => ({
@@ -290,12 +296,7 @@ export class AppMenuitem implements AfterViewInit, OnDestroy {
     private hasMatchingChildRoute(item: MenuItem | null | undefined): boolean {
         if (!item) return false;
         if (item.routerLink) {
-            return this.router.isActive(item.routerLink[0], {
-                paths: 'exact',
-                queryParams: 'ignored',
-                matrixParams: 'ignored',
-                fragment: 'ignored'
-            });
+            return this.router.isActive(item.routerLink[0], this.itemMatchOptions(item));
         }
         return item.items?.some((child) => this.hasMatchingChildRoute(child)) ?? false;
     }

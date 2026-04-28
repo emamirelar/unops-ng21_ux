@@ -42,23 +42,8 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
         @if (partner(); as p) {
             <div class="flex flex-col gap-6">
 
-                <!-- Back + Actions Bar -->
-                <div class="flex items-center justify-between animate-fade-in">
-                    <p-button
-                        icon="pi pi-chevron-left"
-                        label="Back to list"
-                        [text]="true"
-                        severity="secondary"
-                        routerLink="/apps/partners"
-                    />
-                    <div class="flex items-center gap-2">
-                        <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" (onClick)="openEditDrawer()" />
-                        <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" />
-                    </div>
-                </div>
-
                 <!-- Header Card -->
-                <div class="card animate-fade-in">
+                <div class="card animate-fade-in border-0! p-0!">
                     <div class="flex flex-col sm:flex-row sm:items-start gap-5">
                         <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 shrink-0 overflow-hidden">
                             <img [src]="flagUrl()" [alt]="p.address1Country || 'Global'" class="w-10 h-10 object-contain" />
@@ -103,6 +88,11 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                     <p-tag [value]="p.partnerApprovalStatus" [styleClass]="getApprovalClass(p.partnerApprovalStatus)" />
                                 }
                             </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" (onClick)="openEditDrawer()" />
+                            <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" />
                         </div>
                     </div>
                 </div>
@@ -293,6 +283,17 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Back Bar -->
+                <div class="flex items-center animate-fade-in">
+                    <p-button
+                        icon="pi pi-chevron-left"
+                        label="Back to list"
+                        [text]="true"
+                        severity="secondary"
+                        routerLink="/apps/partners"
+                    />
                 </div>
             </div>
 

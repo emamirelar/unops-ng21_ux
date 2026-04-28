@@ -109,21 +109,22 @@ interface FilterTag {
 
                 <div class="flex items-center flex-wrap gap-2">
                     @for (tag of filterTags(); track tag.value) {
-                        <button
-                            type="button"
-                            class="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border transition-colors"
-                            [class]="isTagActive(tag) ? 'bg-primary text-primary-contrast border-primary' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-emphasis'"
-                            (click)="toggleTag(tag)">
-                            {{ tag.label }}
-                        </button>
+                        <p-tag
+                            [value]="tag.label"
+                            severity="secondary"
+                            styleClass="cursor-pointer transition-colors px-2 py-1"
+                            [class]="isTagActive(tag) ? 'tag-filter-active' : ''"
+                            (click)="toggleTag(tag)"
+                        />
                     }
                     @if (hasActiveFilters()) {
-                        <button
-                            type="button"
-                            class="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border border-surface-200 dark:border-surface-700 text-surface-500 dark:text-surface-400 hover:bg-emphasis transition-colors"
-                            (click)="clearFilters()">
-                            <i class="pi pi-times text-xs mr-1"></i>Clear
-                        </button>
+                        <p-tag
+                            value="Clear"
+                            icon="pi pi-times"
+                            severity="secondary"
+                            styleClass="cursor-pointer transition-colors px-2 py-1"
+                            (click)="clearFilters()"
+                        />
                     }
                 </div>
             </div>

@@ -1,4 +1,7 @@
+import { type IsActiveMatchOptions } from '@angular/router';
 import { LayoutService, type MenuItem } from '@emamirelar/ux';
+
+const SUBSET_MATCH: IsActiveMatchOptions = { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' };
 
 /** Demo shell menu for the UNOPS-ng21_UX reference application. */
 export function createDemoAppMenu(layoutService: LayoutService, storybookBaseUrl: string): MenuItem[] {
@@ -17,7 +20,8 @@ export function createDemoAppMenu(layoutService: LayoutService, storybookBaseUrl
                 {
                     label: 'Partners',
                     icon: 'pi pi-fw pi-globe',
-                    routerLink: ['/apps/partners']
+                    routerLink: ['/apps/partners'],
+                    routerLinkActiveOptions: SUBSET_MATCH
                 },
                 {
                     label: 'Contacts',

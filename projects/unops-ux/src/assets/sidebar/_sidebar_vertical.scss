@@ -32,7 +32,6 @@
     margin: 1rem 0rem;
     padding: 0;
     list-style-type: none;
-    transition: gap 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
     .menu-separator {
         margin: 1.5rem 0 0 0;
@@ -103,7 +102,6 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        transition: gap 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         a {
             display: flex;
             align-items: center;
@@ -136,7 +134,7 @@
             }
 
             .layout-submenu-toggler {
-                color: var(--p-primary-200);
+                color: var(--p-surface-400);
                 font-size: var(--text-sm);
                 margin-left: auto;
                 opacity: 1;
@@ -302,6 +300,7 @@
                 max-height: 0;
                 gap: 0;
                 padding: 0;
+                transition: none;
             }
         }
 

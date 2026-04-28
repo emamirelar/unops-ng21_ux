@@ -17,7 +17,7 @@ import { HorizontalGridWidget } from './horizontalgridwidget';
                 <div class="flex flex-col items-center">
                     <h1 class="title-h4 lg:title-h1">
                         Welcome to the enhanced <br />
-                        <span class="text-primary-600">Partner and Opportunities platform, Opportunity +</span>
+                        <span class="text-primary-600">Partner and Opportunities platform, Opportunity+</span>
                     </h1>
                     <p class="body-small lg:body-medium mt-4 lg:mt-6 max-w-2xl">Your personalized dashboard for managing partnerships and opportunities</p>
                     <p class="body-small mt-2 max-w-2xl text-surface-500 dark:text-surface-400">We've added new dashboard features, improved navigation, and streamlined workflows. Explore the updated interface and share your feedback with the admin team.</p>

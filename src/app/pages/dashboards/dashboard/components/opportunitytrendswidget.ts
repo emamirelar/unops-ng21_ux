@@ -15,7 +15,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
             <multi-line-chart [datasets]="randomData" [labels]="labels" [bgColors]="bgColors" [borderColors]="borderColors" [option]="select.value" tooltipPrefix="" />
         </div>`,
     host: {
-        class: 'card w-full xl:w-auto xl:flex-1 mb-0! px-4! sm:px-7! pb-4! sm:pb-7! pt-4! sm:pt-6! border rounded-3xl border-surface flex flex-col justify-between overflow-hidden'
+        class: 'card w-full xl:w-auto xl:flex-1 mb-0! px-4! sm:px-7! pb-4! sm:pb-7! pt-4! sm:pt-6! rounded-3xl flex flex-col justify-between overflow-hidden'
     }
 })
 export class OpportunityTrendsWidget {

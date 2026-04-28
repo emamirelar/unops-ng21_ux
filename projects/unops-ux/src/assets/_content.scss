@@ -4,7 +4,6 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    transition: all 0.2s ease;
 
     > app-configurator,
     > [app-search],
@@ -31,7 +30,6 @@
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 9;
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .layout-content-wrapper-inside {
     width: 100%;
@@ -52,6 +50,6 @@
     }
 
     @media screen and (min-width: 992px) {
-        padding: 1.5rem 3rem;
+        padding: 1.5rem;
     }
 }

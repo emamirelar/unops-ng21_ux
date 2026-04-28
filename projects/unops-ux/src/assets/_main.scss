@@ -20,11 +20,11 @@ body {
 
 @media screen and (min-width: $breakpoint) {
     :root:not(.app-dark) body {
-        background: linear-gradient(355deg, var(--p-primary-50) 5%, var(--p-surface-50) 40%, var(--p-surface-0) 65%);
+        background: linear-gradient(355deg, var(--p-primary-100) 5%, var(--p-surface-100) 50%, var(--p-surface-50) 80%);
     }
 
     .app-dark body {
-        background: linear-gradient(355deg, var(--p-surface-800) 5%, var(--p-surface-950) 75%);
+        background: linear-gradient(355deg, var(--p-primary-800) 5%, var(--p-surface-900) 60%, var(--p-surface-950) 86%);
     }
 }
 

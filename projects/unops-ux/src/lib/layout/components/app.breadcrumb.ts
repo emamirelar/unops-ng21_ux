@@ -17,7 +17,7 @@ interface Breadcrumb {
             @for (item of breadcrumbs$ | async; track item.url; let last = $last) {
                 <li class="text-sm font-medium text-surface-700 dark:text-surface-100">
                     @if (!last && item.url) {
-                        <a [routerLink]="item.url" class="text-surface-700 dark:text-surface-100 hover:text-surface-950 dark:hover:text-surface-0 no-underline hover:underline cursor-pointer">{{ item.label }}</a>
+                        <a [routerLink]="item.url" class="text-surface-700 dark:text-surface-100 hover:text-primary-500 no-underline hover:underline cursor-pointer">{{ item.label }}</a>
                     } @else {
                         {{ item.label }}
                     }

@@ -11,11 +11,11 @@ import { Component } from '@angular/core';
     template: `<section>
         <div class="flex flex-col gap-7">
             <!-- Hero Header -->
-            <div class="text-left animate-fade-in-down mb-12">
-                <h2 class="text-surface-900 dark:text-surface-0 text-2xl sm:text-3xl font-bold leading-tight m-0 mb-4">
-                    Welcome to the enhanced Partner and Opportunities platform, Opportunity +
+            <div class="text-left animate-fade-in-down mb-8">
+                <h2 class="text-surface-900 dark:text-surface-0 text-2xl sm:text-3xl font-bold leading-relaxed m-0 mb-6">
+                    Welcome to the enhanced Partner and Opportunities platform, Opportunity+
                 </h2>
-                <p class="text-surface-700 dark:text-surface-0/90 text-lg sm:text-xl font-medium leading-relaxed m-0 mb-3">
+                <p class="text-surface-700 dark:text-surface-0/90 text-lg sm:text-xl font-medium leading-relaxed m-0 mb-6">
                     Your personalized dashboard for managing partnerships and opportunities
                 </p>
                 <p class="text-surface-500 dark:text-surface-0/70 text-sm sm:text-base leading-relaxed m-0">

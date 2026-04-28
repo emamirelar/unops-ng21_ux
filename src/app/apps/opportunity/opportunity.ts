@@ -165,28 +165,23 @@ interface AiInsight {
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-check-square text-deepsea-500 dark:text-surface-0"></i>
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Tasks</h4>
-                                <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer(); $event.stopPropagation()" />
+                                <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600 ml-12!" (onClick)="openNewTaskDrawer(); $event.stopPropagation()" />
                             </div>
                             <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isTasksExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                         </div>
 
                         @if (isTasksExpanded()) {
                         <!-- Task Filter Tabs -->
-                        <div class="flex flex-wrap gap-1">
+                        <div class="flex flex-wrap gap-2">
                             @for (filter of taskFilterOptions; track filter.key) {
-                                <button
+                                <p-tag
+                                    [value]="filter.label + (taskCounts()[filter.countKey] > 0 ? ' ' + taskCounts()[filter.countKey] : '')"
+                                    [icon]="filter.icon"
+                                    severity="secondary"
+                                    styleClass="cursor-pointer transition-colors px-2 py-1"
+                                    [class]="activeTaskFilter() === filter.key ? 'tag-filter-active' : ''"
                                     (click)="activeTaskFilter.set(filter.key)"
-                                    class="px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer"
-                                    [ngClass]="activeTaskFilter() === filter.key ? 'bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0 ring-1 ring-surface-900 dark:ring-surface-0' : 'text-surface-700 dark:text-surface-300 hover:bg-emphasis'"
-                                >
-                                    <i [class]="filter.icon + ' text-sm'"></i>
-                                    <span class="text-sm font-medium">{{ filter.label }}</span>
-                                    @if (taskCounts()[filter.countKey] > 0) {
-                                        <div class="px-2 py-0.5 rounded-sm text-xs font-semibold" [ngClass]="activeTaskFilter() === filter.key ? 'bg-surface-100 dark:bg-surface-800 text-surface-900 dark:text-surface-0' : filter.badgeClass">
-                                            {{ taskCounts()[filter.countKey] }}
-                                        </div>
-                                    }
-                                </button>
+                                />
                             }
                         </div>
 
@@ -205,7 +200,7 @@ interface AiInsight {
                                             <h5 class="title-h5 text-left!">Not Started</h5>
                                         </div>
                                     </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden bg-transparent!' } }">
+                                    <p-accordioncontent [pt]="accordionContentPT">
                                         <div class="flex flex-col">
                                             @for (task of pendingTasks(); track task.id; let last = $last) {
                                                 <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
@@ -223,7 +218,7 @@ interface AiInsight {
                                             <h5 class="title-h5 text-left!">In Progress</h5>
                                         </div>
                                     </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden bg-transparent!' } }">
+                                    <p-accordioncontent [pt]="accordionContentPT">
                                         <div class="flex flex-col">
                                             @for (task of inProgressTasks(); track task.id; let last = $last) {
                                                 <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
@@ -241,7 +236,7 @@ interface AiInsight {
                                             <h5 class="title-h5 text-left!">Completed</h5>
                                         </div>
                                     </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden bg-transparent!' } }">
+                                    <p-accordioncontent [pt]="accordionContentPT">
                                         <div class="flex flex-col">
                                             @for (task of completedTasks(); track task.id; let last = $last) {
                                                 <ng-container *ngTemplateOutlet="taskItemCompleted; context: { task: task, isLast: last }"></ng-container>
@@ -261,7 +256,7 @@ interface AiInsight {
             <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
                 <!-- AI Project Analysis Card -->
                 <div
-                    class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 motion-safe:animate-enter-liquid [animation-delay:80ms]"
+                    class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 motion-safe:animate-enter-liquid [animation-delay:80ms] max-h-[80vh] overflow-y-auto"
                 >
                     <div class="flex items-center justify-between cursor-pointer" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
                         <div class="flex items-center gap-3">
@@ -602,6 +597,7 @@ export class Opportunity implements OnInit {
     activeTaskFilter = signal('All');
     taskSearchQuery = model('');
     openTaskPanels: string[] = ['0', '1', '2'];
+    accordionContentPT = { root: { class: 'overflow-hidden bg-transparent!' }, content: { class: 'bg-transparent!' } };
     isTaskDrawerVisible = false;
     selectedTask: Task | null = null;
     taskDrawerMode: 'create' | 'edit' = 'create';

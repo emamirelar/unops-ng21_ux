@@ -8,9 +8,10 @@
     --d-menuitem-text-color: var(--p-text-color);
     --d-menuitem-icon-color: var(--p-primary-700);
     --d-menuitem-hover-bg: var(--surface-hover);
-    --d-menuitem-active-bg: var(--surface-hover);
+    --d-menuitem-active-bg: rgba(0, 61, 114, 0.387);
     --d-menuitem-active-text-color: var(--p-primary-600);
     --d-menuitem-active-route-text-color: var(--p-primary-700);
+    --d-menuitem-active-border: 0.5px solid var(--surface-border);
     --d-menuitem-focus-shadow: 0 0 0 0.2rem var(--p-primary-100);
 }
 
@@ -22,8 +23,9 @@
     --d-menuitem-text-color: var(--p-surface-0);
     --d-menuitem-icon-color: var(--color-ocean-300);
     --d-menuitem-hover-bg: rgba(14, 114, 157, 0.3);
-    --d-menuitem-active-bg: rgba(14, 114, 157, 0.3);
+    --d-menuitem-active-bg: rgba(0, 61, 114, 0.387);
     --d-menuitem-active-text-color: var(--p-surface-0);
     --d-menuitem-active-route-text-color: var(--p-surface-0);
+    --d-menuitem-active-border: 0.5px solid var(--p-surface-700);
     --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
 }

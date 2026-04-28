@@ -3,7 +3,6 @@ import { Routes } from '@angular/router';
 export default [
     {
         path: 'opportunity',
-        data: { breadcrumb: 'Opportunities' },
         children: [
             {
                 path: '',

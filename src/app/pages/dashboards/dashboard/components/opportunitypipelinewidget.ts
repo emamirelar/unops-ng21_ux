@@ -21,7 +21,7 @@ import { ButtonModule } from 'primeng/button';
             <p-button styleClass="w-full mt-6 text-surface-950! dark:text-surface-0! rounded-lg!" label="View all opportunities" outlined severity="secondary" />
         </div>`,
     host: {
-        class: 'card w-full xl:w-100 xl:shrink-0 mb-0! p-0! rounded-3xl border border-surface shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]'
+        class: 'card w-full xl:w-100 xl:shrink-0 mb-0! p-0! rounded-3xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]'
     }
 })
 export class OpportunityPipelineWidget {
