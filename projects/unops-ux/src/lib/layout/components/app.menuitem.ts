@@ -23,7 +23,7 @@ import type { MenuItem } from '../tokens';
                 tabindex="0"
                 pRipple
                 [pTooltip]="item()?.label"
-                [tooltipDisabled]="!(isCompact() && !isActive() && root())"
+                [tooltipDisabled]="!((isCompact() || isRailCollapsed()) && !isActive() && root())"
             >
                 <i [ngClass]="item()?.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text label-small text-inherit">{{ item()?.label }}</span>
@@ -50,7 +50,7 @@ import type { MenuItem } from '../tokens';
                 [attr.target]="item()?.target"
                 tabindex="0"
                 [pTooltip]="item()?.label"
-                [tooltipDisabled]="!(isCompact() && !isActive() && root())"
+                [tooltipDisabled]="!((isCompact() || isRailCollapsed()) && !isActive() && root())"
             >
                 <i [ngClass]="item()?.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text label-small text-inherit">{{ item()?.label }}</span>
@@ -124,6 +124,8 @@ export class AppMenuitem implements AfterViewInit {
     isHorizontal = computed(() => this.layoutService.layoutConfig().menuMode === 'horizontal');
 
     isCompact = computed(() => this.layoutService.layoutConfig().menuMode === 'compact');
+
+    isRailCollapsed = computed(() => this.layoutService.isRail() && !this.layoutService.layoutState().sidebarExpanded);
 
     isVisible = computed(() => this.item()?.visible !== false);
 

@@ -28,6 +28,19 @@ interface NotificationsBars {
             <i class="pi pi-bars"></i>
         </button>
         <div class="topbar-left">
+            <button
+                type="button"
+                class="topbar-menu-toggle"
+                [class.active]="isSidebarPinned()"
+                [attr.aria-label]="isSidebarPinned() ? 'Collapse sidebar' : 'Expand sidebar'"
+                (click)="toggleSidebarPin()"
+            >
+                <i class="pi pi-bars"></i>
+            </button>
+            <a class="topbar-logo" [routerLink]="['/']">
+                <img [src]="desktopLogo()" [attr.alt]="mobileLogoConfig.alt" />
+            </a>
+            <span class="topbar-logo-separator"></span>
             <div app-breadcrumb></div>
             @if (searchActive()) {
                 <div class="flex items-center gap-2 ml-auto">
@@ -236,7 +249,13 @@ export class AppTopbar implements AfterViewChecked {
         this.layoutService.isDarkTheme() ? this.mobileLogoConfig.dark : this.mobileLogoConfig.light
     );
 
+    desktopLogo = computed(() =>
+        this.layoutService.isDarkTheme() ? this.mobileLogoConfig.dark : this.mobileLogoConfig.light
+    );
+
     isDarkTheme = computed(() => this.layoutService.isDarkTheme());
+
+    isSidebarPinned = computed(() => this.layoutService.isSidebarPinned());
 
     searchActive = signal(false);
     profileMenuOpen = signal(false);
@@ -346,11 +365,14 @@ export class AppTopbar implements AfterViewChecked {
         this.layoutService.toggleMenu();
     }
 
+    toggleSidebarPin() {
+        this.layoutService.toggleSidebarPin();
+    }
+
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({
             ...state,
-            darkTheme: !state.darkTheme,
-            menuTheme: !state.darkTheme ? 'dark' : state.menuTheme
+            darkTheme: !state.darkTheme
         }));
     }
 

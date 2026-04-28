@@ -182,7 +182,7 @@ interface ColorOption {
                         }
 
                         <div
-                            class="w-8 h-8 bg-surface-100 dark:bg-surface-700 rounded-full border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors"
+                            class="w-8 h-8 bg-surface-100 dark:bg-surface-700 rounded-full border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors"
                             (click)="showColorMenu($event)"
                         >
                             <i class="pi pi-plus text-surface-600 dark:text-surface-300 text-xs"></i>
@@ -216,7 +216,7 @@ interface ColorOption {
                 <div class="p-6 flex flex-col justify-start items-start gap-4">
                     @if (!coverImage()) {
                         <div
-                            class="w-full h-96 p-2 bg-surface-50 dark:bg-surface-700 rounded-xl border border-surface-300 dark:border-surface-600 flex flex-col justify-center items-center gap-6 cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-600 transition-colors"
+                            class="w-full h-96 p-2 bg-surface-50 dark:bg-surface-700 rounded-xl border border-surface-300 dark:border-surface-600 flex flex-col justify-center items-center gap-6 cursor-pointer hover:bg-emphasis transition-colors"
                             (click)="triggerFileUpload('cover')"
                         >
                             <div class="flex flex-col justify-center items-center gap-4">
@@ -240,10 +240,10 @@ interface ColorOption {
                                     <div class="w-full flex justify-between items-start gap-2">
                                         <div class="flex-1 text-surface-500 dark:text-surface-400 text-base sm:text-lg font-medium leading-6 sm:leading-7 line-clamp-2 min-w-0">{{ product.name || 'Product Name' }}</div>
                                         <div class="flex justify-start items-center gap-2 shrink-0">
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
+                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
                                                 <i class="pi pi-heart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
                                             </div>
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
+                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
                                                 <i class="pi pi-shopping-cart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
                                             </div>
                                         </div>
@@ -264,7 +264,7 @@ interface ColorOption {
                     <div class="w-full flex justify-start items-start gap-4">
                         @for (image of additionalImages(); track $index; let index = $index) {
                             <div
-                                class="flex-1 aspect-square p-2 bg-surface-50 dark:bg-surface-700 rounded-xl border border-surface-300 dark:border-surface-600 flex flex-col justify-center items-center gap-6 cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-600 transition-colors"
+                                class="flex-1 aspect-square p-2 bg-surface-50 dark:bg-surface-700 rounded-xl border border-surface-300 dark:border-surface-600 flex flex-col justify-center items-center gap-6 cursor-pointer hover:bg-emphasis transition-colors"
                                 (click)="triggerFileUpload('image' + (index + 1))"
                             >
                                 @if (image) {

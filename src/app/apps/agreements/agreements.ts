@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { DrawerModule } from 'primeng/drawer';
 import { InputTextModule } from 'primeng/inputtext';
 import { Menu, MenuModule } from 'primeng/menu';
+import { PaginatorModule } from 'primeng/paginator';
 import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -61,7 +62,7 @@ interface Agreement {
 
 @Component({
     selector: 'app-agreements',
-    imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, TagModule, TextareaModule, ConfirmDialogModule],
+    imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, PaginatorModule, TagModule, TextareaModule, ConfirmDialogModule],
     providers: [ConfirmationService],
     template: `
         <div class="flex flex-col gap-6 animate-fade-in-up">
@@ -80,7 +81,7 @@ interface Agreement {
                                 severity="secondary"
                                 [rounded]="true"
                                 styleClass="cursor-pointer"
-                                [class]="activeFilter() === filter ? 'agreement-filter-active' : ''"
+                                [class]="activeFilter() === filter ? 'tag-filter-active' : ''"
                                 (click)="activeFilter.set(filter)"
                             />
                         }
@@ -100,12 +101,12 @@ interface Agreement {
                             <tr>
                                 <th pSortableColumn="fileName" class="w-40">Agreement Name <p-sortIcon field="fileName" /></th>
                                 <th pSortableColumn="type" class="w-32">Type <p-sortIcon field="type" /></th>
+                                <th class="w-24">Actions</th>
                                 <th pSortableColumn="fileSize" class="w-42">File Size <p-sortIcon field="fileSize" /></th>
                                 <th class="w-24">Size</th>
                                 <th pSortableColumn="uploadDate" class="flex-1">Upload Date <p-sortIcon field="uploadDate" /></th>
                                 <th pSortableColumn="editDate" class="flex-1">Edit Date <p-sortIcon field="editDate" /></th>
                                 <th pSortableColumn="owner" class="flex-1">Owner <p-sortIcon field="owner" /></th>
-                                <th class="w-24">Actions</th>
                             </tr>
                         </ng-template>
                         <ng-template #body let-doc>
@@ -118,6 +119,13 @@ interface Agreement {
                                 </td>
                                 <td>
                                     <p-tag [value]="doc.type" [severity]="getTagSeverity(doc.type)" styleClass="px-2 py-1" />
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-1">
+                                        <p-button icon="pi pi-download" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" />
+                                        <p-button icon="pi pi-ellipsis-h" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="onTableMenuToggle($event, doc, tableMenu)" />
+                                        <p-menu #tableMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.fileSize }}</span>
@@ -133,13 +141,6 @@ interface Agreement {
                                 </td>
                                 <td>
                                     <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.owner }}</span>
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap-1">
-                                        <p-button icon="pi pi-download" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" />
-                                        <p-button icon="pi pi-ellipsis-h" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="onTableMenuToggle($event, doc, tableMenu)" />
-                                        <p-menu #tableMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
-                                    </div>
                                 </td>
                             </tr>
                         </ng-template>
@@ -191,15 +192,13 @@ interface Agreement {
                             </div>
                         </div>
 
-                        @if (feedTotalPages() > 1) {
-                            <div class="flex items-center justify-between px-6 py-3 border-t border-surface-200 dark:border-surface-600">
-                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ feedPage() + 1 }} / {{ feedTotalPages() }}</span>
-                                <div class="flex items-center gap-1">
-                                    <p-button icon="pi pi-chevron-left" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" [disabled]="feedPage() === 0" (onClick)="feedPage.set(feedPage() - 1)" />
-                                    <p-button icon="pi pi-chevron-right" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" [disabled]="feedPage() === feedTotalPages() - 1" (onClick)="feedPage.set(feedPage() + 1)" />
-                                </div>
-                            </div>
-                        }
+                        <p-paginator
+                            [rows]="feedPerPage"
+                            [totalRecords]="activityFeed.length"
+                            [first]="feedFirst()"
+                            (onPageChange)="feedPage.set($event.page ?? 0)"
+                            styleClass="border-t border-surface-200 dark:border-surface-600"
+                        />
                     </div>
 
                     <div class="lg:col-span-6 xl:col-span-8 flex flex-col gap-6">
@@ -278,7 +277,7 @@ interface Agreement {
                 <div class="flex flex-col h-full">
                     <div class="flex-1 flex flex-col gap-6 overflow-y-auto">
                         <div class="relative min-h-[180px] h-[180px] rounded-2xl bg-surface-100 dark:bg-surface-800 border border-surface-200 dark:border-surface-600">
-                            <div class="w-full h-full flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors rounded-2xl" (click)="triggerFileUpload()">
+                            <div class="w-full h-full flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-emphasis transition-colors rounded-2xl" (click)="triggerFileUpload()">
                                 <div class="flex items-center justify-center">
                                     <div class="w-12 h-12 rounded-full bg-surface-200 dark:bg-surface-600 flex items-center justify-center">
                                         <i class="pi text-surface-600 dark:text-surface-300 text-2xl" [ngClass]="editForm.type ? getIconByType(editForm.type) : 'pi-upload'"></i>
@@ -388,20 +387,6 @@ interface Agreement {
             <p-confirmdialog />
     `,
     styles: `
-        :host ::ng-deep .agreement-filter-active.p-tag {
-            background: var(--surface-0);
-            color: var(--gray-900);
-            outline: 1px solid var(--gray-900);
-            border: 1px solid var(--color-black);
-        }
-
-        :host-context(.app-dark) ::ng-deep .agreement-filter-active.p-tag {
-            background: var(--p-surface-800);
-            color: var(--p-surface-0);
-            outline: 1px solid var(--p-surface-400);
-            border: 1px solid var(--p-surface-400);
-        }
-
         :host-context(.app-dark) ::ng-deep .agreements-table .p-datatable-thead > tr > th {
             color: var(--p-surface-0);
             border-color: var(--p-content-border-color);
@@ -418,11 +403,11 @@ export class Agreements {
 
     feedPage = signal(0);
     feedPerPage = 3;
+    feedFirst = computed(() => this.feedPage() * this.feedPerPage);
     paginatedFeed = computed(() => {
-        const start = this.feedPage() * this.feedPerPage;
+        const start = this.feedFirst();
         return this.activityFeed.slice(start, start + this.feedPerPage);
     });
-    feedTotalPages = computed(() => Math.ceil(this.activityFeed.length / this.feedPerPage));
 
     activeFilter = signal<string>('All Agreements');
 

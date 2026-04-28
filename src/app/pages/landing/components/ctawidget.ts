@@ -20,7 +20,7 @@ import { RouterLink } from '@angular/router';
                         <a routerLink="/" class="w-full sm:w-fit px-4 py-2 bg-surface-950 hover:bg-surface-700 dark:bg-surface-0 dark:hover:bg-surface-200 rounded-lg body-small text-surface-0 dark:text-surface-950 transition-all"> Get Started </a>
                         <a
                             routerLink="/"
-                            class="w-full sm:w-fit flex items-center justify-center gap-2 px-4 py-2 rounded-lg body-small text-surface-950 dark:text-surface-0 border border-surface-200 dark:border-surface-800 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+                            class="w-full sm:w-fit flex items-center justify-center gap-2 px-4 py-2 rounded-lg body-small text-surface-950 dark:text-surface-0 border border-surface-200 dark:border-surface-800 hover:bg-emphasis transition-all"
                         >
                             Learn More
                             <i class="pi pi-arrow-right text-sm"></i>

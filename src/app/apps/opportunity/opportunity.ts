@@ -161,21 +161,23 @@ interface AiInsight {
                 <div class="card">
                     <div class="flex flex-col gap-6">
                         <!-- Tasks Header -->
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div class="flex items-center justify-between px-2 cursor-pointer" (click)="isTasksExpanded.set(!isTasksExpanded())">
                             <div class="flex items-center gap-2">
                                 <i class="pi pi-check-square text-deepsea-500 dark:text-surface-0"></i>
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Tasks</h4>
+                                <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer(); $event.stopPropagation()" />
                             </div>
-                            <p-button icon="pi pi-plus" label="New Task" [outlined]="true" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer()" />
+                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isTasksExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                         </div>
 
+                        @if (isTasksExpanded()) {
                         <!-- Task Filter Tabs -->
                         <div class="flex flex-wrap gap-1">
                             @for (filter of taskFilterOptions; track filter.key) {
                                 <button
                                     (click)="activeTaskFilter.set(filter.key)"
                                     class="px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer"
-                                    [ngClass]="activeTaskFilter() === filter.key ? 'bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0 ring-1 ring-surface-900 dark:ring-surface-0' : 'text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                                    [ngClass]="activeTaskFilter() === filter.key ? 'bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0 ring-1 ring-surface-900 dark:ring-surface-0' : 'text-surface-700 dark:text-surface-300 hover:bg-emphasis'"
                                 >
                                     <i [class]="filter.icon + ' text-sm'"></i>
                                     <span class="text-sm font-medium">{{ filter.label }}</span>
@@ -194,16 +196,16 @@ interface AiInsight {
                         </p-iconfield>
 
                         <!-- Task Accordion -->
-                        <p-accordion [value]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none!' } }">
+                        <p-accordion [value]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
                             @if (pendingTasks().length > 0) {
-                                <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
+                                <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent!' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-inbox text-sm text-blue-500"></i>
-                                            <h4 class="title-h4 text-left!">Not Started</h4>
+                                            <h5 class="title-h5 text-left!">Not Started</h5>
                                         </div>
                                     </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
+                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden bg-transparent!' } }">
                                         <div class="flex flex-col">
                                             @for (task of pendingTasks(); track task.id; let last = $last) {
                                                 <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
@@ -214,14 +216,14 @@ interface AiInsight {
                             }
 
                             @if (inProgressTasks().length > 0) {
-                                <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
+                                <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent!' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-clock text-sm text-yellow-500"></i>
-                                            <h4 class="title-h4 text-left!">In Progress</h4>
+                                            <h5 class="title-h5 text-left!">In Progress</h5>
                                         </div>
                                     </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
+                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden bg-transparent!' } }">
                                         <div class="flex flex-col">
                                             @for (task of inProgressTasks(); track task.id; let last = $last) {
                                                 <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
@@ -232,14 +234,14 @@ interface AiInsight {
                             }
 
                             @if (completedTasks().length > 0) {
-                                <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0!' } }">
+                                <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent!' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-check-circle text-sm text-green-500"></i>
-                                            <h4 class="title-h4 text-left!">Completed</h4>
+                                            <h5 class="title-h5 text-left!">Completed</h5>
                                         </div>
                                     </p-accordionheader>
-                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden' } }">
+                                    <p-accordioncontent [pt]="{ root: { class: 'overflow-hidden bg-transparent!' } }">
                                         <div class="flex flex-col">
                                             @for (task of completedTasks(); track task.id; let last = $last) {
                                                 <ng-container *ngTemplateOutlet="taskItemCompleted; context: { task: task, isLast: last }"></ng-container>
@@ -249,6 +251,7 @@ interface AiInsight {
                                 </p-accordionpanel>
                             }
                         </p-accordion>
+                        }
                     </div>
                 </div>
 
@@ -284,14 +287,14 @@ interface AiInsight {
                                 <input
                                     type="text"
                                     [ngModel]="aiSearchQuery()"
-                                    (ngModelChange)="aiSearchQuery.set($event)"
+                                    (ngModelChange)="aiSearchQuery.set($event); aiInsightsPage.set(0)"
                                     placeholder="Search AI insights, risks, or optimizations..."
                                     class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700 dark:placeholder:text-surface-300"
                                 />
                             </div>
 
-                            <div class="flex flex-col gap-3 max-h-[420px] overflow-y-auto">
-                                @for (insight of filteredAiInsights(); track insight.id) {
+                            <div class="flex flex-col gap-3">
+                                @for (insight of paginatedAiInsights(); track insight.id) {
                                     <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start">
                                         <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
                                         <div class="flex flex-col gap-2 flex-1 min-w-0">
@@ -307,6 +310,15 @@ interface AiInsight {
                                     </div>
                                 }
                             </div>
+
+                            <p-paginator
+                                [rows]="aiInsightsPerPage"
+                                [totalRecords]="filteredAiInsights().length"
+                                [first]="aiInsightsFirst()"
+                                (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
+                                styleClass="border-t border-white/50 dark:border-surface-700/50 mt-2"
+                                [pt]="{ root: { class: 'bg-transparent!' } }"
+                            />
                         </div>
                     }
                 </div>
@@ -324,7 +336,7 @@ interface AiInsight {
                                 value="All Files"
                                 severity="secondary"
                                 styleClass="cursor-pointer transition-colors px-2 py-1"
-                                [class]="activeDocFilter() === 'All Files' ? 'doc-filter-active' : ''"
+                                [class]="activeDocFilter() === 'All Files' ? 'tag-filter-active' : ''"
                                 (click)="activeDocFilter.set('All Files')"
                             />
                             @for (type of docFileTypes(); track type) {
@@ -332,7 +344,7 @@ interface AiInsight {
                                     [value]="type"
                                     severity="secondary"
                                     styleClass="cursor-pointer transition-colors px-2 py-1"
-                                    [class]="activeDocFilter() === type ? 'doc-filter-active' : ''"
+                                    [class]="activeDocFilter() === type ? 'tag-filter-active' : ''"
                                     (click)="activeDocFilter.set(type)"
                                 />
                             }
@@ -340,7 +352,7 @@ interface AiInsight {
                                 value="Other"
                                 severity="secondary"
                                 styleClass="cursor-pointer transition-colors px-2 py-1"
-                                [class]="activeDocFilter() === 'Other' ? 'doc-filter-active' : ''"
+                                [class]="activeDocFilter() === 'Other' ? 'tag-filter-active' : ''"
                                 (click)="activeDocFilter.set('Other')"
                             />
                         </div>
@@ -503,19 +515,6 @@ interface AiInsight {
         </ng-template>
     `,
     styles: `
-        :host ::ng-deep .doc-filter-active.p-tag {
-            background: var(--surface-0);
-            color: var(--primary-900);
-            outline: 1px solid var(--primary-900);
-        }
-
-        :host-context(.app-dark) ::ng-deep .doc-filter-active.p-tag {
-            background: var(--p-surface-800);
-            color: var(--p-surface-0);
-            outline: 1px solid var(--p-surface-400);
-            border-color: var(--p-surface-400);
-        }
-
         :host ::ng-deep .p-datatable th:first-child,
         :host ::ng-deep .p-datatable td:first-child {
             padding-left: 0;
@@ -562,6 +561,7 @@ export class Opportunity implements OnInit {
 
     // ─── Activity ───
     isActivityExpanded = signal(true);
+    isTasksExpanded = signal(true);
 
     // ─── AI Analysis ───
     isAiCardExpanded = signal(false);
@@ -588,6 +588,14 @@ export class Opportunity implements OnInit {
             insight.title.toLowerCase().includes(query) ||
             insight.description.toLowerCase().includes(query)
         );
+    });
+
+    aiInsightsPerPage = 4;
+    aiInsightsPage = signal(0);
+    aiInsightsFirst = computed(() => this.aiInsightsPage() * this.aiInsightsPerPage);
+    paginatedAiInsights = computed(() => {
+        const insights = this.filteredAiInsights();
+        return insights.slice(this.aiInsightsFirst(), this.aiInsightsFirst() + this.aiInsightsPerPage);
     });
 
     // ─── Tasks ───

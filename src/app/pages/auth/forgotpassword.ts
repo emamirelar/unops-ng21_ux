@@ -24,7 +24,7 @@ import { InputTextModule } from 'primeng/inputtext';
                                 <label for="forgot-email" class="sr-only">Email</label>
                                 <input id="forgot-email" pInputText type="text" [formControl]="emailControl" class="w-full mt-7" placeholder="Email" />
                                 <div class="flex items-center gap-4 mt-8">
-                                    <button type="submit" class="body-button border border-surface-200 dark:border-surface-800 bg-transparent hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-950 dark:text-surface-0 flex-1">Cancel</button>
+                                    <button type="submit" class="body-button border border-surface-200 dark:border-surface-800 bg-transparent hover:bg-emphasis text-surface-950 dark:text-surface-0 flex-1">Cancel</button>
                                     <button type="submit" class="body-button flex-1">Submit</button>
                                 </div>
                             </form>

@@ -9,34 +9,6 @@
         gap: 1rem;
     }
 
-    .breadcrumb-back {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5625rem;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        color: var(--text-color);
-        border-radius: var(--border-radius);
-        transition: background-color var(--transition-duration);
-
-        &:hover {
-            background: var(--surface-hover);
-        }
-
-        i {
-            font-size: var(--font-size-sm);
-        }
-    }
-
-    .breadcrumb-divider {
-        width: 1px;
-        align-self: stretch;
-        height: 1.5rem;
-        border-left: 1px solid var(--surface-border);
-    }
-
     ol {
         display: flex;
         align-items: center;

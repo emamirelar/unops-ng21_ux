@@ -185,10 +185,10 @@ interface RecommendedProduct {
                                     <div class="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                                         <div class="flex-1 text-surface-500 dark:text-surface-400 text-base sm:text-lg font-medium leading-6 sm:leading-7">{{ product.name }}</div>
                                         <div class="flex justify-start items-center gap-2 ml-auto">
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
+                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
                                                 <i class="pi pi-heart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
                                             </div>
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
+                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
                                                 <i class="pi pi-shopping-cart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
                                             </div>
                                         </div>

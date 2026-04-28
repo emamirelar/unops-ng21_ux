@@ -48,7 +48,7 @@ enum BlockView {
                         <button
                             (click)="copyCode($event)"
                             [disabled]="codeCopyLoading()"
-                            class="relative w-10 h-10 border border-surface-200 dark:border-surface-700 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 dark:focus-visible:ring-offset-surface-900 cursor-pointer disabled:cursor-wait"
+                            class="relative w-10 h-10 border border-surface-200 dark:border-surface-700 rounded-full hover:bg-emphasis transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 dark:focus-visible:ring-offset-surface-900 cursor-pointer disabled:cursor-wait"
                         >
                             <!-- Loading Spinner -->
                             <span [ngClass]="['absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 leading-none', codeCopyLoading() ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-50 -z-2']">

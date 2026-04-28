@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 
             <div class="mb-14 mt-12 lg:mt-14 flex items-center gap-6 justify-center">
                 <div (click)="isYearly = false" class="cursor-pointer text-surface-900 dark:text-surface-0 text-xl">Monthly</div>
-                <button (click)="isYearly = !isYearly" class="w-18 h-9 rounded-full relative bg-surface-100 hover:bg-surface-50 dark:bg-surface-900 dark:hover:bg-surface-800 border border-surface-200 dark:border-surface-800 transition-all">
+                <button (click)="isYearly = !isYearly" class="w-18 h-9 rounded-full relative bg-surface-100 hover:bg-emphasis dark:bg-surface-900 border border-surface-200 dark:border-surface-800 transition-all">
                     <span class="w-7 h-7 rounded-full bg-primary-500 absolute top-[0.2rem] transition-all ease-in-out duration-200" [ngClass]="isYearly ? 'left-[calc(100%-2rem)]' : ' left-1'"></span>
                 </button>
                 <div (click)="isYearly = true" class="cursor-pointer text-surface-900 dark:text-surface-0 text-xl">Yearly</div>

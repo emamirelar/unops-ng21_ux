@@ -56,7 +56,7 @@ import { filter } from 'rxjs';
                         <div class="flex-1 hidden md:flex items-center justify-end gap-4">
                             <a
                                 routerLink="/auth/login"
-                                class="flex items-center justify-center w-24 rounded-lg leading-normal font-medium py-2 border border-surface-200 dark:border-surface-800 text-surface-900 dark:text-surface-0 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+                                class="flex items-center justify-center w-24 rounded-lg leading-normal font-medium py-2 border border-surface-200 dark:border-surface-800 text-surface-900 dark:text-surface-0 hover:bg-emphasis transition-all"
                             >
                                 Login
                             </a>
@@ -72,7 +72,7 @@ import { filter } from 'rxjs';
                             (click)="openMobileMenu = !openMobileMenu"
                             [attr.aria-expanded]="openMobileMenu"
                             aria-label="Toggle navigation menu"
-                            class="flex md:hidden items-center justify-center rounded-lg text-surface-950 dark:text-surface-0 w-11 h-11 border border-surface-200 dark:border-surface-800 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+                            class="flex md:hidden items-center justify-center rounded-lg text-surface-950 dark:text-surface-0 w-11 h-11 border border-surface-200 dark:border-surface-800 hover:bg-emphasis transition-all"
                         >
                             <i class="leading-none" [ngClass]="openMobileMenu ? 'pi pi-times' : 'pi pi-bars'"></i>
                         </button>
@@ -97,7 +97,7 @@ import { filter } from 'rxjs';
                             <div class="flex flex-col items-center gap-4">
                                 <a
                                     routerLink="/auth/login"
-                                    class="flex items-center justify-center w-full rounded-lg leading-normal font-medium py-2 border border-surface-200 dark:border-surface-800 text-surface-900 dark:text-surface-0 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+                                    class="flex items-center justify-center w-full rounded-lg leading-normal font-medium py-2 border border-surface-200 dark:border-surface-800 text-surface-900 dark:text-surface-0 hover:bg-emphasis transition-all"
                                 >
                                     Login
                                 </a>

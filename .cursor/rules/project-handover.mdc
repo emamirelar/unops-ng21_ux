@@ -284,3 +284,7 @@ When building a new feature page (e.g. partners, opportunity):
 ## Consistency Principle
 
 When making a change to a repeating UI pattern (stat card, tag style, icon, table column, badge), **apply the same change to all similar instances** across the codebase. Do not fix one instance and leave others inconsistent.
+
+## Recent Design-System Changes
+
+- 2026-04-28: Centralized tag/chip styling by adding global `tag.root` / `tag.label` overrides in `projects/unops-ux/src/lib/theme/brand-theme.ts`, introducing `projects/unops-ux/src/assets/_tags.scss` (`.tag-filter-active`, `.tag-status-*`, `.tag-approval-*`), importing it from `projects/unops-ux/src/assets/layout.scss`, and migrating app usages from local `::ng-deep`/Tailwind class strings (`agreements.ts`, `opportunity.ts`, `partner.service.ts`, and dashboard widgets).

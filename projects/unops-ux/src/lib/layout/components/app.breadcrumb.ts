@@ -1,5 +1,4 @@
-import { LayoutService } from '../layout.service';
-import { Component, computed, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterModule } from '@angular/router';
 
@@ -14,25 +13,26 @@ interface Breadcrumb {
     selector: '[app-breadcrumb]',
     imports: [CommonModule, RouterModule],
     template: `<nav class="layout-breadcrumb" aria-label="Breadcrumb">
-        <button type="button" class="breadcrumb-back" [attr.aria-label]="sidebarCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'" (click)="toggleSidebar()">
-            <i [class]="sidebarCollapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
-        </button>
-        <span class="breadcrumb-divider"></span>
         <ol>
-            <ng-template ngFor let-item let-last="last" [ngForOf]="breadcrumbs$ | async">
-                <li class="text-sm font-medium text-deepsea-500 dark:text-surface-0">{{ item.label }}</li>
-                <li *ngIf="!last" class="text-sm font-medium text-deepsea-500 dark:text-surface-0">/</li>
-            </ng-template>
+            @for (item of breadcrumbs$ | async; track item.url; let last = $last) {
+                <li class="text-sm font-medium text-surface-700 dark:text-surface-100">
+                    @if (!last && item.url) {
+                        <a [routerLink]="item.url" class="text-surface-700 dark:text-surface-100 hover:text-surface-950 dark:hover:text-surface-0 no-underline hover:underline cursor-pointer">{{ item.label }}</a>
+                    } @else {
+                        {{ item.label }}
+                    }
+                </li>
+                @if (!last) {
+                    <li class="text-sm font-medium text-surface-400 dark:text-surface-400">/</li>
+                }
+            }
         </ol>
     </nav> `
 })
 export class AppBreadcrumb {
-    private readonly layoutService = inject(LayoutService);
     private readonly _breadcrumbs$ = new BehaviorSubject<Breadcrumb[]>([]);
 
     readonly breadcrumbs$ = this._breadcrumbs$.asObservable();
-
-    sidebarCollapsed = computed(() => this.layoutService.isCompact());
 
     constructor(private router: Router) {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
@@ -59,10 +59,5 @@ export class AppBreadcrumb {
         if (route.firstChild) {
             this.addBreadcrumb(route.firstChild, routeUrl, breadcrumbs);
         }
-    }
-
-    toggleSidebar() {
-        const currentMode = this.layoutService.layoutConfig().menuMode;
-        this.layoutService.changeMenuMode(currentMode === 'compact' ? 'static' : 'compact');
     }
 }

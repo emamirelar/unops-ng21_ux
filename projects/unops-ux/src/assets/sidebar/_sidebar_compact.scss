@@ -23,19 +23,8 @@
             overflow: visible;
             z-index: 999;
 
-            .logo {
-                margin: 0;
-                justify-content: center;
-                padding: 1rem 0.5rem;
-            }
-
-            .logo-image {
-                width: 2rem;
-                margin-right: 0;
-            }
-
-            .app-name {
-                display: none;
+            .sidebar-header {
+                padding: 0.75rem 0.5rem;
             }
 
             .layout-menu-container {
@@ -67,13 +56,13 @@
                 }
 
                 > a .layout-menuitem-icon {
-                    color: var(--color-ocean-300);
+                    color: var(--p-primary-500);
                 }
             }
 
             li.route-active-within {
                 > a .layout-menuitem-icon {
-                    color: var(--color-ocean-300);
+                    color: var(--p-primary-500);
                 }
             }
 
@@ -100,7 +89,7 @@
                     position: relative;
 
                     .layout-submenu-toggler {
-                        color: var(--color-ocean-300);
+                        color: var(--p-primary-500);
                         position: absolute;
                         right: 0.25rem;
                         opacity: 0.5;

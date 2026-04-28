@@ -1,3 +1,5 @@
+@use '_sass_variables' as *;
+
 html {
     height: 100%;
     font-size: 16px;
@@ -14,6 +16,16 @@ body {
     min-height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+@media screen and (min-width: $breakpoint) {
+    :root:not(.app-dark) body {
+        background: linear-gradient(355deg, var(--p-primary-50) 5%, var(--p-surface-50) 40%, var(--p-surface-0) 65%);
+    }
+
+    .app-dark body {
+        background: linear-gradient(355deg, var(--p-surface-800) 5%, var(--p-surface-950) 75%);
+    }
 }
 
 a {

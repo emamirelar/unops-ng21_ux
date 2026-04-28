@@ -30,16 +30,6 @@ import { TagModule } from 'primeng/tag';
     },
     styles: `
         :host ::ng-deep {
-            .p-tag {
-                padding: 0.25rem 0.5rem;
-
-                .p-tag-label {
-                    line-height: 1.5;
-                    font-weight: 600;
-                    font-size: var(--text-xs) !important;
-                }
-            }
-
             .p-select {
                 padding-right: 0.375rem;
                 border-radius: 0.5rem;

@@ -3,7 +3,6 @@ import { Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, Vie
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subject, takeUntil } from 'rxjs';
 import { LayoutService } from '../layout.service';
-import { SIDEBAR_LOGO } from '../tokens';
 import { AppMenu } from './app.menu';
 import { AppTopbar } from './app.topbar';
 
@@ -13,13 +12,6 @@ const BREAKPOINT = 992;
     selector: '[app-sidebar]',
     imports: [CommonModule, AppMenu, RouterModule, AppTopbar],
     template: `<nav class="layout-sidebar" aria-label="Main navigation" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-        <div class="sidebar-header">
-            <a class="logo" [routerLink]="['/']">
-                <img class="logo-image" [src]="sidebarLogo()" [attr.alt]="logoConfig.alt" />
-            </a>
-            <button class="layout-sidebar-anchor z-2" type="button" aria-label="Pin sidebar" (click)="onAnchorToggle()"></button>
-        </div>
-
         <div #menuContainer class="layout-menu-container" (scroll)="onMenuScroll()">
             <div app-menu></div>
         </div>
@@ -28,10 +20,6 @@ const BREAKPOINT = 992;
 })
 export class AppSidebar implements OnInit, OnDestroy {
     layoutService = inject(LayoutService);
-
-    readonly logoConfig = inject(SIDEBAR_LOGO);
-
-    sidebarLogo = computed(() => (this.layoutService.isCompact() ? this.logoConfig.compact : this.logoConfig.expanded));
 
     router = inject(Router);
 
@@ -191,7 +179,7 @@ export class AppSidebar implements OnInit, OnDestroy {
     }
 
     onMouseEnter() {
-        if (!this.layoutService.layoutState().anchored) {
+        if (!this.layoutService.layoutState().sidebarPinned) {
             if (this.timeout) {
                 clearTimeout(this.timeout);
                 this.timeout = null;
@@ -204,7 +192,7 @@ export class AppSidebar implements OnInit, OnDestroy {
     }
 
     onMouseLeave() {
-        if (!this.layoutService.layoutState().anchored && !this.timeout) {
+        if (!this.layoutService.layoutState().sidebarPinned && !this.timeout) {
             this.timeout = setTimeout(() => {
                 this.layoutService.layoutState.update((state) => ({
                     ...state,

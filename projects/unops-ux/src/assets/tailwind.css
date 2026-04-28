@@ -234,6 +234,8 @@
   --color-cherry-900: #3d0c29;
   --color-cherry-950: #26081a;
 
+  --radius-circle: 50%;
+
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;

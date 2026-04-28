@@ -1,0 +1,44 @@
+---
+description: Cards with overflow content must paginate using PrimeNG p-paginator — never scroll, never use custom pagination
+globs: "**/*.ts"
+alwaysApply: true
+---
+
+# Card Pagination: No Scroll, Consistent Paginator
+
+Cards that contain a list of items exceeding visible space **must paginate** — never scroll. Every card paginator must use PrimeNG's `<p-paginator>` component. No custom pagination controls (e.g. "1 / 2" text with chevron buttons).
+
+## Required pattern
+
+```typescript
+// Signals
+itemPage = signal(0);
+itemsPerPage = 3;
+itemFirst = computed(() => this.itemPage() * this.itemsPerPage);
+paginatedItems = computed(() =>
+  this.allItems.slice(this.itemFirst(), this.itemFirst() + this.itemsPerPage)
+);
+```
+
+```html
+<!-- Render paginated slice -->
+@for (item of paginatedItems(); track item.id) { ... }
+
+<!-- Paginator at card bottom -->
+<p-paginator
+    [rows]="itemsPerPage"
+    [totalRecords]="allItems.length"
+    [first]="itemFirst()"
+    (onPageChange)="itemPage.set($event.page ?? 0)"
+    styleClass="border-t border-surface-200 dark:border-surface-700"
+/>
+```
+
+## Rules
+
+1. **Never scroll inside a card.** If items exceed the visible count, paginate.
+2. **Always use `<p-paginator>`** from `primeng/paginator` (`PaginatorModule` in imports).
+3. **Never build custom pagination** — no manual "X / Y" counters, no chevron `p-button` pairs, no custom next/prev logic.
+4. **`styleClass` border** uses `border-t border-surface-200 dark:border-surface-700` to visually separate the paginator from card content.
+5. **Signal pattern** must follow `signal(0)` for page index + `computed` for `first` offset and paginated slice.
+6. **Apply consistently** across all feature pages (`apps/`, `pages/`) — if you change the paginator pattern, update every instance.

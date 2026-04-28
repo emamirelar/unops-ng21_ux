@@ -1,7 +1,7 @@
 @use '../_sass_variables' as *;
 
 .layout-sidebar {
-    border-right: var(--d-sidebar-border);
+   
     background: linear-gradient(355deg, var(--color-blue-400, #26a2d8) 7.69%, var(--color-midnight-850, #001E31) 89.42%);
     height: 100%;
     z-index: 10;
@@ -25,7 +25,7 @@
         li {
             &.active-menuitem {
                 > a {
-                    color: var(--color-ocean-400);
+                    color: var(--p-primary-color);
                 }
             }
 

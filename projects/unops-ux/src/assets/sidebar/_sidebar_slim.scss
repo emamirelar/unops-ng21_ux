@@ -22,16 +22,6 @@
             width: 14rem;
             overflow: visible;
             z-index: 999;
-            .logo {
-                justify-content: center;
-            }
-            .logo-image {
-                margin-right: 0;
-            }
-
-            .app-name {
-                display: none;
-            }
             .layout-menu-container {
                 overflow: auto;
                 padding: 0.75rem;
@@ -113,7 +103,8 @@
                         margin: 0.25rem 0;
 
                         &.active-route {
-                            color: var(--color-ocean-400);
+                            color: var(--p-primary-color);
+                            background: transparent;
                         }
                         &:hover {
                             background-color: var(--popover-item-hover-background-color);

@@ -19,6 +19,7 @@ interface LayoutState {
     mobileMenuActive: boolean;
     searchBarActive: boolean;
     sidebarExpanded: boolean;
+    sidebarPinned: boolean;
     menuHoverActive: boolean;
     activePath: string | null;
     anchored: boolean;
@@ -51,6 +52,7 @@ export class LayoutService {
         mobileMenuActive: false,
         searchBarActive: false,
         sidebarExpanded: false,
+        sidebarPinned: true,
         menuHoverActive: false,
         activePath: null,
         anchored: false
@@ -75,6 +77,10 @@ export class LayoutService {
     isReveal = computed(() => this.layoutConfig().menuMode === 'reveal');
 
     isDrawer = computed(() => this.layoutConfig().menuMode === 'drawer');
+
+    isSidebarPinned = computed(() => this.layoutState().sidebarPinned);
+
+    isRail = computed(() => !this.layoutState().sidebarPinned && this.isStatic());
 
     hasOverlaySubmenu = computed(() => this.isSlim() || this.isCompact() || this.isHorizontal());
 
@@ -176,9 +182,17 @@ export class LayoutService {
         }
     }
 
+    toggleSidebarPin() {
+        this.layoutState.update((prev) => ({
+            ...prev,
+            sidebarPinned: !prev.sidebarPinned,
+            sidebarExpanded: false
+        }));
+    }
+
     changeMenuMode(mode: string) {
         this.layoutConfig.update((prev) => ({ ...prev, menuMode: mode }));
-        this.layoutState.update((prev) => ({ ...prev, staticMenuInactive: false, overlayMenuActive: false, mobileMenuActive: false, sidebarExpanded: false, menuHoverActive: false, anchored: false }));
+        this.layoutState.update((prev) => ({ ...prev, staticMenuInactive: false, overlayMenuActive: false, mobileMenuActive: false, sidebarExpanded: false, sidebarPinned: true, menuHoverActive: false, anchored: false }));
 
         if (this.isDesktop()) {
             this.layoutState.update((prev) => ({ ...prev, activePath: this.hasOverlaySubmenu() ? null : this.router.url }));

@@ -1,10 +1,16 @@
 import { Partner } from '@emamirelar/ux';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { DrawerModule } from 'primeng/drawer';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
+import { TextareaModule } from 'primeng/textarea';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { getPartnerApprovalClass, getPartnerStatusClass, PartnerService } from './partner.service';
 
 const COUNTRY_TO_FLAG: Record<string, string> = {
@@ -30,7 +36,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
 @Component({
     selector: 'app-partner-detail',
-    imports: [CommonModule, ButtonModule, TagModule, DividerModule, RouterModule],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (partner(); as p) {
@@ -39,13 +45,14 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                 <!-- Back + Actions Bar -->
                 <div class="flex items-center justify-between animate-fade-in">
                     <p-button
+                        icon="pi pi-chevron-left"
                         label="Back to list"
                         [text]="true"
                         severity="secondary"
                         routerLink="/apps/partners"
                     />
                     <div class="flex items-center gap-2">
-                        <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" />
+                        <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" (onClick)="openEditDrawer()" />
                         <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" />
                     </div>
                 </div>
@@ -288,6 +295,92 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                     </div>
                 </div>
             </div>
+
+            <!-- Edit Partner Drawer -->
+            <p-drawer [(visible)]="showEditDrawer" position="right" styleClass="w-full! max-w-[480px]!" appendTo="body">
+                <ng-template #header>
+                    <h4 class="title-h4 text-left!">Edit Partner</h4>
+                </ng-template>
+
+                <div class="flex flex-col h-full">
+                    <div class="flex-1 flex flex-col gap-6 overflow-y-auto">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Full Name</label>
+                            <input pInputText [(ngModel)]="editForm.name" class="w-full" />
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Short Name</label>
+                            <input pInputText [(ngModel)]="editForm.shortName" class="w-full" />
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Description</label>
+                            <textarea pTextarea [(ngModel)]="editForm.partnerDescription" [rows]="3" class="w-full"></textarea>
+                        </div>
+
+                        <p-divider styleClass="my-0!" />
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Category</label>
+                                <p-select [(ngModel)]="editForm.partnerCategoryName" [options]="categoryOptions" placeholder="Select category" styleClass="w-full" />
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Group</label>
+                                <input pInputText [(ngModel)]="editForm.partnerGroupName" class="w-full" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Status</label>
+                                <p-select [(ngModel)]="editForm.status" [options]="statusOptions" placeholder="Select status" styleClass="w-full" />
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Approval Status</label>
+                                <p-select [(ngModel)]="editForm.partnerApprovalStatus" [options]="approvalOptions" placeholder="Select approval" styleClass="w-full" />
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <p-toggleswitch [(ngModel)]="editForm.keyGlobalPartner" />
+                            <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Key Global Partner</label>
+                        </div>
+
+                        <p-divider styleClass="my-0!" />
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Focal Point</label>
+                            <input pInputText [(ngModel)]="editForm.partnerFocalPointName" class="w-full" />
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Liaison Office</label>
+                            <input pInputText [(ngModel)]="editForm.liaisonOfficeName" class="w-full" />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Country</label>
+                                <input pInputText [(ngModel)]="editForm.address1Country" class="w-full" />
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">City</label>
+                                <input pInputText [(ngModel)]="editForm.address1City" class="w-full" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 py-6 pt-4 border-t border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900">
+                        <p-button label="Save Changes" severity="primary" styleClass="w-full cursor-pointer" (onClick)="savePartner()" />
+                        <p-button label="Cancel" severity="secondary" [outlined]="true" styleClass="w-full cursor-pointer" (onClick)="showEditDrawer = false" />
+                    </div>
+                </div>
+            </p-drawer>
         } @else {
             <div class="flex flex-col items-center justify-center gap-4 py-20">
                 <i class="pi pi-info-circle text-4xl text-surface-400"></i>
@@ -310,6 +403,18 @@ export class PartnerDetail implements OnInit {
 
     partnerId = signal<string | null>(null);
 
+    showEditDrawer = false;
+    editForm: Partial<Partner> & { keyGlobalPartner: boolean } = {
+        name: '', shortName: '', partnerDescription: '', partnerCategoryName: '',
+        partnerGroupName: '', status: '', partnerApprovalStatus: '',
+        keyGlobalPartner: false, partnerFocalPointName: '', liaisonOfficeName: '',
+        address1Country: '', address1City: ''
+    };
+
+    categoryOptions = ['Government', 'NGO', 'UN Agency', 'Multilateral', 'Private Sector', 'Academic'];
+    statusOptions = ['Active', 'Draft', 'Closed', 'Archived'];
+    approvalOptions = ['Approved', 'NotApproved'];
+
     flagUrl = computed(() => {
         const p = this.partner();
         if (!p) return 'flags/globe.svg';
@@ -326,4 +431,29 @@ export class PartnerDetail implements OnInit {
 
     getStatusClass = getPartnerStatusClass;
     getApprovalClass = getPartnerApprovalClass;
+
+    openEditDrawer() {
+        const p = this.partner();
+        if (!p) return;
+        this.editForm = {
+            name: p.name ?? '',
+            shortName: p.shortName ?? '',
+            partnerDescription: p.partnerDescription ?? '',
+            partnerCategoryName: p.partnerCategoryName ?? '',
+            partnerGroupName: p.partnerGroupName ?? '',
+            status: p.status ?? '',
+            partnerApprovalStatus: p.partnerApprovalStatus ?? '',
+            keyGlobalPartner: p.keyGlobalPartner ?? false,
+            partnerFocalPointName: p.partnerFocalPointName ?? '',
+            liaisonOfficeName: p.liaisonOfficeName ?? '',
+            address1Country: p.address1Country ?? '',
+            address1City: p.address1City ?? ''
+        };
+        this.showEditDrawer = true;
+    }
+
+    savePartner() {
+        this.partnerService.updatePartner(this.partnerId()!, this.editForm);
+        this.showEditDrawer = false;
+    }
 }

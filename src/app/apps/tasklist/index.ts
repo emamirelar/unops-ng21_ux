@@ -50,7 +50,7 @@ interface Task {
                         <button
                             (click)="activeFilter.set(filter.key)"
                             class="px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer shrink-0"
-                            [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                            [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'"
                         >
                             <i [class]="filter.icon + ' text-sm'"></i>
                             <span class="text-sm font-medium">{{ filter.label }}</span>
@@ -78,7 +78,7 @@ interface Task {
                             <button
                                 (click)="activeFilter.set(filter.key)"
                                 class="w-full px-4 py-2 rounded-lg flex items-center gap-3 transition-colors cursor-pointer"
-                                [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                                [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'"
                             >
                                 <i [class]="filter.icon + ' text-base'"></i>
                                 <span class="flex-1 text-left text-base font-medium">{{ filter.fullLabel }}</span>
@@ -179,7 +179,7 @@ interface Task {
                     </p-accordion>
 
                     <!-- Add New Task Button -->
-                    <div class="px-4 lg:px-14 py-3 flex items-center gap-3 cursor-pointer hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors" (click)="openNewTaskDrawer()">
+                    <div class="px-4 lg:px-14 py-3 flex items-center gap-3 cursor-pointer hover:bg-emphasis transition-colors" (click)="openNewTaskDrawer()">
                         <i class="pi pi-plus text-xs text-surface-500 dark:text-surface-400"></i>
                         <span class="text-surface-500 dark:text-surface-400 text-base font-medium">Add New Task</span>
                     </div>

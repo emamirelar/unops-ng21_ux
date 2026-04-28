@@ -24,42 +24,14 @@
             z-index: 999;
 
             .sidebar-header {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 1rem;
                 padding: 1rem 0.5rem;
-                .logo {
-                    width: 100%;
-                    border: none;
-                    padding: 0;
-                    display: flex;
-                    justify-content: flex-end;
-                    margin: 0;
 
-                    .logo-image {
-                        margin-right: 0.875rem;
-                    }
-
-                    .app-name {
-                        display: none;
-                    }
+                .sidebar-menu-toggle {
+                    display: none;
                 }
 
                 .layout-sidebar-anchor {
                     display: none;
-                    flex-shrink: 0;
-                    width: 1.15rem;
-                    height: 1.15rem;
-                    border-radius: 50%;
-                    border: var(--d-menu-separator-border);
-                    border-width: 2px;
-                    background-color: transparent;
-                    outline: none;
-                    transition:
-                        background-color var(--transition-duration),
-                        transform 0.3s;
                 }
             }
             .layout-menu-container {
@@ -121,21 +93,7 @@
                 }
 
                 .sidebar-header {
-                    justify-content: space-between;
                     padding: 1rem;
-                    .logo {
-                        width: 100%;
-                        border: none;
-                        justify-content: flex-start;
-
-                        .logo-image {
-                            margin-right: 0.5rem;
-                        }
-
-                        .app-name {
-                            display: inline-block;
-                        }
-                    }
 
                     .layout-sidebar-anchor {
                         display: flex;

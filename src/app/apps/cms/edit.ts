@@ -45,7 +45,7 @@ interface StatusOption {
                                 </div>
                             } @else {
                                 <div
-                                    class="w-full h-full bg-surface-100 dark:bg-surface-800 flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
+                                    class="w-full h-full bg-surface-100 dark:bg-surface-800 flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-emphasis transition-colors"
                                     (click)="triggerFileUpload()"
                                 >
                                     <div class="w-12 h-12 rounded-full bg-surface-200 dark:bg-surface-600 flex items-center justify-center">

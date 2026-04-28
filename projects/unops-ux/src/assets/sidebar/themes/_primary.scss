@@ -2,15 +2,15 @@
     --d-sidebar-bg-color: var(--color-deepsea-500);
     --d-sidebar-bg-color-alt: var(--color-deepsea-600);
     --d-sidebar-border: 1px solid var(--surface-border);
-    --d-app-name-color: var(--p-surface-0);
-    --d-menu-separator-border: 1px solid rgba(36, 204, 255, 0.619);
-    --d-menuitem-root-text-color: var(--p-surface-0);
-    --d-menuitem-text-color: var(--p-surface-0);
-    --d-menuitem-hover-bg: rgba(58, 183, 255, 0.376);
-    --d-menuitem-active-bg: rgba(1, 74, 116, 0.3);
-    --d-menuitem-active-text-color: var(--p-surface-0);
-    --d-menuitem-active-route-text-color: var(--p-surface-0);
-    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
+    --d-app-name-color: var(--p-surface-800);
+    --d-menu-separator-border: 1px solid var(--surface-border);
+    --d-menuitem-root-text-color: var(--p-surface-500);
+    --d-menuitem-text-color: var(--p-surface-700);
+    --d-menuitem-hover-bg: rgba(106, 208, 252, 0.5);
+    --d-menuitem-active-bg: rgba(106, 208, 252, 0.5);
+    --d-menuitem-active-text-color: var(--p-surface-900);
+    --d-menuitem-active-route-text-color: var(--p-surface-900);
+    --d-menuitem-focus-shadow: 0 0 0 0.2rem var(--p-primary-100);
     --d-sidebar-border: 1px solid transparent;
 }
 
@@ -22,15 +22,17 @@
     --d-menu-separator-border: 1px solid rgba(255, 255, 255, 0.15);
     --d-menuitem-root-text-color: var(--p-surface-0);
     --d-menuitem-text-color: var(--p-surface-50);
-    --d-menuitem-hover-bg: rgba(0, 16, 41, 0.376);
-    --d-menuitem-active-bg: rgba(0, 16, 41, 0.7);
+    --d-menuitem-hover-bg: rgba(14, 114, 157, 0.5);
+    --d-menuitem-active-bg: rgba(14, 114, 157, 0.5);
     --d-menuitem-active-text-color: var(--p-surface-0);
     --d-menuitem-active-route-text-color: var(--p-surface-0);
     --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
 }
 
-:root .layout-sidebar-primary .layout-sidebar,
-:root .layout-sidebar-dark .layout-sidebar,
-:root .layout-sidebar-light .layout-sidebar {
-    background: linear-gradient(355deg, var(--color-blue-600, #0988be) 7.69%, var(--color-midnight-850, #001E31) 89.42%);
+@media screen and (min-width: 992px) {
+    :root .layout-sidebar-primary .layout-sidebar,
+    :root .layout-sidebar-dark .layout-sidebar,
+    :root .layout-sidebar-light .layout-sidebar {
+        background: transparent;
+    }
 }

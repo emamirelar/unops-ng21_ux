@@ -1,6 +1,9 @@
+@use '_sass_variables' as *;
+
 .layout-wrapper {
     height: 100vh;
     display: flex;
+    flex-direction: column;
     transition: all 0.2s ease;
 
     > app-configurator,
@@ -10,15 +13,25 @@
         width: 0;
         overflow: visible;
     }
+
 }
+
+.layout-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
 .layout-content-wrapper {
     flex: 1;
     min-width: 0;
-    height: 100%;
+    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 9;
-    transition: all 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .layout-content-wrapper-inside {
     width: 100%;

@@ -14,15 +14,17 @@ import { AppTopbar } from './app.topbar';
     selector: 'app-layout',
     imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppConfigurator, AppBreadcrumb, AppFooter, AppSearch, AppRightMenu],
     template: `<div class="layout-wrapper" [ngClass]="containerClass()">
-        <div app-sidebar></div>
-        <div class="layout-content-wrapper">
-            <div class="layout-content-wrapper-inside">
-                <div app-topbar></div>
-                <main class="layout-content">
-                    <div app-breadcrumb></div>
-                    <router-outlet></router-outlet>
-                </main>
-                <div app-footer></div>
+        <div app-topbar></div>
+        <div class="layout-body">
+            <div app-sidebar></div>
+            <div class="layout-content-wrapper">
+                <div class="layout-content-wrapper-inside">
+                    <main class="layout-content">
+                        <div app-breadcrumb></div>
+                        <router-outlet></router-outlet>
+                    </main>
+                    <div app-footer></div>
+                </div>
             </div>
         </div>
         <app-configurator />
@@ -48,7 +50,6 @@ export class AppLayout {
     containerClass = computed(() => {
         const layoutConfig = this.layoutService.layoutConfig();
         const layoutState = this.layoutService.layoutState();
-
         return {
             'layout-overlay': layoutConfig.menuMode === 'overlay',
             'layout-static': layoutConfig.menuMode === 'static',
@@ -61,6 +62,7 @@ export class AppLayout {
             'layout-mobile-active': layoutState.mobileMenuActive,
             'layout-static-inactive': layoutState.staticMenuInactive,
             'layout-sidebar-expanded': layoutState.sidebarExpanded,
+            'layout-sidebar-rail': !layoutState.sidebarPinned && layoutConfig.menuMode === 'static',
             'layout-sidebar-anchored': layoutState.anchored,
             [`layout-card-${layoutConfig.cardStyle}`]: true,
             [`layout-sidebar-${layoutConfig.menuTheme}`]: true

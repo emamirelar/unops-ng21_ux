@@ -51,7 +51,7 @@ interface Order {
                         [ngClass]="
                             activeFilter() === 'all'
                                 ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700'
+                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
                         "
                     >
                         All
@@ -62,7 +62,7 @@ interface Order {
                         [ngClass]="
                             activeFilter() === 'ongoing'
                                 ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700'
+                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
                         "
                     >
                         Ongoing Orders
@@ -73,7 +73,7 @@ interface Order {
                         [ngClass]="
                             activeFilter() === 'returns'
                                 ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700'
+                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
                         "
                     >
                         Returns
@@ -84,7 +84,7 @@ interface Order {
                         [ngClass]="
                             activeFilter() === 'cancelled'
                                 ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700'
+                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
                         "
                     >
                         Cancellations
@@ -95,7 +95,7 @@ interface Order {
                         [ngClass]="
                             activeFilter() === 'completed'
                                 ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700'
+                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
                         "
                     >
                         Completed
@@ -113,7 +113,7 @@ interface Order {
             <div class="flex flex-col gap-6">
                 @for (order of filteredOrders(); track order.id) {
                     <div class="rounded-3xl border border-surface-200 dark:border-surface-700 overflow-hidden">
-                        <div class="p-6 xl:p-8 relative cursor-pointer hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors" (click)="toggleOrder(order.id)">
+                        <div class="p-6 xl:p-8 relative cursor-pointer hover:bg-emphasis transition-colors" (click)="toggleOrder(order.id)">
                             <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 xl:gap-6 pr-8">
                                 <div class="flex items-center gap-4 xl:gap-8 w-full xl:w-auto">
                                     <img class="w-12 h-12 rounded-lg shrink-0" [src]="order.image" [alt]="order.product" />

@@ -112,7 +112,18 @@ const brandOverrides = {
                 }
             }
         },
+        paginator: {
+            root: {
+                background: 'transparent'
+            }
+        },
         tag: {
+            root: {
+                padding: '0.25rem 0.5rem'
+            },
+            label: {
+                fontWeight: '600'
+            },
             colorScheme: {
                 light: {
                     secondary: { color: '{surface.800}' },

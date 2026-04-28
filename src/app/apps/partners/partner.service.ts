@@ -2,18 +2,18 @@ import { Injectable, signal } from '@angular/core';
 import { Partner } from '@emamirelar/ux';
 
 const STATUS_CLASSES: Record<string, string> = {
-    Active: '!bg-babygreen-100 !text-babygreen-900 dark:!bg-babygreen-900 dark:!text-babygreen-300',
-    Draft: '!bg-yellow-100 !text-yellow-900 dark:!bg-yellow-900 dark:!text-yellow-300',
-    Closed: '!bg-deepsea-100 !text-deepsea-500 dark:!bg-deepsea-800 dark:!text-deepsea-100',
-    Archived: '!bg-gray-100 !text-gray-700 dark:!bg-gray-900 dark:!text-gray-300'
+    Active: 'tag-status-active',
+    Draft: 'tag-status-draft',
+    Closed: 'tag-status-closed',
+    Archived: 'tag-status-archived'
 };
 
 const APPROVAL_CLASSES: Record<string, string> = {
-    Approved: '!bg-olive-100 !text-olive-700 dark:!bg-olive-900 dark:!text-olive-300',
-    NotApproved: '!bg-red-100 !text-red-800 dark:!bg-red-950 dark:!text-red-300'
+    Approved: 'tag-approval-approved',
+    NotApproved: 'tag-approval-not-approved'
 };
 
-const FALLBACK_CLASS = '!bg-gray-100 !text-gray-700 dark:!bg-gray-900 dark:!text-gray-300';
+const FALLBACK_CLASS = 'tag-status-archived';
 
 export function getPartnerStatusClass(status: string): string {
     return STATUS_CLASSES[status] ?? FALLBACK_CLASS;
@@ -35,6 +35,17 @@ export class PartnerService {
         this.isLoading.set(true);
         this.partnerData.set(MOCK_PARTNERS);
         this.isLoading.set(false);
+    }
+
+    updatePartner(id: string, changes: Partial<Partner>) {
+        const partners = this.partnerData();
+        const idx = partners.findIndex(p => p.id === id);
+        if (idx !== -1) {
+            const updated = { ...partners[idx], ...changes, lastModifiedDate: new Date() };
+            const copy = [...partners];
+            copy[idx] = updated;
+            this.partnerData.set(copy);
+        }
     }
 }
 

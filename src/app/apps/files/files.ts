@@ -202,7 +202,7 @@ interface Document {
                                 class="px-[18px] py-[9px] rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
                                 [ngClass]="{
                                     'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm': activeFilter() === filter,
-                                    'border-surface-200 dark:border-surface-600 text-surface-950 dark:text-surface-0 hover:bg-surface-50 dark:hover:bg-surface-700': activeFilter() !== filter
+                                    'border-surface-200 dark:border-surface-600 text-surface-950 dark:text-surface-0 hover:bg-emphasis': activeFilter() !== filter
                                 }"
                             >
                                 {{ filter }}
@@ -278,7 +278,7 @@ interface Document {
                 <div class="flex flex-col h-full">
                     <div class="flex-1 flex flex-col gap-6 overflow-y-auto">
                         <div class="relative min-h-[180px] h-[180px] rounded-2xl bg-surface-100 dark:bg-surface-800 border border-surface-200 dark:border-surface-600">
-                            <div class="w-full h-full flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors rounded-2xl" (click)="triggerFileUpload()">
+                            <div class="w-full h-full flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-emphasis transition-colors rounded-2xl" (click)="triggerFileUpload()">
                                 <div class="flex items-center justify-center">
                                     <div class="w-12 h-12 rounded-full bg-surface-200 dark:bg-surface-600 flex items-center justify-center">
                                         <i class="pi text-surface-600 dark:text-surface-300 text-2xl" [ngClass]="editForm.type ? getIconByType(editForm.type) : 'pi-upload'"></i>

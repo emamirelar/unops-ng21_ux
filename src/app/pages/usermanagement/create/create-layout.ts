@@ -117,7 +117,7 @@ export class CreateLayout {
         if (this.isActive(route)) {
             return `${baseClass} bg-primary text-surface-0 dark:text-surface-900 shadow-sm`;
         }
-        return `${baseClass} text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700`;
+        return `${baseClass} text-surface-500 dark:text-surface-400 hover:bg-emphasis`;
     }
 
     getMobileMenuButtonClass(route: string): string {
@@ -125,6 +125,6 @@ export class CreateLayout {
         if (this.isActive(route)) {
             return `${baseClass} bg-primary text-surface-0 dark:text-surface-900 shadow-sm`;
         }
-        return `${baseClass} bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700`;
+        return `${baseClass} bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 hover:bg-emphasis`;
     }
 }

@@ -43,7 +43,7 @@ interface MenuItemData {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700'
+                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
                                     ]"
                                     (click)="selectMenuItem(item.label)"
                                 >
@@ -73,7 +73,7 @@ interface MenuItemData {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700'
+                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
                                     ]"
                                     (click)="selectCategory(item.label)"
                                 >
@@ -213,7 +213,7 @@ interface MenuItemData {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700'
+                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
                                     ]"
                                     (click)="selectMenuItem(item.label); showMenuDrawer.set(false)"
                                 >
@@ -243,7 +243,7 @@ interface MenuItemData {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700'
+                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
                                     ]"
                                     (click)="selectCategory(item.label); showMenuDrawer.set(false)"
                                 >

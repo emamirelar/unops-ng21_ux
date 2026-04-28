@@ -375,7 +375,7 @@ interface Size {
                                                 (click)="selectRating(5)"
                                                 [ngClass]="{
                                                     'bg-surface-100 dark:bg-surface-700': selectedRating() === 5,
-                                                    'hover:bg-surface-50 dark:hover:bg-surface-800': selectedRating() !== 5
+                                                    'hover:bg-emphasis': selectedRating() !== 5
                                                 }"
                                             >
                                                 <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
@@ -389,7 +389,7 @@ interface Size {
                                                 (click)="selectRating(4)"
                                                 [ngClass]="{
                                                     'bg-surface-100 dark:bg-surface-700': selectedRating() === 4,
-                                                    'hover:bg-surface-50 dark:hover:bg-surface-800': selectedRating() !== 4
+                                                    'hover:bg-emphasis': selectedRating() !== 4
                                                 }"
                                             >
                                                 <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
@@ -403,7 +403,7 @@ interface Size {
                                                 (click)="selectRating(3)"
                                                 [ngClass]="{
                                                     'bg-surface-100 dark:bg-surface-700': selectedRating() === 3,
-                                                    'hover:bg-surface-50 dark:hover:bg-surface-800': selectedRating() !== 3
+                                                    'hover:bg-emphasis': selectedRating() !== 3
                                                 }"
                                             >
                                                 <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
@@ -417,7 +417,7 @@ interface Size {
                                                 (click)="selectRating(2)"
                                                 [ngClass]="{
                                                     'bg-surface-100 dark:bg-surface-700': selectedRating() === 2,
-                                                    'hover:bg-surface-50 dark:hover:bg-surface-800': selectedRating() !== 2
+                                                    'hover:bg-emphasis': selectedRating() !== 2
                                                 }"
                                             >
                                                 <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
@@ -431,7 +431,7 @@ interface Size {
                                                 (click)="selectRating(1)"
                                                 [ngClass]="{
                                                     'bg-surface-100 dark:bg-surface-700': selectedRating() === 1,
-                                                    'hover:bg-surface-50 dark:hover:bg-surface-800': selectedRating() !== 1
+                                                    'hover:bg-emphasis': selectedRating() !== 1
                                                 }"
                                             >
                                                 <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
@@ -445,7 +445,7 @@ interface Size {
                                 <div class="w-full">
                                     @if (selectedRating() !== 'all') {
                                         <div class="px-6 pt-4 pb-2">
-                                            <p-button label="Show All Reviews" [text]="true" (onClick)="selectRating('all')" styleClass="text-primary-600 dark:text-primary-400 hover:bg-surface-100 dark:hover:bg-surface-800" />
+                                            <p-button label="Show All Reviews" [text]="true" (onClick)="selectRating('all')" styleClass="text-primary-600 dark:text-primary-400 hover:bg-emphasis" />
                                         </div>
                                     }
 

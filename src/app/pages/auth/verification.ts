@@ -26,7 +26,7 @@ import { InputOtpModule } from 'primeng/inputotp';
                                 <button
                                     (click)="closeModal()"
                                     type="button"
-                                    class="body-button border border-surface-200 dark:border-surface-800 bg-transparent hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-950 dark:text-surface-0 flex-1"
+                                    class="body-button border border-surface-200 dark:border-surface-800 bg-transparent hover:bg-emphasis text-surface-950 dark:text-surface-0 flex-1"
                                 >
                                     Cancel
                                 </button>

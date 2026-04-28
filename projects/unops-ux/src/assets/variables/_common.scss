@@ -8,6 +8,7 @@
     --surface-overlay: var(--p-overlay-popover-background);
     --transition-duration: var(--p-transition-duration);
     --border-radius: var(--p-content-border-radius);
+    --border-radius-circle: 50%;
     --focus-ring-shadow: var(--p-focus-ring-shadow);
         --font-size-xs:   clamp(0.7rem,   0.65rem + 0.25vw, 0.75rem);
         --font-size-sm:   clamp(0.8rem,   0.75rem + 0.25vw, 0.875rem);

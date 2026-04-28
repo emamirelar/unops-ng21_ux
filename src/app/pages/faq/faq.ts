@@ -23,7 +23,7 @@ import { RippleModule } from 'primeng/ripple';
                             class="flex items-center cursor-pointer select-none p-4 transition-colors duration-150 rounded-border"
                             [ngClass]="{
                                 'bg-primary text-primary-contrast': activeIndex === i,
-                                'hover:bg-surface-100 dark:hover:bg-surface-800': activeIndex !== i
+                                'hover:bg-emphasis': activeIndex !== i
                             }"
                         >
                             <i [class]="item.icon" class="mr-2 text-lg"></i>

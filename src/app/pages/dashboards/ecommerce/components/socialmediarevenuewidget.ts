@@ -33,20 +33,7 @@ import { TagModule } from 'primeng/tag';
         </div>`,
     host: {
         class: 'card mb-0! flex-1 min-w-80 p-6! border border-surface rounded-2xl'
-    },
-    styles: `
-        :host ::ng-deep {
-            .p-tag {
-                padding: 0.25rem 0.5rem;
-
-                .p-tag-label {
-                    line-height: 1.5;
-                    font-weight: 600;
-                    font-size: var(--text-xs)
-                }
-            }
-        }
-    `
+    }
 })
 export class SocialMediaRevenueWidget {
     protected readonly trackByFn = trackByFn;

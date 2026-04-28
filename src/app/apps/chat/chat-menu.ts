@@ -228,7 +228,7 @@ interface OnlineUser {
 
                     <div class="space-y-2 max-h-96 overflow-y-auto">
                         @for (contact of availableContacts(); track contact.id) {
-                            <div class="p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors" (click)="selectContact(contact)">
+                            <div class="p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-emphasis transition-colors" (click)="selectContact(contact)">
                                 @if (contact.avatar) {
                                     <p-avatar [image]="'demo/images/avatar/' + contact.avatar" size="normal" shape="circle" styleClass="w-10 h-10" />
                                 } @else {
@@ -252,7 +252,7 @@ interface OnlineUser {
         <ng-template #chatItem let-chat="chat">
             <div
                 class="p-4 relative rounded-2xl flex gap-3 cursor-pointer transition-colors"
-                [ngClass]="activeChatId() === chat.id ? 'bg-surface-100 dark:bg-surface-700' : 'bg-surface-0 dark:bg-surface-900 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                [ngClass]="activeChatId() === chat.id ? 'bg-surface-100 dark:bg-surface-700' : 'bg-surface-0 dark:bg-surface-900 hover:bg-emphasis'"
                 (click)="selectChat(chat)"
             >
                 <div class="relative">
@@ -312,7 +312,7 @@ interface OnlineUser {
         <ng-template #chatItemArchived let-chat="chat">
             <div
                 class="p-4 relative rounded-2xl flex gap-3 cursor-pointer transition-colors"
-                [ngClass]="activeChatId() === chat.id ? 'bg-surface-100 dark:bg-surface-700' : 'bg-surface-0 dark:bg-surface-900 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                [ngClass]="activeChatId() === chat.id ? 'bg-surface-100 dark:bg-surface-700' : 'bg-surface-0 dark:bg-surface-900 hover:bg-emphasis'"
                 (click)="selectChat(chat)"
             >
                 <div class="relative">

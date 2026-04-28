@@ -50,6 +50,12 @@
         overflow: hidden;
     }
 
+    .layout-body {
+        flex: 1;
+        min-height: 0;
+        position: relative;
+    }
+
     [app-topbar] {
         height: fit-content;
     }

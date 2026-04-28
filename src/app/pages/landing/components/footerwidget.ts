@@ -40,7 +40,7 @@ import { RouterModule } from '@angular/router';
                             <a
                                 [href]="data.to"
                                 target="_blank"
-                                class="px-4 py-2 rounded-full border border-surface-200 dark:border-surface-800 text-surface-950 dark:text-surface-0 flex items-center justify-center hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+                                class="px-4 py-2 rounded-full border border-surface-200 dark:border-surface-800 text-surface-950 dark:text-surface-0 flex items-center justify-center hover:bg-emphasis transition-all"
                             >
                                 <i [ngClass]="data.icon" class="text-md leading-none"></i>
                             </a>
