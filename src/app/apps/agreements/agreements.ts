@@ -72,123 +72,6 @@ interface Agreement {
             </div>
 
             <div class="flex flex-col gap-8">
-                <div class="flex flex-col lg:grid lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-6 xl:col-span-4 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 overflow-hidden">
-                        <div class="px-6 pt-4 pb-4">
-                            <h4 class="title-h4 text-left!">Activity Feed</h4>
-                        </div>
-
-                        <div class="relative max-h-[350px] lg:max-h-[450px] 2xl:max-h-[330px]">
-                            <div class="absolute top-0 left-0 right-0 h-4 bg-linear-to-b from-surface-0 dark:from-surface-900 to-transparent pointer-events-none z-20"></div>
-                            <div class="absolute bottom-0 left-0 right-0 h-6 bg-linear-to-t from-surface-0 dark:from-surface-900 to-transparent pointer-events-none z-20"></div>
-
-                            <div class="pb-6 pt-3 px-4 max-h-[350px] lg:max-h-[450px] 2xl:max-h-[330px] overflow-y-auto">
-                                <div class="relative">
-                                    <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-500"></div>
-
-                                    <div class="flex flex-col gap-4">
-                                        @for (activity of activityFeed; track activity.id; let i = $index; let last = $last) {
-                                            <div class="flex gap-3">
-                                                <div class="flex items-start pt-2.5 w-6 justify-center">
-                                                    <div class="w-2 h-2 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[activity.dotColor, activity.ringColor]"></div>
-                                                </div>
-
-                                                <div class="flex-1 pb-4" [class.border-b]="!last" [class.border-surface-200]="!last" [class.dark:border-surface-600]="!last">
-                                                    <div class="flex flex-col gap-2">
-                                                        <div class="flex flex-col gap-1">
-                                                            <div class="flex items-center justify-between">
-                                                                <div class="flex items-center gap-1">
-                                                                    <i class="pi text-sm text-surface-500 dark:text-surface-300" [ngClass]="activity.icon"></i>
-                                                                    <span class="text-surface-950 dark:text-surface-0 text-base font-medium leading-normal">{{ activity.fileName }}</span>
-                                                                </div>
-                                                                <div>
-                                                                    <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-h" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="activityMenu.toggle($event)" />
-                                                                    <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
-                                                                </div>
-                                                            </div>
-                                                            <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
-                                                        </div>
-                                                        <div class="flex items-center gap-2">
-                                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.time }}</span>
-                                                            <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-500"></div>
-                                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.author }}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="lg:col-span-6 xl:col-span-8 flex flex-col gap-6">
-                        <div class="p-4 sm:p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col gap-[18px] overflow-hidden">
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:h-8">
-                                <h4 class="title-h4 text-left!">Agreement Types</h4>
-                                <div class="flex items-center gap-1">
-                                    <span class="text-surface-950 dark:text-surface-0 text-xl font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
-                                    <span class="text-surface-500 dark:text-surface-400 text-base leading-none">Total Agreements</span>
-                                </div>
-                            </div>
-
-                            <div class="hidden md:flex items-end gap-1 w-full">
-                                @for (storage of storageData; track storage.id) {
-                                    <div class="flex flex-col gap-2" [style.flex]="storage.flexValue">
-                                        <div class="h-4 rounded-lg" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                        <div class="flex flex-col gap-1">
-                                            <span class="text-surface-900 dark:text-surface-0 text-sm md:text-base xl:text-lg font-medium leading-tight md:leading-normal xl:leading-7">{{ storage.count.toLocaleString() }}</span>
-                                            <div class="flex items-center gap-1">
-                                                <div class="w-2 h-2 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                                <span class="text-surface-600 dark:text-surface-300 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-
-                            <div class="flex flex-col gap-3 md:hidden">
-                                @for (storage of storageData; track storage.id) {
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-3 h-3 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ storage.type }}</span>
-                                        </div>
-                                        <span class="text-surface-900 dark:text-surface-0 text-lg font-medium leading-7">{{ storage.count.toLocaleString() }}</span>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-
-                        <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600">
-                            <h4 class="title-h4 text-left! mb-4">Pinned</h4>
-
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6 gap-3">
-                                @for (pinned of pinnedItems; track pinned.id) {
-                                    <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-600 dark:bg-surface-800 flex flex-col gap-4">
-                                        <div class="flex justify-between items-start">
-                                            <i class="pi text-2xl! text-surface-500 dark:text-surface-300" [ngClass]="pinned.icon"></i>
-                                            <div>
-                                                <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
-                                                <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-col gap-1">
-                                            <span class="text-surface-900 dark:text-surface-0 text-base font-medium">{{ pinned.name }}</span>
-                                            <div class="flex xl:items-center gap-1 xl:flex-row flex-col">
-                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.type }}</span>
-                                                <div class="w-1 h-1 bg-surface-300 dark:bg-surface-500 rounded-full hidden xl:block"></div>
-                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.size }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="flex flex-col gap-6">
                     <div class="flex flex-wrap gap-2">
                         @for (filter of filterOptions; track filter) {
@@ -261,6 +144,128 @@ interface Agreement {
                             </tr>
                         </ng-template>
                     </p-table>
+                </div>
+
+                <div class="flex flex-col lg:grid lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-6 xl:col-span-4 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col">
+                        <div class="px-6 pt-4 pb-4">
+                            <h4 class="title-h4 text-left!">Activity Feed</h4>
+                        </div>
+
+                        <div class="flex-1 pb-2 pt-1 px-4">
+                            <div class="relative">
+                                <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-500"></div>
+
+                                <div class="flex flex-col gap-4">
+                                    @for (activity of paginatedFeed(); track activity.id; let last = $last) {
+                                        <div class="flex gap-3">
+                                            <div class="flex items-start pt-2.5 w-6 justify-center">
+                                                <div class="w-2 h-2 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[activity.dotColor, activity.ringColor]"></div>
+                                            </div>
+
+                                            <div class="flex-1 pb-4" [class.border-b]="!last" [class.border-surface-200]="!last" [class.dark:border-surface-600]="!last">
+                                                <div class="flex flex-col gap-2">
+                                                    <div class="flex flex-col gap-1">
+                                                        <div class="flex items-center justify-between">
+                                                            <div class="flex items-center gap-1">
+                                                                <i class="pi text-sm text-surface-500 dark:text-surface-300" [ngClass]="activity.icon"></i>
+                                                                <span class="text-surface-950 dark:text-surface-0 text-base font-medium leading-normal">{{ activity.fileName }}</span>
+                                                            </div>
+                                                            <div>
+                                                                <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-h" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="activityMenu.toggle($event)" />
+                                                                <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                                            </div>
+                                                        </div>
+                                                        <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
+                                                    </div>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.time }}</span>
+                                                        <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-500"></div>
+                                                        <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.author }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (feedTotalPages() > 1) {
+                            <div class="flex items-center justify-between px-6 py-3 border-t border-surface-200 dark:border-surface-600">
+                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ feedPage() + 1 }} / {{ feedTotalPages() }}</span>
+                                <div class="flex items-center gap-1">
+                                    <p-button icon="pi pi-chevron-left" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" [disabled]="feedPage() === 0" (onClick)="feedPage.set(feedPage() - 1)" />
+                                    <p-button icon="pi pi-chevron-right" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" [disabled]="feedPage() === feedTotalPages() - 1" (onClick)="feedPage.set(feedPage() + 1)" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="lg:col-span-6 xl:col-span-8 flex flex-col gap-6">
+                        <div class="p-4 sm:p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col gap-[18px] overflow-hidden">
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:h-8">
+                                <h4 class="title-h4 text-left!">Agreement Types</h4>
+                                <div class="flex items-center gap-1">
+                                    <span class="text-surface-950 dark:text-surface-0 text-xl font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
+                                    <span class="text-surface-500 dark:text-surface-400 text-base leading-none">Total Agreements</span>
+                                </div>
+                            </div>
+
+                            <div class="hidden md:flex items-end gap-1 w-full">
+                                @for (storage of storageData; track storage.id) {
+                                    <div class="flex flex-col gap-2" [style.flex]="storage.flexValue">
+                                        <div class="h-4 rounded-lg" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm md:text-base xl:text-lg font-medium leading-tight md:leading-normal xl:leading-7">{{ storage.count.toLocaleString() }}</span>
+                                            <div class="flex items-center gap-1">
+                                                <div class="w-2 h-2 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
+                                                <span class="text-surface-600 dark:text-surface-300 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="flex flex-col gap-3 md:hidden">
+                                @for (storage of storageData; track storage.id) {
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-3 h-3 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
+                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ storage.type }}</span>
+                                        </div>
+                                        <span class="text-surface-900 dark:text-surface-0 text-lg font-medium leading-7">{{ storage.count.toLocaleString() }}</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600">
+                            <h4 class="title-h4 text-left! mb-4">Pinned</h4>
+
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6 gap-3">
+                                @for (pinned of pinnedItems; track pinned.id) {
+                                    <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-600 dark:bg-surface-800 flex flex-col gap-4">
+                                        <div class="flex justify-between items-start">
+                                            <i class="pi text-2xl! text-surface-500 dark:text-surface-300" [ngClass]="pinned.icon"></i>
+                                            <div>
+                                                <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
+                                                <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-surface-900 dark:text-surface-0 text-base font-medium">{{ pinned.name }}</span>
+                                            <div class="flex xl:items-center gap-1 xl:flex-row flex-col">
+                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.type }}</span>
+                                                <div class="w-1 h-1 bg-surface-300 dark:bg-surface-500 rounded-full hidden xl:block"></div>
+                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.size }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -410,6 +415,14 @@ interface Agreement {
 })
 export class Agreements {
     @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+    feedPage = signal(0);
+    feedPerPage = 3;
+    paginatedFeed = computed(() => {
+        const start = this.feedPage() * this.feedPerPage;
+        return this.activityFeed.slice(start, start + this.feedPerPage);
+    });
+    feedTotalPages = computed(() => Math.ceil(this.activityFeed.length / this.feedPerPage));
 
     activeFilter = signal<string>('All Agreements');
 
