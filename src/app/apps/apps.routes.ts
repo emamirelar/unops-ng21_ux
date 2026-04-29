@@ -68,7 +68,7 @@ export default [
     },
     {
         path: 'contacts',
-        loadComponent: () => import('./coming-soon').then((c) => c.ComingSoon),
+        loadComponent: () => import('./contacts').then((c) => c.Contacts),
         data: { breadcrumb: 'Contacts' }
     },
     {

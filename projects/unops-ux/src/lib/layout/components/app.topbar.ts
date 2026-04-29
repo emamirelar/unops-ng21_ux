@@ -55,7 +55,9 @@ interface NotificationsBars {
             }
         </div>
 
-        <img class="mobile-logo" [src]="mobileLogo()" [attr.alt]="mobileLogoConfig.alt" />
+        <a class="mobile-logo" [routerLink]="['/landing']">
+            <img [src]="mobileLogo()" [attr.alt]="mobileLogoConfig.alt" />
+        </a>
 
         <div class="topbar-right">
             <ul class="topbar-menu">

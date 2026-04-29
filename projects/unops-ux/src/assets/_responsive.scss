@@ -91,9 +91,12 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: auto;
-            height: clamp(1.25rem, 2rem + 1vw, 2.5rem);
-            object-fit: contain;
+
+            img {
+                width: auto;
+                height: clamp(1.25rem, 2rem + 1vw, 2.5rem);
+                object-fit: contain;
+            }
         }
 
         .mobile-menu-button {
