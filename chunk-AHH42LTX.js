@@ -1,0 +1,154 @@
+import{a as P}from"./chunk-RRHWWQMF.js";import{a as O,c as G}from"./chunk-BFYAFXJ5.js";import{e as H}from"./chunk-O22HT2F3.js";import{Ha as p,Ka as Q,Na as U,Pa as u,Qa as q}from"./chunk-MY7VEI5E.js";import{u as L}from"./chunk-PM5SR23A.js";import{$a as _,Cc as y,Db as E,Hb as A,Ia as g,K as x,L as h,Lc as w,M as I,Mc as j,Nb as N,O as C,Ob as S,Pb as T,Q as r,V as s,W as c,Wa as F,Xa as z,Xb as a,Z as M,_a as D,ba as b,fc as $,ib as m,ka as f,tb as l,ub as v,vb as k,wb as V,zc as R}from"./chunk-M7JBURX2.js";var Z=`
+    .p-radiobutton {
+        position: relative;
+        display: inline-flex;
+        user-select: none;
+        vertical-align: bottom;
+        width: dt('radiobutton.width');
+        height: dt('radiobutton.height');
+    }
+
+    .p-radiobutton-input {
+        cursor: pointer;
+        appearance: none;
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        z-index: 1;
+        outline: 0 none;
+        border: 1px solid transparent;
+        border-radius: 50%;
+    }
+
+    .p-radiobutton-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        border: 1px solid dt('radiobutton.border.color');
+        background: dt('radiobutton.background');
+        width: dt('radiobutton.width');
+        height: dt('radiobutton.height');
+        transition:
+            background dt('radiobutton.transition.duration'),
+            color dt('radiobutton.transition.duration'),
+            border-color dt('radiobutton.transition.duration'),
+            box-shadow dt('radiobutton.transition.duration'),
+            outline-color dt('radiobutton.transition.duration');
+        outline-color: transparent;
+        box-shadow: dt('radiobutton.shadow');
+    }
+
+    .p-radiobutton-icon {
+        transition-duration: dt('radiobutton.transition.duration');
+        background: transparent;
+        font-size: dt('radiobutton.icon.size');
+        width: dt('radiobutton.icon.size');
+        height: dt('radiobutton.icon.size');
+        border-radius: 50%;
+        backface-visibility: hidden;
+        transform: translateZ(0) scale(0.1);
+    }
+
+    .p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:hover) .p-radiobutton-box {
+        border-color: dt('radiobutton.hover.border.color');
+    }
+
+    .p-radiobutton-checked .p-radiobutton-box {
+        border-color: dt('radiobutton.checked.border.color');
+        background: dt('radiobutton.checked.background');
+    }
+
+    .p-radiobutton-checked .p-radiobutton-box .p-radiobutton-icon {
+        background: dt('radiobutton.icon.checked.color');
+        transform: translateZ(0) scale(1, 1);
+        visibility: visible;
+    }
+
+    .p-radiobutton-checked:not(.p-disabled):has(.p-radiobutton-input:hover) .p-radiobutton-box {
+        border-color: dt('radiobutton.checked.hover.border.color');
+        background: dt('radiobutton.checked.hover.background');
+    }
+
+    .p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:hover).p-radiobutton-checked .p-radiobutton-box .p-radiobutton-icon {
+        background: dt('radiobutton.icon.checked.hover.color');
+    }
+
+    .p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:focus-visible) .p-radiobutton-box {
+        border-color: dt('radiobutton.focus.border.color');
+        box-shadow: dt('radiobutton.focus.ring.shadow');
+        outline: dt('radiobutton.focus.ring.width') dt('radiobutton.focus.ring.style') dt('radiobutton.focus.ring.color');
+        outline-offset: dt('radiobutton.focus.ring.offset');
+    }
+
+    .p-radiobutton-checked:not(.p-disabled):has(.p-radiobutton-input:focus-visible) .p-radiobutton-box {
+        border-color: dt('radiobutton.checked.focus.border.color');
+    }
+
+    .p-radiobutton.p-invalid > .p-radiobutton-box {
+        border-color: dt('radiobutton.invalid.border.color');
+    }
+
+    .p-radiobutton.p-variant-filled .p-radiobutton-box {
+        background: dt('radiobutton.filled.background');
+    }
+
+    .p-radiobutton.p-variant-filled.p-radiobutton-checked .p-radiobutton-box {
+        background: dt('radiobutton.checked.background');
+    }
+
+    .p-radiobutton.p-variant-filled:not(.p-disabled):has(.p-radiobutton-input:hover).p-radiobutton-checked .p-radiobutton-box {
+        background: dt('radiobutton.checked.hover.background');
+    }
+
+    .p-radiobutton.p-disabled {
+        opacity: 1;
+    }
+
+    .p-radiobutton.p-disabled .p-radiobutton-box {
+        background: dt('radiobutton.disabled.background');
+        border-color: dt('radiobutton.checked.disabled.border.color');
+    }
+
+    .p-radiobutton-checked.p-disabled .p-radiobutton-box .p-radiobutton-icon {
+        background: dt('radiobutton.icon.disabled.color');
+    }
+
+    .p-radiobutton-sm,
+    .p-radiobutton-sm .p-radiobutton-box {
+        width: dt('radiobutton.sm.width');
+        height: dt('radiobutton.sm.height');
+    }
+
+    .p-radiobutton-sm .p-radiobutton-icon {
+        font-size: dt('radiobutton.icon.sm.size');
+        width: dt('radiobutton.icon.sm.size');
+        height: dt('radiobutton.icon.sm.size');
+    }
+
+    .p-radiobutton-lg,
+    .p-radiobutton-lg .p-radiobutton-box {
+        width: dt('radiobutton.lg.width');
+        height: dt('radiobutton.lg.height');
+    }
+
+    .p-radiobutton-lg .p-radiobutton-icon {
+        font-size: dt('radiobutton.icon.lg.size');
+        width: dt('radiobutton.icon.lg.size');
+        height: dt('radiobutton.icon.lg.size');
+    }
+`;var X=["input"],Y=`
+    ${Z}
+
+    /* For PrimeNG */
+    p-radioButton.ng-invalid.ng-dirty .p-radiobutton-box,
+    p-radio-button.ng-invalid.ng-dirty .p-radiobutton-box,
+    p-radiobutton.ng-invalid.ng-dirty .p-radiobutton-box {
+        border-color: dt('radiobutton.invalid.border.color');
+    }
+`,tt={root:({instance:o})=>["p-radiobutton p-component",{"p-radiobutton-checked":o.checked,"p-disabled":o.$disabled(),"p-invalid":o.invalid(),"p-variant-filled":o.$variant()==="filled","p-radiobutton-sm p-inputfield-sm":o.size()==="small","p-radiobutton-lg p-inputfield-lg":o.size()==="large"}],box:"p-radiobutton-box",input:"p-radiobutton-input",icon:"p-radiobutton-icon"},J=(()=>{class o extends Q{name="radiobutton";style=Y;classes=tt;static \u0275fac=(()=>{let t;return function(n){return(t||(t=f(o)))(n||o)}})();static \u0275prov=h({token:o,factory:o.\u0275fac})}return o})();var K=new C("RADIOBUTTON_INSTANCE"),ot={provide:O,useExisting:x(()=>W),multi:!0},nt=(()=>{class o{accessors=[];add(t,i){this.accessors.push([t,i])}remove(t){this.accessors=this.accessors.filter(i=>i[1]!==t)}select(t){this.accessors.forEach(i=>{this.isSameGroup(i,t)&&i[1]!==t&&i[1].writeValue(t.value)})}isSameGroup(t,i){return t[0].control?t[0].control.root===i.control.control.root&&t[1].name()===i.name():!1}static \u0275fac=function(i){return new(i||o)};static \u0275prov=h({token:o,factory:o.\u0275fac,providedIn:"root"})}return o})(),W=(()=>{class o extends P{$pcRadioButton=r(K,{optional:!0,skipSelf:!0})??void 0;bindDirectiveInstance=r(u,{self:!0});onAfterViewChecked(){this.bindDirectiveInstance.setAttrs(this.ptms(["host","root"]))}value;tabindex;inputId;ariaLabelledBy;ariaLabel;styleClass;autofocus;binary;variant=y();size=y();onClick=new b;onFocus=new b;onBlur=new b;inputViewChild;$variant=R(()=>this.variant()||this.config.inputStyle()||this.config.inputVariant());checked;focused;control;_componentStyle=r(J);injector=r(M);registry=r(nt);onInit(){this.control=this.injector.get(G),this.registry.add(this.control,this)}onChange(t){this.$disabled()||this.select(t)}select(t){this.$disabled()||(this.checked=!0,this.writeModelValue(this.checked),this.onModelChange(this.value),this.registry.select(this),this.onClick.emit({originalEvent:t,value:this.value}))}onInputFocus(t){this.focused=!0,this.onFocus.emit(t)}onInputBlur(t){this.focused=!1,this.onModelTouched(),this.onBlur.emit(t)}focus(){this.inputViewChild.nativeElement.focus()}writeControlValue(t,i){this.checked=this.binary?!!t:t==this.value,i(this.checked),this.cd.markForCheck()}onDestroy(){this.registry.remove(this)}get dataP(){return this.cn({invalid:this.invalid(),checked:this.checked,disabled:this.$disabled(),filled:this.$variant()==="filled",[this.size()]:this.size()})}static \u0275fac=(()=>{let t;return function(n){return(t||(t=f(o)))(n||o)}})();static \u0275cmp=F({type:o,selectors:[["p-radioButton"],["p-radiobutton"],["p-radio-button"]],viewQuery:function(i,n){if(i&1&&N(X,5),i&2){let e;S(e=T())&&(n.inputViewChild=e.first)}},hostVars:5,hostBindings:function(i,n){i&2&&(m("data-p-disabled",n.$disabled())("data-p-checked",n.checked)("data-p",n.dataP),a(n.cx("root")))},inputs:{value:"value",tabindex:[2,"tabindex","tabindex",j],inputId:"inputId",ariaLabelledBy:"ariaLabelledBy",ariaLabel:"ariaLabel",styleClass:"styleClass",autofocus:[2,"autofocus","autofocus",w],binary:[2,"binary","binary",w],variant:[1,"variant"],size:[1,"size"]},outputs:{onClick:"onClick",onFocus:"onFocus",onBlur:"onBlur"},features:[$([ot,J,{provide:K,useExisting:o},{provide:U,useExisting:o}]),D([u]),_],decls:4,vars:20,consts:[["input",""],["type","radio",3,"focus","blur","change","checked","pAutoFocus","pBind"],[3,"pBind"]],template:function(i,n){if(i&1){let e=E();v(0,"input",1,0),A("focus",function(d){return s(e),c(n.onInputFocus(d))})("blur",function(d){return s(e),c(n.onInputBlur(d))})("change",function(d){return s(e),c(n.onChange(d))}),k(),v(2,"div",2),V(3,"div",2),k()}i&2&&(a(n.cx("input")),l("checked",n.checked)("pAutoFocus",n.autofocus)("pBind",n.ptm("input")),m("id",n.inputId)("name",n.name())("required",n.required()?"":void 0)("disabled",n.$disabled()?"":void 0)("value",n.modelValue())("aria-labelledby",n.ariaLabelledBy)("aria-label",n.ariaLabel)("aria-checked",n.checked)("tabindex",n.tabindex),g(2),a(n.cx("box")),l("pBind",n.ptm("box")),g(),a(n.cx("icon")),l("pBind",n.ptm("icon")))},dependencies:[L,H,p,q,u],encapsulation:2,changeDetection:0})}return o})(),xt=(()=>{class o{static \u0275fac=function(i){return new(i||o)};static \u0275mod=z({type:o});static \u0275inj=I({imports:[W,p,p]})}return o})();export{W as a,xt as b};
