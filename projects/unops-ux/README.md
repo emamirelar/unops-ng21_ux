@@ -4,16 +4,8 @@ Angular 21 library: UNOPS brand theme (PrimeNG / PrimeUIX), application layout s
 
 ## Install
 
-**GitHub Packages** (configure `.npmrc` with `@emamirelar:registry=https://npm.pkg.github.com` and auth):
-
 ```bash
 npm install @emamirelar/ux
-```
-
-**Git URL** (build from source in the consuming workspace or use published artifacts):
-
-```bash
-npm install github:YOUR_ORG/unops-ng21_ux#main
 ```
 
 ## Bootstrap

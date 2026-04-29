@@ -9,7 +9,8 @@
         "url": "https://github.com/opp_plus/unops-ng21_ux.git"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "registry": "https://registry.npmjs.org/",
+        "access": "public"
     },
     "peerDependencies": {
         "@angular/common": "^21",

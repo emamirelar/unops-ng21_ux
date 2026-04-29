@@ -21,24 +21,15 @@ Step-by-step guide for the OpportunityPlus team to replace the legacy Material-b
 
 ## Phase 1: Install and Wire Up
 
-### 1. Configure npm registry (one-time, per developer)
+### 1. Install the package
 
-Create or edit `.npmrc` in the prod repo root:
-
-```
-@emamirelar:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-```
-
-Each developer needs a GitHub Personal Access Token with `read:packages` scope, set as the `GITHUB_TOKEN` environment variable (or pasted directly — don't commit it).
-
-### 2. Install the package
+The package is published publicly on npmjs — no registry configuration or auth tokens needed:
 
 ```bash
 npm install @emamirelar/ux@21.0.0
 ```
 
-### 3. Delete the legacy theme preset
+### 2. Delete the legacy theme preset
 
 ```bash
 rm src/styles/themes/unops.preset.ts
@@ -46,7 +37,7 @@ rm src/styles/themes/unops.preset.ts
 
 This is the ~5200-line Material-based PrimeNG preset. It is entirely replaced by `BrandSoft` from the library.
 
-### 4. Update `app.config.ts`
+### 3. Update `app.config.ts`
 
 Replace the old preset import with the library:
 
@@ -102,7 +93,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-### 5. Update `angular.json`
+### 4. Update `angular.json`
 
 #### Styles — replace all legacy SCSS with library styles
 
@@ -126,7 +117,7 @@ Add to the `assets` array:
 }
 ```
 
-### 6. Simplify `src/styles.scss`
+### 5. Simplify `src/styles.scss`
 
 Replace the current 11-import file. Each removed import has a specific library replacement:
 
@@ -156,7 +147,7 @@ Replace the current 11-import file. Each removed import has a specific library r
 @use './styles/info-callout.scss';
 ```
 
-The library's `styles.scss` and `tailwind.css` are already loaded via `angular.json` (step 5), so they don't appear in `styles.scss`. PrimeNG tokens come from `BrandSoft` via `providePrimeNG`.
+The library's `styles.scss` and `tailwind.css` are already loaded via `angular.json` (step 4), so they don't appear in `styles.scss`. PrimeNG tokens come from `BrandSoft` via `providePrimeNG`.
 
 **Final state** (after Phase 3 — all pages rebuilt):
 
@@ -167,7 +158,7 @@ The library's `styles.scss` and `tailwind.css` are already loaded via `angular.j
 
 The four `KEEP temporarily` imports are deleted in Phase 3 once every page that references them has been rebuilt.
 
-### 7. Update route shells
+### 6. Update route shells
 
 In your `app.routes.ts`, import layout shells from the library:
 
@@ -192,7 +183,7 @@ export const appRoutes: Routes = [
 ];
 ```
 
-### 8. Delete legacy layout components
+### 7. Delete legacy layout components
 
 The library provides the full app shell. Delete the old layout folder and every file in it:
 
@@ -224,13 +215,13 @@ This removes the prod app's local copies of all of these (now provided by `@emam
 
 If the prod repo uses different filenames or a different folder name (e.g. `src/app/layout/` instead of `src/app/layouts/`), adjust accordingly — but delete **all** layout shell components and the layout service.
 
-### 9. Delete `public/layout/` (the old layout SCSS)
+### 8. Delete `public/layout/` (the old layout SCSS)
 
 ```bash
 rm -rf public/layout/
 ```
 
-This removes all legacy layout SCSS partials. The library's `styles.scss` (referenced in `angular.json` step 5) already bundles the full layout SCSS including:
+This removes all legacy layout SCSS partials. The library's `styles.scss` (referenced in `angular.json` step 4) already bundles the full layout SCSS including:
 
 | Deleted file | Library replacement |
 |---|---|
@@ -244,15 +235,15 @@ This removes all legacy layout SCSS partials. The library's `styles.scss` (refer
 | `public/layout/_responsive.scss` | Bundled in library |
 | Any other SCSS partials in the folder | Bundled in library |
 
-### 10. Delete the prod app's local `tailwind.css`
+### 9. Delete the prod app's local `tailwind.css`
 
 ```bash
 rm src/tailwind.css
 ```
 
-The library's `tailwind.css` (referenced in `angular.json` step 5 as `node_modules/@emamirelar/ux/assets/tailwind.css`) replaces it entirely with the UNOPS brand color scales, animation tokens, typography utilities, and dark mode configuration.
+The library's `tailwind.css` (referenced in `angular.json` step 4 as `node_modules/@emamirelar/ux/assets/tailwind.css`) replaces it entirely with the UNOPS brand color scales, animation tokens, typography utilities, and dark mode configuration.
 
-### 11. Verify
+### 10. Verify
 
 ```bash
 ng serve
@@ -367,10 +358,10 @@ These should have been removed in Phase 1. Verify they no longer exist:
 
 ```bash
 # Should all return "No such file or directory"
-ls src/styles/themes/unops.preset.ts       # Deleted in Phase 1, step 3
-ls src/app/layouts/                          # Deleted in Phase 1, step 8
-ls public/layout/                            # Deleted in Phase 1, step 9
-ls src/tailwind.css                          # Deleted in Phase 1, step 10
+ls src/styles/themes/unops.preset.ts       # Deleted in Phase 1, step 2
+ls src/app/layouts/                          # Deleted in Phase 1, step 7
+ls public/layout/                            # Deleted in Phase 1, step 8
+ls src/tailwind.css                          # Deleted in Phase 1, step 9
 ```
 
 ### Final verification
