@@ -18,20 +18,22 @@ let aiCardBgFilterId = 0;
     styles: `
         :host {
             --ux-ai-bg-from: #cce5ff;
-            --ux-ai-bg-to: #ffedf8;
-            --ux-ai-fg-from: #d0eeff;
-            --ux-ai-fg-to: #D6A5C2
+            --ux-ai-bg-to:rgb(255, 236, 254);
+            --ux-ai-fg-from:rgb(188, 214, 255);
+            --ux-ai-fg-to:rgb(246, 216, 255);
             position: relative;
             overflow: hidden;
+            isolation: isolate;
+            contain: paint;
             animation: ux-ai-bg-move 6s ease-in-out infinite;
             will-change: background-color;
         }
 
         :host-context([class*='app-dark']) {
-            --ux-ai-bg-from: #003567;
-            --ux-ai-bg-to:rgb(20, 1, 37);
-            --ux-ai-fg-from: #003855;
-            --ux-ai-fg-to: #821A57;
+            --ux-ai-bg-from:rgb(0, 32, 69);
+            --ux-ai-bg-to:rgb(47, 18, 116);
+            --ux-ai-fg-from:rgb(0, 20, 47);
+            --ux-ai-fg-to:rgb(76, 1, 71);
         }
 
         :host > :not(svg) {
@@ -45,6 +47,8 @@ let aiCardBgFilterId = 0;
             z-index: 0;
             height: 100%;
             width: 100%;
+            max-height: 100%;
+            overflow: hidden;
             pointer-events: none;
         }
 

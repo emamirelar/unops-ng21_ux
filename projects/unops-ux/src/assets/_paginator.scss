@@ -1,0 +1,16 @@
+// PrimeUIX paginator defaults to flex-wrap: wrap, which splits << < 1 2 3 … > >> across
+// lines in narrow cards. Keep one row; scroll horizontally only if still too tight.
+.p-paginator.p-component {
+  flex-wrap: nowrap !important;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.p-paginator-content {
+  flex-wrap: nowrap !important;
+  min-width: 0;
+}

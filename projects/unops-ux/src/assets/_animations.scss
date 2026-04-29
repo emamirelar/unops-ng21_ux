@@ -13,6 +13,29 @@ router-outlet + * {
     }
 }
 
+/* ── Expand / collapse (grid-row technique) ── */
+.expand-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+        grid-template-rows 0.3s ease-in,
+        opacity 0.3s ease-in;
+
+    &--open {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        transition:
+            grid-template-rows 0.3s ease-out,
+            opacity 0.3s ease-out;
+    }
+
+    &__inner {
+        overflow: hidden;
+        min-height: 0;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

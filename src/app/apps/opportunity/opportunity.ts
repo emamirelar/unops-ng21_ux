@@ -117,7 +117,8 @@ interface AiInsight {
                         <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isActivityExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                     </div>
 
-                    @if (isActivityExpanded()) {
+                    <div class="expand-body" [class.expand-body--open]="isActivityExpanded()">
+                        <div class="expand-body__inner">
                         <div class="pb-3 pt-3 px-2">
                             <div class="relative">
                                 <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
@@ -156,7 +157,8 @@ interface AiInsight {
                             (onPageChange)="activityPage.set($event.page ?? 0)"
                             styleClass="border-t border-surface-200 dark:border-surface-700"
                         />
-                    }
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tasks Section -->
@@ -172,8 +174,10 @@ interface AiInsight {
                             <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isTasksExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                         </div>
 
-                        @if (isTasksExpanded()) {
+                        <div class="expand-body" [class.expand-body--open]="isTasksExpanded()">
+                            <div class="expand-body__inner">
                         <!-- Task Filter Tabs -->
+                        <div class="flex flex-col gap-6">
                         <div class="flex flex-wrap gap-2">
                             @for (filter of taskFilterOptions; track filter.key) {
                                 <p-tag
@@ -248,7 +252,9 @@ interface AiInsight {
                                 </p-accordionpanel>
                             }
                         </p-accordion>
-                        }
+                        </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -258,8 +264,9 @@ interface AiInsight {
             <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
                 <!-- AI Project Analysis Card -->
                 <ux-ai-card-bg
-                    class="border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col max-h-[calc(100dvh-12rem)]"
+                    class="border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 flex flex-col max-h-[calc(100dvh-12rem)]"
                 >
+                    <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1 min-h-0">
                     <div class="flex items-center justify-between cursor-pointer shrink-0" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
                         <div class="flex items-center gap-3">
                             <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
@@ -267,9 +274,7 @@ interface AiInsight {
                             </div>
                             <div class="flex flex-col">
                                 <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">AI Project Analysis</h4>
-                                @if (!isAiCardExpanded()) {
-                                    <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
-                                }
+                                <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
                             </div>
                         </div>
                         <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-transparent border border-white dark:border-surface-300 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-white/10 transition-colors">
@@ -277,8 +282,9 @@ interface AiInsight {
                         </button>
                     </div>
 
-                    @if (isAiCardExpanded()) {
-                        <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0 motion-safe:animate-enter-liquid-reveal [animation-delay:20ms]">
+                    <div class="expand-body" [class.expand-body--open]="isAiCardExpanded()">
+                        <div class="expand-body__inner">
+                        <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0">
                             <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5 shrink-0">
                                 <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
                                 <input
@@ -314,12 +320,15 @@ interface AiInsight {
                                     [totalRecords]="filteredAiInsights().length"
                                     [first]="aiInsightsFirst()"
                                     (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
+                                    [pageLinkSize]="3"
                                     styleClass="w-full border-none! bg-transparent!"
-                                    [pt]="{ root: { class: 'bg-transparent! relative! w-full! flex-wrap! justify-center!' } }"
+                                    [pt]="{ root: { class: 'bg-transparent! relative! w-full! justify-center!' } }"
                                 />
                             </div>
                         </div>
-                    }
+                        </div>
+                    </div>
+                    </div>
                 </ux-ai-card-bg>
 
                 <!-- Documents Section -->
@@ -538,6 +547,7 @@ interface AiInsight {
         :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
             background: transparent;
         }
+
     `
 })
 export class Opportunity implements OnInit {
