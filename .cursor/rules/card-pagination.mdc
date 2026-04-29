@@ -1,7 +1,7 @@
 ---
 description: Cards with overflow content must paginate using PrimeNG p-paginator — never scroll, never use custom pagination
 globs: "**/*.ts"
-alwaysApply: true
+alwaysApply: false
 ---
 
 # Card Pagination: No Scroll, Consistent Paginator

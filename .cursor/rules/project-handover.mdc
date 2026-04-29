@@ -1,8 +1,6 @@
 ---
-description: Comprehensive project conventions and architecture guide for the UNOPS OPP+ UX library. Read this first when onboarding.
-alwaysApply: true
+alwaysApply: false
 ---
-
 # UNOPS OPP+ UX Library — Project Guide
 
 ## Tech Stack

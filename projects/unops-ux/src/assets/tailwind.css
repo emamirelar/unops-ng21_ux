@@ -365,6 +365,28 @@
       transform: translateY(0);
     }
   }
+
+  /* AI card ambient background (optional Tailwind hooks; `ux-ai-card-bg` also defines scoped motion) */
+  --animate-ai-bg-move: ai-bg-move 6s ease-in-out infinite;
+  --animate-ai-fg-move: ai-fg-move 6s ease-in-out infinite;
+  @keyframes ai-bg-move {
+    0%,
+    100% {
+      background-color: #cce5ff;
+    }
+    50% {
+      background-color: #ffedf8;
+    }
+  }
+  @keyframes ai-fg-move {
+    0%,
+    100% {
+      fill: #d0eeff;
+    }
+    50% {
+      fill: #e6c7d9;
+    }
+  }
 }
 
 

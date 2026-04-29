@@ -158,7 +158,7 @@ interface FilterTag {
                         @for (item of items; track item.id; let i = $index) {
                             <a
                                 [routerLink]="['/apps/partners', item.id]"
-                                class="flex flex-col sm:flex-row sm:items-center p-4 gap-4 no-underline text-inherit cursor-pointer hover:bg-emphasis transition-colors animate-fade-in-up"
+                                class="flex flex-col sm:flex-row sm:items-center p-4 gap-4 no-underline text-inherit cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up"
                                 [style.animation-delay.ms]="i * 50"
                                 [class.border-t]="i !== 0"
                                 [class.border-surface]="i !== 0"
@@ -214,7 +214,7 @@ interface FilterTag {
                         @for (item of items; track item.id; let i = $index) {
                             <a [routerLink]="['/apps/partners', item.id]" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2 no-underline text-inherit">
                                 <div
-                                    class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-emphasis transition-colors animate-fade-in-up"
+                                    class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up"
                                     [style.animation-delay.ms]="i * 50"
                                 >
                                     <div class="flex items-start justify-between">

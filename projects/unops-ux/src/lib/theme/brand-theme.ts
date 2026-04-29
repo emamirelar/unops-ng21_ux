@@ -112,6 +112,22 @@ const brandOverrides = {
                 }
             }
         },
+        datatable: {
+            colorScheme: {
+                light: {
+                    row: {
+                        hoverBackground: '{primary.100}',
+                        hoverColor: '{surface.950}'
+                    }
+                },
+                dark: {
+                    row: {
+                        hoverBackground: '{primary.900}',
+                        hoverColor: '{surface.0}'
+                    }
+                }
+            }
+        },
         paginator: {
             root: {
                 background: 'transparent'

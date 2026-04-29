@@ -1,7 +1,7 @@
 ---
 description: Tracks design-system customisations that diverge from upstream PrimeNG / PrimeUIX defaults so future upgrades (e.g. PrimeNG 22) can be reconciled safely.
-globs: 
-alwaysApply: true
+globs: "projects/unops-ux/src/lib/theme/**,projects/unops-ux/src/assets/**,src/app.config.ts,.storybook/preview.ts"
+alwaysApply: false
 ---
 
 # Design-System Maintenance Ledger
@@ -18,6 +18,7 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 | `projects/unops-ux/src/lib/layout/components/app.topbar.ts` | Top bar shell (profile, notifications, etc.) |
 | `projects/unops-ux/src/lib/layout/components/app.configurator.ts` | Runtime preset + surface switching via `$t()` |
 | `projects/unops-ux/src/assets/tailwind.css` | Duplicates brand primitives as Tailwind `@theme` values; app-level motion keyframes and animation tokens |
+| `projects/unops-ux/src/lib/components/ai-card-bg/ai-card-bg.ts` | `ux-ai-card-bg` — animated AI insight card shell (brand-tinted background + blurred SVG blobs); CSS variables for light/dark; `prefers-reduced-motion` disables motion |
 | `projects/unops-ux/src/assets/_animations.scss` | App-wide page entrance (`router-outlet + *`), `.card` hover micro-interaction, and `prefers-reduced-motion` override |
 | `.storybook/preview.ts` | Uses `BrandSoft` for Storybook PrimeNG provider |
 
@@ -39,6 +40,8 @@ Whenever you add, rename, or override anything in the design-system layer, **app
 
 | Date | Change | Upstream target | Files affected |
 |------|--------|-----------------|----------------|
+| 2026-04-29 | **AI card moving background:** Added standalone `AiCardBgComponent` (`ux-ai-card-bg`) with scoped `ux-ai-bg-move` / `ux-ai-fg-move` keyframes, CSS variables for light (`#cce5ff`↔`#ffedf8`, fill `#d0eeff`↔`#e6c7d9`) and dark (`#0d2847`↔`#2d1530`, fill `#003855`↔`#541138`), unique SVG `feGaussianBlur` filter ids, and `prefers-reduced-motion` static fallbacks. Optional Tailwind tokens `--animate-ai-bg-move` / `--animate-ai-fg-move` plus `ai-bg-move` / `ai-fg-move` keyframes in `tailwind.css`. Opportunity AI sidebar now wraps content in `ux-ai-card-bg` (static gradient removed; paginator strip `bg-transparent`). Exported from `@emamirelar/ux` via `lib/components`. | N/A (library + Tailwind v4) | `ai-card-bg.ts`, `lib/components/index.ts`, `public-api.ts`, `tailwind.css`, `opportunity.ts` |
+| 2026-04-29 | **Data row hover color:** Added `datatable.row.hoverBackground` / `hoverColor` component override in `brand-theme.ts` (`'{primary.200}'` / `'{surface.950}'` light, `'{primary.800}'` / `'{surface.0}'` dark) so all `p-table` rows use the brand primary hover. Replaced `hover:bg-emphasis` with `hover:bg-primary-200 dark:hover:bg-primary-800` on custom data-row elements in `partners.ts` (list + grid views) to match. Other non-row usages of `hover:bg-emphasis` (buttons, menus, upload zones) left unchanged. | PrimeNG 21 / PrimeUIX Themes 2 | `brand-theme.ts`, `partners.ts` |
 | 2026-04-28 | **Mobile sidebar light-mode background:** On mobile (<992px) the sidebar previously showed the dark gradient (`_sidebar_theme_core.scss`) for all themes, making light-mode `--d-*` tokens (dark text) unreadable. Added `:root:not(.app-dark) .layout-sidebar { background: var(--surface-ground); }` in the mobile media query of `_responsive.scss` so light mode uses the page background color, reusing the same tokens as desktop. Dark mode on mobile: primary keeps the gradient; dark/light themes get `.app-dark .layout-sidebar-{dark,light} .layout-sidebar { background: var(--d-sidebar-bg-color); }`. | N/A (layout SCSS layer) | `_responsive.scss` |
 | 2026-04-28 | **Active menuitem token indirection:** Replaced hard-coded `--p-primary-600` / `background-color: none` / `--p-primary-500` border in `_sidebar_theme_core.scss` `li.active-menuitem > a` with `--d-menuitem-active-text-color` / `--d-menuitem-active-bg` / `--d-menuitem-active-border`. Added new `--d-menuitem-active-border` token to all three sidebar theme files (`_primary.scss`, `_dark.scss`, `_light.scss`) with per-mode values. Active expanded items now correctly adapt to light/dark mode via the existing `--d-*` system. | N/A (layout SCSS layer) | `_sidebar_theme_core.scss`, `_primary.scss`, `_dark.scss`, `_light.scss` |
 | 2026-04-28 | **Dark sidebar theme light-mode fix:** Restructured `_dark.scss` so the base `.layout-sidebar-dark` rule uses body-appropriate tokens for light mode (`--p-text-color`, `--p-text-muted-color`, `--p-primary-700/800`, transparent border) matching the primary theme pattern. Moved white/light-on-dark values into `.app-dark .layout-sidebar-dark` (added `--d-sidebar-border`, `--d-menu-separator-border`, `--d-menuitem-hover-bg`, `--d-menuitem-active-bg`, `--d-menuitem-focus-shadow`). Sidebar stays transparent on desktop; text now adapts to body background in each mode. | N/A (layout SCSS layer) | `_dark.scss` |

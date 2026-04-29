@@ -1,6 +1,7 @@
 ---
 description: Enforces reuse of existing design tokens and CSS/SCSS variables. No hard-coded values, no new tokens, no modifications to existing variables.
-alwaysApply: true
+globs: "**/*.{ts,html,scss,css}"
+alwaysApply: false
 ---
 
 # Styling: Reuse Existing Tokens Only

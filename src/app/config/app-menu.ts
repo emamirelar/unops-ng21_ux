@@ -41,7 +41,8 @@ export function createDemoAppMenu(layoutService: LayoutService, storybookBaseUrl
                 {
                     label: 'Opportunities',
                     icon: 'pi pi-fw pi-briefcase',
-                    routerLink: ['/apps/opportunity']
+                    routerLink: ['/apps/opportunities'],
+                    routerLinkActiveOptions: SUBSET_MATCH
                 }
             ]
         },

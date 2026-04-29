@@ -1,4 +1,4 @@
-import { Component, computed, inject, model, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, model, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -19,6 +19,7 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TaskDrawer } from '../tasklist/task-drawer';
+import { AiCardBgComponent } from '@emamirelar/ux';
 
 interface Member {
     name?: string;
@@ -87,7 +88,8 @@ interface AiInsight {
         MenuModule,
         ConfirmDialogModule,
         FileUploadModule,
-        TaskDrawer
+        TaskDrawer,
+        AiCardBgComponent
     ],
     providers: [ConfirmationService, MessageService],
     template: `
@@ -255,10 +257,10 @@ interface AiInsight {
             <!-- RIGHT SIDEBAR -->
             <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
                 <!-- AI Project Analysis Card -->
-                <div
-                    class="bg-gradient-to-r from-[#cce5ff] to-[#ffedf8] dark:from-[#0d2847] dark:to-[#2d1530] border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 motion-safe:animate-enter-liquid [animation-delay:80ms] max-h-[80vh] overflow-y-auto"
+                <ux-ai-card-bg
+                    class="border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col max-h-[calc(100dvh-12rem)]"
                 >
-                    <div class="flex items-center justify-between cursor-pointer" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
+                    <div class="flex items-center justify-between cursor-pointer shrink-0" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
                         <div class="flex items-center gap-3">
                             <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
                                 <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
@@ -276,8 +278,8 @@ interface AiInsight {
                     </div>
 
                     @if (isAiCardExpanded()) {
-                        <div class="flex flex-col gap-4 mt-4 motion-safe:animate-enter-liquid-reveal [animation-delay:20ms]">
-                            <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5">
+                        <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0 motion-safe:animate-enter-liquid-reveal [animation-delay:20ms]">
+                            <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5 shrink-0">
                                 <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
                                 <input
                                     type="text"
@@ -288,9 +290,9 @@ interface AiInsight {
                                 />
                             </div>
 
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-0.5">
                                 @for (insight of paginatedAiInsights(); track insight.id) {
-                                    <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start">
+                                    <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start shrink-0">
                                         <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
                                         <div class="flex flex-col gap-2 flex-1 min-w-0">
                                             <div class="flex flex-col gap-1">
@@ -306,17 +308,19 @@ interface AiInsight {
                                 }
                             </div>
 
-                            <p-paginator
-                                [rows]="aiInsightsPerPage"
-                                [totalRecords]="filteredAiInsights().length"
-                                [first]="aiInsightsFirst()"
-                                (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
-                                styleClass="border-t border-white/50 dark:border-surface-700/50 mt-2"
-                                [pt]="{ root: { class: 'bg-transparent!' } }"
-                            />
+                            <div class="shrink-0 w-full border-t border-white/50 dark:border-surface-700/50 pt-2 mt-1 relative z-[1] bg-transparent">
+                                <p-paginator
+                                    [rows]="aiInsightsPerPage()"
+                                    [totalRecords]="filteredAiInsights().length"
+                                    [first]="aiInsightsFirst()"
+                                    (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
+                                    styleClass="w-full border-none! bg-transparent!"
+                                    [pt]="{ root: { class: 'bg-transparent! relative! w-full! flex-wrap! justify-center!' } }"
+                                />
+                            </div>
                         </div>
                     }
-                </div>
+                </ux-ai-card-bg>
 
                 <!-- Documents Section -->
                 <div class="card flex flex-col">
@@ -585,13 +589,22 @@ export class Opportunity implements OnInit {
         );
     });
 
-    aiInsightsPerPage = 4;
+    private destroyRef = inject(DestroyRef);
+    aiInsightsPerPage = signal(this.calcInsightsPerPage());
     aiInsightsPage = signal(0);
-    aiInsightsFirst = computed(() => this.aiInsightsPage() * this.aiInsightsPerPage);
+    aiInsightsFirst = computed(() => this.aiInsightsPage() * this.aiInsightsPerPage());
     paginatedAiInsights = computed(() => {
         const insights = this.filteredAiInsights();
-        return insights.slice(this.aiInsightsFirst(), this.aiInsightsFirst() + this.aiInsightsPerPage);
+        return insights.slice(this.aiInsightsFirst(), this.aiInsightsFirst() + this.aiInsightsPerPage());
     });
+
+    private calcInsightsPerPage(): number {
+        const shellOffset = 12 * 16;
+        const cardChrome = 160 + 72; // header, search, gaps, paginator strip
+        const insightCardHeight = 150;
+        const available = (typeof window !== 'undefined' ? window.innerHeight : 900) - shellOffset - cardChrome;
+        return Math.max(1, Math.floor(available / insightCardHeight));
+    }
 
     // ─── Tasks ───
     activeTaskFilter = signal('All');
@@ -684,7 +697,11 @@ export class Opportunity implements OnInit {
 
     constructor(private confirmationService: ConfirmationService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        const onResize = () => this.aiInsightsPerPage.set(this.calcInsightsPerPage());
+        window.addEventListener('resize', onResize);
+        this.destroyRef.onDestroy(() => window.removeEventListener('resize', onResize));
+    }
 
     // ─── Task Methods ───
     toggleTaskCompletion(task: Task, completed: boolean) {

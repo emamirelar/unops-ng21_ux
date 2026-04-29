@@ -1,6 +1,7 @@
 ---
 description: Ensure no hardcoded localhost or dev URLs exist in application source code — use environment config instead
-alwaysApply: true
+globs: "**/*.{ts,html,scss}"
+alwaysApply: false
 ---
 
 # No Hardcoded Localhost URLs

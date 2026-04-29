@@ -2,12 +2,17 @@ import { Routes } from '@angular/router';
 
 export default [
     {
-        path: 'opportunity',
+        path: 'opportunities',
+        data: { breadcrumb: 'Opportunities' },
         children: [
             {
                 path: '',
+                loadComponent: () => import('./opportunities').then((c) => c.Opportunities)
+            },
+            {
+                path: ':id',
                 loadComponent: () => import('./opportunity').then((c) => c.Opportunity),
-                data: { breadcrumb: 'Opportunity Details' }
+                data: { breadcrumb: 'Details' }
             }
         ]
     },
