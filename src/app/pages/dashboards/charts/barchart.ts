@@ -1,4 +1,4 @@
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { sampleDataByFixedLength } from '@/app/lib/utils';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, HostBinding, inject, input } from '@angular/core';

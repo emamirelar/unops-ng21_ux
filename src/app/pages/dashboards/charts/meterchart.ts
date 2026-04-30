@@ -1,4 +1,4 @@
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { sampleDataByFixedLength, trackByFn } from '@/app/lib/utils';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostBinding, inject, input, output, untracked, viewChild } from '@angular/core';

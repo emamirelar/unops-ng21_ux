@@ -1,4 +1,4 @@
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockViewer } from './components/blockviewer';

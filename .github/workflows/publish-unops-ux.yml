@@ -1,5 +1,5 @@
-# Publishes the @unops/ux Angular library to npmjs when a version tag is pushed.
-name: Publish @unops/ux
+# Publishes the @unopsitg/ux Angular library to npmjs when a version tag is pushed.
+name: Publish @unopsitg/ux
 
 on:
     push:
@@ -20,7 +20,7 @@ jobs:
                   node-version: '22'
                   cache: 'npm'
                   registry-url: 'https://registry.npmjs.org'
-                  scope: '@unops'
+                  scope: '@unopsitg'
 
             - name: Install dependencies
               run: npm install --no-audit

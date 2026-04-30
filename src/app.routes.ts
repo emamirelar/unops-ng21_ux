@@ -1,4 +1,4 @@
-import { AppLayout, AuthLayout } from '@unops/ux';
+import { AppLayout, AuthLayout } from '@unopsitg/ux';
 import { LandingLayout } from '@/app/layout/components/app.landinglayout';
 import { Notfound } from '@/app/pages/notfound/notfound';
 import { Routes } from '@angular/router';

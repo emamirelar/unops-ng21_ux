@@ -4,7 +4,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
-import { BrandSoft } from '@unops/ux';
+import { BrandSoft } from '@unopsitg/ux';
 import { PartnerDetail } from '@/app/apps/partners/partner-detail';
 import { PartnerService } from '@/app/apps/partners/partner.service';
 

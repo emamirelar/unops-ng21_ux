@@ -43,7 +43,7 @@ This keeps the theme layer for "every tag looks like this" defaults, and SCSS fo
 
 ```mermaid
 flowchart TD
-  subgraph library ["@unops/ux library"]
+  subgraph library ["@unopsitg/ux library"]
     BT["brand-theme.ts\n(severity text colors\n+ compact size)"]
     TS["_tags.scss\n(.tag-filter-active\n.tag-status-*\n.tag-approval-*)"]
   end

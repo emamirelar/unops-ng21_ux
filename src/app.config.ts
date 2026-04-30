@@ -1,7 +1,7 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
-import { BrandSoft, LayoutService, MENU_MODEL } from '@unops/ux';
+import { BrandSoft, LayoutService, MENU_MODEL } from '@unopsitg/ux';
 import { providePrimeNG } from 'primeng/config';
 import { createDemoAppMenu } from './app/config/app-menu';
 import { appRoutes } from './app.routes';

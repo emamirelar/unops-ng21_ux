@@ -1,6 +1,6 @@
-# Adopting `@unops/ux` in the OpportunityPlus App
+# Adopting `@unopsitg/ux` in the OpportunityPlus App
 
-Step-by-step guide for the OpportunityPlus team to replace the legacy Material-based styling with the `@unops/ux` design library.
+Step-by-step guide for the OpportunityPlus team to replace the legacy Material-based styling with the `@unopsitg/ux` design library.
 
 **Time estimate:** ~30 minutes for Phase 1 (foundation swap). Phase 2 is page-by-page rebuild.
 
@@ -26,7 +26,7 @@ Step-by-step guide for the OpportunityPlus team to replace the legacy Material-b
 The package is published publicly on npmjs — no registry configuration or auth tokens needed:
 
 ```bash
-npm install @unops/ux@21.0.0
+npm install @unopsitg/ux@21.0.0
 ```
 
 ### 2. Delete the legacy theme preset
@@ -48,7 +48,7 @@ import { MyAppPreset } from './styles/themes/unops.preset';
 
 // AFTER
 import { providePrimeNG } from 'primeng/config';
-import { BrandSoft, MENU_MODEL, LayoutService, type MenuItem } from '@unops/ux';
+import { BrandSoft, MENU_MODEL, LayoutService, type MenuItem } from '@unopsitg/ux';
 ```
 
 Update the providers array:
@@ -99,8 +99,8 @@ export const appConfig: ApplicationConfig = {
 
 ```json
 "styles": [
-    "node_modules/@unops/ux/assets/styles.scss",
-    "node_modules/@unops/ux/assets/tailwind.css",
+    "node_modules/@unopsitg/ux/assets/styles.scss",
+    "node_modules/@unopsitg/ux/assets/tailwind.css",
     "src/styles.scss"
 ]
 ```
@@ -112,7 +112,7 @@ Add to the `assets` array:
 ```json
 {
     "glob": "**/*",
-    "input": "node_modules/@unops/ux/assets/opp",
+    "input": "node_modules/@unopsitg/ux/assets/opp",
     "output": "assets/opp"
 }
 ```
@@ -163,7 +163,7 @@ The four `KEEP temporarily` imports are deleted in Phase 3 once every page that 
 In your `app.routes.ts`, import layout shells from the library:
 
 ```typescript
-import { AppLayout, AuthLayout } from '@unops/ux';
+import { AppLayout, AuthLayout } from '@unopsitg/ux';
 
 export const appRoutes: Routes = [
     {
@@ -191,25 +191,25 @@ The library provides the full app shell. Delete the old layout folder and every 
 rm -rf src/app/layouts/
 ```
 
-This removes the prod app's local copies of all of these (now provided by `@unops/ux`):
+This removes the prod app's local copies of all of these (now provided by `@unopsitg/ux`):
 
 | Deleted file | Library replacement |
 |---|---|
-| `src/app/layouts/app-layout.component.ts` | `AppLayout` from `@unops/ux` |
+| `src/app/layouts/app-layout.component.ts` | `AppLayout` from `@unopsitg/ux` |
 | `src/app/layouts/app-layout.component.html` | (inline template in library) |
-| `src/app/layouts/app-sidebar.component.ts` | `AppSidebar` from `@unops/ux` |
+| `src/app/layouts/app-sidebar.component.ts` | `AppSidebar` from `@unopsitg/ux` |
 | `src/app/layouts/app-sidebar.component.html` | (inline template in library) |
-| `src/app/layouts/app-topbar.component.ts` | `AppTopbar` from `@unops/ux` |
+| `src/app/layouts/app-topbar.component.ts` | `AppTopbar` from `@unopsitg/ux` |
 | `src/app/layouts/app-topbar.component.html` | (inline template in library) |
-| `src/app/layouts/app-menu.component.ts` | `AppMenu` from `@unops/ux` |
+| `src/app/layouts/app-menu.component.ts` | `AppMenu` from `@unopsitg/ux` |
 | `src/app/layouts/app-menu.component.html` | (inline template in library) |
-| `src/app/layouts/app-menuitem.component.ts` | `AppMenuitem` from `@unops/ux` |
-| `src/app/layouts/app-breadcrumb.component.ts` | `AppBreadcrumb` from `@unops/ux` |
-| `src/app/layouts/app-footer.component.ts` | `AppFooter` from `@unops/ux` |
-| `src/app/layouts/app-configurator.component.ts` | `AppConfigurator` from `@unops/ux` |
-| `src/app/layouts/app-right-menu.component.ts` | `AppRightMenu` from `@unops/ux` |
-| `src/app/layouts/app-search.component.ts` | `AppSearch` from `@unops/ux` |
-| `src/app/layouts/layout.service.ts` | `LayoutService` from `@unops/ux` |
+| `src/app/layouts/app-menuitem.component.ts` | `AppMenuitem` from `@unopsitg/ux` |
+| `src/app/layouts/app-breadcrumb.component.ts` | `AppBreadcrumb` from `@unopsitg/ux` |
+| `src/app/layouts/app-footer.component.ts` | `AppFooter` from `@unopsitg/ux` |
+| `src/app/layouts/app-configurator.component.ts` | `AppConfigurator` from `@unopsitg/ux` |
+| `src/app/layouts/app-right-menu.component.ts` | `AppRightMenu` from `@unopsitg/ux` |
+| `src/app/layouts/app-search.component.ts` | `AppSearch` from `@unopsitg/ux` |
+| `src/app/layouts/layout.service.ts` | `LayoutService` from `@unopsitg/ux` |
 | Any `.scss` files in the folder | Library's built-in SCSS |
 | Any `index.ts` / barrel file | Library barrel exports |
 
@@ -225,7 +225,7 @@ This removes all legacy layout SCSS partials. The library's `styles.scss` (refer
 
 | Deleted file | Library replacement |
 |---|---|
-| `public/layout/layout.scss` | `node_modules/@unops/ux/assets/styles.scss` (in `angular.json`) |
+| `public/layout/layout.scss` | `node_modules/@unopsitg/ux/assets/styles.scss` (in `angular.json`) |
 | `public/layout/variables/_common.scss` | Bundled in library |
 | `public/layout/_sass_variables.scss` | Bundled in library |
 | `public/layout/_card.scss` | Bundled in library |
@@ -241,7 +241,7 @@ This removes all legacy layout SCSS partials. The library's `styles.scss` (refer
 rm src/tailwind.css
 ```
 
-The library's `tailwind.css` (referenced in `angular.json` step 4 as `node_modules/@unops/ux/assets/tailwind.css`) replaces it entirely with the UNOPS brand color scales, animation tokens, typography utilities, and dark mode configuration.
+The library's `tailwind.css` (referenced in `angular.json` step 4 as `node_modules/@unopsitg/ux/assets/tailwind.css`) replaces it entirely with the UNOPS brand color scales, animation tokens, typography utilities, and dark mode configuration.
 
 ### 10. Verify
 
@@ -279,7 +279,7 @@ Rebuild pages in priority order using library patterns as reference. The design 
 ### Using LayoutService from the library
 
 ```typescript
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 
 export class MyComponent {
     private layoutService = inject(LayoutService);
@@ -380,11 +380,11 @@ grep -rn "public/layout\|../layout/layout" src/ --include='*.ts' --include='*.sc
 ng build
 ```
 
-All four commands must be clean (no matches, no build errors). If any remain, fix the references to use `@unops/ux` imports or Tailwind utilities, then re-run.
+All four commands must be clean (no matches, no build errors). If any remain, fix the references to use `@unopsitg/ux` imports or Tailwind utilities, then re-run.
 
 ---
 
-## Quick Reference: What's Exported from `@unops/ux`
+## Quick Reference: What's Exported from `@unopsitg/ux`
 
 ### Theme
 

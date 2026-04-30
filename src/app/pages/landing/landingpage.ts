@@ -1,4 +1,4 @@
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { CtaWidget } from '@/app/pages/landing/components/ctawidget';
 import { FaqWidget } from '@/app/pages/landing/components/faqwidget';
 import { HeroWidget } from '@/app/pages/landing/components/herowidget';
@@ -7,7 +7,7 @@ import { SectionThreeWidget } from '@/app/pages/landing/components/sectionthreew
 import { SectionTwoWidget } from '@/app/pages/landing/components/sectiontwowidget';
 import { TestimonialWidget } from '@/app/pages/landing/components/testimonialwidget';
 import { Component, inject } from '@angular/core';
-import { AppConfigurator } from '@unops/ux';
+import { AppConfigurator } from '@unopsitg/ux';
 
 @Component({
     selector: 'app-landing-page',

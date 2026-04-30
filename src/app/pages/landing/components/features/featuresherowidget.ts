@@ -1,4 +1,4 @@
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { CustomersLogoWidget } from '@/app/pages/landing/components/customerslogowidget';
 import { HorizontalGridWidget } from '@/app/pages/landing/components/horizontalgridwidget';
 import { LazyImageWidget } from '@/app/pages/landing/components/lazyimagewidget';

@@ -1,5 +1,5 @@
 /*
- * Public API Surface of @unops/ux
+ * Public API Surface of @unopsitg/ux
  */
 export * from './lib/theme';
 export * from './lib/layout';

@@ -1,4 +1,4 @@
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { LazyImageWidget } from '@/app/pages/landing/components/lazyimagewidget';
 import { LogoWidget } from '@/app/pages/landing/components/logowidget';
 import { Component, computed, inject } from '@angular/core';

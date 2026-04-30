@@ -1,4 +1,4 @@
-import { Partner, AiCardBgComponent } from '@unops/ux';
+import { Partner, AiCardBgComponent } from '@unopsitg/ux';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';

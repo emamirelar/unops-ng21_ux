@@ -20,11 +20,11 @@ alwaysApply: false
 
 ```
 projects/
-  unops-ux/          # Publishable Angular library (@unops/ux): layout shell, brand theme, types, SCSS/Tailwind, logos
+  unops-ux/          # Publishable Angular library (@unopsitg/ux): layout shell, brand theme, types, SCSS/Tailwind, logos
     src/
       lib/theme/     # brand-theme.ts (PrimeUIX presets + UNOPS overrides)
       lib/layout/    # LayoutService, AppLayout, sidebar, topbar, menu, configurator, etc.
-      lib/types/     # Shared TypeScript interfaces (also re-exported from @unops/ux)
+      lib/types/     # Shared TypeScript interfaces (also re-exported from @unopsitg/ux)
       assets/        # layout SCSS partials, tailwind.css, styles.scss, opp/ SVGs
 src/
   app/
@@ -87,16 +87,16 @@ Legacy code still uses `@Input()` / `@Output()` / `EventEmitter` — do not intr
 
 ### Path Alias
 
-Application code uses the `@/` alias (mapped to `src/` in `tsconfig.json`). The publishable layout library is imported via `@unops/ux` (mapped to `projects/unops-ux/src/public-api.ts` in this workspace; from npm after install):
+Application code uses the `@/` alias (mapped to `src/` in `tsconfig.json`). The publishable layout library is imported via `@unopsitg/ux` (mapped to `projects/unops-ux/src/public-api.ts` in this workspace; from npm after install):
 
 ```typescript
-import { LayoutService, BrandSoft, MENU_MODEL } from '@unops/ux';
+import { LayoutService, BrandSoft, MENU_MODEL } from '@unopsitg/ux';
 ```
 
 ### Routing
 
 - Central route table in `src/app.routes.ts`.
-- Three layout shells: `AppLayout` and `AuthLayout` from `@unops/ux`, plus app-local `LandingLayout`.
+- Three layout shells: `AppLayout` and `AuthLayout` from `@unopsitg/ux`, plus app-local `LandingLayout`.
 - **Lazy loading** via `loadComponent` (single pages) and `loadChildren` (route arrays).
 - Child route files export `default` route arrays.
 - Use `data: { breadcrumb: 'Label' }` on routes for the breadcrumb component.
@@ -240,7 +240,7 @@ Rules:
 - `.storybook/preview.ts` mirrors the app's providers: zoneless CD, PrimeNG with `BrandSoft`, `.app-dark` dark mode toggle.
 - Static assets from `public/` are served by Storybook.
 - Storybook is deployed alongside the app at `{baseHref}/storybook` on GitHub Pages.
-- When adding a PrimeNG component story, import `BrandSoft` from `@unops/ux` in the story's `applicationConfig`.
+- When adding a PrimeNG component story, import `BrandSoft` from `@unopsitg/ux` in the story's `applicationConfig`.
 - New feature pages (partners, dashboards, etc.) should have corresponding Storybook page stories in `src/stories/pages/`.
 
 ## GitHub Pages Deployment

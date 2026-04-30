@@ -1,4 +1,4 @@
-import { LayoutService } from '@unops/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { generateRandomMultiData, trackByFn } from '@/app/lib/utils';
 import { MeterChart } from '@/app/pages/dashboards/charts/meterchart';
 import { CommonModule } from '@angular/common';

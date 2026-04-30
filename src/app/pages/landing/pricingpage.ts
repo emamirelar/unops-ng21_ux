@@ -1,5 +1,5 @@
-import { AppConfigurator } from '@unops/ux';
-import { LayoutService } from '@unops/ux';
+import { AppConfigurator } from '@unopsitg/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { CtaWidget } from '@/app/pages/landing/components/ctawidget';
 import { PricingCompareWidget } from '@/app/pages/landing/components/pricing/pricingcomparewidget';
 import { PricingHeroWidget } from '@/app/pages/landing/components/pricing/pricingherowidget';

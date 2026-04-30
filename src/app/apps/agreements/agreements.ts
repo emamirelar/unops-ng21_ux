@@ -11,7 +11,7 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MenuItem } from 'primeng/api';
-import { AiCardBgComponent } from '@unops/ux';
+import { AiCardBgComponent } from '@unopsitg/ux';
 
 interface ActivityFeed {
     id: number;

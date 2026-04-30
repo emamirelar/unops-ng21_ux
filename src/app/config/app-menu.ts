@@ -1,5 +1,5 @@
 import { type IsActiveMatchOptions } from '@angular/router';
-import { LayoutService, type MenuItem } from '@unops/ux';
+import { LayoutService, type MenuItem } from '@unopsitg/ux';
 
 const SUBSET_MATCH: IsActiveMatchOptions = { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' };
 

@@ -230,7 +230,7 @@ For each file:
 @import "../node_modules/unops-ng_ux/projects/unops-ux/src/assets/tailwind.css";
 ```
 
-This bypasses ng-packagr and reaches into the library source. Once the library publishes assets via its `ng-package.json`, change to the package path (the exact path depends on how the library publishes — check `node_modules/@unops/ux/` after install).
+This bypasses ng-packagr and reaches into the library source. Once the library publishes assets via its `ng-package.json`, change to the package path (the exact path depends on how the library publishes — check `node_modules/@unopsitg/ux/` after install).
 
 ---
 

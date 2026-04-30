@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
-import { brandPrimitives } from '@unops/ux';
+import { brandPrimitives } from '@unopsitg/ux';
 
 interface ColorSwatch {
     shade: string;

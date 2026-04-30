@@ -1,5 +1,5 @@
-import { AppConfigurator } from '@unops/ux';
-import { LayoutService } from '@unops/ux';
+import { AppConfigurator } from '@unopsitg/ux';
+import { LayoutService } from '@unopsitg/ux';
 import { LazyImageWidget } from '@/app/pages/landing/components/lazyimagewidget';
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';

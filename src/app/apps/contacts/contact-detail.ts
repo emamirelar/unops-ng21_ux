@@ -5,7 +5,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { TagModule } from 'primeng/tag';
-import { AiCardBgComponent } from '@unops/ux';
+import { AiCardBgComponent } from '@unopsitg/ux';
 import { Contact, ContactService, getContactStatusClass } from './contact.service';
 
 interface AiInsight {

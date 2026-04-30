@@ -1,6 +1,6 @@
 ---
 name: Extract Angular Library
-overview: Extract the reusable design system, layout shell, and shared types from the current Angular application into a publishable Angular library (`@unops/ux`), making the app a consumer of its own library while enabling other projects to install it via GitHub Packages or git URL.
+overview: Extract the reusable design system, layout shell, and shared types from the current Angular application into a publishable Angular library (`@unopsitg/ux`), making the app a consumer of its own library while enabling other projects to install it via GitHub Packages or git URL.
 todos:
   - id: scaffold
     content: "Scaffold library project: `projects/unops-ux/` with ng-package.json, package.json, tsconfig.lib.json, tsconfig.lib.prod.json, public-api.ts"
@@ -30,10 +30,10 @@ todos:
     content: Add `unops-ux` library project to angular.json with ng-packagr builder
     status: completed
   - id: update-tsconfig
-    content: Add `@unops/ux` path mapping to tsconfig.json for dev-time resolution
+    content: Add `@unopsitg/ux` path mapping to tsconfig.json for dev-time resolution
     status: completed
   - id: update-app-imports
-    content: "Update ~60 app files: change `@/app/layout/` and `@/app/types/` imports to `@unops/ux`"
+    content: "Update ~60 app files: change `@/app/layout/` and `@/app/types/` imports to `@unopsitg/ux`"
     status: completed
   - id: provide-menu-app
     content: Move hardcoded menu model to app-level file, provide MENU_MODEL in app.config.ts
@@ -50,7 +50,7 @@ todos:
 isProject: false
 ---
 
-# Extract Angular Library (`@unops/ux`)
+# Extract Angular Library (`@unopsitg/ux`)
 
 ## Architecture
 
@@ -62,14 +62,14 @@ graph LR
         lib["projects/unops-ux/\n(Angular library)"]
         app["src/\n(demo app)"]
     end
-    app -->|"imports @unops/ux"| lib
-    consumer["Product repo"] -->|"npm install @unops/ux"| dist["dist/unops-ux/\n(built package)"]
+    app -->|"imports @unopsitg/ux"| lib
+    consumer["Product repo"] -->|"npm install @unopsitg/ux"| dist["dist/unops-ux/\n(built package)"]
     lib -->|"ng build unops-ux"| dist
 ```
 
 ## What moves to the library vs what stays
 
-**Moves to `@unops/ux`:**
+**Moves to `@unopsitg/ux`:**
 - `brand-theme.ts` (presets, primitives)
 - `layout.service.ts` + `LayoutConfig`/`LayoutState` types
 - All layout components: `AppLayout`, `AppSidebar`, `AppTopbar`, `AppMenu`, `AppMenuitem`, `AppBreadcrumb`, `AppFooter`, `AppSearch`, `AppRightMenu`, `AppConfigurator`, `AuthLayout`
@@ -132,7 +132,7 @@ The token has UNOPS defaults via `factory`, so this repo's app needs zero config
 
 ### 4. Fix import paths
 
-Library code uses relative paths internally (no `@/` alias). The app's ~55 files importing from `@/app/layout/` update to `@unops/ux` or `@unops/ux/layout`.
+Library code uses relative paths internally (no `@/` alias). The app's ~55 files importing from `@/app/layout/` update to `@unopsitg/ux` or `@unopsitg/ux/layout`.
 
 ## Library project structure
 
@@ -169,7 +169,7 @@ projects/unops-ux/
       styles.scss                   # SCSS entry point
       tailwind.css                  # brand color definitions
   ng-package.json                   # ng-packagr config + asset globs
-  package.json                      # @unops/ux, peerDependencies
+  package.json                      # @unopsitg/ux, peerDependencies
   tsconfig.lib.json
   tsconfig.lib.prod.json
   README.md
@@ -179,7 +179,7 @@ projects/unops-ux/
 
 ```json
 {
-  "name": "@unops/ux",
+  "name": "@unopsitg/ux",
   "version": "21.0.0",
   "peerDependencies": {
     "@angular/common": "^21",
@@ -194,11 +194,11 @@ projects/unops-ux/
 
 ## Consuming project usage
 
-After `npm install @unops/ux`:
+After `npm install @unopsitg/ux`:
 
 ```typescript
 // app.config.ts
-import { BrandSoft, MENU_MODEL, SIDEBAR_LOGO } from '@unops/ux';
+import { BrandSoft, MENU_MODEL, SIDEBAR_LOGO } from '@unopsitg/ux';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -212,15 +212,15 @@ export const appConfig: ApplicationConfig = {
 ```json
 // angular.json — reference library styles
 "styles": [
-  "node_modules/@unops/ux/assets/styles.scss",
-  "node_modules/@unops/ux/assets/tailwind.css"
+  "node_modules/@unopsitg/ux/assets/styles.scss",
+  "node_modules/@unopsitg/ux/assets/tailwind.css"
 ]
 ```
 
 ```json
 // angular.json — copy library assets (logos, images)
 "assets": [
-  { "glob": "**/*", "input": "node_modules/@unops/ux/assets/opp", "output": "assets/opp" }
+  { "glob": "**/*", "input": "node_modules/@unopsitg/ux/assets/opp", "output": "assets/opp" }
 ]
 ```
 
@@ -232,10 +232,10 @@ export const appConfig: ApplicationConfig = {
 
 ## Files changed in the app (import updates)
 
-~55 files currently import from `@/app/layout/` — these update to `@unops/ux` or `@unops/ux/layout`. This is a mechanical find-and-replace. The `@/` alias continues to work for app-specific code (pages, features).
+~55 files currently import from `@/app/layout/` — these update to `@unopsitg/ux` or `@unopsitg/ux/layout`. This is a mechanical find-and-replace. The `@/` alias continues to work for app-specific code (pages, features).
 
-5 files import from `@/app/types/` — these update to `@unops/ux`.
+5 files import from `@/app/types/` — these update to `@unopsitg/ux`.
 
 [`angular.json`](angular.json) gets a new `unops-ux` project entry under `projects`.
 
-[`tsconfig.json`](tsconfig.json) gets a path mapping: `"@unops/ux": ["projects/unops-ux/src/public-api.ts"]` so the app resolves library imports from source during development.
+[`tsconfig.json`](tsconfig.json) gets a path mapping: `"@unopsitg/ux": ["projects/unops-ux/src/public-api.ts"]` so the app resolves library imports from source during development.

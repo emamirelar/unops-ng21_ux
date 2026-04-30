@@ -1,4 +1,4 @@
-import { Partner } from '@unops/ux';
+import { Partner } from '@unopsitg/ux';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
