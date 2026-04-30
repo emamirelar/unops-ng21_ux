@@ -1,4 +1,4 @@
-import { LayoutService } from '@emamirelar/ux';
+import { LayoutService } from '@unops/ux';
 import { Component, effect, inject, signal } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { FluidModule } from 'primeng/fluid';

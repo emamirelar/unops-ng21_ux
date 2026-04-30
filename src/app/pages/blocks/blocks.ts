@@ -1,4 +1,4 @@
-import { LayoutService } from '@emamirelar/ux';
+import { LayoutService } from '@unops/ux';
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockViewer } from './components/blockviewer';

@@ -4,7 +4,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
-import { BrandSoft, LayoutService, MENU_MODEL } from '@emamirelar/ux';
+import { BrandSoft, LayoutService, MENU_MODEL } from '@unops/ux';
 import { setCompodocJson } from '@storybook/addon-docs/angular';
 import docJson from '../documentation.json';
 import { createDemoAppMenu } from '../src/app/config/app-menu';

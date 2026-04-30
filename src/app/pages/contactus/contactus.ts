@@ -1,4 +1,4 @@
-import { LayoutService } from '@emamirelar/ux';
+import { LayoutService } from '@unops/ux';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';

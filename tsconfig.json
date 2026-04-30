@@ -22,7 +22,7 @@
             "@/*": [
                 "src/*"
             ],
-            "@emamirelar/ux": [
+            "@unops/ux": [
                 "projects/unops-ux/src/public-api.ts"
             ]
         }

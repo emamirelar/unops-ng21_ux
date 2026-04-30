@@ -1,4 +1,4 @@
-import { LayoutService } from '@emamirelar/ux';
+import { LayoutService } from '@unops/ux';
 import { LazyImageWidget } from '@/app/pages/landing/components/lazyimagewidget';
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';

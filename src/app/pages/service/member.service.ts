@@ -1,4 +1,4 @@
-import { Member } from '@emamirelar/ux';
+import { Member } from '@unops/ux';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 

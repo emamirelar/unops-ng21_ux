@@ -1,11 +1,11 @@
-# @emamirelar/ux
+# @unops/ux
 
 Angular 21 library: UNOPS brand theme (PrimeNG / PrimeUIX), application layout shell, and shared demo types.
 
 ## Install
 
 ```bash
-npm install @emamirelar/ux
+npm install @unops/ux
 ```
 
 ## Bootstrap
@@ -14,7 +14,7 @@ npm install @emamirelar/ux
 // app.config.ts
 import { ApplicationConfig } from '@angular/core';
 import { providePrimeNG } from 'primeng/config';
-import { BrandSoft, MENU_MODEL, LayoutService } from '@emamirelar/ux';
+import { BrandSoft, MENU_MODEL, LayoutService } from '@unops/ux';
 import { createDemoAppMenu } from './app/config/app-menu';
 import { environment } from './environments/environment';
 
@@ -38,12 +38,12 @@ Reference library SCSS/Tailwind and copy bundled logos into your app output:
 ```json
 // angular.json — styles (library bundles layout SCSS via `assets/styles.scss`)
 "styles": [
-  "node_modules/@emamirelar/ux/assets/styles.scss",
-  "node_modules/@emamirelar/ux/assets/tailwind.css",
+  "node_modules/@unops/ux/assets/styles.scss",
+  "node_modules/@unops/ux/assets/tailwind.css",
   "src/styles.scss"
 ],
 "assets": [
-  { "glob": "**/*", "input": "node_modules/@emamirelar/ux/assets/opp", "output": "assets/opp" }
+  { "glob": "**/*", "input": "node_modules/@unops/ux/assets/opp", "output": "assets/opp" }
 ]
 ```
 

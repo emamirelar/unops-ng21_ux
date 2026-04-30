@@ -1,8 +1,8 @@
-import { Component, computed, ElementRef, signal, ViewChild } from '@angular/core';
+import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
+import { DataViewModule } from 'primeng/dataview';
 import { DrawerModule } from 'primeng/drawer';
 import { InputTextModule } from 'primeng/inputtext';
 import { Menu, MenuModule } from 'primeng/menu';
@@ -11,6 +11,7 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MenuItem } from 'primeng/api';
+import { AiCardBgComponent } from '@unops/ux';
 
 interface ActivityFeed {
     id: number;
@@ -47,6 +48,15 @@ interface Comment {
     time: string;
 }
 
+interface AiInsight {
+    id: number;
+    title: string;
+    description: string;
+    actionLabel: string;
+    icon: string;
+    iconColor: string;
+}
+
 interface Agreement {
     id: number;
     fileName: string;
@@ -62,7 +72,7 @@ interface Agreement {
 
 @Component({
     selector: 'app-agreements',
-    imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, PaginatorModule, TagModule, TextareaModule, ConfirmDialogModule],
+    imports: [CommonModule, FormsModule, ButtonModule, DataViewModule, DrawerModule, InputTextModule, MenuModule, PaginatorModule, TagModule, TextareaModule, ConfirmDialogModule, AiCardBgComponent],
     providers: [ConfirmationService],
     template: `
         <div class="flex flex-col gap-6 animate-fade-in-up">
@@ -72,7 +82,8 @@ interface Agreement {
                 </div>
             </div>
 
-            <div class="flex flex-col gap-8">
+            <div class="flex flex-col xl:flex-row gap-6 w-full">
+            <div class="w-full flex-1 flex flex-col gap-8 min-w-0">
                 <div class="flex flex-col gap-6">
                     <div class="flex flex-wrap gap-2">
                         @for (filter of filterOptions; track filter) {
@@ -87,177 +98,93 @@ interface Agreement {
                         }
                     </div>
 
-                    <p-table
-                        [value]="filteredAgreements()"
-                        [paginator]="true"
-                        [rows]="rows"
-                        [scrollable]="true"
-                        sortMode="multiple"
-                        styleClass="agreements-table bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&_[data-pc-name=pcpaginator]]:rounded-none!"
-                        tableStyleClass="w-full min-w-[50rem]"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-                    >
-                        <ng-template #header>
-                            <tr>
-                                <th pSortableColumn="fileName" class="w-40">Agreement Name <p-sortIcon field="fileName" /></th>
-                                <th pSortableColumn="type" class="w-32">Type <p-sortIcon field="type" /></th>
-                                <th class="w-24">Actions</th>
-                                <th pSortableColumn="fileSize" class="w-42">File Size <p-sortIcon field="fileSize" /></th>
-                                <th class="w-24">Size</th>
-                                <th pSortableColumn="uploadDate" class="flex-1">Upload Date <p-sortIcon field="uploadDate" /></th>
-                                <th pSortableColumn="editDate" class="flex-1">Edit Date <p-sortIcon field="editDate" /></th>
-                                <th pSortableColumn="owner" class="flex-1">Owner <p-sortIcon field="owner" /></th>
-                            </tr>
-                        </ng-template>
-                        <ng-template #body let-doc>
-                            <tr>
-                                <td>
-                                    <div class="flex items-center gap-3 py-2">
-                                        <i class="pi text-xl text-surface-500 dark:text-surface-300" [ngClass]="doc.icon"></i>
-                                        <span class="text-surface-700 dark:text-surface-200 text-base whitespace-nowrap">{{ doc.fileName }}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p-tag [value]="doc.type" [severity]="getTagSeverity(doc.type)" styleClass="px-2 py-1" />
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap-1">
-                                        <p-button icon="pi pi-download" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" />
-                                        <p-button icon="pi pi-ellipsis-h" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="onTableMenuToggle($event, doc, tableMenu)" />
-                                        <p-menu #tableMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.fileSize }}</span>
-                                </td>
-                                <td>
-                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.size }}</span>
-                                </td>
-                                <td>
-                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.uploadDate }}</span>
-                                </td>
-                                <td>
-                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.editDate }}</span>
-                                </td>
-                                <td>
-                                    <span class="text-surface-600 dark:text-surface-300 text-base whitespace-nowrap">{{ doc.owner }}</span>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
-
-                <div class="flex flex-col lg:grid lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-6 xl:col-span-4 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col">
-                        <div class="px-6 pt-4 pb-4">
-                            <h4 class="title-h4 text-left!">Activity Feed</h4>
-                        </div>
-
-                        <div class="flex-1 pb-2 pt-1 px-4">
-                            <div class="relative">
-                                <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-500"></div>
-
-                                <div class="flex flex-col gap-4">
-                                    @for (activity of paginatedFeed(); track activity.id; let last = $last) {
-                                        <div class="flex gap-3">
-                                            <div class="flex items-start pt-2.5 w-6 justify-center">
-                                                <div class="w-2 h-2 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[activity.dotColor, activity.ringColor]"></div>
+                    <div class="bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 overflow-hidden">
+                        <p-dataview [value]="paginatedAgreements()" layout="list" [pt]="{ header: { class: 'p-0! hidden' }, content: { class: 'bg-transparent!' } }">
+                            <ng-template #list let-items>
+                                <div class="flex flex-col">
+                                    @for (item of items; track item.id; let i = $index) {
+                                        <div
+                                            class="flex flex-col sm:flex-row sm:items-center px-5 py-4 gap-4 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors"
+                                            [class.border-t]="i !== 0"
+                                            [class.border-surface-200]="i !== 0"
+                                            [class.dark:border-surface-600]="i !== 0"
+                                            (click)="editAgreement(item)"
+                                        >
+                                            <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 shrink-0">
+                                                <i class="pi text-lg text-surface-500 dark:text-surface-300" [ngClass]="item.icon"></i>
                                             </div>
 
-                                            <div class="flex-1 pb-4" [class.border-b]="!last" [class.border-surface-200]="!last" [class.dark:border-surface-600]="!last">
-                                                <div class="flex flex-col gap-2">
-                                                    <div class="flex flex-col gap-1">
-                                                        <div class="flex items-center justify-between">
-                                                            <div class="flex items-center gap-1">
-                                                                <i class="pi text-sm text-surface-500 dark:text-surface-300" [ngClass]="activity.icon"></i>
-                                                                <span class="text-surface-950 dark:text-surface-0 text-base font-medium leading-normal">{{ activity.fileName }}</span>
-                                                            </div>
-                                                            <div>
-                                                                <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-h" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="activityMenu.toggle($event)" />
-                                                                <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
-                                                            </div>
-                                                        </div>
-                                                        <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
-                                                    </div>
+                                            <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-3 min-w-0">
+                                                <div class="flex flex-col gap-1 min-w-0">
                                                     <div class="flex items-center gap-2">
-                                                        <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.time }}</span>
-                                                        <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-500"></div>
-                                                        <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.author }}</span>
+                                                        <span class="text-surface-900 dark:text-surface-0 text-base font-semibold truncate">{{ item.fileName }}</span>
+                                                        <p-tag [value]="item.type" [severity]="getTagSeverity(item.type)" styleClass="px-2 py-0.5 text-xs" />
                                                     </div>
+                                                    <div class="flex items-center gap-3 text-sm text-surface-500 dark:text-surface-400">
+                                                        <span class="flex items-center gap-1"><i class="pi pi-file text-xs"></i> {{ item.fileSize }}</span>
+                                                        <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> {{ item.uploadDate }}</span>
+                                                        <span class="flex items-center gap-1"><i class="pi pi-user text-xs"></i> {{ item.owner }}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center gap-2 shrink-0">
+                                                    <p-button icon="pi pi-download" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="$event.stopPropagation()" />
+                                                    <p-button icon="pi pi-ellipsis-h" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="onTableMenuToggle($event, item, dataviewMenu); $event.stopPropagation()" />
+                                                    <p-menu #dataviewMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
                                                 </div>
                                             </div>
                                         </div>
                                     }
                                 </div>
-                            </div>
-                        </div>
+                            </ng-template>
+                        </p-dataview>
 
                         <p-paginator
-                            [rows]="feedPerPage"
-                            [totalRecords]="activityFeed.length"
-                            [first]="feedFirst()"
-                            (onPageChange)="feedPage.set($event.page ?? 0)"
+                            [rows]="rows"
+                            [totalRecords]="filteredAgreements().length"
+                            [first]="agreementsFirst()"
+                            (onPageChange)="agreementsPage.set($event.page ?? 0)"
                             styleClass="border-t border-surface-200 dark:border-surface-600"
                         />
                     </div>
+                </div>
 
-                    <div class="lg:col-span-6 xl:col-span-8 flex flex-col gap-6">
-                        <div class="p-4 sm:p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col gap-[18px] overflow-hidden">
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:h-8">
-                                <h4 class="title-h4 text-left!">Agreement Types</h4>
-                                <div class="flex items-center gap-1">
-                                    <span class="text-surface-950 dark:text-surface-0 text-xl font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
-                                    <span class="text-surface-500 dark:text-surface-400 text-base leading-none">Total Agreements</span>
-                                </div>
-                            </div>
+                <div class="bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col">
+                    <div class="px-6 pt-4 pb-4">
+                        <h4 class="title-h4 text-left!">Activity Feed</h4>
+                    </div>
 
-                            <div class="hidden md:flex items-end gap-1 w-full">
-                                @for (storage of storageData; track storage.id) {
-                                    <div class="flex flex-col gap-2" [style.flex]="storage.flexValue">
-                                        <div class="h-4 rounded-lg" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                        <div class="flex flex-col gap-1">
-                                            <span class="text-surface-900 dark:text-surface-0 text-sm md:text-base xl:text-lg font-medium leading-tight md:leading-normal xl:leading-7">{{ storage.count.toLocaleString() }}</span>
-                                            <div class="flex items-center gap-1">
-                                                <div class="w-2 h-2 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                                <span class="text-surface-600 dark:text-surface-300 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
-                                            </div>
+                    <div class="flex-1 pb-2 pt-1 px-4">
+                        <div class="relative">
+                            <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-500"></div>
+
+                            <div class="flex flex-col gap-4">
+                                @for (activity of paginatedFeed(); track activity.id; let last = $last) {
+                                    <div class="flex gap-3">
+                                        <div class="flex items-start pt-2.5 w-6 justify-center">
+                                            <div class="w-2 h-2 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[activity.dotColor, activity.ringColor]"></div>
                                         </div>
-                                    </div>
-                                }
-                            </div>
 
-                            <div class="flex flex-col gap-3 md:hidden">
-                                @for (storage of storageData; track storage.id) {
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-3 h-3 rounded-sm" [style.background-color]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ storage.type }}</span>
-                                        </div>
-                                        <span class="text-surface-900 dark:text-surface-0 text-lg font-medium leading-7">{{ storage.count.toLocaleString() }}</span>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-
-                        <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600">
-                            <h4 class="title-h4 text-left! mb-4">Pinned</h4>
-
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6 gap-3">
-                                @for (pinned of pinnedItems; track pinned.id) {
-                                    <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-600 dark:bg-surface-800 flex flex-col gap-4">
-                                        <div class="flex justify-between items-start">
-                                            <i class="pi text-2xl! text-surface-500 dark:text-surface-300" [ngClass]="pinned.icon"></i>
-                                            <div>
-                                                <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
-                                                <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-col gap-1">
-                                            <span class="text-surface-900 dark:text-surface-0 text-base font-medium">{{ pinned.name }}</span>
-                                            <div class="flex xl:items-center gap-1 xl:flex-row flex-col">
-                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.type }}</span>
-                                                <div class="w-1 h-1 bg-surface-300 dark:bg-surface-500 rounded-full hidden xl:block"></div>
-                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.size }}</span>
+                                        <div class="flex-1 pb-4" [class.border-b]="!last" [class.border-surface-200]="!last" [class.dark:border-surface-600]="!last">
+                                            <div class="flex flex-col gap-2">
+                                                <div class="flex flex-col gap-1">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center gap-1">
+                                                            <i class="pi text-sm text-surface-500 dark:text-surface-300" [ngClass]="activity.icon"></i>
+                                                            <span class="text-surface-950 dark:text-surface-0 text-base font-medium leading-normal">{{ activity.fileName }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-h" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="activityMenu.toggle($event)" />
+                                                            <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.time }}</span>
+                                                    <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-500"></div>
+                                                    <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.author }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -265,7 +192,137 @@ interface Agreement {
                             </div>
                         </div>
                     </div>
+
+                    <p-paginator
+                        [rows]="feedPerPage"
+                        [totalRecords]="activityFeed.length"
+                        [first]="feedFirst()"
+                        (onPageChange)="feedPage.set($event.page ?? 0)"
+                        styleClass="border-t border-surface-200 dark:border-surface-600"
+                    />
                 </div>
+            </div>
+
+            <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
+                <ux-ai-card-bg
+                    class="border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 flex flex-col max-h-[calc(100dvh-12rem)]"
+                >
+                    <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1 min-h-0">
+                    <div class="flex items-center justify-between cursor-pointer shrink-0" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
+                        <div class="flex items-center gap-3">
+                            <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">AI Agreement Analysis</h4>
+                                <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
+                            </div>
+                        </div>
+                        <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-transparent border border-white dark:border-surface-300 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-white/10 transition-colors">
+                            <i class="pi text-xs text-darkblue-500 dark:text-surface-0" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                        </button>
+                    </div>
+
+                    <div class="expand-body" [class.expand-body--open]="isAiCardExpanded()">
+                        <div class="expand-body__inner">
+                        <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0">
+                            <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5 shrink-0">
+                                <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
+                                <input
+                                    type="text"
+                                    [ngModel]="aiSearchQuery()"
+                                    (ngModelChange)="aiSearchQuery.set($event); aiInsightsPage.set(0)"
+                                    placeholder="Search AI insights, risks, or compliance..."
+                                    class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700 dark:placeholder:text-surface-300"
+                                />
+                            </div>
+
+                            <div class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-0.5">
+                                @for (insight of paginatedAiInsights(); track insight.id) {
+                                    <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start shrink-0">
+                                        <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
+                                        <div class="flex flex-col gap-2 flex-1 min-w-0">
+                                            <div class="flex flex-col gap-1">
+                                                <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
+                                                <p class="text-[#2b638b] dark:text-surface-300 text-sm leading-normal">{{ insight.description }}</p>
+                                            </div>
+                                            <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-sm font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
+                                                {{ insight.actionLabel }}
+                                                <i class="pi pi-arrow-right text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="shrink-0 w-full border-t border-white/50 dark:border-surface-700/50 pt-2 mt-1 relative z-[1] bg-transparent">
+                                <p-paginator
+                                    [rows]="aiInsightsPerPage()"
+                                    [totalRecords]="filteredAiInsights().length"
+                                    [first]="aiInsightsFirst()"
+                                    (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
+                                    [pageLinkSize]="3"
+                                    styleClass="w-full border-none! bg-transparent!"
+                                    [pt]="{ root: { class: 'bg-transparent! relative! w-full! justify-center!' } }"
+                                />
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </ux-ai-card-bg>
+
+                <div class="p-5 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600">
+                    <h4 class="title-h4 text-left! mb-4">Pinned</h4>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        @for (pinned of pinnedItems; track pinned.id) {
+                            <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-600 dark:bg-surface-800 flex flex-col gap-4">
+                                <div class="flex justify-between items-start">
+                                    <i class="pi text-2xl! text-surface-500 dark:text-surface-300" [ngClass]="pinned.icon"></i>
+                                    <div>
+                                        <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
+                                        <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-surface-900 dark:text-surface-0 text-base font-medium">{{ pinned.name }}</span>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.type }}</span>
+                                        <div class="w-1 h-1 bg-surface-300 dark:bg-surface-500 rounded-full"></div>
+                                        <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.size }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="p-4 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col gap-4 overflow-hidden">
+                    <div class="flex justify-between items-center">
+                        <h4 class="title-h4 text-left!">Agreement Types</h4>
+                        <div class="flex items-center gap-1">
+                            <span class="text-surface-950 dark:text-surface-0 text-lg font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
+                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-none">Total</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-end gap-1 w-full">
+                        @for (storage of storageData; track storage.id) {
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="h-3 rounded-md" [style.background-color]="storage.color" [style.box-shadow]="'0px 3px 6px 0px ' + storage.shadowColor"></div>
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium leading-tight">{{ storage.count }}</span>
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-1.5 h-1.5 rounded-sm" [style.background-color]="storage.color"></div>
+                                        <span class="text-surface-600 dark:text-surface-300 text-xs leading-tight">{{ storage.type }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
 
@@ -386,20 +443,11 @@ interface Agreement {
 
             <p-confirmdialog />
     `,
-    styles: `
-        :host-context(.app-dark) ::ng-deep .agreements-table .p-datatable-thead > tr > th {
-            color: var(--p-surface-0);
-            border-color: var(--p-content-border-color);
-        }
-
-        :host-context(.app-dark) ::ng-deep .agreements-table .p-datatable-tbody > tr > td {
-            color: var(--p-surface-200);
-            border-color: var(--p-content-border-color);
-        }
-    `
+    styles: ``
 })
-export class Agreements {
+export class Agreements implements OnInit {
     @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+    private destroyRef = inject(DestroyRef);
 
     feedPage = signal(0);
     feedPerPage = 3;
@@ -410,6 +458,47 @@ export class Agreements {
     });
 
     activeFilter = signal<string>('All Agreements');
+
+    agreementsPage = signal(0);
+    agreementsFirst = computed(() => this.agreementsPage() * this.rows);
+    paginatedAgreements = computed(() => {
+        const all = this.filteredAgreements();
+        const start = this.agreementsFirst();
+        return all.slice(start, start + this.rows);
+    });
+
+    // ─── AI Analysis ───
+    isAiCardExpanded = signal(false);
+    aiSearchQuery = signal('');
+    aiInsights: AiInsight[] = [
+        { id: 1, title: 'Expiring Agreements', description: '5 partnership agreements are set to expire within the next 30 days. Renewal discussions should begin immediately to avoid service gaps.', actionLabel: 'View expiring list', icon: 'pi-exclamation-triangle', iconColor: 'text-orange-500' },
+        { id: 2, title: 'Compliance Risk Detected', description: '2 vendor contracts are missing updated data processing addendums required by the latest regulatory changes effective Q2 2026.', actionLabel: 'Review non-compliant', icon: 'pi-shield', iconColor: 'text-red-500' },
+        { id: 3, title: 'Duplicate Clause Patterns', description: 'Similar indemnification clauses appear in 8 agreements with slight variations. Standardizing could reduce legal review time by 40%.', actionLabel: 'View clause comparison', icon: 'pi-copy', iconColor: 'text-blue-500' },
+        { id: 4, title: 'Auto-Renewal Alert', description: '3 agreements with auto-renewal clauses are approaching their opt-out windows. Decision needed within 14 days.', actionLabel: 'Manage renewals', icon: 'pi-calendar', iconColor: 'text-teal-500' },
+        { id: 5, title: 'Cost Optimization', description: 'Consolidating 4 overlapping service agreements with the same vendor could save approximately $45,000 annually.', actionLabel: 'View consolidation plan', icon: 'pi-wallet', iconColor: 'text-green-600' },
+        { id: 6, title: 'Signature Bottleneck', description: '6 agreements are pending signature for more than 15 days. The average approval cycle is 7 days.', actionLabel: 'Escalate pending', icon: 'pi-clock', iconColor: 'text-orange-500' },
+        { id: 7, title: 'Missing Attachments', description: '4 recently uploaded agreements are missing required annexes or supporting schedules referenced in the main body.', actionLabel: 'Send reminders', icon: 'pi-file', iconColor: 'text-blue-500' },
+        { id: 8, title: 'Favorable Terms Detected', description: 'The NDA template used in 12 agreements includes broader IP protections than the industry standard, which is a competitive advantage.', actionLabel: 'View analysis', icon: 'pi-check-circle', iconColor: 'text-green-500' },
+        { id: 9, title: 'Version Control Issue', description: '2 agreements have multiple versions uploaded with conflicting terms. Only the latest signed version should be retained.', actionLabel: 'Resolve conflicts', icon: 'pi-exclamation-circle', iconColor: 'text-cherry-500' },
+        { id: 10, title: 'Jurisdiction Mismatch', description: '1 partnership agreement references a governing law jurisdiction that differs from the operational region.', actionLabel: 'Review jurisdiction', icon: 'pi-globe', iconColor: 'text-ocean-500' }
+    ];
+
+    filteredAiInsights = computed(() => {
+        const query = this.aiSearchQuery().trim().toLowerCase();
+        if (!query) return this.aiInsights;
+        return this.aiInsights.filter(insight =>
+            insight.title.toLowerCase().includes(query) ||
+            insight.description.toLowerCase().includes(query)
+        );
+    });
+
+    aiInsightsPerPage = signal(this.calcInsightsPerPage());
+    aiInsightsPage = signal(0);
+    aiInsightsFirst = computed(() => this.aiInsightsPage() * this.aiInsightsPerPage());
+    paginatedAiInsights = computed(() => {
+        const insights = this.filteredAiInsights();
+        return insights.slice(this.aiInsightsFirst(), this.aiInsightsFirst() + this.aiInsightsPerPage());
+    });
 
     filterOptions = ['All Agreements', 'Recently Uploaded', 'Large Files', 'Uploaded by Me'];
 
@@ -595,6 +684,20 @@ export class Agreements {
     tableMenuItems: MenuItem[] = [];
 
     constructor(private confirmationService: ConfirmationService) {}
+
+    ngOnInit() {
+        const onResize = () => this.aiInsightsPerPage.set(this.calcInsightsPerPage());
+        window.addEventListener('resize', onResize);
+        this.destroyRef.onDestroy(() => window.removeEventListener('resize', onResize));
+    }
+
+    private calcInsightsPerPage(): number {
+        const shellOffset = 12 * 16;
+        const cardChrome = 160 + 72;
+        const insightCardHeight = 150;
+        const available = (typeof window !== 'undefined' ? window.innerHeight : 900) - shellOffset - cardChrome;
+        return Math.max(1, Math.floor(available / insightCardHeight));
+    }
 
     onTableMenuToggle(event: Event, agreement: Agreement, menu: Menu) {
         this.tableMenuItems = [

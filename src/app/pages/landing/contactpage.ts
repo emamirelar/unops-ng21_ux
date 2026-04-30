@@ -1,5 +1,5 @@
-import { AppConfigurator } from '@emamirelar/ux';
-import { LayoutService } from '@emamirelar/ux';
+import { AppConfigurator } from '@unops/ux';
+import { LayoutService } from '@unops/ux';
 import { ContactAdressWidget } from '@/app/pages/landing/components/contact/contactadresswidget';
 import { ContactHeroWidget } from '@/app/pages/landing/components/contact/contactherowidget';
 import { FaqWidget } from '@/app/pages/landing/components/faqwidget';

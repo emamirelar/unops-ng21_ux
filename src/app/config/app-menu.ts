@@ -1,5 +1,5 @@
 import { type IsActiveMatchOptions } from '@angular/router';
-import { LayoutService, type MenuItem } from '@emamirelar/ux';
+import { LayoutService, type MenuItem } from '@unops/ux';
 
 const SUBSET_MATCH: IsActiveMatchOptions = { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' };
 
@@ -26,7 +26,8 @@ export function createDemoAppMenu(layoutService: LayoutService, storybookBaseUrl
                 {
                     label: 'Contacts',
                     icon: 'pi pi-fw pi-users',
-                    routerLink: ['/apps/contacts']
+                    routerLink: ['/apps/contacts'],
+                    routerLinkActiveOptions: SUBSET_MATCH
                 },
                 {
                     label: 'Interactions',

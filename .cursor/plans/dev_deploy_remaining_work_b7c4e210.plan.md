@@ -6,22 +6,22 @@ todos:
     content: "Delete 6 legacy files that are no longer imported: unops.preset.ts, unops-design-tokens.css/.scss, primeng-unops-theme.scss, global-filters-dialog-theme.scss, unops-utilities.scss (~9K dead lines)"
     status: pending
   - id: migrate-templates
-    content: "Migrate ~60 component templates from unops-* Tailwind classes to library native palette (bg-unops-primary → bg-blue-500, text-unops-neutral-600 → text-gray-600, etc.)"
+    content: Migrate ~60 component templates from unops-* Tailwind classes to library native palette (bg-unops-primary → bg-blue-500, text-unops-neutral-600 → text-gray-600, etc.)
     status: pending
   - id: remove-compat-bridge
-    content: "Remove the @theme compat block and @utility badge definitions from src/tailwind.css (lines 9-269), leaving only the library import"
+    content: Remove the @theme compat block and @utility badge definitions from src/tailwind.css (lines 9-269), leaving only the library import
     status: pending
   - id: replace-layout
-    content: "Replace public/layout/ (old Sakai-based shell) with the library's layout partials (sidebar themes, animations, tags, paginator)"
+    content: Replace public/layout/ (old Sakai-based shell) with the library's layout partials (sidebar themes, animations, tags, paginator)
     status: pending
   - id: trim-styles
-    content: "Remove recordPage.scss, detail-fields.scss, data-table.scss, info-callout.scss from styles.scss — migrate any still-needed rules into component SCSS first"
+    content: Remove recordPage.scss, detail-fields.scss, data-table.scss, info-callout.scss from styles.scss — migrate any still-needed rules into component SCSS first
     status: pending
   - id: fix-import-path
-    content: "Change tailwind.css library import from raw node_modules filesystem path to proper package asset path"
+    content: Change tailwind.css library import from raw node_modules filesystem path to proper package asset path
     status: pending
   - id: update-readme
-    content: "Update src/styles/README.md — still references deleted unops.preset.ts and unops-design-tokens.css as active"
+    content: Update src/styles/README.md — still references deleted unops.preset.ts and unops-design-tokens.css as active
     status: pending
 isProject: false
 ---
@@ -230,7 +230,7 @@ For each file:
 @import "../node_modules/unops-ng_ux/projects/unops-ux/src/assets/tailwind.css";
 ```
 
-This bypasses ng-packagr and reaches into the library source. Once the library publishes assets via its `ng-package.json`, change to the package path (the exact path depends on how the library publishes — check `node_modules/@emamirelar/ux/` after install).
+This bypasses ng-packagr and reaches into the library source. Once the library publishes assets via its `ng-package.json`, change to the package path (the exact path depends on how the library publishes — check `node_modules/@unops/ux/` after install).
 
 ---
 

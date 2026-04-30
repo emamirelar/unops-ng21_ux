@@ -1,4 +1,4 @@
-import { LayoutService } from '@emamirelar/ux';
+import { LayoutService } from '@unops/ux';
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Input } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
