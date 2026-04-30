@@ -206,6 +206,42 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Location & Office -->
+                        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-3">
+                            <div class="flex items-center gap-2">
+                                <i class="pi pi-map-marker text-deepsea-500 dark:text-surface-0"></i>
+                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Location</h4>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+                                @if (p.address1Country) {
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 shrink-0 overflow-hidden">
+                                            <img [src]="flagUrl()" [alt]="p.address1Country" class="w-7 h-7 object-contain" />
+                                        </div>
+                                        <div class="flex flex-col gap-0.5">
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.address1Country }}</span>
+                                            @if (p.address1City) {
+                                                <span class="text-surface-500 dark:text-surface-400 text-xs">{{ p.address1City }}</span>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (p.liaisonOfficeName) {
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 shrink-0">
+                                            <i class="pi pi-building text-surface-600 dark:text-surface-300"></i>
+                                        </div>
+                                        <div class="flex flex-col gap-0.5">
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.liaisonOfficeName }}</span>
+                                            <span class="text-surface-500 dark:text-surface-400 text-xs">Liaison Office</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Right Sidebar -->
@@ -300,43 +336,6 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             } @else {
                                 <span class="text-surface-500 dark:text-surface-400 text-sm italic">No focal point assigned</span>
                             }
-                        </div>
-
-                        <!-- Location & Office -->
-                        <div class="card flex flex-col gap-4 animate-fade-in-up stagger-2">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-map-marker text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Location</h4>
-                            </div>
-
-                            <div class="flex flex-col gap-4">
-                                @if (p.address1Country) {
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 shrink-0 overflow-hidden">
-                                            <img [src]="flagUrl()" [alt]="p.address1Country" class="w-7 h-7 object-contain" />
-                                        </div>
-                                        <div class="flex flex-col gap-0.5">
-                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.address1Country }}</span>
-                                            @if (p.address1City) {
-                                                <span class="text-surface-500 dark:text-surface-400 text-xs">{{ p.address1City }}</span>
-                                            }
-                                        </div>
-                                    </div>
-                                }
-
-                                @if (p.liaisonOfficeName) {
-                                    <p-divider styleClass="my-0!" />
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 shrink-0">
-                                            <i class="pi pi-building text-surface-600 dark:text-surface-300"></i>
-                                        </div>
-                                        <div class="flex flex-col gap-0.5">
-                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.liaisonOfficeName }}</span>
-                                            <span class="text-surface-500 dark:text-surface-400 text-xs">Liaison Office</span>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
                         </div>
 
                         <!-- Metadata -->

@@ -66,6 +66,14 @@ const INTERACTION_COLORS: Record<string, string> = {
                             <h1 class="text-deepsea-500 dark:text-surface-0 text-xl sm:text-2xl font-extrabold leading-8 m-0">
                                 {{ c.salutation ? c.salutation + ' ' : '' }}{{ c.firstName }} {{ c.lastName }}
                             </h1>
+                            <div class="flex items-center flex-wrap gap-2">
+                                @if (c.type) {
+                                    <p-tag [value]="c.type" severity="info" />
+                                }
+                                @if (c.status) {
+                                    <p-tag [value]="c.status" [styleClass]="getStatusClass(c.status)" />
+                                }
+                            </div>
                             <div class="flex items-center flex-wrap gap-x-3 gap-y-1 text-sm text-surface-600 dark:text-surface-300">
                                 @if (c.title) {
                                     <span class="flex items-center gap-1.5">
@@ -89,14 +97,6 @@ const INTERACTION_COLORS: Record<string, string> = {
                                 }
                             </div>
                         </div>
-                    </div>
-                    <div class="flex items-center flex-wrap gap-2">
-                        @if (c.type) {
-                            <p-tag [value]="c.type" severity="info" />
-                        }
-                        @if (c.status) {
-                            <p-tag [value]="c.status" [styleClass]="getStatusClass(c.status)" />
-                        }
                     </div>
                 </div>
 
@@ -255,26 +255,6 @@ const INTERACTION_COLORS: Record<string, string> = {
                         </div>
                     </div>
 
-                    <!-- Notes -->
-                    @if (c.notes) {
-                        <div class="card">
-                            <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isNotesExpanded()" (click)="isNotesExpanded.set(!isNotesExpanded())">
-                                <div class="flex items-center gap-2">
-                                    <i class="pi pi-file-edit text-deepsea-500 dark:text-surface-0"></i>
-                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Notes</h4>
-                                </div>
-                                <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isNotesExpanded()" [class.pi-chevron-down]="!isNotesExpanded()"></i>
-                            </div>
-                            <div class="expand-body" [class.expand-body--open]="isNotesExpanded()">
-                                <div class="expand-body__inner">
-                                    <p class="text-surface-700 dark:text-surface-300 text-sm leading-relaxed m-0 px-2 pb-4">
-                                        {{ c.notes }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
                 </div>
 
                 <!-- RIGHT COLUMN: Sidebar -->
@@ -400,6 +380,26 @@ const INTERACTION_COLORS: Record<string, string> = {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Notes -->
+                    @if (c.notes) {
+                        <div class="card">
+                            <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isNotesExpanded()" (click)="isNotesExpanded.set(!isNotesExpanded())">
+                                <div class="flex items-center gap-2">
+                                    <i class="pi pi-file-edit text-deepsea-500 dark:text-surface-0"></i>
+                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Notes</h4>
+                                </div>
+                                <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isNotesExpanded()" [class.pi-chevron-down]="!isNotesExpanded()"></i>
+                            </div>
+                            <div class="expand-body" [class.expand-body--open]="isNotesExpanded()">
+                                <div class="expand-body__inner">
+                                    <p class="text-surface-700 dark:text-surface-300 text-sm leading-relaxed m-0 px-2 pb-4">
+                                        {{ c.notes }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
 
                     <!-- Documents -->
                     <div class="card">
