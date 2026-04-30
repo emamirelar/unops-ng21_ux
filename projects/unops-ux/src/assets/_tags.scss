@@ -1,72 +1,90 @@
 .tag-filter-active.p-tag {
-    background: var(--p-surface-0);
+    border-color: var(--p-primary-900);
+    background-color: var(--p-primary-50);
     color: var(--p-primary-900);
     outline: 1px solid var(--p-primary-900);
 }
 
-:root[class*='app-dark'] .tag-filter-active.p-tag {
-    background: var(--p-surface-900);
-    color: var(--p-surface-0);
-    outline: 1px solid var(--p-primary-400);
-    border-color: var(--p-primary-400);
-}
-
 .tag-status-active.p-tag {
-    background: var(--color-babygreen-100);
+    border-color: var(--color-babygreen-300);
+    background-color: var(--color-babygreen-50);
+    border-color: var(--color-babygreen-300);
     color: var(--color-babygreen-900);
 }
 
 .tag-status-draft.p-tag {
-    background: var(--color-yellow-100);
+    
+    background-color: var(--color-lemon-200);
+    
     color: var(--color-yellow-900);
 }
 
 .tag-status-closed.p-tag {
-    background: var(--color-deepsea-100);
+    border-color: var(--color-deepsea-500);
     color: var(--color-deepsea-500);
 }
 
 .tag-status-archived.p-tag {
-    background: var(--color-gray-100);
+    outline: 1px solid var(--color-gray-400);
+    background-color: var(--color-gray-100);
+    border-color: var(--color-gray-400);
     color: var(--color-gray-700);
 }
 
 .tag-approval-approved.p-tag {
-    background: var(--color-olive-100);
-    color: var(--color-olive-700);
+    outline: 1px solid var(--color-green-400);
+    background-color: var(--color-babygreen-50);
+    border-color: var(--color-green-400);
+    color: var(--color-green-700);
 }
 
 .tag-approval-not-approved.p-tag {
-    background: var(--color-red-50);
+    outline: 1px solid var(--color-red-400);
+    background-color: var(--color-red-50);
+    border-color: var(--color-red-400);
     color: var(--color-red-800);
 }
 
+
+:root[class*='app-dark'] .tag-filter-active.p-tag {
+    background-color: var(--p-primary-900);
+    outline: 1px solid var(--p-primary-400);
+    border-color: var(--p-primary-400);
+    color: var(--p-primary-100);
+}
+
 :root[class*='app-dark'] .tag-status-active.p-tag {
-    background: var(--color-babygreen-900);
-    color: var(--color-babygreen-300);
+    background: var(--color-teal-800);
+    color: var(--color-teal-100);
 }
 
 :root[class*='app-dark'] .tag-status-draft.p-tag {
     background: var(--color-yellow-900);
-    color: var(--color-yellow-300);
+    color: var(--color-lemon-200);
 }
 
 :root[class*='app-dark'] .tag-status-closed.p-tag {
-    background: var(--color-deepsea-800);
-    color: var(--color-deepsea-100);
+    background-color: var(--color-deepsea-400);
+    color: var(--color-gray-200);
 }
 
 :root[class*='app-dark'] .tag-status-archived.p-tag {
-    background: var(--color-gray-900);
+    outline: 1px solid var(--color-gray-300);
+    border-color: var(--color-gray-300);
+    background-color: var(--color-gray-900);
     color: var(--color-gray-300);
 }
 
 :root[class*='app-dark'] .tag-approval-approved.p-tag {
-    background: var(--color-olive-900);
-    color: var(--color-olive-300);
+    outline: 1px solid var(--color-green-300);
+    border-color: var(--color-green-300);
+    background-color: var(--color-midnight-800);
+    color: var(--color-green-300);
 }
 
 :root[class*='app-dark'] .tag-approval-not-approved.p-tag {
-    background: var(--color-red-950);
+    outline: 1px solid var(--color-red-300);
+    border-color: var(--color-red-300);
+    background-color: var(--color-midnight-800);
     color: var(--color-red-300);
 }

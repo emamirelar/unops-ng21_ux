@@ -19,7 +19,7 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TaskDrawer } from '../tasklist/task-drawer';
-import { AiCardBgComponent } from '@emamirelar/ux';
+import { AiCardBgComponent } from '@unops/ux';
 
 interface Member {
     name?: string;

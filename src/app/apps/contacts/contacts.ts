@@ -85,6 +85,7 @@ interface FilterTag {
                                 [style.animation-delay.ms]="i * 50"
                                 [class.border-t]="i !== 0"
                                 [class.border-surface]="i !== 0"
+                                [routerLink]="['/apps/contacts', item.id]"
                             >
                                 <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 shrink-0">
                                     <span class="text-primary text-sm font-bold">{{ getInitials(item) }}</span>
@@ -131,6 +132,7 @@ interface FilterTag {
                                 <div
                                     class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up"
                                     [style.animation-delay.ms]="i * 50"
+                                    [routerLink]="['/apps/contacts', item.id]"
                                 >
                                     <div class="flex items-start justify-between">
                                         <div class="flex items-center gap-3">

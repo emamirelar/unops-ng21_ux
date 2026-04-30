@@ -1,11 +1,22 @@
-import { Partner } from '@emamirelar/ux';
+import { Partner, AiCardBgComponent } from '@unops/ux';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { PaginatorModule } from 'primeng/paginator';
 import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
 import { PartnerService } from './partner.service';
+
+interface AiInsight {
+    id: number;
+    title: string;
+    description: string;
+    actionLabel: string;
+    icon: string;
+    iconColor: string;
+}
 
 const COUNTRY_TO_FLAG: Record<string, string> = {
     japan: 'jp', switzerland: 'ch', denmark: 'dk', belgium: 'be',
@@ -30,14 +41,14 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
 @Component({
     selector: 'app-partner-detail-v2',
-    imports: [CommonModule, ButtonModule, TagModule, RouterModule, TabsModule],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, TabsModule, AiCardBgComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (partner(); as p) {
-            <div class="flex flex-col gap-0">
+            <div class="flex flex-col gap-6 animate-fade-in-up">
 
                 <!-- Back + Actions Bar -->
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center justify-between">
                     <p-button
                         icon="pi pi-arrow-left"
                         label="Partners"
@@ -59,7 +70,6 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         </div>
 
                         <div class="flex flex-col gap-1.5 flex-1 min-w-0">
-                            <!-- Line 1: Name + badge -->
                             <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
                                 <h1 class="text-surface-900 dark:text-surface-0 text-xl font-bold leading-7 m-0">{{ p.name }}</h1>
                                 @if (p.shortName) {
@@ -72,7 +82,6 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                 }
                             </div>
 
-                            <!-- Line 2: Location · Office · Focal point -->
                             <div class="flex items-center flex-wrap gap-x-3 gap-y-1 text-sm text-surface-600 dark:text-surface-300">
                                 @if (p.address1Country) {
                                     <span class="flex items-center gap-1.5">
@@ -96,7 +105,6 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                 }
                             </div>
 
-                            <!-- Line 3: Tags -->
                             <div class="flex items-center flex-wrap gap-2 mt-0.5">
                                 @if (p.partnerCategoryName) {
                                     <p-tag [value]="p.partnerCategoryName" severity="info" />
@@ -105,120 +113,194 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                     <p-tag [value]="p.status" [style]="getStatusStyle(p.status)" />
                                 }
                                 @if (p.partnerApprovalStatus) {
-                                    <p-tag [value]="p.partnerApprovalStatus" [style]="getApprovalStyle(p.partnerApprovalStatus)" />
+                                    <p-tag [value]="getApprovalLabel(p.partnerApprovalStatus)" [style]="getApprovalStyle(p.partnerApprovalStatus)" />
                                 }
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tabs -->
-                <p-tabs [value]="0" [scrollable]="true">
-                    <p-tablist>
-                        <p-tab [value]="0"><i class="pi pi-id-card mr-2"></i>Details</p-tab>
-                        <p-tab [value]="1"><i class="pi pi-briefcase mr-2"></i>Opportunities</p-tab>
-                        <p-tab [value]="2"><i class="pi pi-users mr-2"></i>Contacts</p-tab>
-                        <p-tab [value]="3"><i class="pi pi-comments mr-2"></i>Interactions</p-tab>
-                        <p-tab [value]="4"><i class="pi pi-file mr-2"></i>Documents</p-tab>
-                    </p-tablist>
+                <div class="flex flex-col xl:flex-row gap-6 w-full">
+                <!-- LEFT COLUMN: Tabs -->
+                <div class="w-full flex-1 min-w-0">
+                    <p-tabs [value]="0" [scrollable]="true">
+                        <p-tablist>
+                            <p-tab [value]="0"><i class="pi pi-id-card mr-2"></i>Details</p-tab>
+                            <p-tab [value]="1"><i class="pi pi-briefcase mr-2"></i>Opportunities</p-tab>
+                            <p-tab [value]="2"><i class="pi pi-users mr-2"></i>Contacts</p-tab>
+                            <p-tab [value]="3"><i class="pi pi-comments mr-2"></i>Interactions</p-tab>
+                            <p-tab [value]="4"><i class="pi pi-file mr-2"></i>Documents</p-tab>
+                        </p-tablist>
 
-                    <!-- Details tab -->
-                    <p-tabpanels>
-                        <p-tabpanel [value]="0">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5 py-2">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner ID</span>
-                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.id }}</span>
+                        <p-tabpanels>
+                            <p-tabpanel [value]="0">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5 py-2">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner ID</span>
+                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.id }}</span>
+                                    </div>
+
+                                    @if (p.partnerDescription) {
+                                        <div class="flex flex-col gap-1 sm:col-span-2">
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Description</span>
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerDescription }}</span>
+                                        </div>
+                                    }
+
+                                    @if (p.partnerCategoryName) {
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category</span>
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryName }}</span>
+                                        </div>
+                                    }
+
+                                    @if (p.partnerCategoryCode) {
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category Code</span>
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryCode }}</span>
+                                        </div>
+                                    }
+
+                                    @if (p.partnerGroupName) {
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner Group</span>
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerGroupName }}</span>
+                                        </div>
+                                    }
+
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Key Global Partner</span>
+                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                                            @if (p.keyGlobalPartner) {
+                                                <i class="pi pi-check-circle text-green-500 mr-1"></i> Yes
+                                            } @else {
+                                                <i class="pi pi-minus-circle text-surface-400 mr-1"></i> No
+                                            }
+                                        </span>
+                                    </div>
+
+                                    @if (p.createdDate) {
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Created</span>
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.createdDate | date:'mediumDate' }}</span>
+                                        </div>
+                                    }
+
+                                    @if (p.lastModifiedDate) {
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Last Modified</span>
+                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.lastModifiedDate | date:'mediumDate' }}</span>
+                                        </div>
+                                    }
+                                </div>
+                            </p-tabpanel>
+
+                            <p-tabpanel [value]="1">
+                                <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+                                    <i class="pi pi-briefcase text-3xl"></i>
+                                    <span class="text-sm">No opportunities linked to this partner yet.</span>
+                                </div>
+                            </p-tabpanel>
+
+                            <p-tabpanel [value]="2">
+                                <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+                                    <i class="pi pi-users text-3xl"></i>
+                                    <span class="text-sm">No contacts linked to this partner yet.</span>
+                                </div>
+                            </p-tabpanel>
+
+                            <p-tabpanel [value]="3">
+                                <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+                                    <i class="pi pi-comments text-3xl"></i>
+                                    <span class="text-sm">No interactions recorded for this partner yet.</span>
+                                </div>
+                            </p-tabpanel>
+
+                            <p-tabpanel [value]="4">
+                                <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+                                    <i class="pi pi-file text-3xl"></i>
+                                    <span class="text-sm">No documents attached to this partner yet.</span>
+                                </div>
+                            </p-tabpanel>
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
+
+                <!-- RIGHT COLUMN: AI Sidebar -->
+                <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0">
+
+                    <!-- AI Partner Analysis -->
+                    <ux-ai-card-bg
+                        class="border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 flex flex-col max-h-[calc(100dvh-12rem)]"
+                    >
+                        <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1 min-h-0">
+                        <div class="flex items-center justify-between cursor-pointer shrink-0" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
+                            <div class="flex items-center gap-3">
+                                <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                    <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">AI Partner Analysis</h4>
+                                    <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
+                                </div>
+                            </div>
+                            <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-transparent border border-white dark:border-surface-300 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-white/10 transition-colors">
+                                <i class="pi text-xs text-darkblue-500 dark:text-surface-0" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                            </button>
+                        </div>
+
+                        <div class="expand-body" [class.expand-body--open]="isAiCardExpanded()">
+                            <div class="expand-body__inner">
+                            <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0">
+                                <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5 shrink-0">
+                                    <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
+                                    <input
+                                        type="text"
+                                        [ngModel]="aiSearchQuery()"
+                                        (ngModelChange)="aiSearchQuery.set($event); aiInsightsPage.set(0)"
+                                        placeholder="Search insights, risks, or recommendations..."
+                                        class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700 dark:placeholder:text-surface-300"
+                                    />
                                 </div>
 
-                                @if (p.partnerDescription) {
-                                    <div class="flex flex-col gap-1 sm:col-span-2">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Description</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerDescription }}</span>
-                                    </div>
-                                }
-
-                                @if (p.partnerCategoryName) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryName }}</span>
-                                    </div>
-                                }
-
-                                @if (p.partnerCategoryCode) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category Code</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryCode }}</span>
-                                    </div>
-                                }
-
-                                @if (p.partnerGroupName) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner Group</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerGroupName }}</span>
-                                    </div>
-                                }
-
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Key Global Partner</span>
-                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
-                                        @if (p.keyGlobalPartner) {
-                                            <i class="pi pi-check-circle text-green-500 mr-1"></i> Yes
-                                        } @else {
-                                            <i class="pi pi-minus-circle text-surface-400 mr-1"></i> No
-                                        }
-                                    </span>
+                                <div class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-0.5">
+                                    @for (insight of paginatedAiInsights(); track insight.id) {
+                                        <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start shrink-0">
+                                            <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
+                                            <div class="flex flex-col gap-2 flex-1 min-w-0">
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
+                                                    <p class="text-[#2b638b] dark:text-surface-300 text-sm leading-normal">{{ insight.description }}</p>
+                                                </div>
+                                                <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-sm font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
+                                                    {{ insight.actionLabel }}
+                                                    <i class="pi pi-arrow-right text-xs"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
 
-                                @if (p.createdDate) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Created</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.createdDate | date:'mediumDate' }}</span>
-                                    </div>
-                                }
-
-                                @if (p.lastModifiedDate) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Last Modified</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.lastModifiedDate | date:'mediumDate' }}</span>
-                                    </div>
-                                }
+                                <div class="shrink-0 w-full border-t border-white/50 dark:border-surface-700/50 pt-2 mt-1 relative z-[1] bg-transparent">
+                                    <p-paginator
+                                        [rows]="aiInsightsPerPage()"
+                                        [totalRecords]="filteredAiInsights().length"
+                                        [first]="aiInsightsFirst()"
+                                        (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
+                                        [pageLinkSize]="3"
+                                        styleClass="w-full border-none! bg-transparent!"
+                                        [pt]="{ root: { class: 'bg-transparent! relative! w-full! justify-center!' } }"
+                                    />
+                                </div>
                             </div>
-                        </p-tabpanel>
-
-                        <!-- Opportunities tab (placeholder) -->
-                        <p-tabpanel [value]="1">
-                            <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
-                                <i class="pi pi-briefcase text-3xl"></i>
-                                <span class="text-sm">No opportunities linked to this partner yet.</span>
                             </div>
-                        </p-tabpanel>
+                        </div>
+                        </div>
+                    </ux-ai-card-bg>
 
-                        <!-- Contacts tab (placeholder) -->
-                        <p-tabpanel [value]="2">
-                            <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
-                                <i class="pi pi-users text-3xl"></i>
-                                <span class="text-sm">No contacts linked to this partner yet.</span>
-                            </div>
-                        </p-tabpanel>
+                </div>
+                </div>
 
-                        <!-- Interactions tab (placeholder) -->
-                        <p-tabpanel [value]="3">
-                            <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
-                                <i class="pi pi-comments text-3xl"></i>
-                                <span class="text-sm">No interactions recorded for this partner yet.</span>
-                            </div>
-                        </p-tabpanel>
-
-                        <!-- Documents tab (placeholder) -->
-                        <p-tabpanel [value]="4">
-                            <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
-                                <i class="pi pi-file text-3xl"></i>
-                                <span class="text-sm">No documents attached to this partner yet.</span>
-                            </div>
-                        </p-tabpanel>
-                    </p-tabpanels>
-                </p-tabs>
             </div>
         } @else {
             <div class="flex flex-col items-center justify-center gap-4 py-20">
@@ -250,9 +332,55 @@ export class PartnerDetailV2 implements OnInit {
         return code ? `flags/${code}.svg` : 'flags/globe.svg';
     });
 
+    // ─── AI Analysis ───
+    isAiCardExpanded = signal(false);
+    aiSearchQuery = signal('');
+    aiInsights: AiInsight[] = [
+        { id: 1, title: 'Due Diligence Expiring', description: 'This partner\'s due diligence assessment expires in 30 days. A renewal process should be initiated to avoid partnership suspension.', actionLabel: 'Start renewal process', icon: 'pi-exclamation-triangle', iconColor: 'text-orange-500' },
+        { id: 2, title: 'High Opportunity Conversion', description: 'This partner has a 78% opportunity-to-agreement conversion rate, significantly above the 52% portfolio average.', actionLabel: 'View performance report', icon: 'pi-chart-line', iconColor: 'text-green-500' },
+        { id: 3, title: 'Capacity Gap Identified', description: 'Recent project evaluations suggest a gap in financial reporting capacity. Targeted training could improve compliance scores.', actionLabel: 'Recommend capacity plan', icon: 'pi-graduation-cap', iconColor: 'text-blue-500' },
+        { id: 4, title: 'Geographic Expansion', description: 'This partner has expressed interest in operations in 3 new countries where UNOPS has active programmes. Cross-referencing shows strong alignment.', actionLabel: 'View matching programmes', icon: 'pi-globe', iconColor: 'text-teal-500' },
+        { id: 5, title: 'Compliance Risk: Low', description: 'All required documentation is current. No audit findings in the last 24 months. Risk rating remains at the lowest tier.', actionLabel: 'View compliance dashboard', icon: 'pi-shield', iconColor: 'text-green-600' },
+        { id: 6, title: 'Engagement Trend Declining', description: 'Active opportunities with this partner dropped from 8 to 3 in the past 6 months. Engagement may need revitalization.', actionLabel: 'Draft engagement strategy', icon: 'pi-chart-bar', iconColor: 'text-red-500' },
+        { id: 7, title: 'Similar Partners Found', description: '3 other partners in the same category and region have overlapping mandates. Consolidation or coordination may reduce duplication.', actionLabel: 'Compare partner profiles', icon: 'pi-search', iconColor: 'text-blue-600' },
+        { id: 8, title: 'Funding Cycle Alignment', description: 'This partner\'s fiscal year ends in Q2. Aligning new proposals with their budget cycle could improve approval rates by ~35%.', actionLabel: 'View fiscal calendar', icon: 'pi-calendar', iconColor: 'text-orange-500' },
+        { id: 9, title: 'Key Contact Changes', description: '2 primary focal points at this partner organization have changed roles in the last quarter. Relationship mapping should be updated.', actionLabel: 'Update contact records', icon: 'pi-users', iconColor: 'text-cherry-500' },
+        { id: 10, title: 'Agreement Renewal Window', description: '1 framework agreement with this partner expires in 90 days. Early renewal discussions are recommended.', actionLabel: 'Draft renewal proposal', icon: 'pi-clock', iconColor: 'text-teal-500' },
+    ];
+
+    filteredAiInsights = computed(() => {
+        const query = this.aiSearchQuery().trim().toLowerCase();
+        if (!query) return this.aiInsights;
+        return this.aiInsights.filter(insight =>
+            insight.title.toLowerCase().includes(query) ||
+            insight.description.toLowerCase().includes(query)
+        );
+    });
+
+    private destroyRef = inject(DestroyRef);
+    aiInsightsPerPage = signal(this.calcInsightsPerPage());
+    aiInsightsPage = signal(0);
+    aiInsightsFirst = computed(() => this.aiInsightsPage() * this.aiInsightsPerPage());
+    paginatedAiInsights = computed(() => {
+        const insights = this.filteredAiInsights();
+        return insights.slice(this.aiInsightsFirst(), this.aiInsightsFirst() + this.aiInsightsPerPage());
+    });
+
+    private calcInsightsPerPage(): number {
+        const shellOffset = 12 * 16;
+        const cardChrome = 160 + 72;
+        const insightCardHeight = 150;
+        const available = (typeof window !== 'undefined' ? window.innerHeight : 900) - shellOffset - cardChrome;
+        return Math.max(1, Math.floor(available / insightCardHeight));
+    }
+
     ngOnInit() {
         this.partnerService.getPartners();
         this.partnerId.set(this.route.snapshot.paramMap.get('id'));
+
+        const onResize = () => this.aiInsightsPerPage.set(this.calcInsightsPerPage());
+        window.addEventListener('resize', onResize);
+        this.destroyRef.onDestroy(() => window.removeEventListener('resize', onResize));
     }
 
     getStatusStyle(status: string): Record<string, string> {
@@ -271,5 +399,12 @@ export class PartnerDetailV2 implements OnInit {
             NotApproved: { background: 'var(--color-red-100)', color: 'var(--color-red-700)' }
         };
         return styles[status] ?? { background: 'var(--color-gray-100)', color: 'var(--color-gray-600)' };
+    }
+
+    getApprovalLabel(status: string): string {
+        const labels: Record<string, string> = {
+            NotApproved: 'Not Approved'
+        };
+        return labels[status] ?? status;
     }
 }

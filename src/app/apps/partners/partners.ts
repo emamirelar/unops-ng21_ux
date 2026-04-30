@@ -1,4 +1,4 @@
-import { Partner } from '@emamirelar/ux';
+import { Partner } from '@unops/ux';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -111,8 +111,8 @@ interface FilterTag {
                     @for (tag of filterTags(); track tag.value) {
                         <p-tag
                             [value]="tag.label"
-                            severity="secondary"
-                            styleClass="cursor-pointer transition-colors px-2 py-1"
+                            [severity]="tag.group === 'category' ? 'info' : undefined"
+                            [styleClass]="getFilterTagClass(tag)"
                             [class]="isTagActive(tag) ? 'tag-filter-active' : ''"
                             (click)="toggleTag(tag)"
                         />
@@ -199,7 +199,7 @@ interface FilterTag {
                                             <p-tag [value]="item.status" [styleClass]="getStatusClass(item.status)" />
                                         }
                                         @if (item.partnerApprovalStatus) {
-                                            <p-tag [value]="item.partnerApprovalStatus" [styleClass]="getApprovalClass(item.partnerApprovalStatus)" />
+                                            <p-tag [value]="getApprovalLabel(item.partnerApprovalStatus)" [styleClass]="getApprovalClass(item.partnerApprovalStatus)" />
                                         }
                                         <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
                                     </div>
@@ -252,7 +252,7 @@ interface FilterTag {
                                                 <p-tag [value]="item.status" [styleClass]="getStatusClass(item.status)" />
                                             }
                                             @if (item.partnerApprovalStatus) {
-                                                <p-tag [value]="item.partnerApprovalStatus" [styleClass]="getApprovalClass(item.partnerApprovalStatus)" />
+                                                <p-tag [value]="getApprovalLabel(item.partnerApprovalStatus)" [styleClass]="getApprovalClass(item.partnerApprovalStatus)" />
                                             }
                                         </div>
                                         <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
@@ -346,4 +346,17 @@ export class Partners implements OnInit {
 
     getStatusClass = getPartnerStatusClass;
     getApprovalClass = getPartnerApprovalClass;
+
+    getFilterTagClass(tag: FilterTag): string {
+        const base = 'cursor-pointer transition-colors px-2 py-1';
+        if (tag.group === 'status') return `${base} ${getPartnerStatusClass(tag.value)}`;
+        return base;
+    }
+
+    getApprovalLabel(status: string): string {
+        const labels: Record<string, string> = {
+            NotApproved: 'Not Approved'
+        };
+        return labels[status] ?? status;
+    }
 }

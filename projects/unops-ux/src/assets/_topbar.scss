@@ -208,7 +208,7 @@
                 justify-content: center;
                 color: inherit;
                 overflow: hidden;
-                border-radius: var(--border-radius);
+                border-radius: var(--border-radius-circle);
                 transition:
                     background-color var(--transition-duration),
                     box-shadow var(--transition-duration);

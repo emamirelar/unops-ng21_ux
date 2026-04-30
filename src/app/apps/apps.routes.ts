@@ -68,8 +68,18 @@ export default [
     },
     {
         path: 'contacts',
-        loadComponent: () => import('./contacts').then((c) => c.Contacts),
-        data: { breadcrumb: 'Contacts' }
+        data: { breadcrumb: 'Contacts' },
+        children: [
+            {
+                path: '',
+                loadComponent: () => import('./contacts').then((c) => c.Contacts)
+            },
+            {
+                path: ':id',
+                loadComponent: () => import('./contacts/contact-detail').then((c) => c.ContactDetail),
+                data: { breadcrumb: 'Details' }
+            }
+        ]
     },
     {
         path: 'interactions',

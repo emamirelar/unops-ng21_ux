@@ -27,6 +27,40 @@
             @media screen and (min-width: 768px) {
                 max-width: none;
             }
+
+            a {
+                color: var(--p-text-color);
+                position: relative;
+                text-decoration: none;
+                z-index: 0;
+                cursor: pointer;
+
+                &::before {
+                    background: var(--p-primary-200);
+                    content: '';
+                    inset: 0;
+                    position: absolute;
+                    transform: scaleX(0);
+                    transform-origin: right;
+                    transition: transform 0.3s ease-in-out;
+                    z-index: -1;
+
+                    .app-dark & {
+                        background: var(--p-primary-800);
+                    }
+                }
+
+                &:hover::before {
+                    transform: scaleX(1);
+                    transform-origin: left;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    &::before {
+                        transition: none;
+                    }
+                }
+            }
         }
     }
 }

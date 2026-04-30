@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Partner } from '@emamirelar/ux';
+import { Partner } from '@unops/ux';
 
 const STATUS_CLASSES: Record<string, string> = {
     Active: 'tag-status-active',

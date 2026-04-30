@@ -116,13 +116,13 @@ const brandOverrides = {
             colorScheme: {
                 light: {
                     row: {
-                        hoverBackground: '{primary.100}',
+                        hoverBackground: '{surface.100}',
                         hoverColor: '{surface.950}'
                     }
                 },
                 dark: {
                     row: {
-                        hoverBackground: '{primary.900}',
+                        hoverBackground: '{surface.900}',
                         hoverColor: '{surface.0}'
                     }
                 }
@@ -133,13 +133,13 @@ const brandOverrides = {
                 background: 'transparent'
             }
         },
+
         tag: {
             root: {
-                padding: '0.25rem 0.5rem'
+                padding: '0.25rem 0.5rem',
+                fontWeight: '500'
             },
-            label: {
-                fontWeight: '400'
-            },
+
             colorScheme: {
                 light: {
                     secondary: { color: '{surface.800}' },
@@ -147,11 +147,11 @@ const brandOverrides = {
                     active: { color: '{green.800}' },
                     inactive: { color: '{gray.800}' },
                     info: { color: '{blue.800}' },
-                    warn: { color: '{orange.800}' }
+                    warn: { color: '{orange.800}' },
+                    error: { color: '{red.800}' }
                 },
                 dark: {
                     secondary: { color: '{surface.100}' },
-
                     success: { color: '{green.100}' },
                     active: { color: '{green.100}' },
                     info: { color: '{blue.100}' },

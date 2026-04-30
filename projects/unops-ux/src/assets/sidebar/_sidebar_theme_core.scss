@@ -2,7 +2,7 @@
 
 .layout-sidebar {
    
-    background: linear-gradient(355deg, var(--color-blue-400, #26a2d8) 7.69%, var(--color-midnight-850, #001E31) 89.42%);
+    background: var(--p-surface-900);
     height: 100%;
     z-index: 10;
     .sidebar-header {

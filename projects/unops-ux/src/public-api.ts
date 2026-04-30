@@ -1,5 +1,5 @@
 /*
- * Public API Surface of @emamirelar/ux
+ * Public API Surface of @unops/ux
  */
 export * from './lib/theme';
 export * from './lib/layout';

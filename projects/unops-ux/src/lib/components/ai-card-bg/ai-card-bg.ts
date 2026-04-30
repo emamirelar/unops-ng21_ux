@@ -25,7 +25,7 @@ let aiCardBgFilterId = 0;
             overflow: hidden;
             isolation: isolate;
             contain: paint;
-            animation: ux-ai-bg-move 6s ease-in-out infinite;
+            animation: ux-ai-bg-move 5s ease-in-out infinite;
             will-change: background-color;
         }
 
