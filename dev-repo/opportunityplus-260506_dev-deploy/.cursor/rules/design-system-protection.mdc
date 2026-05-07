@@ -1,0 +1,93 @@
+---
+description: Enforces design-system integrity — no auth workarounds, no unauthorized styling, shared components only, no hard-coded visual values
+globs: *.ts, *.html, *.css, *.scss, *.cs
+alwaysApply: true
+---
+
+# Design System and Code Integrity Protection
+
+These constraints apply alongside `component-development.mdc` and `dotnet-implementation.mdc`. Violations block or must be reverted unless the user explicitly approves an exception.
+
+## 1. No permission or auth workarounds
+
+- Do not bypass, skip, or mock authentication or authorization in **production** code paths.
+- Do not hardcode tokens, API keys, passwords, or other credentials.
+- Do not disable or weaken `[Authorize]`, `[PermissionAuthorize]`, or Angular route guards to make something “just work.”
+- If a permission or credential blocks progress, **stop** and ask the user for the correct setup (roles, credentials, or environment).
+- Permissions must follow the **server-side** patterns in `component-development.mdc` and `dotnet-implementation.mdc` (e.g. `GET /api/{entity}/{id}/permissions`, no client-only permission logic).
+
+## 2. No unauthorized styling changes
+
+Do **not** modify existing stylesheets or style-related files unless the **user explicitly asked** for that file or change.
+
+**Protected paths** (under `UNOPS.PAO.ClientApp/` unless noted):
+
+- `node_modules/unops-ng_ux/` (UX package — never modify `node_modules`)
+- `src/tailwind.css` (Tailwind 4 entry; imports package `@theme`)
+- `.postcssrc.json` (PostCSS config for Tailwind 4)
+- `src/styles.scss` (global resets)
+- `src/styles/detail-fields.scss`, `src/styles/data-table.scss`, `src/styles/info-callout.scss` (shared SCSS partials)
+- Any component `*.scss` that is **not** part of the feature/file the user asked you to create or edit
+
+**Before changing any style file**, the agent must:
+
+1. Name the exact file and the proposed change.
+2. Briefly explain visual or cross-app impact.
+3. Wait for explicit user confirmation.
+
+## 3. Use existing design system components only
+
+- Build UI with **PrimeNG** (module imports per `component-development.mdc`) and existing shared/reusable pieces under `src/app/shared/`.
+- Do **not** add custom primitives (buttons, inputs, modals, cards, etc.) when PrimeNG or an existing shared component covers the use case.
+- Do **not** change an existing shared component to suit a new feature without **explicit user approval**.
+- If no suitable component exists, **ask** before creating a new one.
+
+## 4. No hard-coded visual values
+
+Do not hardcode colors, spacing, font sizes, radii, shadows, or breakpoints in ways that bypass the design system.
+
+**Use instead:**
+
+- Tailwind utilities from the package `@theme` (standard names: `text-darkblue-500`, `bg-gray-50`, `rounded-md`, `p-4`, `gap-6`, etc.)
+- CSS variables from the package `@theme` block (`var(--color-darkblue-500)`, `var(--color-gray-600)`, etc.)
+- PrimeNG surface tokens (`var(--surface-card)`, `var(--surface-border)`, etc.)
+- PrimeNG / preset tokens from `BrandSoft` (imported as `@emamirelar/ux`)
+- Custom Tailwind responsive variants defined in `src/tailwind.css` (`unops-mobile:`, `unops-tablet:`, `unops-desktop:`)
+
+**Avoid** (replace with tokens/utilities):
+
+| Avoid | Prefer |
+|--------|--------|
+| `color: #0092d1` | `var(--color-darkblue-500)` or `text-darkblue-500` |
+| `background: #ffffff` | `var(--surface-card)` or `bg-white` |
+| `color: #3c3d3e` | `var(--color-gray-800)` or `text-gray-800` |
+| `padding: 16px` | Tailwind `p-4` |
+| `font-size: 14px` | Tailwind `text-sm` |
+| `border-radius: 8px` | Tailwind `rounded-md` |
+| **Any `unops-*` utility** (e.g. `text-unops-primary`, `bg-unops-neutral-50`) | Standard Tailwind names (`text-darkblue-500`, `bg-gray-50`) — the `unops-*` prefix utilities do not exist |
+
+**Allowed literals:** `0`, `1px` (hairline borders), and `white` / `transparent` where they are universal constants (e.g. `color-mix` bases).
+
+## 5. PrimeNG theming and style encapsulation (no regressions)
+
+**Before adding or changing Prime-related styles:**
+
+| Do not (without explicit approval) | Do instead |
+|------------------------------------|------------|
+| `::ng-deep` | `:host :deep …`, sibling `:deep …`, or a scoped `styleClass` on PrimeNG components |
+| New `.p-*` overrides in feature `*.component.scss` | Fix or extend the `BrandSoft` preset (in the `unops-ng_ux` package); use Tailwind utilities; only if the preset cannot express it, add component-scoped styling |
+| `!important` on a property **value** that is `var(--p-…)` (PrimeNG CSS variables) | Adjust the `BrandSoft` preset, or use `var(--color-…)` without `!important` |
+| Duplicate hex values for colors already in tokens | Single source: package `@theme` block and `BrandSoft` preset |
+
+**Clarifications:**
+
+- **All PrimeNG styling goes through the `BrandSoft` preset** from `@emamirelar/ux`. The preset is Aura-based with UNOPS brand primitives.
+- **Layout shell comes from the `unops-ng_ux` package** (`AppLayout`, `AppSidebar`, `AppTopbar`, `AppMenu`). Do not recreate custom layout components.
+- **`::ng-deep`:** do not add new usages; use the replacements above. Exceptions need **explicit user/maintainer approval** and a comment (e.g. ticket ID).
+- **`!important`:** avoiding `!important` on **`var(--p-…)`** is the guardrail; other `!important` is discouraged but not the same violation — prefer fixing specificity or using package tokens.
+
+**Document body / non-descendant targets** (e.g. `body.resizing`) belong in **`src/styles.scss`** (or another global stylesheet), not in a component’s `:host :deep` chain.
+
+## QA exception
+
+Work in `QA Tests/` and `src/qa-frontend-tests/` remains governed by `qa-write-boundaries.mdc`; this rule does not grant permission to change production styles or shared components outside those QA folders.

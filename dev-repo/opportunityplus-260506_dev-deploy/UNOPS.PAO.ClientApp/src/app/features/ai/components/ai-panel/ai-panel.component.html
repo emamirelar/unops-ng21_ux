@@ -1,0 +1,72 @@
+﻿@if (!embedded()) {
+  <p-panel class="ai-panel">
+    <ng-template #header>
+      <div class="flex gap-4 items-center w-full">
+        @if (showAiIcon()) {
+          <img src="assets/images/AI_visual_64.svg" alt="AI Assistant" class="ai-panel-header-icon ml-1" />
+        }
+        <div class="font-sans text-xl font-semibold">{{ title() | translate }}</div>
+      </div>
+    </ng-template>
+
+    @if (shouldShowSpinner()) {
+      <div class="w-full flex justify-center items-center ai-panel-spinner-wrap">
+        <i class="pi pi-spin pi-spinner"></i>
+      </div>
+    } @else if (shouldShowContent()) {
+      <div class="flex flex-col gap-4">
+        <div [class]="shouldTruncate() ? 'content-truncated-wrapper' : 'content-full-wrapper'">
+          <div [innerHTML]="content() | markdown" [class]="'markdown-content ' + customStyles()"></div>
+        </div>
+
+        @if (showSeeMoreButton() || showSeeLessButton()) {
+          <div class="flex justify-center -mb-2">
+            <p-button
+              [label]="toggleButtonLabel() | translate"
+              [icon]="toggleButtonIcon()"
+              [rounded]="true"
+              [size]="'small'"
+              [text]="true"
+              (onClick)="toggleFullContent()"
+            />
+          </div>
+        }
+      </div>
+    } @else if (shouldShowError()) {
+      <div class="text-cherry-500">
+        {{ content() }}
+      </div>
+    }
+  </p-panel>
+} @else {
+  <div class="ai-panel ai-panel-embedded">
+    @if (shouldShowSpinner()) {
+      <div class="w-full flex justify-center items-center ai-panel-spinner-wrap">
+        <i class="pi pi-spin pi-spinner"></i>
+      </div>
+    } @else if (shouldShowContent()) {
+      <div class="flex flex-col gap-4">
+        <div [class]="shouldTruncate() ? 'content-truncated-wrapper' : 'content-full-wrapper'">
+          <div [innerHTML]="content() | markdown" [class]="'markdown-content ' + customStyles()"></div>
+        </div>
+
+        @if (showSeeMoreButton() || showSeeLessButton()) {
+          <div class="flex justify-center -mb-2">
+            <p-button
+              [label]="toggleButtonLabel() | translate"
+              [icon]="toggleButtonIcon()"
+              [rounded]="true"
+              [size]="'small'"
+              [text]="true"
+              (onClick)="toggleFullContent()"
+            />
+          </div>
+        }
+      </div>
+    } @else if (shouldShowError()) {
+      <div class="text-cherry-500">
+        {{ content() }}
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,348 @@
+/**
+ * Opportunity View Component Styles
+ * Unified Dashboard View styling
+ */
+
+:host {
+  display: block;
+  background-color: var(--color-gray-50);
+  min-height: calc(100vh - 4rem);
+}
+
+// Custom scrollbar styling for better visibility
+:host :deep {
+  // Content scroll container
+  .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-blue-700) 30%, transparent)
+      color-mix(in srgb, var(--color-gray-900) 5%, transparent);
+
+    // Webkit browsers (Chrome, Safari, Edge)
+    &::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: color-mix(in srgb, var(--color-gray-900) 5%, transparent);
+      border-radius: 0.25rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--color-blue-700) 30%, transparent);
+      border-radius: 0.25rem;
+      border: 1px solid color-mix(in srgb, var(--color-gray-900) 5%, transparent);
+      
+      &:hover {
+        background: color-mix(in srgb, var(--color-blue-700) 50%, transparent);
+      }
+      
+      &:active {
+        background: color-mix(in srgb, var(--color-blue-700) 70%, transparent);
+      }
+    }
+  }
+}
+
+// Smooth transitions for interactive elements
+.bg-white,
+.bg-white,
+p-card,
+p-badge,
+p-chip {
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Hover effects for cards
+p-card:hover {
+  transform: translateY(calc(-1 * 0.25rem / 2));
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+// Stat card styling
+.bg-white.rounded-lg.shadow-sm:hover,
+.bg-white.rounded-lg.shadow-sm:hover {
+  transform: translateY(calc(-1 * 0.25rem / 2));
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+// Back button hover effect
+a:hover i {
+  transform: translateX(calc(-1 * 0.25rem / 2));
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Loading spinner
+.pi-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Prime badge/card/panel + placeholders: primeng-brand-theme.scss (.unops-opportunity-view-host on host)
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+// Hover-to-edit section affordances
+.section-hover-container {
+  position: relative;
+  border-radius: 0.5rem;
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Show hover effects only when section is editable
+  &.section-editable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--color-blue-700) 2%, var(--surface-card, #fff));
+
+      // Add subtle border glow effect
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 2px solid color-mix(in srgb, var(--color-blue-700) 20%, transparent);
+        border-radius: 12px;
+        pointer-events: none;
+        z-index: 1;
+      }
+    }
+  }
+
+  // Don't show hover effects if section has unsaved changes
+  &:not(.section-editable) {
+    cursor: default;
+  }
+}
+
+// Ensure child components don't interfere with hover effect
+.section-hover-container > * {
+  position: relative;
+  z-index: 2;
+}
+
+// Height-based responsive banner (simplified)
+.opportunity-banner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  transition:
+    height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 0.5rem 0.5rem;
+
+  // Default: hidden on short viewports
+  display: none;
+
+  @media (min-height: 800px) {
+    display: block;
+    height: 4rem;
+    max-height: 4rem;
+  }
+
+  @media (min-height: 960px) {
+    height: 6rem;
+    max-height: 6rem;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Loading Progress Strip Styles
+.loading-progress-strip {
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Smooth progress bar fill animation
+  .bg-blue-500 {
+    transition: width calc(0.3s + 0.2s)
+      cubic-bezier(0.0, 0.0, 0.2, 1);
+  }
+}
+
+// Fade in animation for progress strip
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * 0.25rem));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .loading-progress-strip {
+    animation: none;
+  }
+
+  .loading-progress-strip .bg-blue-500 {
+    transition: none;
+  }
+
+  .pi-spinner {
+    animation: none;
+  }
+}
+
+// Field highlight animation for requirement click navigation
+// Applied globally since field elements are in child components
+:host :deep {
+  .field-highlight {
+    animation: fieldHighlightPulse 2s ease-in-out;
+    border-radius: 8px;
+  }
+}
+
+@keyframes fieldHighlightPulse {
+  0% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  20% {
+    background-color: color-mix(in srgb, var(--color-blue-700) 15%, transparent);
+    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--color-blue-700) 20%, transparent);
+  }
+  50% {
+    background-color: color-mix(in srgb, var(--color-blue-700) 10%, transparent);
+    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--color-blue-700) 15%, transparent);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+// ========================================
+// Workflow Action Loading Overlay
+// Shows a blur effect with spinner during workflow actions
+// (Submit, Approve, Reject, Recall, Cancel, Reopen)
+// ========================================
+.workflow-action-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // Semi-transparent backdrop with blur effect
+  background-color: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(0.25rem);
+  -webkit-backdrop-filter: blur(0.25rem);
+  
+  // Smooth fade-in animation
+  animation: overlayFadeIn 0.2s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+// Overlay fade-in animation
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Reduced motion support for overlay
+@media (prefers-reduced-motion: reduce) {
+  .workflow-action-overlay {
+    animation: none;
+  }
+}
+
+// Section entrance (stagger via delay classes on parent template)
+@keyframes opportunitySectionEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.opportunity-section-enter {
+  animation: opportunitySectionEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.opportunity-section-enter-delay-1 {
+  animation-delay: 40ms;
+}
+.opportunity-section-enter-delay-2 {
+  animation-delay: 80ms;
+}
+.opportunity-section-enter-delay-3 {
+  animation-delay: 120ms;
+}
+.opportunity-section-enter-delay-4 {
+  animation-delay: 160ms;
+}
+.opportunity-section-enter-delay-5 {
+  animation-delay: 200ms;
+}
+.opportunity-section-enter-delay-6 {
+  animation-delay: 240ms;
+}
+.opportunity-section-enter-delay-7 {
+  animation-delay: 280ms;
+}
+.opportunity-section-enter-delay-8 {
+  animation-delay: 320ms;
+}
+.opportunity-section-enter-delay-9 {
+  animation-delay: 360ms;
+}
+.opportunity-section-enter-delay-10 {
+  animation-delay: 400ms;
+}
+.opportunity-section-enter-delay-11 {
+  animation-delay: 440ms;
+}
+.opportunity-section-enter-delay-12 {
+  animation-delay: 480ms;
+}
+.opportunity-section-enter-delay-13 {
+  animation-delay: 520ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opportunity-section-enter,
+  .opportunity-section-enter[class*='-delay-'] {
+    animation: none;
+  }
+}

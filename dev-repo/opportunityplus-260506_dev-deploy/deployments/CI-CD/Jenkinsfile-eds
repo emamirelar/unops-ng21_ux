@@ -1,0 +1,469 @@
+properties(
+    [
+        buildDiscarder(logRotator(numToKeepStr: "8"))
+    ]
+)
+
+timestamps {
+    def branchName = env.BRANCH_NAME ?: 'test'
+    def agentLabel = "opportunityplus-agent-${branchName}"
+
+    echo "Using Jenkins dynamic agent: ${agentLabel}"
+
+node(agentLabel) {
+    def CHECK_NAME = 'External Data Service CI'
+    def BUILD_URL = env.BUILD_URL ?: ''
+
+    def environment, PROJECT_ID, REPO_NAME, IMAGE_NAME, IMAGE_TAG
+    def SERVICE_NAME, REGION, SQL_CONN_STRING, VPC_CONNECTOR
+    def SECRETS, ENV_VARS, CREDENTIALS_ID, DOCKERFILE, PORT
+    def MIN_INSTANCES, MAX_INSTANCES, MEMORY, CPU, TIMEOUT, SERVICE_ACCOUNT, INVOKER_SERVICE_ACCOUNTS
+    
+    try {
+        stage('Checkout Code') {
+            cleanWs()
+            def checkoutSuccess = false
+            def maxAttempts = 3
+            def lastError = null
+
+            for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+                try {
+                    echo "Checkout attempt ${attempt} of ${maxAttempts}..."
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: scm.branches,
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'CloneOption',
+                             depth: 0,
+                             noTags: false,
+                             reference: '',
+                             shallow: false,
+                             timeout: 5],
+                            [$class: 'SubmoduleOption',
+                             disableSubmodules: false,
+                             parentCredentials: true,
+                             recursiveSubmodules: true,
+                             reference: '',
+                             timeout: 5,
+                             trackingSubmodules: false]
+                        ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: scm.userRemoteConfigs
+                    ])
+                    checkoutSuccess = true
+                    echo "Checkout succeeded on attempt ${attempt}"
+                    break
+                } catch (Exception checkoutError) {
+                    lastError = checkoutError
+                    echo "Checkout attempt ${attempt} failed: ${checkoutError.getMessage()}"
+                    if (attempt < maxAttempts) {
+                        def waitSeconds = attempt * 15
+                        echo "Waiting ${waitSeconds} seconds before retry..."
+                        sleep(waitSeconds)
+                        sh 'git clean -fdx || true'
+                        sh 'git submodule foreach --recursive git clean -fdx || true'
+                    }
+                }
+            }
+
+            if (!checkoutSuccess) {
+                error("Checkout failed after ${maxAttempts} attempts. Last error: ${lastError?.getMessage() ?: 'Unknown'}")
+            }
+
+            // Verify submodule was checked out
+            sh """
+            echo "Verifying submodule checkout..."
+            if [ -d "UNOPS.PAO.ExternalDataService" ] && [ -f "UNOPS.PAO.ExternalDataService/Program.cs" ]; then
+                echo "✓ External Data Service submodule checked out successfully"
+                ls -la UNOPS.PAO.ExternalDataService/
+            else
+                echo "✗ External Data Service submodule not found or incomplete"
+                echo "Available directories:"
+                ls -la
+                exit 1
+            fi
+            """
+
+            publishChecks name: CHECK_NAME,
+                          status: 'IN_PROGRESS',
+                          title: 'External Data Service Build Started',
+                          summary: "Starting External Data Service build for branch: ${env.BRANCH_NAME ?: 'development'}",
+                          detailsURL: BUILD_URL
+        }
+        
+        stage('Load Configuration') {
+            def configYaml = readFile('deployments/CI-CD/jenkins-config-eds.yaml')
+            def yaml = new org.yaml.snakeyaml.Yaml()
+            def config = yaml.load(configYaml)
+
+            def currentBranch = env.BRANCH_NAME ?: 'development'
+            def envConfig = null
+ 
+            config.environments.each { envName, envSettings -> 
+                if (currentBranch.matches(envSettings.branch_pattern)) {
+                    envConfig = envSettings
+                    return true
+                }
+            }
+
+            if (!envConfig) {
+                envConfig = config.environments.development
+                echo "No matching environment found for branch ${currentBranch}, using development environment"
+            }
+            
+            environment = envConfig.environment
+            PROJECT_ID = envConfig.project_id
+            REPO_NAME = envConfig.repo_name
+            IMAGE_NAME = envConfig.image_name
+            IMAGE_TAG = 'latest'
+            SERVICE_NAME = envConfig.service_name
+            REGION = envConfig.region
+            SQL_CONN_STRING = envConfig.sql_conn_string
+            VPC_CONNECTOR = envConfig.vpc_connector
+            SECRETS = envConfig.secrets
+            ENV_VARS = envConfig.env_vars
+            CREDENTIALS_ID = envConfig.credentials_id
+            SERVICE_ACCOUNT = envConfig.service_account
+            DOCKERFILE = envConfig.dockerfile
+            PORT = envConfig.port
+            MIN_INSTANCES = envConfig.min_instances
+            MAX_INSTANCES = envConfig.max_instances
+            MEMORY = envConfig.memory
+            CPU = envConfig.cpu
+            TIMEOUT = envConfig.timeout
+            INVOKER_SERVICE_ACCOUNTS = envConfig.invoker_service_accounts
+            
+            // Cloud Scheduler Configuration
+            SCHEDULER_ENABLED = envConfig.scheduler_enabled ?: false
+            SCHEDULER_SETUP_SCRIPT = envConfig.scheduler_setup_script ?: ""
+            
+            echo "Configuration loaded for External Data Service environment: ${environment}"
+            echo "Project ID: ${PROJECT_ID}"
+            echo "Service Name: ${SERVICE_NAME}"
+            echo "Service Account: ${SERVICE_ACCOUNT}"
+            echo "Branch: ${currentBranch}"
+            echo "Invoker Service Accounts: ${INVOKER_SERVICE_ACCOUNTS}"
+            echo "Configuration Path will be: ../ExternalDataService/config (relative to submodule)"
+            echo "Cloud Scheduler Enabled: ${SCHEDULER_ENABLED}"
+            if (SCHEDULER_ENABLED) {
+                echo "Scheduler Setup Script: ${SCHEDULER_SETUP_SCRIPT}"
+            }
+        }
+
+        stage('Ensure Artifact Registry Exists') {
+            // Retry for transient GCP API/network issues
+            retry(3) {
+                withCredentials([file(credentialsId: CREDENTIALS_ID, variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh """
+                    UNIQUE_CREDS_FILE="\${WORKSPACE}/gcp-creds-registry-\${BUILD_NUMBER}.json"
+                    cp "\${GOOGLE_APPLICATION_CREDENTIALS}" "\${UNIQUE_CREDS_FILE}"
+                    gcloud auth activate-service-account --key-file="\${UNIQUE_CREDS_FILE}"
+                    gcloud config set project ${PROJECT_ID}
+                    
+                    REPO_TYPE="docker"
+
+                    if ! gcloud artifacts repositories describe "${REPO_NAME}" --location="${REGION}" >/dev/null 2>&1; then
+                        echo "Artifact Registry '${REPO_NAME}' does not exist in '${REGION}'. Creating..."
+                        gcloud artifacts repositories create "${REPO_NAME}" \\
+                            --repository-format="\$REPO_TYPE" \\
+                            --location="${REGION}" \\
+                            --description="Docker repository for External Data Service"
+                    else
+                        echo "Artifact Registry '${REPO_NAME}' already exists in '${REGION}'."
+                    fi
+                    
+                    # Cleanup unique credential file
+                    rm -f "\${UNIQUE_CREDS_FILE}"
+                    """
+                }
+            }
+        }
+
+        stage('Build and Deploy External Data Service') {
+            withCredentials([file(credentialsId: CREDENTIALS_ID, variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                sh """
+                # Create isolated build directory for External Data Service
+                EDS_BUILD_DIR="\${WORKSPACE}/eds-build-\${BUILD_NUMBER}"
+                mkdir -p "\${EDS_BUILD_DIR}"
+                
+                # Copy ALL source files including ExternalDataService config directory
+                # This ensures the appsettings.Development.json and config files are available
+                echo "Copying all project files including ExternalDataService configuration..."
+                rsync -av --exclude="eds-build-*" . "\${EDS_BUILD_DIR}/"
+                
+                # Verify the ExternalDataService configuration directory exists
+                if [ -d "\${EDS_BUILD_DIR}/ExternalDataService" ]; then
+                    echo "✓ ExternalDataService configuration directory found"
+                    ls -la "\${EDS_BUILD_DIR}/ExternalDataService/"
+                else
+                    echo "⚠️  ExternalDataService configuration directory not found"
+                    echo "Creating basic structure..."
+                    mkdir -p "\${EDS_BUILD_DIR}/ExternalDataService/config"
+                fi
+                
+                cd "\${EDS_BUILD_DIR}"
+                
+                # Setup unique credentials
+                UNIQUE_CREDS_FILE="\${EDS_BUILD_DIR}/gcp-creds-eds-\${BUILD_NUMBER}.json"
+                cp "\${GOOGLE_APPLICATION_CREDENTIALS}" "\${UNIQUE_CREDS_FILE}"
+                gcloud auth activate-service-account --key-file="\${UNIQUE_CREDS_FILE}"
+                gcloud config set project ${PROJECT_ID}
+                
+                # Copy ExternalDataService configuration files into the service directory
+                echo "Copying ExternalDataService configuration files to build context..."
+                if [ -d "ExternalDataService" ]; then
+                    cp -r ExternalDataService UNOPS.PAO.ExternalDataService/
+                    echo "✓ ExternalDataService configuration files copied to build context"
+                    echo "Config files:"
+                    ls -la UNOPS.PAO.ExternalDataService/ExternalDataService/config/
+                else
+                    echo "⚠️  ExternalDataService directory not found"
+                fi
+                
+                # Navigate to External Data Service submodule directory
+                cd UNOPS.PAO.ExternalDataService
+                
+                # Verify the service can find the configuration files
+                echo "Checking configuration path setup..."
+                echo "Current directory: \$(pwd)"
+                echo "Configuration files in build context:"
+                ls -la config/ || echo "No config directory found"
+
+                # Build and push External Data Service image (with retry for transient GCP API issues)
+                echo "Building Docker image..."
+                BUILD_SUCCESS=false
+                for attempt in 1 2 3; do
+                    echo "Build attempt \$attempt for External Data Service..."
+                    if gcloud builds submit --tag ${REGION}-docker.pkg.dev/${PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG} .; then
+                        echo "External Data Service build successful on attempt \$attempt"
+                        BUILD_SUCCESS=true
+                        break
+                    else
+                        echo "External Data Service build failed on attempt \$attempt"
+                        if [ \$attempt -lt 3 ]; then
+                            echo "Waiting 20 seconds before retry..."
+                            sleep 20
+                        fi
+                    fi
+                done
+                if [ "\$BUILD_SUCCESS" = false ]; then
+                    echo "External Data Service build failed after 3 attempts"
+                    exit 1
+                fi
+
+                # Deploy External Data Service to Cloud Run with retry logic
+                echo "Deploying External Data Service to Cloud Run..."
+                DEPLOY_SUCCESS=false
+                for attempt in 1 2 3; do
+                    echo "Deployment attempt \$attempt for External Data Service..."
+                    if gcloud run deploy ${SERVICE_NAME} \\
+                            --image ${REGION}-docker.pkg.dev/${PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG} \\
+                            --project ${PROJECT_ID} \\
+                            --region ${REGION} \\
+                            --port ${PORT} \\
+                            --platform managed \\
+                            --service-account ${SERVICE_ACCOUNT} \\
+                            --set-cloudsql-instances ${SQL_CONN_STRING} \\
+                            --vpc-connector ${VPC_CONNECTOR} \\
+                            --vpc-egress private-ranges-only \\
+                            --set-env-vars ${ENV_VARS} \\
+                            --set-secrets ${SECRETS} \\
+                            --min-instances ${MIN_INSTANCES} \\
+                            --max-instances ${MAX_INSTANCES} \\
+                            --memory ${MEMORY} \\
+                            --cpu ${CPU} \\
+                            --timeout=${TIMEOUT} \\
+                            --quiet; then
+                        echo "External Data Service deployment successful on attempt \$attempt"
+                        DEPLOY_SUCCESS=true
+                        break
+                    else
+                        echo "External Data Service deployment failed on attempt \$attempt"
+                        if [ \$attempt -lt 3 ]; then
+                            echo "Waiting 30 seconds before retry..."
+                            sleep 30
+                        fi
+                    fi
+                done
+                
+                        if [ "\$DEPLOY_SUCCESS" = false ]; then
+                            echo "External Data Service deployment failed after 3 attempts"
+                            exit 1
+                        fi
+                        
+                        # Configure IAM policies for External Data Service
+                        echo "Setting up Cloud Run invoker permissions for External Data Service..."
+                        IFS=',' read -ra ADDR <<< "${INVOKER_SERVICE_ACCOUNTS}"
+                        for service_account in "\${ADDR[@]}"; do
+                            echo "Granting Cloud Run invoker role to \$service_account for External Data Service..."
+                            gcloud run services add-iam-policy-binding ${SERVICE_NAME} \\
+                                --member="serviceAccount:\$service_account" \\
+                                --role="roles/run.invoker" \\
+                                --region=${REGION} \\
+                                --project=${PROJECT_ID} || echo "Warning: Failed to set IAM policy for External Data Service"
+                        done
+                        
+                        # Cleanup
+                        rm -f "\${UNIQUE_CREDS_FILE}"
+                        cd "\${WORKSPACE}"
+                        rm -rf "\${EDS_BUILD_DIR}"
+                """
+            }
+        }
+        
+        // Conditional Cloud Scheduler Setup
+        if (SCHEDULER_ENABLED == true) {
+            stage('Setup Cloud Scheduler Jobs') {
+                withCredentials([file(credentialsId: CREDENTIALS_ID, variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    script {
+                        // Get the deployed service URL
+                        def serviceUrl = sh(
+                            script: """
+                            gcloud auth activate-service-account --key-file=\${GOOGLE_APPLICATION_CREDENTIALS}
+                            gcloud config set project ${PROJECT_ID}
+                            gcloud run services describe ${SERVICE_NAME} \\
+                                --region=${REGION} \\
+                                --project=${PROJECT_ID} \\
+                                --format='value(status.url)'
+                            """,
+                            returnStdout: true
+                        ).trim()
+                        
+                        echo "Deployed Service URL: ${serviceUrl}"
+                        
+                        // Extract project number from service URL for YAML variable substitution
+                        def projectNumber = ""
+                        try {
+                            projectNumber = sh(
+                                script: "echo '${serviceUrl}' | grep -oE '[0-9]{12}' || echo ''",
+                                returnStdout: true
+                            ).trim()
+                            echo "Extracted Project Number: ${projectNumber}"
+                        } catch (Exception e) {
+                            echo "Warning: Could not extract project number from service URL: ${e.getMessage()}"
+                        }
+                        
+                        // Generate scheduler commands from YAML configuration
+                        def schedulerCommands = ""
+                        if (SCHEDULER_ENABLED) {
+                            try {
+                                echo "Loading scheduler jobs configuration from YAML..."
+                                def schedulerYaml = readFile('ExternalDataService/deploy/cloud-scheduler-jobs.yaml')
+                                def yaml = new org.yaml.snakeyaml.Yaml()
+                                def schedulerConfig = yaml.load(schedulerYaml)
+                                
+                                def commandsList = []
+                                schedulerConfig.each { jobKey, jobConfig ->
+                                    // Replace placeholders in job name and URI
+                                    def jobName = jobConfig.name
+                                        .replace('${ENVIRONMENT}', environment.toLowerCase())
+                                        .replace('${PROJECT_ID}', PROJECT_ID)
+                                        .replace('${REGION}', REGION)
+                                    
+                                    def uri = jobConfig.httpTarget.uri
+                                        .replace('${ENVIRONMENT}', environment.toLowerCase())
+                                        .replace('${PROJECT_NUMBER}', projectNumber)
+                                        .replace('${PROJECT_ID}', PROJECT_ID)
+                                        .replace('${REGION}', REGION)
+                                    
+                                    // Extract endpoint from full URI (path portion)
+                                    def endpoint = uri.replaceAll('https://external-data-service-.*\\.run\\.app', '')
+                                    
+                                    // Extract timeout (remove 's' suffix)
+                                    def timeout = jobConfig.attemptDeadline.toString().replace('s', '')
+                                    
+                                    // Generate create_scheduler_job command
+                                    def command = """create_scheduler_job \\
+    "${jobName}" \\
+    "${jobConfig.description}" \\
+    "${jobConfig.schedule}" \\
+    "${endpoint}" \\
+    "${timeout}" \\
+    "${jobConfig.retryConfig.retryCount}" \\
+    "${jobConfig.httpTarget.httpMethod}\""""
+                                    
+                                    commandsList.add(command)
+                                }
+                                
+                                schedulerCommands = commandsList.join('\n\n')
+                                echo "✓ Generated ${commandsList.size()} scheduler job commands from YAML"
+                                
+                            } catch (Exception e) {
+                                echo "⚠️ Warning: Failed to load scheduler YAML configuration: ${e.getMessage()}"
+                                echo "Scheduler jobs will use hardcoded definitions from shell script"
+                                schedulerCommands = ""
+                            }
+                        }
+                        
+                        // Make setup script executable and run it
+                        // Script parameters: <project-id> <environment> <region> [oauth-client-id]
+                        // OAuth Client ID is auto-read from appsettings.{Env}.json if not provided
+                        sh """
+                        chmod +x ${SCHEDULER_SETUP_SCRIPT}
+                        
+                        echo "Setting up Cloud Scheduler jobs for PAO External Data Service..."
+                        echo "Environment: ${environment.toLowerCase()}"
+                        echo "Service URL (for reference): ${serviceUrl}"
+                        
+                        # Export generated scheduler commands as environment variable
+                        export SCHEDULER_COMMANDS='${schedulerCommands}'
+                        
+                        # Parameters: project-id, environment, region
+                        # OAuth Client ID and other settings are auto-read from appsettings.{Env}.json
+                        ${SCHEDULER_SETUP_SCRIPT} \\
+                            "${PROJECT_ID}" \\
+                            "${environment.toLowerCase()}" \\
+                            "${REGION}"
+                        """
+                        
+                        echo "✓ Cloud Scheduler jobs setup completed successfully"
+                    }
+                }
+            }
+        }
+        
+        stage('Post-Deploy Actions') {
+            echo 'External Data Service build completed successfully!'
+            echo "External Data Service: https://console.cloud.google.com/run/detail/${REGION}/${SERVICE_NAME}"
+            echo "Service Account: ${SERVICE_ACCOUNT}"
+            echo "Environment: ${environment}"
+            echo "Configuration: Uses ExternalDataService/appsettings.Development.json from project root"
+            
+            if (SCHEDULER_ENABLED == true) {
+                // Note: Scheduler region may differ from Cloud Run region (e.g., europe-west4 -> europe-west3)
+                def schedulerRegion = REGION == "europe-west4" ? "europe-west3" : REGION
+                echo ""
+                echo "Cloud Scheduler Jobs:"
+                echo "  View Jobs: https://console.cloud.google.com/cloudscheduler?project=${PROJECT_ID}"
+                echo "  Job Prefix: pao-external-data-*"
+                echo "  Scheduler Region: ${schedulerRegion}"
+                echo "  Manual Trigger: gcloud scheduler jobs run JOB_NAME --location=${schedulerRegion} --project=${PROJECT_ID}"
+            }
+            
+            publishChecks name: CHECK_NAME,
+                          status: 'COMPLETED',
+                          conclusion: 'SUCCESS',
+                          title: 'External Data Service Build Succeeded',
+                          summary: "Successfully deployed External Data Service to ${environment} environment (${PROJECT_ID})",
+                          detailsURL: BUILD_URL
+        }
+    }
+    catch (Exception e) {
+        def errorMessage = e?.getMessage() ?: 'Unknown error occurred'
+        echo "External Data Service build failed: ${errorMessage}"
+        currentBuild.result = 'FAILURE'
+        
+        try {
+            publishChecks name: CHECK_NAME ?: 'External Data Service CI',
+                          status: 'COMPLETED',
+                          conclusion: 'FAILURE',
+                          title: 'External Data Service Build Failed',
+                          summary: "External Data Service build failed: ${errorMessage}",
+                          detailsURL: BUILD_URL ?: env.BUILD_URL ?: ''
+        } catch (Exception statusError) {
+            echo "Could not publish status: ${statusError.getMessage()}"
+        }
+    }
+}
+}

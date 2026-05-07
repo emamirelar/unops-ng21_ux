@@ -1,0 +1,28 @@
+.lookerstudio-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .animate-spin {
+    animation: lookerstudio-spin 1s linear infinite;
+  }
+}
+
+.responsive-iframe-container {
+  width: 100%;
+  flex: 1;
+  min-height: 400px;
+
+  iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+  }
+}
+
+@keyframes lookerstudio-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

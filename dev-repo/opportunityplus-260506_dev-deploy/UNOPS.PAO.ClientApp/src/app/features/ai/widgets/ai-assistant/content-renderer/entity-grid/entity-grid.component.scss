@@ -1,0 +1,20 @@
+.entity-grid-container {
+  margin: 1rem 0;
+  width: 100%;
+  min-width: 0; /* Allows the container to shrink below its content size */
+}
+
+.entity-grid-header h4 {
+  margin: 0 0 0.75rem 0;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  font-size: 1.125rem;
+}
+
+.entity-grid-loading,
+.entity-grid-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-gray-500);
+  font-style: italic;
+} 

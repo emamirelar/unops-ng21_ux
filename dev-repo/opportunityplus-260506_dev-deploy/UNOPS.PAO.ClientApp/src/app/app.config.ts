@@ -1,0 +1,160 @@
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  inject,
+  provideAppInitializer,
+  provideZoneChangeDetection,
+} from '@angular/core';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+  Router,
+} from '@angular/router';
+
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
+
+import { GoogleLoginProvider, SOCIAL_AUTH_CONFIG } from '@abacritt/angularx-social-login';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MarkdownModule, SANITIZE } from 'ngx-markdown';
+import { SecurityContext } from '@angular/core';
+
+/******* Services *********/
+
+import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService } from 'primeng/api';
+import { FeedbackDialogService } from '@shared/services/ui';
+import { authInterceptor } from '@core/interceptors/auth.interceptor';
+import { serverErrorInterceptor } from '@core/interceptors/server-error.interceptor';
+import { AuthService } from '@core/services/auth';
+import { ConfigurationService } from '@core/services/configuration';
+import { GoogleAnalyticsService } from '@core/services/google-analytics';
+import { HasPermissionDirective } from './shared';
+import { PermissionService } from '@core/services/auth';
+import { LanguageService } from '@shared/services/utils';
+
+/******* PrimeNG and UX library imports *********/
+import { providePrimeNG } from 'primeng/config';
+import { BrandSoft } from '@emamirelar/ux';
+import { SIDEBAR_LOGO, TOPBAR_MOBILE_LOGO } from '@emamirelar/ux/tokens';
+import { provideMenuModel } from '@core/providers/menu-model.provider';
+import { routes } from './app.routes';
+
+/********************************/
+const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
+  http: HttpClient,
+) => new TranslateHttpLoader(http, './assets/i18n/', '.json');
+
+const socialAuthConfigFactory = (configService: ConfigurationService) => {
+  return {
+    autoLogin: false,
+    providers: [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider(
+          configService.getConfig().googleClientId,
+          { oneTapEnabled: false },
+        ),
+      },
+    ],
+  };
+};
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(
+      routes,
+      withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
+      withComponentInputBinding()
+    ),
+    // Config loading and Google Analytics initialization (GA only when enabled in appsettings)
+    provideAppInitializer(() => {
+      const configService = inject(ConfigurationService);
+      const gaService = inject(GoogleAnalyticsService);
+      return configService.loadConfig().then(() => {
+        gaService.initializeIfEnabled();
+      });
+    }),
+    // Language initialization - load preferred language before app starts
+    provideAppInitializer(() => {
+      const languageService = inject(LanguageService);
+      return languageService.initializeLanguage();
+    }),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideHttpClient(
+      withInterceptors([authInterceptor, serverErrorInterceptor]),
+    ),
+    ConfigurationService,
+    {
+      provide: SOCIAL_AUTH_CONFIG,
+      useFactory: socialAuthConfigFactory,
+      deps: [ConfigurationService],
+    },
+    importProvidersFrom(
+      [
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: httpLoaderFactory,
+          deps: [HttpClient],
+        },
+      }),
+      MarkdownModule.forRoot({
+        sanitize: { provide: SANITIZE, useValue: SecurityContext.HTML },
+      }),
+    ]),
+    provideAnimationsAsync(),
+    AuthService,
+    PermissionService,
+    DialogService,
+    MessageService,
+    ConfirmationService,
+    HasPermissionDirective,
+    providePrimeNG({
+      theme: {
+        preset: BrandSoft,
+        options: {
+          ripple: true,
+          animations: true,
+          typography: true,
+          colors: true,
+          shape: true,
+          spacing: true,
+          elevation: true,
+          transitions: true,
+          breakpoints: true,
+          zIndex: true,
+          rtl: false,
+          ltr: true,
+          colorScheme: 'light',
+          darkModeSelector: '.app-dark',
+        },
+      },
+    }),
+    FeedbackDialogService,
+    provideMenuModel(),
+    {
+      provide: SIDEBAR_LOGO,
+      useValue: {
+        expanded: 'assets/opp/AppLogo/AppLogo-onDark_H.svg',
+        compact: 'assets/opp/AppLogo/AppLogo-onDark_compact.svg',
+        alt: 'UNOPS Opportunity+'
+      }
+    },
+    {
+      provide: TOPBAR_MOBILE_LOGO,
+      useValue: {
+        dark: 'assets/opp/AppLogo/AppLogo-onDark_H.svg',
+        light: 'assets/opp/AppLogo/AppLogo-onLight_H.svg',
+        alt: 'UNOPS Opportunity+'
+      }
+    }
+  ],
+};

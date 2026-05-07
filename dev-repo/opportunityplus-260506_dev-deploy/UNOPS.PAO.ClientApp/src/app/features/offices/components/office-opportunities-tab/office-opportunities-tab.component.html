@@ -1,0 +1,113 @@
+<div class="flex flex-col gap-6">
+  <p-panel class="office-detail-panel bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+    <ng-template pTemplate="header">
+      <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span class="material-symbols-outlined text-xl text-gray-700">lightbulb</span>
+          <span class="text-2xl font-semibold">{{ 'office.opportunities.title' | translate }}</span>
+          <span class="text-sm font-normal text-gray-500">{{ 'office.opportunities.includesChildOffices' | translate }}</span>
+        </div>
+        <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-600">{{ totalRecords() }}</span>
+      </div>
+    </ng-template>
+    <div class="mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div class="max-w-md flex-1">
+        <p-iconfield iconPosition="left" class="w-full">
+          <p-inputicon class="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            [placeholder]="'office.opportunities.searchPlaceholder' | translate"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchInput($event)"
+            class="w-full" />
+        </p-iconfield>
+      </div>
+      <div class="text-sm text-gray-700">
+        {{ 'office.opportunities.showingCount' | translate: { count: totalRecords() } }}
+      </div>
+    </div>
+    <p-table
+      [value]="opportunities()"
+      [lazy]="true"
+      [paginator]="true"
+      [rows]="pageSize()"
+      [totalRecords]="totalRecords()"
+      (onLazyLoad)="onLazyLoad($event)"
+      [loading]="loading()"
+      [scrollable]="true"
+      styleClass="data-table p-datatable-sm p-datatable-gridlines office-datatable-header-muted"
+      [tableStyle]="{ 'min-width': '62rem' }"
+      [rowsPerPageOptions]="[5, 10, 25, 50]">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ 'office.opportunities.columnOpportunity' | translate }}</th>
+          <th>{{ 'office.opportunities.columnResponsibleOrgUnit' | translate }}</th>
+          <th>{{ 'office.opportunities.columnStage' | translate }}</th>
+          <th>{{ 'office.opportunities.columnPartner' | translate }}</th>
+          <th>{{ 'office.opportunities.columnValue' | translate }}</th>
+          <th>{{ 'office.opportunities.columnCreatedDate' | translate }}</th>
+          <th>{{ 'office.opportunities.columnTargetSigning' | translate }}</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-opp>
+        <tr>
+          <td>
+            <a [routerLink]="['/partnerships/opportunities', opp.id]" class="text-blue-500 hover:underline font-medium">{{ opp.name ?? 'â€”' }}</a>
+          </td>
+          <td>
+            @if (opp.responsibleOrgUnitId) {
+              <a
+                [routerLink]="['/offices', opp.responsibleOrgUnitId]"
+                class="text-blue-500 hover:underline font-medium">
+                {{ opp.responsibleOrgUnitName ?? 'â€”' }}
+              </a>
+            } @else {
+              {{ opp.responsibleOrgUnitName ?? 'â€”' }}
+            }
+          </td>
+          <td>
+            @if (opp.stage) {
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold {{
+                  opp.stage === 'GO' || opp.stage === 'NO GO' || opp.stage === 'No-GO'
+                    ? 'bg-lemon-50 text-yellow-800 border border-yellow-400'
+                    : 'bg-blue-100 text-blue-600'
+                }}">{{ opp.stage }}</span>
+            } @else {
+              â€”
+            }
+          </td>
+          <td>{{ opp.partnerName ?? 'â€”' }}</td>
+          <td>{{ formatCurrency(opp.value) }}</td>
+          <td>
+            @if (opp.createdDate) {
+              {{ opp.createdDate | date: 'mediumDate' }}
+            } @else {
+              â€”
+            }
+          </td>
+          <td>
+            @if (opp.targetSigningDate) {
+              {{ opp.targetSigningDate | date: 'mediumDate' }}
+            } @else {
+              â€”
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center py-8 text-gray-500">{{ 'office.opportunities.noOpportunities' | translate }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="7" class="text-center py-8">
+            <p-progressSpinner strokeWidth="3" styleClass="w-8 h-8"></p-progressSpinner>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-panel>
+</div>

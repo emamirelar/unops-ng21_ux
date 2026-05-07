@@ -1,0 +1,50 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@core/*": ["src/app/core/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@layouts/*": ["src/app/layouts/*"],
+      "@features/*": ["src/app/features/*"],
+      "@partnerships/*": ["src/app/features/partnerships/*"],
+      "@offices/*": ["src/app/features/offices/*"],
+      "@admin/*": ["src/app/features/admin/*"],
+      "@ai/*": ["src/app/features/ai/*"],
+      "@search/*": ["src/app/features/search/*"],
+      "@features/shared/*": ["src/app/features/shared/*"],
+      "@assets/*": ["src/assets/*"],
+      "@styles/*": ["src/styles/*"],
+      "@emamirelar/ux": ["node_modules/unops-ng_ux/projects/unops-ux/src/lib/theme/brand-theme"],
+      "@emamirelar/ux/tokens": ["node_modules/unops-ng_ux/projects/unops-ux/src/lib/layout/tokens"],
+      "@emamirelar/ux/layout-service": ["node_modules/unops-ng_ux/projects/unops-ux/src/lib/layout/layout.service"],
+      "@emamirelar/ux/layout": ["node_modules/unops-ng_ux/projects/unops-ux/src/lib/layout/index"],
+      "@unopsitg/ux": ["src/app/ux/unopsitg/index"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

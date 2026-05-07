@@ -7,6 +7,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TagModule } from 'primeng/tag';
 import { AiCardBgComponent } from '@unopsitg/ux';
 import { Contact, ContactService, getContactStatusClass } from './contact.service';
+import { DocumentsCard } from '../documents';
 
 interface AiInsight {
     id: number;
@@ -35,7 +36,7 @@ const INTERACTION_COLORS: Record<string, string> = {
 
 @Component({
     selector: 'app-contact-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiCardBgComponent],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiCardBgComponent, DocumentsCard],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (contact(); as c) {
@@ -343,7 +344,7 @@ const INTERACTION_COLORS: Record<string, string> = {
                                 @if (c.partnerId) {
                                     <div class="flex flex-col gap-5 px-2 pb-4">
                                         <div class="flex items-center gap-4 p-3 rounded-xl border border-surface-200 dark:border-surface-700 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
-                                            [routerLink]="'/apps/partners/v2/' + c.partnerId">
+                                            [routerLink]="'/apps/partners/' + c.partnerId">
                                             <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 shrink-0">
                                                 <i class="pi pi-globe text-primary"></i>
                                             </div>
@@ -402,23 +403,7 @@ const INTERACTION_COLORS: Record<string, string> = {
                     }
 
                     <!-- Documents -->
-                    <div class="card">
-                        <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isDocumentsExpanded()" (click)="isDocumentsExpanded.set(!isDocumentsExpanded())">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Documents</h4>
-                            </div>
-                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isDocumentsExpanded()" [class.pi-chevron-down]="!isDocumentsExpanded()"></i>
-                        </div>
-                        <div class="expand-body" [class.expand-body--open]="isDocumentsExpanded()">
-                            <div class="expand-body__inner">
-                                <div class="flex flex-col items-center justify-center gap-3 py-8 text-surface-400">
-                                    <i class="pi pi-folder text-3xl"></i>
-                                    <span class="text-sm">No documents attached to this contact yet.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app-documents-card />
 
                     <!-- Record Information -->
                     <div class="card">
@@ -488,7 +473,6 @@ export class ContactDetail implements OnInit {
     isOrgExpanded = signal(true);
     isInteractionsExpanded = signal(true);
     isNotesExpanded = signal(true);
-    isDocumentsExpanded = signal(false);
     isPartnerExpanded = signal(true);
     isRecordInfoExpanded = signal(false);
 

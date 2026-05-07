@@ -1,0 +1,27 @@
+/**
+ * Info callout styles matching office mockups.
+ * Light blue banner with dark blue text for informational messages.
+ */
+
+.info-callout {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-blue-50, #DEEFFF);
+  border: 1px solid var(--color-blue-100, #C9E8FF);
+  border-radius: 0.375rem;
+  color: var(--color-blue-700, #006692);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.info-callout i {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-callout strong {
+  font-weight: 600;
+  color: var(--color-blue-700, #006692);
+}

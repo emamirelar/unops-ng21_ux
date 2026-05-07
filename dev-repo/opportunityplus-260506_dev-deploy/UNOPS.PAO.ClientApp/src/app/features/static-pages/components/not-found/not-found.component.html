@@ -1,0 +1,12 @@
+<div class="flex items-center justify-center min-h-screen overflow-hidden">
+    <div class="flex flex-col items-center justify-center">
+        <div class="access-static-page-outer">
+            <div class="access-static-page-inner w-full bg-white dark:bg-gray-950 py-20 px-8 sm:px-20 flex flex-col items-center">
+                <span class="text-blue-500 font-bold text-3xl">404</span>
+                <h1 class="text-gray-950 dark:text-white font-bold text-3xl lg:text-5xl mb-2">{{ 'page.notFound.title' | translate }}</h1>
+                <div class="text-gray-600 dark:text-gray-200 mb-8">{{ 'page.notFound.message' | translate }}</div>
+                <p-button [label]="'page.notFound.goHome' | translate" routerLink="/" />
+            </div>
+        </div>
+    </div>
+</div>

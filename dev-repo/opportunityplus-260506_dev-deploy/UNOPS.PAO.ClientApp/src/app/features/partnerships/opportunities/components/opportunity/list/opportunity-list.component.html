@@ -1,0 +1,290 @@
+<!-- Unified Create Opportunity Dialog -->
+<app-create-opportunity-from-interactions-dialog
+  [visible]="showCreateDialog()"
+  (visibleChange)="showCreateDialog.set($event)"
+  [config]="dialogConfig()"
+  (opportunityCreated)="handleOpportunityCreated($event)"
+/>
+
+<div class="flex flex-col gap-6">
+  <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">
+    {{ 'title.opportunities' | translate }}
+  </h1>
+
+  <div class="flex flex-col items-start justify-start gap-3">
+    <div class="flex items-center gap-3 w-full flex-wrap">
+      <p-iconfield class="w-full sm:w-72">
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          pInputText
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          [placeholder]="'search.opportunitiesPlaceholder' | translate"
+          class="w-full! py-2! rounded-xl!"
+        />
+      </p-iconfield>
+
+      <div class="flex items-center gap-3 ml-auto flex-wrap">
+        @if (!permissionsLoading() && entityPermissions().permissions.canExport) {
+          <p-button
+            icon="pi pi-file-export"
+            [label]="'button.export' | translate"
+            (click)="exportData()"
+            rounded
+            text
+          />
+        }
+        @if (!permissionsLoading() && entityPermissions().permissions.canCreate) {
+          <p-button
+            icon="pi pi-plus"
+            [label]="'button.newOpportunity' | translate"
+            rounded
+            (onClick)="openOpportunityEditDialog()"
+          />
+        }
+      </div>
+    </div>
+
+    <div class="flex items-center flex-wrap gap-2">
+      @for (tag of filterTags(); track tag.group + ':' + tag.value) {
+        <p-tag
+          [value]="tag.label"
+          [severity]="tag.group === 'stage' ? 'info' : undefined"
+          [styleClass]="isTagActive(tag) ? 'cursor-pointer tag-filter-active' : 'cursor-pointer'"
+          (click)="toggleTag(tag)"
+        />
+      }
+      @if (hasActiveFilters()) {
+        <p-tag
+          [value]="'button.clearFilters' | translate"
+          icon="pi pi-times"
+          severity="secondary"
+          styleClass="cursor-pointer"
+          (click)="clearFilters()"
+        />
+      }
+    </div>
+  </div>
+
+  <div class="p-4 border border-surface-200 dark:border-surface-700 rounded-2xl">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+      <div class="flex items-center text-surface-700 dark:text-surface-300 flex-wrap gap-6 text-sm">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-lightbulb text-base! leading-normal!"></i>
+          <span>{{ totalCount() }} {{ 'title.opportunities' | translate }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-check-circle text-base! leading-normal!"></i>
+          <span>{{ activeCount() }} {{ 'label.active' | translate }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-pencil text-base! leading-normal!"></i>
+          <span>{{ draftCount() }} {{ 'label.draft' | translate }}</span>
+        </div>
+      </div>
+      <p-select-button [(ngModel)]="layout" [options]="layoutOptions" [allowEmpty]="false">
+        <ng-template #item let-option>
+          <i class="pi" [class.pi-bars]="option === 'list'" [class.pi-table]="option === 'grid'"></i>
+        </ng-template>
+      </p-select-button>
+    </div>
+
+    @if (serverTotalCount() > listPageSize) {
+      <p class="text-surface-600 dark:text-surface-400 text-sm mb-3 m-0">
+        {{ 'message.opportunityListMaxLoaded' | translate: { count: listPageSize } }}
+      </p>
+    }
+
+    @if (isLoading()) {
+      <div class="flex flex-col gap-4">
+        @for (_ of [1, 2, 3, 4, 5]; track $index) {
+          <div class="flex items-center gap-4 p-4">
+            <p-skeleton shape="circle" size="3rem" />
+            <div class="flex-1 flex flex-col gap-2">
+              <p-skeleton width="40%" height="1rem" />
+              <p-skeleton width="25%" height="0.75rem" />
+            </div>
+            <p-skeleton width="5rem" height="1.5rem" borderRadius="1rem" />
+          </div>
+        }
+      </div>
+    }
+
+    @if (!isLoading()) {
+      <p-dataview
+        [value]="filteredOpportunities()"
+        [layout]="layout"
+        [pt]="{
+          root: { class: 'border-none!' },
+          header: { class: 'p-0! hidden' },
+          content: { class: 'bg-transparent! p-0!' }
+        }"
+      >
+        <ng-template #list let-items>
+          <div class="flex flex-col">
+            @for (item of items; track item.id; let i = $index) {
+              <a
+                [routerLink]="['/partnerships/opportunities', item.id]"
+                class="flex flex-col sm:flex-row sm:items-center p-4 gap-4 no-underline text-inherit cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up"
+                [style.animation-delay.ms]="i * 50"
+                [class.border-t]="i !== 0"
+                [class.border-surface-200]="i !== 0"
+                [class.dark:border-surface-700]="i !== 0"
+              >
+                <div
+                  class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 shrink-0 overflow-hidden"
+                >
+                  @if (getThumbnailSrc(item); as src) {
+                    <img [src]="src" [alt]="item.name" class="w-8 h-8 object-cover rounded-lg" />
+                  } @else {
+                    <i class="pi pi-briefcase text-primary text-xl"></i>
+                  }
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-4 min-w-0">
+                  <div class="flex flex-col gap-1 min-w-0">
+                    <span class="text-surface-900 dark:text-surface-0 text-base font-semibold truncate">{{
+                      item.name
+                    }}</span>
+                    <div class="flex items-center gap-3 text-sm text-surface-600 dark:text-surface-300 flex-wrap">
+                      @if (item.partnerReference) {
+                        <span class="flex items-center gap-1">
+                          <i class="pi pi-hashtag text-xs"></i>
+                          {{ item.partnerReference }}
+                        </span>
+                      }
+                      @if (item.responsibleOrgUnitName) {
+                        <span class="flex items-center gap-1">
+                          <i class="pi pi-building text-xs"></i>
+                          {{ item.responsibleOrgUnitName }}
+                        </span>
+                      }
+                      @if (item.proposedInitiativeTypeName) {
+                        <span class="flex items-center gap-1">
+                          <i class="pi pi-tag text-xs"></i>
+                          {{ item.proposedInitiativeTypeName }}
+                        </span>
+                      }
+                      @if (item.initiativeBudgetUSD != null && item.initiativeBudgetUSD !== undefined) {
+                        <span class="flex items-center gap-1">
+                          <i class="pi pi-dollar text-xs"></i>
+                          {{ item.initiativeBudgetUSD | currency: 'USD' : 'symbol' : '1.0-0' }}
+                        </span>
+                      }
+                    </div>
+                    @if (item.descriptionPreview) {
+                      <p class="text-surface-500 dark:text-surface-400 text-xs m-0 line-clamp-2">
+                        {{ item.descriptionPreview }}
+                      </p>
+                    }
+                  </div>
+
+                  <div class="flex items-center flex-wrap gap-2 sm:flex-nowrap sm:gap-3 sm:shrink-0">
+                    @if (item.status) {
+                      <p-tag [value]="item.status" [styleClass]="getStatusClass(item.status)" />
+                    }
+                    @if (item.stage) {
+                      <p-tag [value]="item.stage" severity="warn" />
+                    }
+                    <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
+                  </div>
+                </div>
+              </a>
+            }
+            @empty {
+              <div class="flex flex-col items-center justify-center py-12 text-surface-500">
+                <i class="pi pi-search text-4xl mb-3"></i>
+                <span class="text-lg">{{ 'message.noOpportunitiesFound' | translate }}</span>
+              </div>
+            }
+          </div>
+        </ng-template>
+
+        <ng-template #grid let-items>
+          <div class="grid grid-cols-12 gap-4">
+            @for (item of items; track item.id; let i = $index) {
+              <a
+                [routerLink]="['/partnerships/opportunities', item.id]"
+                class="col-span-12 sm:col-span-6 lg:col-span-4 p-2 no-underline text-inherit animate-fade-in-up"
+                [style.animation-delay.ms]="i * 50"
+              >
+                <div
+                  class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors h-full"
+                >
+                  <div class="flex items-start gap-3 min-w-0">
+                    <div
+                      class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 shrink-0 overflow-hidden"
+                    >
+                      @if (getThumbnailSrc(item); as src) {
+                        <img [src]="src" [alt]="item.name" class="w-7 h-7 object-cover rounded-md" />
+                      } @else {
+                        <i class="pi pi-briefcase text-primary"></i>
+                      }
+                    </div>
+                    <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+                      <span class="text-surface-900 dark:text-surface-0 text-base font-semibold line-clamp-2">{{
+                        item.name
+                      }}</span>
+                      @if (item.partnerReference) {
+                        <span class="text-surface-600 dark:text-surface-300 text-xs truncate">{{
+                          item.partnerReference
+                        }}</span>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-2 text-sm text-surface-600 dark:text-surface-300">
+                    @if (item.responsibleOrgUnitName) {
+                      <span class="flex items-center gap-2">
+                        <i class="pi pi-building text-xs"></i>
+                        {{ item.responsibleOrgUnitName }}
+                      </span>
+                    }
+                    @if (item.proposedInitiativeTypeName) {
+                      <span class="flex items-center gap-2">
+                        <i class="pi pi-tag text-xs"></i>
+                        {{ item.proposedInitiativeTypeName }}
+                      </span>
+                    }
+                    @if (item.initiativeBudgetUSD != null && item.initiativeBudgetUSD !== undefined) {
+                      <span class="flex items-center gap-2">
+                        <i class="pi pi-dollar text-xs"></i>
+                        {{ item.initiativeBudgetUSD | currency: 'USD' : 'symbol' : '1.0-0' }}
+                      </span>
+                    }
+                  </div>
+
+                  @if (item.descriptionPreview) {
+                    <p class="text-surface-500 dark:text-surface-400 text-xs m-0 line-clamp-3 flex-1">
+                      {{ item.descriptionPreview }}
+                    </p>
+                  }
+
+                  <div
+                    class="flex items-center justify-between pt-2 border-t border-surface-200 dark:border-surface-700 gap-2 flex-wrap"
+                  >
+                    <div class="flex items-center gap-2 flex-wrap">
+                      @if (item.status) {
+                        <p-tag [value]="item.status" [styleClass]="getStatusClass(item.status)" />
+                      }
+                      @if (item.stage) {
+                        <p-tag [value]="item.stage" severity="warn" />
+                      }
+                    </div>
+                    <span class="pi pi-chevron-right text-surface-400 text-sm shrink-0"></span>
+                  </div>
+                </div>
+              </a>
+            }
+            @empty {
+              <div class="col-span-full flex flex-col items-center justify-center py-12 text-surface-500">
+                <i class="pi pi-search text-4xl mb-3"></i>
+                <span class="text-lg">{{ 'message.noOpportunitiesFound' | translate }}</span>
+              </div>
+            }
+          </div>
+        </ng-template>
+      </p-dataview>
+    }
+  </div>
+</div>

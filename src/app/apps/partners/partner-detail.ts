@@ -13,6 +13,7 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { getPartnerApprovalClass, getPartnerStatusClass, PartnerService } from './partner.service';
+import { DocumentsCard, DocumentItem } from '../documents';
 
 interface AiInsight {
     id: number;
@@ -46,7 +47,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
 @Component({
     selector: 'app-partner-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiCardBgComponent],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiCardBgComponent, DocumentsCard],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (partner(); as p) {
@@ -338,6 +339,9 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             }
                         </div>
 
+                        <!-- Documents -->
+                        <app-documents-card class="animate-fade-in-up stagger-2" [documents]="partnerDocuments()" />
+
                         <!-- Metadata -->
                         <div class="card flex flex-col gap-4 animate-fade-in-up stagger-3">
                             <div class="flex items-center gap-2">
@@ -505,6 +509,9 @@ export class PartnerDetail implements OnInit {
         const code = COUNTRY_TO_FLAG[p.address1Country.toLowerCase()];
         return code ? `flags/${code}.svg` : 'flags/globe.svg';
     });
+
+    // ─── Documents ───
+    partnerDocuments = signal<DocumentItem[]>([]);
 
     // ─── AI Analysis ───
     isAiCardExpanded = signal(false);

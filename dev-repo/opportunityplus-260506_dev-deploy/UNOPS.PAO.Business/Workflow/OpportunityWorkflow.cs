@@ -1,0 +1,102 @@
+using UNOPS.Workflow.Models;
+
+namespace UNOPS.PAO.Business.Workflow;
+
+/// <summary>
+/// Defines the Opportunity workflow state machine with 4 stages.
+/// Based on PRD: IDENTIFY & PROFILE → GO or NO GO or CANCELLED, with NO GO and CANCELLED reopenable.
+/// </summary>
+public static class OpportunityWorkflow
+{
+    /// <summary>
+    /// The entity name used in workflow configuration.
+    /// </summary>
+    public const string EntityName = "Opportunity";
+
+    /// <summary>
+    /// Scope discriminator for the default <c>StateMachineVersion</c> (scope-kind default: name set, id null).
+    /// </summary>
+    public const string WorkflowScopeEntityName = "Office";
+
+    /// <summary>
+    /// Stage constants for Opportunity workflow.
+    /// </summary>
+    public static class Stages
+    {
+        /// <summary>
+        /// Initial stage - identifying and profiling the opportunity.
+        /// </summary>
+        public const string IdentifyAndProfile = "IDENTIFY & PROFILE";
+
+        /// <summary>
+        /// Final positive stage - opportunity approved to proceed.
+        /// </summary>
+        public const string Go = "GO";
+
+        /// <summary>
+        /// Final negative stage - opportunity not proceeding. Can be reopened.
+        /// </summary>
+        public const string NoGo = "NO GO";
+
+        /// <summary>
+        /// Cancelled stage - opportunity cancelled by OM. Can be reopened.
+        /// </summary>
+        public const string Cancelled = "CANCELLED";
+    }
+
+    /// <summary>
+    /// Gets the state machine definition for Opportunity entities.
+    /// </summary>
+    public static StateMachine StateMachine => new()
+    {
+        EntityType = EntityName,
+        States =
+        [
+            new State 
+            { 
+                Sequence = 1, 
+                StageCode = Stages.IdentifyAndProfile, 
+                DisplayName = Stages.IdentifyAndProfile,  // Match database uppercase
+                Facing = Facing.Internal 
+            },
+            new State 
+            { 
+                Sequence = 2, 
+                StageCode = Stages.Go, 
+                DisplayName = Stages.Go,  // Match database uppercase
+                Facing = Facing.Internal 
+            },
+            new State 
+            { 
+                Sequence = 3, 
+                StageCode = Stages.NoGo, 
+                DisplayName = Stages.NoGo,  // Match database uppercase
+                Facing = Facing.Internal 
+            },
+            new State 
+            { 
+                Sequence = 4, 
+                StageCode = Stages.Cancelled, 
+                DisplayName = Stages.Cancelled,  // Match database uppercase
+                Facing = Facing.Internal 
+            }
+        ]
+    };
+
+    /// <summary>
+    /// All valid stage values for validation purposes.
+    /// </summary>
+    public static string[] AllStages => 
+    [
+        Stages.IdentifyAndProfile,
+        Stages.Go,
+        Stages.NoGo,
+        Stages.Cancelled
+    ];
+
+    /// <summary>
+    /// Checks if a stage value is valid.
+    /// </summary>
+    public static bool IsValidStage(string? stage) => 
+        !string.IsNullOrEmpty(stage) && AllStages.Contains(stage);
+}

@@ -1,0 +1,261 @@
+@use './styles/themes/styles/recordPage.scss';
+
+@reference "./tailwind.css";
+
+@import 'driver.js/dist/driver.css';
+
+html, body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-400) transparent;
+}
+
+body.resizing {
+  user-select: none;
+  cursor: ew-resize;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-400);
+  border-radius: 0.5rem;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.center-align {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-logo {
+    width: 2rem;
+    height: 2rem;
+    margin: auto;
+}
+
+@keyframes AnimateBackgroud {
+  0% { background-position: 10%; }
+  50% { background-position: 100%; }
+  100% { background-position: 0; }
+}
+
+.background-animate {
+  background-size: 800%;
+  animation: AnimateBackgroud 1.5s ease;
+}
+
+/* Driver.js Styling — uses library color tokens */
+.driver-popover {
+  width: min(450px, 90vw);
+  max-width: 90%;
+  max-height: 90%;
+  padding: 0;
+  background: var(--surface-card, #fff);
+  color: var(--color-gray-900);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  font-family: "Noto Sans", sans-serif;
+  line-height: 1.2;
+}
+
+.driver-popover-title {
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: "Noto Sans", sans-serif;
+  margin: 0 0 0.5rem 0;
+  color: var(--color-blue-500);
+  border-bottom: none;
+}
+
+.driver-popover-description {
+  padding: 0 1.5rem;
+  flex-grow: 1;
+  line-height: 1.6;
+  overflow-y: auto;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 0.875rem;
+}
+
+.driver-popover-footer {
+  padding: 1.5rem;
+  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.driver-popover-footer .driver-popover-next-btn,
+.driver-popover-footer .driver-popover-prev-btn {
+  align-items: center;
+  display: flex;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background-color: transparent;
+  color: var(--color-blue-500);
+  font-size: 0.875rem;
+  line-height: 1.2;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  text-align: center;
+  text-transform: none;
+  text-decoration: none;
+  text-shadow: none;
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+  min-height: 44px;
+  transition-property: background, color, border-color, outline-color, box-shadow;
+  transition-duration: 0.15s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.driver-popover-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 0.25rem;
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-600);
+}
+
+.driver-popover-footer .driver-popover-next-btn {
+  background-color: var(--color-blue-500);
+  color: #fff;
+  border: 1px solid var(--color-blue-500);
+}
+
+.driver-popover-footer .driver-popover-next-btn:hover {
+  background-color: var(--color-blue-600);
+  color: #fff;
+  border-color: var(--color-blue-600);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.driver-popover-footer .driver-popover-prev-btn:hover {
+  background-color: var(--color-blue-50);
+  color: var(--color-blue-600);
+  border-color: var(--color-blue-600);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.driver-popover-close-btn:hover {
+  color: var(--color-red-500);
+  opacity: 0.8;
+}
+
+.driver-popover-footer .driver-popover-next-btn:active,
+.driver-popover-footer .driver-popover-prev-btn:active {
+  background-color: color-mix(in srgb, var(--color-blue-500) 20%, transparent);
+  color: var(--color-blue-700);
+}
+
+.driver-popover-progress-text {
+  font-size: 0.75rem;
+  color: var(--color-gray-600);
+}
+
+.driver-highlighted-element {
+  animation: driver-pulse 2s infinite;
+}
+
+@keyframes driver-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-blue-500) 70%, transparent); }
+  70% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--color-blue-500) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-blue-500) 0%, transparent); }
+}
+
+app-tour-control {
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+app-tour-control p-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+app-tour-control p-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+@media (max-width: 768px) {
+  app-tour-control {
+    bottom: 0.75rem;
+    right: 0.75rem;
+  }
+
+  .driver-popover {
+    width: 95%;
+    max-width: 320px;
+    font-size: 0.875rem;
+  }
+
+  .driver-popover-title {
+    font-size: 1rem;
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .driver-popover-description {
+    padding: 0 1rem;
+  }
+
+  .driver-popover-footer {
+    padding: 1rem;
+  }
+
+  .driver-popover-close-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 1.125rem;
+  }
+}
+
+:not(body):has(> .driver-active-element) {
+  overflow: unset;
+}
+
+/* ── Reusable expand / collapse animation (detail page card sections) ── */
+.expand-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.expand-body--open {
+  grid-template-rows: 1fr;
+}
+
+.expand-body__inner {
+  overflow: hidden;
+}

@@ -1,0 +1,142 @@
+﻿<!-- Custom Dialog Overlay -->
+<div [class]="dialogClasses()" (click)="!isMobile() && hide()">
+  
+  <!-- Dialog Content -->
+  <div [class]="contentClasses()" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 shrink-0"
+         [class.p-8]="!isMobile()">
+      <h2 class="text-lg font-semibold text-gray-950"
+          [class.text-xl]="!isMobile()">
+        {{ getDialogTitle() }}
+      </h2>
+      <button 
+        type="button"
+        class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+        [class.p-4]="!isMobile()"
+        (click)="hide()">
+        <i class="pi pi-times text-gray-500" [class.text-lg]="!isMobile()"></i>
+      </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden"
+         [class.p-8]="!isMobile()"
+         [class.p-4]="isMobile()">
+      
+      <!-- Camera/Image Section - Takes majority of space -->
+      <div class="flex-1 flex flex-col min-h-0 relative"
+           [ngClass]="scanning ? 'opacity-50' : ''">
+        
+        <!-- Loading Spinner -->
+        <div *ngIf="scanning" 
+             class="absolute inset-0 flex items-center justify-center z-10">
+          <p-progressSpinner styleClass="w-12 h-12"></p-progressSpinner>
+        </div>
+
+         <!-- Camera View -->
+         <div *ngIf="!capturedImage" 
+              class="flex-1 bg-deepsea-500 rounded-lg overflow-hidden relative"
+              [class.rounded-none]="isMobile()">
+           <video #video 
+                  class="w-full h-full object-cover" 
+                  autoplay 
+                  playsinline>
+           </video>
+           
+           <!-- Camera Toggle Button (Mobile Only) -->
+           <button *ngIf="isMobile()"
+                   type="button"
+                   class="absolute top-4 right-4 p-2 bg-deepsea-500/50 text-white rounded-full hover:bg-deepsea-500/70 transition-all"
+                   (click)="toggleCamera()">
+             <i class="pi pi-sort-alt"></i>
+           </button>
+         </div>
+
+        <!-- Captured Image View -->
+        <div *ngIf="capturedImage" 
+             class="flex-1 bg-deepsea-500 rounded-lg overflow-hidden relative"
+             [class.rounded-none]="isMobile()">
+          <img [src]="capturedImage" 
+               [alt]="'contact.scanner.capturedImageAlt' | translate" 
+               class="w-full h-full object-contain">
+          
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="error" class="mt-4">
+          <div class="bg-cherry-50 border border-cherry-300 rounded-md p-2">
+            <div class="flex">
+              <i class="pi pi-exclamation-triangle text-cherry-400 mr-2 mt-0.5"></i>
+              <p class="text-xs text-cherry-700">{{ error }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Button Section -->
+      <div class="shrink-0 mt-6">
+        <div class="flex justify-end gap-4"
+             [class.justify-center]="isMobile()"
+             [class.gap-2]="isMobile()">
+          
+          <!-- Captured Image State Buttons -->
+          <ng-container *ngIf="capturedImage">
+            <button type="button"
+                    [class]="scannerActionSecondaryClass"
+                    [class.flex-1]="isMobile()"
+                    [class.max-w-32]="isMobile()"
+                    (click)="retake()">
+              <i class="pi pi-refresh mr-2"></i>
+              {{ 'button.retake' | translate }}
+            </button>
+            
+            <button type="button"
+                    [class]="scannerActionPrimaryClass"
+                    [class.flex-1]="isMobile()"
+                    [class.max-w-32]="isMobile()"
+                    [disabled]="scanning"
+                    (click)="scanBusinessCard()">
+              <i class="pi pi-search mr-2" *ngIf="!scanning"></i>
+              <i class="pi pi-spin pi-spinner mr-2" *ngIf="scanning"></i>
+              {{ scanning ? ('common.scanning' | translate) : ('button.scan' | translate) }}
+            </button>
+          </ng-container>
+
+          <!-- Camera State Buttons -->
+          <ng-container *ngIf="!capturedImage">
+            <!-- File Upload -->
+            <div class="relative"
+                 [class.flex-1]="isMobile()"
+                 [class.max-w-40]="isMobile()">
+              <input #fileInput
+                     type="file"
+                     accept="image/*"
+                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                     (change)="handleFileUpload($event)">
+              <button type="button"
+                      [class]="'w-full ' + scannerActionSecondaryClass">
+                <i class="pi pi-upload mr-2"></i>
+                {{ 'button.uploadImage' | translate }}
+              </button>
+            </div>
+            
+            <!-- Capture Button -->
+            <button type="button"
+                    [class]="scannerActionPrimaryClass"
+                    [class.flex-1]="isMobile()"
+                    [class.max-w-32]="isMobile()"
+                    (click)="captureImage()">
+              <i class="pi pi-camera mr-2"></i>
+              {{ 'button.capture' | translate }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden Canvas for Image Processing -->
+<canvas #canvas class="hidden"></canvas>

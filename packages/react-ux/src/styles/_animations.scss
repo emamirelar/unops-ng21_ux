@@ -1,0 +1,47 @@
+@use './_sass_variables' as *;
+
+router-outlet + * {
+    display: block;
+    animation: fade-in-up 0.35s ease-out both;
+}
+
+.card {
+    transition: box-shadow 0.25s ease;
+
+    &:hover {
+        box-shadow: $sidebarShadow;
+    }
+}
+
+/* ── Expand / collapse (grid-row technique) ── */
+.expand-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+        grid-template-rows 0.3s ease-in,
+        opacity 0.3s ease-in;
+
+    &--open {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        transition:
+            grid-template-rows 0.3s ease-out,
+            opacity 0.3s ease-out;
+    }
+
+    &__inner {
+        overflow: hidden;
+        min-height: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

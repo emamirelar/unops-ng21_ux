@@ -1,0 +1,693 @@
+@if (recordData().id) {
+<div class="flex flex-col gap-6" [class.opacity-50]="infoLoading()">
+
+  <!-- Header Card -->
+  <div class="card animate-fade-in border-0! p-0!">
+    <div class="flex flex-col sm:flex-row sm:items-start gap-5">
+      <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 shrink-0 overflow-hidden">
+        @if (recordData().logoUrl) {
+          <img [src]="recordData().logoUrl" [alt]="recordData().name" class="w-full h-full object-cover" />
+        } @else {
+          <i class="pi pi-building text-primary text-2xl"></i>
+        }
+      </div>
+
+      <div class="flex flex-col gap-2 flex-1 min-w-0">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+          <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">{{ recordData().name }}</h1>
+          @if (recordData().shortName) {
+            <span class="text-surface-500 dark:text-surface-400 text-lg font-medium">({{ recordData().shortName }})</span>
+          }
+          @if (recordData().keyGlobalPartner) {
+            <span class="flex items-center gap-1 text-amber-500 text-sm font-medium">
+              <i class="pi pi-star-fill text-xs"></i> {{ 'label.keyGlobalPartner' | translate }}
+            </span>
+          }
+        </div>
+
+        <div class="flex items-center flex-wrap gap-x-4 gap-y-2 text-sm text-surface-600 dark:text-surface-300">
+          @if (recordData().address1Country) {
+            <span class="flex items-center gap-1.5">
+              <i class="pi pi-map-marker text-xs"></i>
+              {{ recordData().address1City ? recordData().address1City + ', ' : '' }}{{ recordData().address1Country }}
+            </span>
+          }
+          @if (recordData().liaisonOfficeName) {
+            <span class="flex items-center gap-1.5">
+              <i class="pi pi-building text-xs"></i>
+              {{ recordData().liaisonOfficeName }}
+            </span>
+          }
+        </div>
+
+        <div class="flex items-center flex-wrap gap-2 mt-1">
+          @if (recordData().partnerCategoryName) {
+            <p-tag [value]="recordData().partnerCategoryName!" severity="info" />
+          }
+          @if (recordData().status) {
+            <p-tag [value]="recordData().status!" [styleClass]="getStatusClass(recordData().status!)" />
+          }
+          @if (recordData().partnerApprovalStatus) {
+            <p-tag [value]="recordData().partnerApprovalStatus!" [styleClass]="getApprovalClass(recordData().partnerApprovalStatus!)" />
+          }
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0 flex-wrap justify-start sm:ml-auto">
+        @if (recordData().permissions?.canApprove) {
+          <p-button icon="pi pi-check" [rounded]="true" [outlined]="true" severity="success"
+                    pTooltip="{{ 'button.approve' | translate }}" tooltipPosition="bottom"
+                    (onClick)="handleApprovalClick()" />
+        }
+        @if (recordData().permissions?.canUnapprove) {
+          <p-button icon="pi pi-times" [rounded]="true" [outlined]="true" severity="warn"
+                    pTooltip="{{ 'button.unapprove' | translate }}" tooltipPosition="bottom"
+                    (onClick)="handleUnapprovalClick()" />
+        }
+        @if (recordData().permissions?.canActivate) {
+          <p-button icon="pi pi-play" [rounded]="true" [outlined]="true" severity="info"
+                    pTooltip="{{ 'button.activate' | translate }}" tooltipPosition="bottom"
+                    (onClick)="handleActivateClick()" />
+        }
+        @if (recordData().permissions?.canClose) {
+          <p-button icon="pi pi-times-circle" [rounded]="true" [outlined]="true" severity="secondary"
+                    pTooltip="{{ 'button.close' | translate }}" tooltipPosition="bottom"
+                    (onClick)="handleCloseClick()" />
+        }
+        @if (recordData().permissions?.canArchive) {
+          <p-button icon="pi pi-inbox" [rounded]="true" [outlined]="true" severity="secondary"
+                    pTooltip="{{ 'button.archive' | translate }}" tooltipPosition="bottom"
+                    (onClick)="handleArchiveClick()" />
+        }
+        @if (recordData().permissions?.canUpdate) {
+          <p-button icon="pi pi-pencil" [outlined]="true" severity="secondary"
+                    [label]="'button.edit' | translate"
+                    (onClick)="handleEditClick()" />
+        }
+        @if (recordData().permissions?.canDelete) {
+          <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                    pTooltip="{{ 'button.delete' | translate }}" tooltipPosition="bottom"
+                    (onClick)="deletePartner()" />
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-Column Content -->
+  <div class="flex flex-col xl:flex-row gap-6 w-full">
+
+    <!-- Main Content (Left Column) -->
+    <div class="flex-1 flex flex-col gap-6 min-w-0">
+
+      <!-- Partner Information -->
+      <div class="card flex flex-col gap-5 animate-fade-in-up stagger-1">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
+          <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'label.partner.partnerInformation' | translate }}</h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+          @if (recordData().shortName) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.partnerShortDescription' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().shortName }}</span>
+            </div>
+          }
+          @if (recordData().partnerCategoryName) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partnerTree.partnerGroup' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().partnerCategoryName }}{{ recordData().partnerGroupName ? ' / ' + recordData().partnerGroupName : '' }}</span>
+            </div>
+          }
+          @if (recordData().status) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.status' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().status }}</span>
+            </div>
+          }
+
+          @if (recordData().partnerApprovalStatus) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.approvalStatus' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().partnerApprovalStatus }}</span>
+            </div>
+          }
+          <div class="flex flex-col gap-1">
+            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.keyGlobalPartner' | translate }}</span>
+            <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">
+              @if (recordData().keyGlobalPartner) {
+                <i class="pi pi-check-circle text-green-500 mr-1"></i> {{ 'label.yes' | translate }}
+              } @else {
+                <i class="pi pi-minus-circle text-surface-400 mr-1"></i> {{ 'label.no' | translate }}
+              }
+            </span>
+          </div>
+          @if (recordData().liaisonOfficeName) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.partnerLiaisonOffice' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().liaisonOfficeName }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="card flex flex-col gap-5 animate-fade-in-up stagger-2">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-map-marker text-deepsea-500 dark:text-surface-0"></i>
+          <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'label.address' | translate }}</h4>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+          @if (recordData().address1Country) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.address.country' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().address1Country }}</span>
+            </div>
+          }
+          @if (recordData().address1City) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.address.cityStatePostal' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">
+                {{ recordData().address1City }}{{ recordData().address1StateProvince ? ', ' + recordData().address1StateProvince : '' }}{{ recordData().address1PostalCode ? ' ' + recordData().address1PostalCode : '' }}
+              </span>
+            </div>
+          }
+          @if (recordData().address1Street) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.address.street' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().address1Street }}</span>
+            </div>
+          }
+          @if (recordData().address1Street2) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.address.street2' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().address1Street2 }}</span>
+            </div>
+          }
+          @if (getPrimaryOrganizationUnit(recordData())) {
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.organization.primaryUnit' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ getPrimaryOrganizationUnit(recordData())?.name }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Related Engagements -->
+      <div class="card flex flex-col gap-5 animate-fade-in-up stagger-3">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-link text-deepsea-500 dark:text-surface-0"></i>
+          <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.relatedEngagements' | translate }}</h4>
+        </div>
+        <div class="overflow-y-auto max-h-[400px]">
+          <app-base-engagement-list [partnerId]="partnerIdAsNumber"></app-base-engagement-list>
+        </div>
+      </div>
+
+      <!-- Additional Details (See More section) -->
+      @if (showAdditionalInfo() && showFullContent()) {
+
+        <!-- Partner Attributes -->
+        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-3">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-check-circle text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.partnerAttributes' | translate }}</h4>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.unAndStateEntity' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                @if (recordData().unAndStateEntity) {
+                  <i class="pi pi-check-circle text-green-500 mr-1"></i> {{ 'label.yes' | translate }}
+                } @else {
+                  <i class="pi pi-minus-circle text-surface-400 mr-1"></i> {{ 'label.no' | translate }}
+                }
+              </span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.unSecretariatPartner' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                @if (recordData().unSecretariatPartner) {
+                  <i class="pi pi-check-circle text-green-500 mr-1"></i> {{ 'label.yes' | translate }}
+                } @else {
+                  <i class="pi pi-minus-circle text-surface-400 mr-1"></i> {{ 'label.no' | translate }}
+                }
+              </span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.pooledFund' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                @if (recordData().pooledFund) {
+                  <i class="pi pi-check-circle text-green-500 mr-1"></i> {{ 'label.yes' | translate }}
+                } @else {
+                  <i class="pi pi-minus-circle text-surface-400 mr-1"></i> {{ 'label.no' | translate }}
+                }
+              </span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.canCreateNewOpportunities' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                @if (recordData().canCreateNewOpportunities) {
+                  <i class="pi pi-check-circle text-green-500 mr-1"></i> {{ 'label.yes' | translate }}
+                } @else {
+                  <i class="pi pi-minus-circle text-surface-400 mr-1"></i> {{ 'label.no' | translate }}
+                }
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Approval & Compliance -->
+        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-3">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-shield text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.approvalCompliance' | translate }}</h4>
+          </div>
+
+          @if (dueDiligenceExpiryWarning()) {
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800">
+              <i class="pi pi-exclamation-triangle text-yellow-600 dark:text-yellow-400 text-lg mt-0.5"></i>
+              <div class="flex flex-col gap-1">
+                <span class="text-sm font-semibold text-yellow-700 dark:text-yellow-300">
+                  {{ 'partner.view.dueDiligence.expiryWarning' | translate: { months: dueDiligenceExpiryWarning()!.months, days: dueDiligenceExpiryWarning()!.days } }}
+                </span>
+                <span class="text-xs text-yellow-600 dark:text-yellow-400">{{ 'partner.view.dueDiligence.expiryWarningDetails' | translate }}</span>
+              </div>
+            </div>
+          }
+
+          <div class="flex flex-col gap-3">
+            @if (recordData().dueDiligenceRequired) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.dueDiligenceRequired' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ recordData().dueDiligenceRequired }}</span>
+              </div>
+            }
+            @if (recordData().dueDiligenceApproval) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.dueDiligenceApproval' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().dueDiligenceApproval }}</span>
+              </div>
+            }
+            @if (recordData().dueDiligenceApprovalDate) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.dueDiligenceApprovalDate' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().dueDiligenceApprovalDate | date }}</span>
+              </div>
+            }
+            @if (recordData().dueDiligenceExpiryDate) {
+              <div class="flex items-center justify-between p-2 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
+                <span class="text-yellow-700 dark:text-yellow-300 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.dueDiligenceExpiryDate' | translate }}</span>
+                <span class="text-yellow-700 dark:text-yellow-300 text-sm font-medium">{{ recordData().dueDiligenceExpiryDate | date }}</span>
+              </div>
+            }
+            @if (recordData().partnerApprovalDate) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.partnerApprovalDate' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().partnerApprovalDate | date }}</span>
+              </div>
+            }
+            @if (recordData().partnerApprovalReference) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.partnerApprovalReference' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().partnerApprovalReference }}</span>
+              </div>
+            }
+            @if (recordData().partnerLevyStatus) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.partnerLevyStatus' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().partnerLevyStatus }}</span>
+              </div>
+            }
+            @if (recordData().reasonForLevy) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.reasonForLevy' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().reasonForLevy }}</span>
+              </div>
+            }
+            @if (recordData().levyTreatment) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.levyTreatment' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().levyTreatment }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- General Information -->
+        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-3">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-info-circle text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.generalInformation' | translate }}</h4>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            @if (recordData().erpDimValue) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.partnerCode' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ recordData().erpDimValue }}</span>
+              </div>
+            }
+            @if (recordData().partnerShortDescription || recordData().shortName) {
+              <div class="flex items-center justify-between">
+                <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.partnerShortDescription' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().partnerShortDescription || recordData().shortName }}</span>
+              </div>
+            }
+            @if (recordData().partnerLongDescription) {
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ 'label.partner.partnerLongDescription' | translate }}</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm leading-relaxed">{{ recordData().partnerLongDescription }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (recordData().reasonForNoNewOpportunity) {
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 animate-fade-in-up stagger-3">
+            <i class="pi pi-exclamation-triangle text-orange-600 dark:text-orange-400 text-lg mt-0.5"></i>
+            <div class="flex flex-col gap-1">
+              <span class="text-sm font-semibold text-orange-700 dark:text-orange-300">{{ 'label.partner.reasonForNoNewOpportunity' | translate }}</span>
+              <span class="text-sm text-orange-600 dark:text-orange-400">{{ recordData().reasonForNoNewOpportunity }}</span>
+            </div>
+          </div>
+        }
+      }
+
+      <!-- See More / See Less -->
+      @if (shouldShowSeeMoreButton()) {
+        <div class="flex justify-center">
+          <p-button
+            [label]="'button.seeMore' | translate"
+            icon="pi pi-chevron-down"
+            [rounded]="true"
+            [text]="true"
+            (onClick)="toggleFullContent()"
+          />
+        </div>
+      }
+      @if (shouldShowSeeLessButton()) {
+        <div class="flex justify-center">
+          <p-button
+            [label]="'button.seeLess' | translate"
+            icon="pi pi-chevron-up"
+            [rounded]="true"
+            [text]="true"
+            (onClick)="toggleFullContent()"
+          />
+        </div>
+      }
+
+      <!-- Links -->
+      <div class="card flex flex-col gap-4 animate-fade-in-up stagger-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-link text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.links' | translate }}</h4>
+          </div>
+          @if (recordPermissions().permissions.canUpdate) {
+            <p-button
+              icon="pi pi-plus"
+              [rounded]="true"
+              [text]="true"
+              [label]="'button.addLink' | translate"
+              (onClick)="openAddLinkDialog()"
+              severity="primary" />
+          }
+        </div>
+        @if (recordData().id && +(recordData().id!) > 0) {
+          <app-link-list #linkListComponent
+                         [entityType]="entityTypePartner"
+                         [entityId]="+(recordData().id!)"
+                         [showAddButton]="false"
+                         [disabled]="!recordPermissions().permissions.canUpdate" />
+        }
+      </div>
+
+      <!-- Documents -->
+      <div class="card flex flex-col gap-4 animate-fade-in-up stagger-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-file text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.doc' | translate }}</h4>
+          </div>
+          @if (recordPermissions().permissions.canUpdate) {
+            <p-button
+              icon="pi pi-google"
+              [rounded]="true"
+              [text]="true"
+              [label]="'button.uploadDocument' | translate"
+              (onClick)="openGoogleDriveDialog()"
+              severity="primary" />
+          }
+        </div>
+        <app-document #appDocument
+                      [entityId]="recordId"
+                      [entityName]="'partner'"
+                      [acceptedFormat]="'.pdf, .xls, .xlsx, .doc, .docx'"
+                      [showUploadButton]="false"
+                      [disabled]="!recordPermissions().permissions.canUpdate">
+          <div ngProjectAs="document-toolbar">
+            @if (recordPermissions().permissions.canUpdate) {
+              <app-document-gdrive #gdriveComponent
+                                   [entityId]="recordId"
+                                   [entityName]="'partner'"
+                                   [appDocumentRef]="appDocument"
+                                   [showUploadButton]="false"
+                                   [acceptedMIMETypes]="acceptedMiMIETypesForgDrive"></app-document-gdrive>
+            }
+          </div>
+        </app-document>
+      </div>
+    </div>
+
+    <!-- Right Sidebar (380px) -->
+    <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0">
+
+      <!-- Focal Point -->
+      <div class="card flex flex-col gap-4 animate-fade-in-up stagger-1">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-user text-deepsea-500 dark:text-surface-0"></i>
+          <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'label.partner.partnerFocalPoint' | translate }}</h4>
+        </div>
+
+        @if (recordData().partnerFocalPointName || recordData().partnerFocalPointUserName) {
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 shrink-0">
+              <i class="pi pi-user text-primary text-base"></i>
+            </div>
+            <div class="flex flex-col gap-0.5">
+              <a [href]="'mailto:' + recordData().partnerFocalPointUserName"
+                 class="text-surface-900 dark:text-surface-0 text-sm font-semibold no-underline hover:text-primary transition-colors">
+                {{ recordData().partnerFocalPointName || recordData().partnerFocalPointUserName }}
+              </a>
+              <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.partnerFocalPoint' | translate }}</span>
+            </div>
+          </div>
+        } @else {
+          <span class="text-surface-500 dark:text-surface-400 text-sm italic">{{ 'label.noFocalPointAssigned' | translate }}</span>
+        }
+
+        @if (recordData().liaisonOfficeName || recordData().liaisonOfficeId) {
+          <p-divider styleClass="my-0!" />
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 shrink-0">
+              <i class="pi pi-building text-surface-600 dark:text-surface-300"></i>
+            </div>
+            <div class="flex flex-col gap-0.5">
+              <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ recordData().liaisonOfficeName || recordData().liaisonOfficeId }}</span>
+              <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.partner.partnerLiaisonOffice' | translate }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- AI Partner Analysis -->
+      <ux-ai-card-bg class="motion-safe:animate-enter-liquid animate-fade-in-up stagger-2 block box-border border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm overflow-hidden flex flex-col max-h-[calc(100dvh-12rem)]">
+        <div class="p-4 flex flex-col gap-4 flex-1 min-h-0">
+          <div class="flex items-center gap-2 shrink-0">
+            <i class="pi pi-sparkles text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0 m-0">{{ 'label.aiPartnerAnalysis' | translate }}</h4>
+          </div>
+          <input
+            pInputText
+            class="w-full! py-2! rounded-xl! text-sm!"
+            [placeholder]="'placeholder.searchInsights' | translate"
+            [ngModel]="aiSearchQuery()"
+            (ngModelChange)="aiSearchQuery.set($event); aiCurrentPage.set(0)"
+          />
+          <div class="flex flex-col gap-3 max-h-[min(24rem,50vh)] overflow-y-auto flex-1 min-h-0">
+            @for (insight of paginatedAiInsights(); track insight.title) {
+              <div
+                class="flex gap-3 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
+              >
+                <div class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0" [class]="insight.iconBg">
+                  <i [class]="insight.icon" class="text-sm"></i>
+                </div>
+                <div class="flex flex-col gap-1 flex-1 min-w-0">
+                  <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ insight.title }}</span>
+                  <span class="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">{{ insight.description }}</span>
+                  <p-button
+                    [label]="insight.action"
+                    [text]="true"
+                    size="small"
+                    styleClass="self-start p-0!"
+                    (onClick)="$event.stopPropagation()"
+                  />
+                </div>
+              </div>
+            }
+          </div>
+          @if (filteredAiInsights().length > 0) {
+            <p-paginator
+              [first]="aiCurrentPage() * aiPageSize"
+              [rows]="aiPageSize"
+              [totalRecords]="filteredAiInsights().length"
+              (onPageChange)="onAiInsightsPageChange($event)"
+              [alwaysShow]="true"
+              [showFirstLastIcon]="false"
+              [showPageLinks]="false"
+            />
+          }
+        </div>
+      </ux-ai-card-bg>
+
+      <!-- AI Summary of Interactions -->
+      <ux-ai-card-bg class="motion-safe:animate-enter-liquid animate-fade-in-up stagger-3 block box-border border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-4 flex flex-col gap-4 min-h-[8rem]">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-sparkles text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0 m-0">{{ 'label.partner.summaryOfInteractions' | translate }}</h4>
+          </div>
+          <app-ai-panel
+            [embedded]="true"
+            [title]="'label.partner.summaryOfInteractions'"
+            [entityId]="recordId"
+            [promptType]="'partner_interactions_summary'"
+            [aiService]="geminiService"
+            (onRefresh)="onSummaryRefresh()"
+            (onDataLoaded)="onSummaryLoaded($event)"
+            (onError)="onSummaryError($event)"
+          />
+        </div>
+      </ux-ai-card-bg>
+
+      <!-- AI Partner News -->
+      <ux-ai-card-bg class="motion-safe:animate-enter-liquid animate-fade-in-up stagger-4 block box-border border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-4 flex flex-col gap-4 min-h-[8rem]">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-sparkles text-deepsea-500 dark:text-surface-0"></i>
+            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0 m-0">{{ 'label.partner.partnerNews' | translate }}</h4>
+          </div>
+          <app-ai-panel
+            [embedded]="true"
+            [title]="'label.partner.partnerNews'"
+            [entityId]="recordId"
+            [promptType]="'partner_news'"
+            [aiService]="geminiService"
+            (onRefresh)="onNewsRefresh()"
+            (onDataLoaded)="onNewsLoaded($event)"
+            (onError)="onNewsError($event)"
+          />
+        </div>
+      </ux-ai-card-bg>
+
+      <!-- Record Information -->
+      <div class="card flex flex-col gap-4 animate-fade-in-up stagger-3">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-clock text-deepsea-500 dark:text-surface-0"></i>
+          <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.recordInformation' | translate }}</h4>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">ID</span>
+            <span class="text-surface-900 dark:text-surface-0 text-sm font-mono">{{ recordData().id }}</span>
+          </div>
+          @if (recordData().createdByName) {
+            <div class="flex items-center justify-between">
+              <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.createdBy' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().createdByName }}</span>
+            </div>
+          }
+          @if (recordData().createdDate) {
+            <div class="flex items-center justify-between">
+              <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.createdDate' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().createdDate | date:'mediumDate' }}</span>
+            </div>
+          }
+          @if (recordData().lastModifiedByName) {
+            <div class="flex items-center justify-between">
+              <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.modifiedBy' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().lastModifiedByName }}</span>
+            </div>
+          }
+          @if (recordData().lastModifiedDate) {
+            <div class="flex items-center justify-between">
+              <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">{{ 'label.lastModified' | translate }}</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm">{{ recordData().lastModifiedDate | date:'mediumDate' }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="card flex flex-col gap-4 animate-fade-in-up stagger-4">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-pencil text-deepsea-500 dark:text-surface-0"></i>
+          <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ 'title.notes' | translate }}</h4>
+        </div>
+        <textarea pInputText
+                  class="w-full! min-h-[120px] rounded-xl! text-sm"
+                  [placeholder]="'placeholder.addNotes' | translate"
+                  [ngModel]="notesText()"
+                  (ngModelChange)="notesText.set($event)">
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center animate-fade-in">
+    <p-button
+      [label]="'button.backToList' | translate"
+      [text]="true"
+      severity="secondary"
+      icon="pi pi-chevron-left"
+      routerLink="/partnerships/partners"
+    />
+  </div>
+</div>
+} @else {
+<div class="flex flex-col items-center justify-center gap-4 py-20">
+  <i class="pi pi-spin pi-spinner text-4xl text-surface-400"></i>
+  <span class="text-surface-600 dark:text-surface-300 text-lg">{{ 'label.loading' | translate }}</span>
+</div>
+}
+
+<!-- Contacts Dialog -->
+@defer (when showCommentDialog) {
+  <p-dialog
+    [header]="'title.contacts' | translate"
+    [modal]="true"
+    [(visible)]="showCommentDialog"
+    [maximizable]="true"
+    [closeOnEscape]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '90vw', maxWidth: '1000px' }"
+    (onHide)="_handleOnViewContactsDaialogClose()">
+
+    <app-partner-contacts
+      [partnerId]="recordId"
+      [partnerName]="recordData().name || ''" />
+
+    <ng-template pTemplate="footer">
+      <p-button
+        [label]="'button.close' | translate"
+        severity="secondary"
+        icon="pi pi-times"
+        (onClick)="showCommentDialog = false" />
+    </ng-template>
+  </p-dialog>
+}
+
+<p-confirmDialog></p-confirmDialog>

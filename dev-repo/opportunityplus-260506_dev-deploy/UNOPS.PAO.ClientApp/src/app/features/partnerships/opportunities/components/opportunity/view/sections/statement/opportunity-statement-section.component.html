@@ -1,0 +1,329 @@
+﻿<!-- STATEMENT - Opportunity Statement -->
+<p-panel
+  [toggleable]="true"
+  [collapsed]="false"
+  styleClass="border-surface-200 dark:border-surface-700"
+  class="{{ generatingStatement() ? 'opacity-50 pointer-events-none' : '' }}"
+>
+  <ng-template pTemplate="header">
+    <div class="flex items-center justify-between w-full pr-4">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-file-edit text-midnight-500"></i>
+        <span class="font-semibold">{{ "label.opportunityStatement" | translate }} *</span>
+      </div>
+      <div class="flex items-center gap-2">
+        @if (generatingStatement()) {
+          <i class="pi pi-spin pi-spinner text-xl text-primary"></i>
+        }
+        @if (opportunity().opportunityStatementMarkdown) {
+          <p-button
+            icon="pi pi-window-maximize"
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            size="small"
+            [pTooltip]="'button.viewFullscreen' | translate"
+            tooltipStyleClass="unops-tooltip-nowrap"
+            tooltipPosition="top"
+            (onClick)="openFullscreenDialog($event)"
+          />
+        }
+      </div>
+    </div>
+  </ng-template>
+
+  <div
+    id="field-opportunityStatementMarkdown"
+    [style.min-height]="'18.75rem'"
+  >
+    <!-- Approver Guidance Section - Shows when user is approver and opportunity is pending approval -->
+    @if (showApproverGuidance()) {
+      <div class="mb-6 p-4 bg-ocean-300 border border-ocean-400 rounded-lg">
+        <div class="flex items-start gap-3">
+          <i class="pi pi-info-circle text-xl text-ocean-500 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-semibold text-gray-950 mb-2">
+              {{ 'workflow.goDecision.statementGuidance.title' | translate }}
+            </div>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              {{ 'workflow.goDecision.statementGuidance.message' | translate }}
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (!opportunity().opportunityStatementMarkdown) {
+      <!-- Show generate button if no statement exists -->
+      <div
+        class="flex flex-col items-center justify-center gap-4"
+        [style.min-height]="'18.75rem'"
+      >
+        <div class="text-center text-gray-600 mb-4">
+          <i class="pi pi-file-edit text-6xl mb-4 text-gray-400"></i>
+          <p class="text-lg">
+            {{ "message.opportunity.noStatement" | translate }}
+          </p>
+          <p class="text-sm mt-2">
+            {{ "message.opportunity.generateStatementPrompt" | translate }}
+          </p>
+        </div>
+        @if (canUpdate()) {
+          <p-button
+            [label]="generatingStatement() ? ('button.generating' | translate) : ('button.generateOpportunityStatement' | translate)"
+            icon="pi pi-sparkles"
+            [loading]="generatingStatement()"
+            [disabled]="generatingStatement()"
+            (onClick)="generateOpportunityStatement()"
+            styleClass="p-button-lg"
+          />
+        }
+      </div>
+    } @else {
+      <!-- Show regenerate button, export button, and markdown content -->
+      <div class="space-y-4">
+        <!-- Validation Results Section -->
+        @if (isValidating() || validationResult()) {
+          <div>
+            <!-- Validation Loading State -->
+            @if (isValidating()) {
+              <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-md border border-gray-300">
+                <i class="pi pi-spin pi-spinner text-xl text-blue-500"></i>
+                <span class="text-gray-700">{{ 'message.opportunity.validatingStatement' | translate }}</span>
+              </div>
+            }
+
+            <!-- Validation Success - Aligned -->
+            @if (!isValidating() && validationResult() && validationResult()?.isAligned) {
+              <p-message severity="success" styleClass="w-full">
+                <div class="flex items-start gap-3">
+                  <i class="pi pi-check-circle text-xl"></i>
+                  <div class="flex-1">
+                    <div class="font-semibold mb-1">{{ 'message.opportunity.statementAligned' | translate }}</div>
+                    <div class="text-sm">{{ validationResult()?.message }}</div>
+                  </div>
+                </div>
+              </p-message>
+            }
+
+            <!-- Validation Warning - Not Aligned -->
+            @if (!isValidating() && validationResult() && !validationResult()?.isAligned) {
+              <div class="bg-lemon-50 w-full border border-yellow-400 rounded-lg p-4">
+                <div class="flex flex-col gap-3">
+                  <div class="flex items-start gap-3">
+                    <i class="pi pi-exclamation-triangle text-yellow-800 text-xl"></i>
+                    <div class="flex-1">
+                      <div class="text-xs font-semibold text-midnight-500 mb-1">{{ 'message.opportunity.statementNotAligned' | translate }}</div>
+                      <div class="text-xs text-gray-800 mb-2">{{ validationResult()?.message }}</div>
+                      
+                      @if (validationResult()?.misalignmentItems && validationResult()!.misalignmentItems.length > 0) {
+                        <ul class="list-disc list-inside space-y-1 text-xs bg-white text-gray-800 pl-2 mt-3">
+                          @for (item of validationResult()!.misalignmentItems; track item) {
+                            <li>{{ item }}</li>
+                          }
+                        </ul>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (canUpdate()) {
+          <div class="flex justify-end gap-2">
+            <!-- Export to Google Doc button hidden due to data integrity concerns
+                 Risk: Teams may collaborate on exported doc, then content gets overwritten when statement is regenerated
+                 Decision: Hide export functionality to maintain alignment between opportunity record and exported statements
+            <p-button
+              [label]="isExporting() ? ('button.exporting' | translate) : ('button.exportToGoogleDoc' | translate)"
+              icon="pi pi-google"
+              [loading]="isExporting()"
+              [disabled]="isExporting() || generatingStatement()"
+              (onClick)="exportToGoogleDoc()"
+              severity="secondary"
+              [outlined]="true"
+            />
+            -->
+            <p-button
+              [label]="generatingStatement() ? ('button.regenerating' | translate) : ('button.regenerateOpportunityStatement' | translate)"
+              icon="pi pi-refresh"
+              [loading]="generatingStatement()"
+              [disabled]="generatingStatement() || isExporting()"
+              (onClick)="generateOpportunityStatement()"
+              severity="secondary"
+              [outlined]="true"
+            />
+          </div>
+        }
+        
+        <!-- Display markdown content -->
+        <div class="prose max-w-none markdown-content">
+          <markdown
+            [data]="opportunity().opportunityStatementMarkdown"
+            (ready)="onMarkdownReady()"
+          ></markdown>
+        </div>
+      </div>
+    }
+  </div>
+</p-panel>
+
+<!-- Fullscreen Statement Dialog -->
+<p-dialog
+  [(visible)]="showFullscreenDialog"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [maximizable]="false"
+  [style]="{
+    width: '90vw',
+    height: '90vh',
+  }"
+  [contentStyle]="{ height: 'calc(90vh - 120px)', overflow: 'auto' }"
+  styleClass="statement-fullscreen-dialog"
+>
+  <ng-template pTemplate="header">
+    <div class="flex items-center justify-between w-full pr-4">
+      <div class="flex items-center gap-3">
+        <i class="pi pi-file-edit text-midnight-500 text-xl"></i>
+        <span class="font-semibold text-lg">{{ "label.opportunityStatement" | translate }}</span>
+        <span class="text-gray-500">Ã¢â‚¬â€</span>
+        <span class="text-gray-600">{{ opportunity().name }}</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="p-4">
+    <!-- Validation Results Section in Fullscreen -->
+    @if (isValidating() || validationResult()) {
+      <div class="mb-4">
+        <!-- Validation Loading State -->
+        @if (isValidating()) {
+          <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-md border border-gray-300">
+            <i class="pi pi-spin pi-spinner text-xl text-blue-500"></i>
+            <span class="text-gray-700">{{ 'message.opportunity.validatingStatement' | translate }}</span>
+          </div>
+        }
+
+        <!-- Validation Success - Aligned -->
+        @if (!isValidating() && validationResult() && validationResult()?.isAligned) {
+          <p-message severity="success" styleClass="w-full">
+            <div class="flex items-start gap-3">
+              <i class="pi pi-check-circle text-xl"></i>
+              <div class="flex-1">
+                <div class="font-semibold mb-1">{{ 'message.opportunity.statementAligned' | translate }}</div>
+                <div class="text-sm">{{ validationResult()?.message }}</div>
+              </div>
+            </div>
+          </p-message>
+        }
+
+        <!-- Validation Warning - Not Aligned -->
+        @if (!isValidating() && validationResult() && !validationResult()?.isAligned) {
+          <div class="bg-lemon-50 w-full border border-yellow-400 rounded-lg p-4">
+            <div class="flex flex-col gap-3">
+              <div class="flex items-start gap-3">
+                <i class="pi pi-exclamation-triangle text-yellow-800 text-xl"></i>
+                <div class="flex-1">
+                  <div class="text-xs font-semibold text-midnight-500 mb-1">{{ 'message.opportunity.statementNotAligned' | translate }}</div>
+                  <div class="text-xs text-gray-800 mb-2">{{ validationResult()?.message }}</div>
+                  
+                  @if (validationResult()?.misalignmentItems && validationResult()!.misalignmentItems.length > 0) {
+                    <ul class="list-disc list-inside space-y-1 text-xs bg-white text-gray-800 pl-2 mt-3">
+                      @for (item of validationResult()!.misalignmentItems; track item) {
+                        <li>{{ item }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Markdown Content in Fullscreen -->
+    <div class="prose max-w-none markdown-content text-base leading-relaxed">
+      <markdown
+        [data]="opportunity().opportunityStatementMarkdown"
+        (ready)="onMarkdownReady()"
+      ></markdown>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-between w-full">
+      <div class="flex gap-2">
+        @if (canUpdate()) {
+          <p-button
+            [label]="generatingStatement() ? ('button.regenerating' | translate) : ('button.regenerateOpportunityStatement' | translate)"
+            icon="pi pi-refresh"
+            [loading]="generatingStatement()"
+            [disabled]="generatingStatement() || isExporting()"
+            (onClick)="generateOpportunityStatement()"
+            severity="secondary"
+            [outlined]="true"
+          />
+        }
+      </div>
+      <p-button
+        [label]="'button.close' | translate"
+        icon="pi pi-times"
+        severity="secondary"
+        (onClick)="closeFullscreenDialog()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Export Success Dialog -->
+<p-dialog
+  [(visible)]="showExportSuccessDialog"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '32rem' }"
+  [header]="'title.exportSuccess' | translate"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-start gap-3">
+      <i class="pi pi-check-circle text-4xl text-green-500"></i>
+      <div class="flex-1">
+        <p class="text-gray-800 mb-2">
+          {{ "message.opportunity.exportSuccessDetail" | translate }}
+        </p>
+        <p class="text-sm text-gray-600">
+          {{ "message.opportunity.exportClickToOpen" | translate }}
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-ocean-300 border border-ocean-400 rounded-lg p-3">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          <i class="pi pi-google text-ocean-500"></i>
+          <span class="text-sm text-gray-800 truncate">{{
+            opportunity().name
+          }}</span>
+        </div>
+        <p-button
+          [label]="'button.openDoc' | translate"
+          icon="pi pi-external-link"
+          size="small"
+          (onClick)="openExportedDoc()"
+        />
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="'button.close' | translate"
+      severity="secondary"
+      (onClick)="closeExportDialog()"
+    />
+  </ng-template>
+</p-dialog>

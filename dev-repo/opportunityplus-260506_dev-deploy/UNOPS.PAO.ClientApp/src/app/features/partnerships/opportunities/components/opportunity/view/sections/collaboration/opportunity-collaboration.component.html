@@ -1,0 +1,15 @@
+<p-panel [toggleable]="true" [(collapsed)]="isPanelCollapsed" styleClass="border-surface-200 dark:border-surface-700">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <i class="pi pi-comments text-midnight-500 dark:text-primary-300"></i>
+      <span class="font-semibold text-surface-900 dark:text-surface-0">{{
+        'label.opportunity.collaboration' | translate
+      }}</span>
+    </div>
+  </ng-template>
+  <app-comment
+    entityType="Opportunity"
+    [entityId]="opportunityId()"
+    [panelHeader]="panelHeader"
+  />
+</p-panel>

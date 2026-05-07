@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+/* Compact spinners; styleClass is on the ProgressSpinner root. */
+:host :deep(.office-operational-role-history-spinner-initial) {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+:host :deep(.office-operational-role-history-spinner-initial svg) {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+:host :deep(.office-operational-role-history-spinner-more) {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+:host :deep(.office-operational-role-history-spinner-more svg) {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+

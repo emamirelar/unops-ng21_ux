@@ -1,0 +1,34 @@
+<p-toast></p-toast>
+<p-dialog [(visible)]="visible" [header]="dialogConfig?.summary || 'Error'"
+    [closable]="dialogConfig?.closable !== false"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '30vw' }"
+    (onHide)="onDialogClose()">
+    <p [innerHTML]="dialogConfig?.detail"></p>
+    @if (dialogConfig?.showRefreshButton) {
+        <div class="flex justify-end mt-4">
+            <p-button
+                [label]="'action.refreshPage' | translate"
+                icon="pi pi-refresh"
+                severity="primary"
+                (onClick)="refreshPage()">
+            </p-button>
+        </div>
+    }
+    @if (dialogConfig?.onConfirm) {
+        <div class="flex justify-end gap-2 mt-4">
+            <p-button
+                [label]="'button.cancel' | translate"
+                severity="secondary"
+                (onClick)="onCancel()">
+            </p-button>
+            <p-button
+                [label]="'button.confirm' | translate"
+                severity="danger"
+                (onClick)="onConfirm()">
+            </p-button>
+        </div>
+    }
+</p-dialog>

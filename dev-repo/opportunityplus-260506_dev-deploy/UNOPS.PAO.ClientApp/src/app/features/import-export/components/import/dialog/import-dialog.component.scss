@@ -1,0 +1,72 @@
+/* Import dialog — truncation + row error highlight */
+
+.import-dialog-th-checkbox {
+  width: 3rem;
+}
+
+.import-dialog-th-icon {
+  width: 4rem;
+}
+
+.truncate-text {
+  max-width: 18.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  cursor: help;
+}
+
+.truncate-short {
+  max-width: 9.375rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  cursor: help;
+}
+
+@media (max-width: 1024px) {
+  .truncate-text {
+    max-width: 12.5rem;
+  }
+  .truncate-short {
+    max-width: 7.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .truncate-text {
+    max-width: 9.375rem;
+  }
+  .truncate-short {
+    max-width: 6.25rem;
+  }
+}
+
+.import-error {
+  background-color: color-mix(in srgb, var(--color-red-500) 14%, #ffffff);
+  border-left: 0.25rem solid var(--color-red-500);
+}
+
+.import-error td {
+  background-color: color-mix(in srgb, var(--color-red-500) 14%, #ffffff);
+}
+
+.import-row-validation-warning:not(.import-error) {
+  background-color: color-mix(in srgb, var(--color-orange-500) 22%, #ffffff);
+  border-left: 0.25rem solid var(--color-orange-400);
+}
+
+.import-row-validation-warning:not(.import-error) td {
+  background-color: color-mix(in srgb, var(--color-orange-500) 22%, #ffffff);
+}
+
+.internal-duplicate-badge {
+  background-color: var(--color-orange-500);
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 0.25rem;
+  border-radius: 0.125rem;
+  font-weight: 600;
+}

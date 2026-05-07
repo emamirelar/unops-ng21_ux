@@ -1,0 +1,88 @@
+using System.Collections.Generic;
+using UNOPS.PAO.Domain.Enums;
+using UNOPS.PAO.Models.Artifacts;
+using UNOPS.PAO.Models.Shared;
+
+namespace UNOPS.PAO.Models.OrganizationUnits;
+
+public class OrganizationHierarchyModel
+{
+    /// <summary>
+    /// Primary key for this DTO context: often the <see cref="UNOPS.PAO.Domain.Entities.Office.Id"/> when the model
+    /// is built from <see cref="UNOPS.PAO.Domain.Entities.OfficeRelationship"/> (operational office row).
+    /// The hierarchy table id is in <see cref="OrganizationHierarchyId"/>.
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
+    /// When <see cref="Id"/> is an <see cref="UNOPS.PAO.Domain.Entities.Office"/> id, links to
+    /// <see cref="UNOPS.PAO.Domain.Entities.OrganizationHierarchy"/> for <see cref="OrganizationUnitRelationship"/> and legacy filters.
+    /// </summary>
+    public int? OrganizationHierarchyId { get; set; }
+
+    public string Code { get; set; }
+    public string Name { get; set; }
+    public string Status { get; set; }
+    public string Type { get; set; }
+    public string Description { get; set; }
+    public int? ParentId { get; set; }
+    public string? ParentName { get; set; }
+    public string? ParentCode { get; set; }
+    public bool IsSelfManagementEnabled { get; set; }
+    
+    // Computed properties
+    public int ChildrenCount { get; set; }
+    public int EntityRelationshipCount { get; set; }
+    
+    // RBAC permissions
+    public EntityPermissionsModel? Permissions { get; set; }
+    
+    /// <summary>
+    /// Collection of artifacts associated with this organization unit
+    /// Automatically loaded via AutoMapper when OrganizationHierarchy entity is mapped
+    /// </summary>
+    public List<EntityArtifactModel> Artifacts { get; set; } = new List<EntityArtifactModel>();
+}
+
+public class OrganizationHierarchyTreeModel
+{
+    public OrganizationHierarchyDataModel Data { get; set; }
+}
+
+public class OrganizationHierarchyDataModel
+{
+    public int Id { get; set; }
+    public string Code { get; set; }
+    public string Name { get; set; }
+    public OrganizationUnitType Type { get; set; }
+    public string Description { get; set; }
+    public int? ParentId { get; set; }
+    public List<OrganizationHierarchyDataModel> Children { get; set; } = new();
+}
+
+public class OrganizationHierarchyFilterRequest : PaginationRequest
+{
+    public string? Name { get; set; }
+    public string? Code { get; set; }
+    public string? Type { get; set; }
+    public int? ParentId { get; set; }
+    public string? ParentCode { get; set; }
+    public string? Status { get; set; }
+    public bool? IsSelfManagementEnabled { get; set; }
+    public bool IncludeCounts { get; set; } = true;
+}
+
+public class OrganizationHierarchySearchRequest
+{
+    public string? SearchTerm { get; set; }
+    public string? Type { get; set; }
+    public int? ParentId { get; set; }
+    public string? Status { get; set; }
+    public bool? IsSelfManagementEnabled { get; set; }
+    public int? MinChildrenCount { get; set; }
+    public int? MaxChildrenCount { get; set; }
+    public int PageSize { get; set; } = 20;
+    public int PageIndex { get; set; } = 1;
+    public string? OrderBy { get; set; } = "Name";
+    public bool Ascending { get; set; } = true;
+}

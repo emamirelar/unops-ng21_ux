@@ -1,0 +1,323 @@
+@if (partner(); as p) {
+  <div class="flex flex-col gap-0 animate-fade-in">
+
+    <!-- Back + Actions Bar -->
+    <div class="flex items-center justify-between mb-4">
+      <p-button
+        icon="pi pi-arrow-left"
+        label="Partners"
+        [text]="true"
+        severity="secondary"
+        (onClick)="goBack()"
+      />
+      <div class="flex items-center gap-2">
+        <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" size="small" />
+        <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" size="small" />
+      </div>
+    </div>
+
+    <!-- Unified Header Card -->
+    <div class="card !mb-0 !rounded-b-none !border-b !border-b-surface-200">
+      <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+        <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 shrink-0 overflow-hidden">
+          @if (p.logoUrl) {
+            <img [src]="p.logoUrl" [alt]="p.name || 'Partner'" class="w-full h-full object-cover" />
+          } @else {
+            <img [src]="flagUrl()" [alt]="p.address1Country || 'Global'" class="w-9 h-9 object-contain" />
+          }
+        </div>
+
+        <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+          <!-- Name + badge -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
+            <h1 class="text-surface-900 dark:text-surface-0 text-xl font-bold leading-7 m-0">{{ p.name }}</h1>
+            @if (p.shortName) {
+              <span class="text-surface-500 dark:text-surface-400 text-base font-medium">({{ p.shortName }})</span>
+            }
+            @if (p.keyGlobalPartner) {
+              <span class="flex items-center gap-1 text-amber-500 text-xs font-semibold">
+                <i class="pi pi-star-fill text-xs"></i> Key Global
+              </span>
+            }
+          </div>
+
+          <!-- Location / Office / Focal Point -->
+          <div class="flex items-center flex-wrap gap-x-3 gap-y-1 text-sm text-surface-600 dark:text-surface-300">
+            @if (p.address1Country) {
+              <span class="flex items-center gap-1.5">
+                <i class="pi pi-map-marker text-xs text-surface-400"></i>
+                {{ p.address1City ? p.address1City + ', ' : '' }}{{ p.address1Country }}
+              </span>
+            }
+            @if (p.liaisonOfficeName) {
+              <span class="text-surface-300 dark:text-surface-600">&middot;</span>
+              <span class="flex items-center gap-1.5">
+                <i class="pi pi-building text-xs text-surface-400"></i>
+                {{ p.liaisonOfficeName }}
+              </span>
+            }
+            @if (p.partnerFocalPointName) {
+              <span class="text-surface-300 dark:text-surface-600">&middot;</span>
+              <span class="flex items-center gap-1.5">
+                <i class="pi pi-user text-xs text-surface-400"></i>
+                {{ p.partnerFocalPointName }}
+              </span>
+            }
+          </div>
+
+          <!-- Tags -->
+          <div class="flex items-center flex-wrap gap-2 mt-0.5">
+            @if (p.partnerCategoryName) {
+              <p-tag [value]="p.partnerCategoryName" severity="info" />
+            }
+            @if (p.status) {
+              <p-tag [value]="p.status" [style]="getStatusStyle(p.status)" />
+            }
+            @if (p.partnerApprovalStatus) {
+              <p-tag [value]="p.partnerApprovalStatus" [style]="getApprovalStyle(p.partnerApprovalStatus)" />
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <p-tabs [value]="0" [scrollable]="true">
+      <p-tablist>
+        <p-tab [value]="0"><i class="pi pi-id-card mr-2"></i>Details</p-tab>
+        <p-tab [value]="1"><i class="pi pi-briefcase mr-2"></i>Opportunities</p-tab>
+        <p-tab [value]="2"><i class="pi pi-users mr-2"></i>Contacts</p-tab>
+        <p-tab [value]="3"><i class="pi pi-comments mr-2"></i>Interactions</p-tab>
+        <p-tab [value]="4"><i class="pi pi-file mr-2"></i>Documents</p-tab>
+      </p-tablist>
+
+      <p-tabpanels>
+        <!-- Details Tab -->
+        <p-tabpanel [value]="0">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5 py-2">
+
+            <!-- Partner ID -->
+            <div class="flex flex-col gap-1 animate-fade-in-up stagger-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner ID</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.id }}</span>
+            </div>
+
+            <!-- Description -->
+            @if (p.partnerDescription || p.partnerLongDescription) {
+              <div class="flex flex-col gap-1 sm:col-span-2 animate-fade-in-up stagger-1">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Description</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerDescription || p.partnerLongDescription }}</span>
+              </div>
+            }
+
+            <!-- Category -->
+            @if (p.partnerCategoryName) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryName }}</span>
+              </div>
+            }
+
+            <!-- Category Code -->
+            @if (p.partnerCategoryCode) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category Code</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryCode }}</span>
+              </div>
+            }
+
+            <!-- Partner Group -->
+            @if (p.partnerGroupName) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner Group</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerGroupName }}</span>
+              </div>
+            }
+
+            <!-- Short Name -->
+            @if (p.shortName) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Short Name</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.shortName }}</span>
+              </div>
+            }
+
+            <!-- Partner Code -->
+            @if (p.erpDimValue) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner Code</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.erpDimValue }}</span>
+              </div>
+            }
+
+            <!-- Key Global Partner -->
+            <div class="flex flex-col gap-1 animate-fade-in-up stagger-3">
+              <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Key Global Partner</span>
+              <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                @if (p.keyGlobalPartner) {
+                  <i class="pi pi-check-circle text-green-500 mr-1"></i> Yes
+                } @else {
+                  <i class="pi pi-minus-circle text-surface-400 mr-1"></i> No
+                }
+              </span>
+            </div>
+
+            <!-- Country -->
+            @if (p.address1Country) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-4">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Country</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                  {{ p.address1City ? p.address1City + ', ' : '' }}{{ p.address1Country }}
+                </span>
+              </div>
+            }
+
+            <!-- Organization Unit -->
+            @if (getPrimaryOrganizationUnit(p); as orgUnit) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-4">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Organization Unit</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ orgUnit.name }}</span>
+              </div>
+            }
+
+            <!-- Focal Point -->
+            @if (p.partnerFocalPointName) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-4">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Focal Point</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerFocalPointName }}</span>
+                @if (p.partnerFocalPointUserName) {
+                  <a [href]="'mailto:' + p.partnerFocalPointUserName"
+                     class="text-xs text-blue-500 hover:text-blue-700 no-underline hover:underline">
+                    {{ p.partnerFocalPointUserName }}
+                  </a>
+                }
+              </div>
+            }
+
+            <!-- Liaison Office -->
+            @if (p.liaisonOfficeName) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Liaison Office</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.liaisonOfficeName }}</span>
+              </div>
+            }
+
+            <!-- Status -->
+            @if (p.status) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Status</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.status }}</span>
+              </div>
+            }
+
+            <!-- Approval Status -->
+            @if (p.partnerApprovalStatus) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Approval Status</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerApprovalStatus }}</span>
+              </div>
+            }
+
+            <!-- Due Diligence -->
+            @if (p.dueDiligenceRequired) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-5">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Due Diligence Required</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.dueDiligenceRequired }}</span>
+              </div>
+            }
+            @if (p.dueDiligenceApproval) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-6">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Due Diligence Approval</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.dueDiligenceApproval }}</span>
+              </div>
+            }
+            @if (p.dueDiligenceExpiryDate) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-6">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Due Diligence Expiry</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ formatDate(p.dueDiligenceExpiryDate) }}</span>
+              </div>
+            }
+
+            <!-- Expiry Warning -->
+            @if (dueDiligenceExpiryWarning(); as warning) {
+              <div class="sm:col-span-2 lg:col-span-3 animate-fade-in-up stagger-6">
+                <div class="flex items-start gap-3 rounded-xl bg-orange-50 dark:bg-orange-950/20 px-4 py-3">
+                  <i class="pi pi-exclamation-triangle text-orange-500 mt-0.5"></i>
+                  <div>
+                    <span class="text-sm font-semibold text-orange-700 dark:text-orange-300">
+                      Due diligence expires in {{ warning.months > 0 ? warning.months + ' months and ' : '' }}{{ warning.days }} days
+                    </span>
+                    <div class="text-xs text-orange-600 dark:text-orange-400 mt-0.5">
+                      Please ensure renewal is initiated before expiry.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- Created -->
+            @if (p.createdDate) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-6">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Created</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ formatDate(p.createdDate) }}</span>
+              </div>
+            }
+
+            <!-- Last Modified -->
+            @if (p.lastModifiedDate) {
+              <div class="flex flex-col gap-1 animate-fade-in-up stagger-6">
+                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Last Modified</span>
+                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ formatDate(p.lastModifiedDate) }}</span>
+              </div>
+            }
+
+          </div>
+        </p-tabpanel>
+
+        <!-- Opportunities tab (placeholder) -->
+        <p-tabpanel [value]="1">
+          <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+            <i class="pi pi-briefcase text-3xl"></i>
+            <span class="text-sm">No opportunities linked to this partner yet.</span>
+          </div>
+        </p-tabpanel>
+
+        <!-- Contacts tab (placeholder) -->
+        <p-tabpanel [value]="2">
+          <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+            <i class="pi pi-users text-3xl"></i>
+            <span class="text-sm">No contacts linked to this partner yet.</span>
+          </div>
+        </p-tabpanel>
+
+        <!-- Interactions tab (placeholder) -->
+        <p-tabpanel [value]="3">
+          <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+            <i class="pi pi-comments text-3xl"></i>
+            <span class="text-sm">No interactions recorded for this partner yet.</span>
+          </div>
+        </p-tabpanel>
+
+        <!-- Documents tab (placeholder) -->
+        <p-tabpanel [value]="4">
+          <div class="flex flex-col items-center justify-center gap-3 py-12 text-surface-400">
+            <i class="pi pi-file text-3xl"></i>
+            <span class="text-sm">No documents attached to this partner yet.</span>
+          </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+
+  </div>
+} @else if (isLoading()) {
+  <div class="flex flex-col items-center justify-center gap-4 py-20 animate-fade-in">
+    <i class="pi pi-spin pi-spinner text-4xl text-surface-400"></i>
+    <span class="text-surface-500 text-sm">Loading partner...</span>
+  </div>
+} @else {
+  <div class="flex flex-col items-center justify-center gap-4 py-20 animate-fade-in">
+    <i class="pi pi-info-circle text-4xl text-surface-400"></i>
+    <span class="text-surface-600 dark:text-surface-300 text-lg">Partner not found</span>
+    <p-button label="Back to Partners" icon="pi pi-arrow-left" (onClick)="goBack()" />
+  </div>
+}

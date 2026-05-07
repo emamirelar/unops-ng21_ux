@@ -1,0 +1,24 @@
+/* Interaction Detail Component Styles */
+
+/* Ensure hyperlinks in description are properly styled */
+/* Using :deep to pierce Angular's view encapsulation for innerHTML content */
+.interaction-description {
+  :deep a {
+    color: var(--color-blue-500);
+    text-decoration: underline;
+    cursor: pointer;
+    
+    &:hover {
+      color: var(--color-blue-600);
+      text-decoration: underline;
+    }
+    
+    &:visited {
+      color: var(--color-ocean-500);
+    }
+    
+    &:active {
+      color: var(--color-blue-800);
+    }
+  }
+}

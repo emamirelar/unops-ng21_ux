@@ -1,0 +1,164 @@
+<div class="flex flex-col gap-6">
+  <!-- Key Information â€” same p-panel pattern as Partner Information -->
+  <p-panel class="office-detail-panel bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+    <ng-template pTemplate="header">
+      <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-info-circle text-midnight-500"></i>
+          <span class="text-2xl font-semibold">{{ 'office.details.keyInformation' | translate }}</span>
+        </div>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-700">
+          <i class="pi pi-lock text-[11px]"></i>
+          {{ 'office.details.geographicReadOnly' | translate }}
+        </span>
+      </div>
+    </ng-template>
+    <div class="flex flex-col gap-2">
+      <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+        <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.id' | translate }}</span>
+        <span class="text-sm text-gray-500 text-right">{{ office().id }}</span>
+      </div>
+      <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+        <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.costCentre' | translate }}</span>
+        <span class="text-sm text-gray-500 text-right">{{ keyInfo()?.code ?? office().code }}</span>
+      </div>
+      @if (keyInfo()) {
+        <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+          <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.internalName' | translate }}</span>
+          <span class="text-sm text-gray-500 text-right">{{ keyInfo()!.internalName ?? 'â€”' }}</span>
+        </div>
+        <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+          <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.alias' | translate }}</span>
+          <span class="text-sm text-gray-500 text-right">{{ keyInfo()!.alias ?? 'â€”' }}</span>
+        </div>
+        <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+          <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.organisationalEntityType' | translate }}</span>
+          <span class="text-sm text-gray-500 text-right">{{ keyInfo()!.organisationalEntityType ?? 'â€”' }}</span>
+        </div>
+        <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+          <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.hierarchyLevel' | translate }}</span>
+          @if (keyInfo()!.hierarchyLevel != null) {
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-gray-100 text-gray-700">{{ 'office.detail.level' | translate }} {{ keyInfo()!.hierarchyLevel }}</span>
+          } @else {
+            <span class="text-sm text-gray-500 text-right">â€”</span>
+          }
+        </div>
+        <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+          <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.effectiveDate' | translate }}</span>
+          <span class="text-sm text-gray-500 text-right">{{ formatDate(keyInfo()!.effectiveDate) }}</span>
+        </div>
+      }
+    </div>
+
+    <hr class="border-t border-gray-200 my-6" />
+    <div class="text-xl font-semibold text-gray-500 mb-4">{{ 'office.details.parentOffices' | translate }}</div>
+    <div class="flex flex-col gap-2">
+      @if (parentChain().length > 1) {
+        <div class="hierarchy-tree">
+          <app-office-hierarchy-tree [nodes]="parentChain()" />
+        </div>
+      } @else {
+        <p class="text-sm text-gray-400 m-0">{{ 'office.details.noRelatedParentOffices' | translate }}</p>
+      }
+    </div>
+
+    <hr class="border-t border-gray-200 my-6" />
+    <div class="text-xl font-semibold text-gray-500 mb-4">
+      {{ 'office.details.childOffices' | translate }} ({{ children().length }})
+    </div>
+    <div class="flex flex-col gap-0.5">
+      @if (children().length > 0) {
+        @for (child of children(); track child.id) {
+          <div class="child-office-row flex items-center min-w-0 py-1">
+            <span class="material-symbols-outlined child-office-icon shrink-0">apartment</span>
+            <a [routerLink]="['/offices', child.id]" class="child-office-link min-w-0">{{ formatOfficeTreeLabel(child.code, child.name) }}</a>
+          </div>
+        }
+      } @else {
+        <p class="text-sm text-gray-400 m-0">{{ 'office.details.noRelatedChildOffices' | translate }}</p>
+      }
+    </div>
+
+    <div class="mt-4 pt-4 border-t border-gray-200">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+        <span class="flex items-center gap-2">
+          <i class="pi pi-info-circle text-xs"></i>
+          {{ 'office.details.keyInformationSource' | translate }}
+        </span>
+        <span class="flex items-center gap-2">
+          <i class="pi pi-sync text-xs"></i>
+          {{ 'office.sync.lastSynced' | translate }}: {{ formatLastSynced(officesLastSyncedAt()) }}
+        </span>
+      </div>
+    </div>
+  </p-panel>
+
+  <!-- Geographic Implementation -->
+  <p-panel class="office-detail-panel bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+    <ng-template pTemplate="header">
+      <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-map-marker text-midnight-500"></i>
+          <span class="text-2xl font-semibold">{{ 'office.details.geographicImplementation' | translate }}</span>
+        </div>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-700">
+          <i class="pi pi-lock text-[11px]"></i>
+          {{ 'office.details.geographicReadOnly' | translate }}
+        </span>
+      </div>
+    </ng-template>
+    @if (physicalLocations().length === 0) {
+      <p class="text-sm text-gray-400">{{ 'office.details.noPhysicalLocations' | translate }}</p>
+    } @else {
+      <div class="flex flex-col gap-6">
+        @for (location of physicalLocations(); track $index) {
+          @if ($index > 0) {
+            <hr class="border-t border-gray-200" />
+          }
+          <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+              <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.officeIdOneUNOPS' | translate }}</span>
+              <span class="text-sm text-gray-500 text-right">{{ location.officeId ?? 'â€”' }}</span>
+            </div>
+            <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+              <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.officeName' | translate }}</span>
+              <span class="text-sm text-gray-500 text-right">{{ location.officeName ?? 'â€”' }}</span>
+            </div>
+            <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+              <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.alias' | translate }}</span>
+              <span class="text-sm text-gray-500 text-right">{{ location.alias ?? 'â€”' }}</span>
+            </div>
+            <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+              <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.locationType' | translate }}</span>
+              <span class="text-sm text-gray-500 text-right">{{ location.locationType ?? 'â€”' }}</span>
+            </div>
+            <div class="flex justify-between items-start p-2 rounded border border-gray-200">
+              <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.description' | translate }}</span>
+              <span class="text-sm text-gray-500 text-right" style="line-height: 1.6;">{{ location.description ?? 'â€”' }}</span>
+            </div>
+            <div class="flex justify-between items-start p-2 rounded border border-gray-200">
+              <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.address' | translate }}</span>
+              <span class="text-sm text-gray-500 text-right whitespace-pre-line" style="line-height: 1.6;">{{ formatAddress(location) }}</span>
+            </div>
+            <div class="flex justify-between items-center p-2 rounded border border-gray-200">
+              <span class="text-sm font-medium text-gray-400 shrink-0 mr-4">{{ 'office.details.geoCoordinates' | translate }}</span>
+              <span class="text-sm text-gray-500 text-right">{{ location.geoCoordinates ?? 'â€”' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    <div class="mt-4 pt-4 border-t border-gray-200">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+        <span class="flex items-center gap-2">
+          <i class="pi pi-info-circle text-xs"></i>
+          {{ 'office.details.geographicSource' | translate }}
+        </span>
+        <span class="flex items-center gap-2">
+          <i class="pi pi-sync text-xs"></i>
+          {{ 'office.sync.lastSynced' | translate }}: {{ formatLastSynced(locationsLastSyncedAt()) }}
+        </span>
+      </div>
+    </div>
+  </p-panel>
+</div>

@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+:host :deep {
+  --p-tabs-tablist-background: transparent;
+}

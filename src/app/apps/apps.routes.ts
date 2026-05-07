@@ -50,16 +50,16 @@ export default [
                 loadComponent: () => import('./partners').then((c) => c.Partners)
             },
             {
-                path: 'v2/:id',
-                loadComponent: () => import('./partners/partner-detail-v2').then((c) => c.PartnerDetailV2),
-                data: { breadcrumb: 'Details (v2)' }
-            },
-            {
                 path: ':id',
                 loadComponent: () => import('./partners/partner-detail').then((c) => c.PartnerDetail),
                 data: { breadcrumb: 'Details' }
             }
         ]
+    },
+    {
+        path: 'partners-team',
+        loadComponent: () => import('./partners/partners-team').then((c) => c.PartnersTeam),
+        data: { breadcrumb: 'Partners (Team Version)' }
     },
     {
         path: 'agreements',

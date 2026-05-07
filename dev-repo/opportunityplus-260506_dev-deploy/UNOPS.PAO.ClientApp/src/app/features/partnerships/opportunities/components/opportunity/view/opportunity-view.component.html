@@ -1,0 +1,759 @@
+﻿<p-confirmDialog></p-confirmDialog>
+
+<!-- Workflow Action Loading Overlay -->
+@if (workflowActionInProgress()) {
+  <div class="workflow-action-overlay">
+    <i class="pi pi-spin pi-spinner text-5xl text-white"></i>
+  </div>
+}
+
+<!-- Main Container -->
+<div
+  class="flex flex-col bg-gray-50 dark:bg-surface-900 -m-4 overflow-hidden"
+  [style.height]="'calc(100vh - 64px)'"
+>
+  @if (loading()) {
+    <div class="flex items-center justify-center py-12">
+      <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+    </div>
+  }
+
+  @if (!loading() && opportunity()) {
+    <!-- Header -->
+    <div
+      class="flex-shrink-0 bg-gray-50 dark:bg-surface-900 border-b border-gray-300 dark:border-surface-700 z-10 transition-all duration-300"
+    >
+      <div class="px-4 md:px-12">
+        @if (opportunity()?.opportunityBannerImage && !headerScrolled()) {
+          <div class="transition-all duration-300 pt-4">
+            <div class="opportunity-banner group cursor-pointer">
+              <img
+                [src]="opportunity()!.opportunityBannerImage"
+                [alt]="opportunity()!.name + ' banner'"
+                class="w-full h-full object-cover"
+              />
+              <div
+                class="absolute inset-0 pointer-events-none"
+                [style.background]="
+                  'linear-gradient(to right, color-mix(in srgb, var(--p-surface-50, #f9fafb) 40%, transparent) 0%, transparent 15%, transparent 85%, color-mix(in srgb, var(--p-surface-50, #f9fafb) 40%, transparent) 100%), linear-gradient(to bottom, transparent 0%, transparent 70%, color-mix(in srgb, var(--p-surface-50, #f9fafb) 60%, transparent) 100%)'
+                "
+              ></div>
+              <div
+                [class]="isRegeneratingBanner() ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
+                class="absolute inset-0 bg-deepsea-500/50 flex items-center justify-center transition-opacity duration-200"
+                [class.cursor-wait]="isRegeneratingBanner()"
+                [class.cursor-pointer]="!isRegeneratingBanner()"
+                (click)="!isRegeneratingBanner() && regenerateBannerImage()"
+              >
+                @if (isRegeneratingBanner()) {
+                  <div class="flex flex-col items-center gap-3">
+                    <i class="pi pi-spin pi-spinner text-white text-3xl sm:text-4xl lg:text-5xl"></i>
+                    <span class="text-white text-xs sm:text-sm font-medium">{{
+                      'message.generatingBanner' | translate
+                    }}</span>
+                  </div>
+                } @else {
+                  <div class="flex flex-col items-center gap-2">
+                    <i class="pi pi-refresh text-white text-2xl sm:text-3xl lg:text-4xl"></i>
+                    <span class="text-white text-xs sm:text-sm font-medium">{{
+                      'button.regenerateBanner' | translate
+                    }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <div
+          [class]="
+            headerScrolled()
+              ? 'px-0 py-3'
+              : (opportunity()?.opportunityBannerImage && !headerScrolled() ? 'px-0 pb-6' : 'py-6')
+          "
+          class="transition-all duration-300"
+        >
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+              <a
+                routerLink="/partnerships/opportunities"
+                class="text-gray-600 dark:text-surface-300 hover:text-midnight-500 dark:hover:text-surface-0 flex-shrink-0"
+              >
+                <i class="pi pi-arrow-left text-xl"></i>
+              </a>
+              <div class="flex-1 min-w-0">
+                <h1
+                  class="text-xl sm:text-2xl font-extrabold text-deepsea-500 dark:text-surface-0 transition-all duration-300"
+                  [class.text-lg]="headerScrolled()"
+                >
+                  {{ opportunity()?.name || ('message.loading' | translate) }}
+                </h1>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0 flex-wrap justify-end">
+              @if (opportunity()?.stage) {
+                <p-badge
+                  [value]="opportunity()?.stage || ''"
+                  severity="info"
+                  styleClass="whitespace-nowrap"
+                />
+              }
+              @if ((opportunity()?.status || '').toLowerCase() === 'closed') {
+                <span
+                  class="px-2 py-1 text-xs rounded-full bg-badge-danger text-badge-danger whitespace-nowrap"
+                  >{{ opportunity()?.status || '' }}</span
+                >
+              } @else {
+                <p-badge
+                  [value]="opportunity()?.status || ''"
+                  [severity]="getStatusSeverity(opportunity()?.status)"
+                  styleClass="whitespace-nowrap"
+                />
+              }
+              @if (oupEngagementUrl()) {
+                <p-button
+                  [label]="'button.goToOup' | translate"
+                  icon="pi pi-external-link"
+                  [outlined]="true"
+                  size="small"
+                  severity="secondary"
+                  (onClick)="openOUPEngagement()"
+                  styleClass="whitespace-nowrap"
+                  [pTooltip]="'tooltip.opportunity.openInOup' | translate"
+                  tooltipStyleClass="unops-tooltip-nowrap"
+                  tooltipPosition="bottom"
+                />
+              }
+            </div>
+          </div>
+
+          <!-- Metadata row with icons -->
+          <div
+            [class]="
+              headerScrolled()
+                ? 'flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-gray-600 dark:text-surface-400 mt-3'
+                : 'flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-surface-400 mt-4'
+            "
+            class="transition-all duration-300"
+          >
+            <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
+              <i class="pi pi-hashtag text-gray-400 dark:text-surface-500"></i>
+              <strong>{{ 'label.opportunity.id' | translate }}:</strong> {{ opportunity()!.id || '—' }}
+            </span>
+            <span class="text-gray-300 dark:text-surface-600 hidden sm:inline">|</span>
+            <span class="inline-flex items-center gap-1.5 whitespace-nowrap min-w-0">
+              <i class="pi pi-user text-gray-400 dark:text-surface-500"></i>
+              <strong>{{ 'label.opportunity.manager' | translate }}:</strong>
+              <span class="truncate max-w-[12rem] sm:max-w-none">{{
+                opportunityManager() || '—'
+              }}</span>
+            </span>
+            <span class="text-gray-300 dark:text-surface-600 hidden sm:inline">|</span>
+            <span class="inline-flex items-center gap-1.5 whitespace-nowrap min-w-0">
+              <i class="pi pi-building text-gray-400 dark:text-surface-500"></i>
+              <strong>{{ 'label.opportunity.orgUnit' | translate }}:</strong>
+              <span class="truncate max-w-[14rem] sm:max-w-none">{{
+                opportunity()!.responsibleOrgUnitName || '—'
+              }}</span>
+            </span>
+            @if (opportunity()!.targetSigningDate) {
+              <span class="text-gray-300 dark:text-surface-600 hidden sm:inline">|</span>
+              <span
+                class="inline-flex items-center gap-1.5 whitespace-nowrap"
+                [class.text-cherry-500]="isTargetSigningDateOverdue()"
+              >
+                <i class="pi pi-calendar text-gray-400 dark:text-surface-500"></i>
+                <strong>{{ 'label.opportunity.targetSigningDate' | translate }}:</strong>
+                <span [class.font-semibold]="isTargetSigningDateOverdue()">{{
+                  opportunity()!.targetSigningDate | date: 'mediumDate'
+                }}</span>
+              </span>
+            }
+          </div>
+        </div>
+
+        @if (opportunity()?.stage && canChangeStage()) {
+          <div class="pt-4 pb-2">
+            <app-requirements-validation
+              [entityName]="'opportunity'"
+              [entityId]="opportunity()?.id?.toString() ?? ''"
+              [formGroup]="opportunityForm"
+              [currentStage]="opportunity()?.stage ?? ''"
+              [entityData]="opportunity()"
+              [customValidators]="customValidators"
+              (requirementClick)="handleRequirementClick($event)"
+            />
+          </div>
+        }
+
+        @if (showDecisionGuidance()) {
+          <div class="pt-4 border-t border-gray-300 dark:border-surface-700">
+            <p-message severity="info" [closable]="false">
+              <ng-template pTemplate="content">
+                <div class="flex items-start gap-3">
+                  <i class="pi pi-info-circle text-blue-500 text-xl flex-shrink-0 mt-0.5"></i>
+                  <div class="flex flex-col gap-1">
+                    <span class="font-semibold">{{
+                      'workflow.goDecision.guidance.title' | translate
+                    }}</span>
+                    <span>{{ instructionalGuidanceText | translate }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-message>
+          </div>
+        }
+
+        @if (showDecisionInfoPanel()) {
+          <div class="pt-4">
+            <app-opportunity-decision-info-panel
+              [opportunity]="opportunity()!"
+              [risks]="opportunityRisks()"
+              [senderRemarks]="workflowSubmissionComment()"
+            />
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Sticky workflow + section navigation -->
+    <div
+      class="flex-shrink-0 sticky top-0 z-20 bg-gray-50/95 dark:bg-surface-900/95 backdrop-blur-sm border-b border-gray-300 dark:border-surface-700"
+    >
+      <div class="px-4 md:px-12 py-4 border-b border-gray-200 dark:border-surface-700">
+        <app-stage-workflow
+          #stageWorkflowComponent
+          [entityName]="'opportunity'"
+          [entityId]="opportunity()?.id?.toString() ?? ''"
+          [canChangeStage]="canChangeStage()"
+          [isOpportunityManager]="isCurrentUserOpportunityManager()"
+          [feedbackDialogService]="feedbackDialogService"
+          [customStageChangeHandler]="customStageChangeHandler"
+          [responsibleOrgUnitName]="opportunity()?.responsibleOrgUnitName ?? ''"
+          (onStageChangeSuccess)="handleStageChangeSuccess()"
+          (onGoSubmissionSuccess)="handleGoSubmissionSuccess($event)"
+          (onGoApprovalSuccess)="handleGoApprovalSuccess($event)"
+          (onActionInProgressChange)="handleWorkflowActionInProgressChange($event)"
+        />
+      </div>
+
+      <div class="px-4 md:px-12 py-3">
+        @if (showProgressBar()) {
+          <div class="loading-progress-strip mb-3 transition-all duration-300">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex-1 min-w-0">
+                <div class="w-full bg-gray-200 dark:bg-surface-700 rounded-full h-1.5 overflow-hidden">
+                  <div
+                    class="bg-blue-500 h-1.5 rounded-full transition-all duration-500 ease-out"
+                    [style.width.%]="progressPercentage()"
+                  ></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 text-sm text-gray-700 dark:text-surface-200 flex-shrink-0">
+                <span class="flex items-center gap-2">
+                  <i class="pi pi-spin pi-spinner text-blue-500 text-sm"></i>
+                  <span class="font-medium hidden sm:inline">{{ progressMessage() }}</span>
+                </span>
+                <span class="text-gray-500 dark:text-surface-400 font-medium">
+                  {{ progressPercentage() }}%
+                </span>
+              </div>
+            </div>
+            <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">
+              {{ progressMessage() }}
+            </div>
+          </div>
+        }
+
+        <div class="lg:hidden">
+          <p-select
+            [options]="navSections"
+            [ngModel]="activeNavGroupId()"
+            (ngModelChange)="scrollToSection($event)"
+            optionLabel="label"
+            optionValue="id"
+            fluid="true"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              @if (selectedOption) {
+                <div class="flex items-center gap-2">
+                  <i [class]="'pi ' + selectedOption.icon"></i>
+                  <span>{{ selectedOption.label | translate }}</span>
+                </div>
+              }
+            </ng-template>
+            <ng-template pTemplate="item" let-option>
+              <div class="flex items-center gap-2">
+                <i [class]="'pi ' + option.icon"></i>
+                <span>{{ option.label | translate }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <div class="hidden lg:block relative">
+          <div #chipsSizerDiv class="absolute top-0 left-0 w-full pointer-events-none h-px opacity-0"></div>
+          <div #chipsContainer class="flex flex-wrap items-center gap-2">
+            @for (section of visibleChips(); track section.id) {
+              <button
+                type="button"
+                (click)="scrollToSection(section.id)"
+                [class]="navPillClass(section.id)"
+              >
+                <i [class]="'pi ' + section.icon + ' text-sm'"></i>
+                <span>{{ section.label | translate }}</span>
+              </button>
+            }
+            @if (hasOverflowChips()) {
+              <p-select
+                [options]="overflowChips()"
+                [ngModel]="activeNavGroupId()"
+                (ngModelChange)="scrollToSection($event)"
+                optionLabel="label"
+                optionValue="id"
+                [placeholder]="'label.more' | translate"
+                appendTo="body"
+                [style]="{ width: '7.5rem' }"
+                styleClass="more-chips-dropdown"
+              >
+                <ng-template pTemplate="selectedItem">
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-ellipsis-h text-sm"></i>
+                    <span>{{ 'label.more' | translate }}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="item" let-option>
+                  <div class="flex items-center gap-2">
+                    <i [class]="'pi ' + option.icon"></i>
+                    <span>{{ option.label | translate }}</span>
+                  </div>
+                </ng-template>
+              </p-select>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrollable content + sidebar -->
+    <div
+      #contentScrollContainer
+      class="flex flex-1 min-h-0 overflow-y-auto overflow-x-hidden bg-gray-50 dark:bg-surface-900"
+    >
+      <div class="flex flex-col xl:flex-row xl:items-start gap-6 xl:gap-8 w-full px-4 md:px-12 py-4 sm:py-6">
+        <div class="flex-1 min-w-0 flex flex-col gap-6">
+          <!-- OVERVIEW -->
+          <div
+            id="section-overview"
+            [style.scroll-margin-top]="'calc(64px + 8px)'"
+            class="opportunity-section-enter group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('overview')"
+            (click)="handleSectionClick('overview', $event)"
+          >
+            <app-opportunity-overview-section
+              #overviewSection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('overview')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('overview')"
+            />
+          </div>
+
+          <!-- WHAT -->
+          <div
+            id="section-what"
+            class="opportunity-section-enter opportunity-section-enter-delay-1 group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('what')"
+            (click)="handleSectionClick('what', $event)"
+          >
+            <app-opportunity-what-section
+              #whatSection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [suggestions]="whatSuggestions()"
+              [loadingInsightsSuggestions]="loadingInsightsSuggestions()"
+              [documentUploadTrigger]="documentUploadTrigger()"
+              [sectionSaveTrigger]="sectionSaveTrigger()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('what')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('what')"
+            />
+          </div>
+
+          <!-- WHEN -->
+          <div
+            id="section-when"
+            class="opportunity-section-enter opportunity-section-enter-delay-2 group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('when')"
+            (click)="handleSectionClick('when', $event)"
+          >
+            <app-opportunity-when-section
+              #whenSection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [suggestions]="whenSuggestions()"
+              [loadingInsightsSuggestions]="loadingInsightsSuggestions()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('when')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('when')"
+            />
+          </div>
+
+          <!-- WHERE -->
+          <div
+            id="section-where"
+            class="opportunity-section-enter opportunity-section-enter-delay-3 group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('where')"
+            (click)="handleSectionClick('where', $event)"
+          >
+            <app-opportunity-where-section
+              #whereSection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [suggestions]="whereSuggestions()"
+              [loadingInsightsSuggestions]="loadingInsightsSuggestions()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('where')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('where')"
+            />
+          </div>
+
+          <!-- WHO -->
+          <div
+            id="section-who"
+            class="opportunity-section-enter opportunity-section-enter-delay-4 group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('who')"
+            (click)="handleSectionClick('who', $event)"
+          >
+            <app-opportunity-who-section
+              #whoSection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [suggestions]="whoSuggestions()"
+              [loadingInsightsSuggestions]="loadingInsightsSuggestions()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('who')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('who')"
+            />
+          </div>
+
+          <!-- WHY -->
+          <div
+            id="section-why"
+            class="opportunity-section-enter opportunity-section-enter-delay-5 group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('why')"
+            (click)="handleSectionClick('why', $event)"
+          >
+            <app-opportunity-why-section
+              #whySection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [suggestions]="whySuggestions()"
+              [loadingInsightsSuggestions]="loadingInsightsSuggestions()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('why')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('why')"
+              (unopsMissionsNotApplicableChange)="handleUnopsMissionsNotApplicableChange($event)"
+            />
+          </div>
+
+          <!-- TEAM -->
+          <div
+            id="section-team"
+            class="opportunity-section-enter opportunity-section-enter-delay-6 group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('team')"
+            (click)="handleSectionClick('team', $event)"
+          >
+            <app-opportunity-team-section
+              #teamSection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [suggestions]="teamSuggestions()"
+              [loadingInsightsSuggestions]="loadingInsightsSuggestions()"
+              [sectionSaveTrigger]="sectionSaveTrigger()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('team')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('team')"
+            />
+          </div>
+
+          <!-- ANALYSIS -->
+          <div id="section-analysis" class="opportunity-section-enter opportunity-section-enter-delay-7">
+            <app-opportunity-analysis-section
+              [opportunity]="opportunity()!"
+              [sectionSaveTrigger]="sectionSaveTrigger()"
+              [insights]="allInsights()"
+              [suggestions]="allSuggestions()"
+              [loadingInsights]="insightsLoading()"
+              [insightsRefreshingPending]="insightsRefreshingPending()"
+              [insightsError]="insightsError()"
+              (refreshRequested)="handleInsightsRefresh()"
+            />
+          </div>
+
+          <!-- DST / RISKS -->
+          <div
+            id="section-risks"
+            class="opportunity-section-enter opportunity-section-enter-delay-8 group relative section-hover-container"
+            [class.section-editable]="canUpdate() && !sectionsWithUnsavedChanges().has('risks')"
+            (click)="handleSectionClick('risks', $event)"
+          >
+            <app-opportunity-dst-section
+              #risksSection
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [deferFromCreate]="fromCreate()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+              (changesDetected)="handleSectionChangesDetected('risks')"
+              (changesSavedOrDiscarded)="handleSectionChangesSaved('risks')"
+            />
+          </div>
+
+          <!-- RELATED -->
+          <div id="section-related" class="opportunity-section-enter opportunity-section-enter-delay-9">
+            <app-opportunity-related-items
+              #relatedItemsComponent
+              [opportunityId]="opportunity()!.id!"
+            />
+          </div>
+
+          <!-- COLLABORATION -->
+          <div id="section-collaboration" class="opportunity-section-enter opportunity-section-enter-delay-10">
+            <app-opportunity-collaboration [opportunityId]="opportunity()!.id!" />
+          </div>
+
+          <!-- DOCUMENTS (inline) -->
+          <div id="section-documents" class="opportunity-section-enter opportunity-section-enter-delay-11">
+            <app-opportunity-documents
+              #documentsComponent
+              [opportunityId]="opportunity()!.id!"
+              [opportunity]="opportunity()"
+              [embedInPage]="true"
+              [collapsed]="false"
+              [canUpdate]="canUpdate()"
+              (togglePanel)="toggleDocumentsPanel()"
+              (opportunityUpdated)="handleDocumentUploaded()"
+            />
+          </div>
+
+          <!-- STATEMENT -->
+          <div id="section-statement" class="opportunity-section-enter opportunity-section-enter-delay-12">
+            <app-opportunity-statement-section
+              [opportunity]="opportunity()!"
+              [canUpdate]="canUpdate()"
+              [showApproverGuidance]="showDecisionGuidance()"
+              [sectionSaveTrigger]="sectionSaveTrigger()"
+              (opportunityUpdated)="handleOpportunityUpdate($event)"
+            />
+          </div>
+
+          <!-- Audit / actions -->
+          <div
+            class="bg-white dark:bg-surface-900 rounded-lg shadow-sm border border-gray-300 dark:border-surface-700 mt-2 p-4 opportunity-section-enter opportunity-section-enter-delay-13"
+          >
+            <div
+              class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
+            >
+              <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-gray-600 dark:text-surface-400">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-user-plus text-gray-500 dark:text-surface-500"></i>
+                  <span class="font-medium">{{ 'label.opportunity.createdBy' | translate }}:</span>
+                  <span class="text-gray-800 dark:text-surface-200">{{
+                    opportunity()!.createdByName || ('message.interaction.unknownUser' | translate)
+                  }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-calendar-plus text-gray-500 dark:text-surface-500"></i>
+                  <span class="font-medium">{{ 'label.opportunity.createdDate' | translate }}:</span>
+                  <span class="text-gray-800 dark:text-surface-200">{{
+                    formatDate(opportunity()!.createdDate)
+                  }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-user-edit text-gray-500 dark:text-surface-500"></i>
+                  <span class="font-medium">{{ 'label.opportunity.lastModifiedBy' | translate }}:</span>
+                  <span class="text-gray-800 dark:text-surface-200">{{
+                    opportunity()!.lastModifiedByName ||
+                      ('message.interaction.unknownUser' | translate)
+                  }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-calendar-times text-gray-500 dark:text-surface-500"></i>
+                  <span class="font-medium">{{ 'label.opportunity.lastModified' | translate }}:</span>
+                  <span class="text-gray-800 dark:text-surface-200">{{
+                    formatDate(opportunity()!.lastModifiedDate)
+                  }}</span>
+                </div>
+              </div>
+              <div class="flex-shrink-0 w-full lg:w-auto">
+                <p-button
+                  [label]="'button.submitForReview' | translate"
+                  icon="pi pi-send"
+                  [disabled]="true"
+                  styleClass="w-full lg:w-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right sidebar (xl+) -->
+        <aside
+          class="hidden xl:flex w-[380px] shrink-0 flex-col gap-4 sticky top-4 self-start pb-8"
+        >
+          <div
+            class="rounded-unops-md border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 shadow-unops-sm overflow-hidden"
+          >
+            <div
+              class="flex cursor-pointer items-start justify-between gap-2 px-4 py-3 border-b border-surface-200 dark:border-surface-700"
+              (click)="aiSidebarInsightsExpanded.set(!aiSidebarInsightsExpanded())"
+            >
+              <div class="min-w-0">
+                <div class="font-semibold text-sm text-surface-900 dark:text-surface-0 flex items-center gap-2">
+                  <i class="pi pi-sparkles text-primary"></i>
+                  {{ 'label.aiOpportunityInsights' | translate }}
+                </div>
+                <div class="text-xs text-surface-600 dark:text-surface-400 mt-0.5">
+                  {{ 'label.opportunity.aiInsightsSubtitle' | translate }}
+                </div>
+              </div>
+              <i
+                class="pi text-surface-400 shrink-0 mt-0.5"
+                [class.pi-chevron-down]="!aiSidebarInsightsExpanded()"
+                [class.pi-chevron-up]="aiSidebarInsightsExpanded()"
+              ></i>
+            </div>
+            <div class="expand-body" [class.expand-body--open]="aiSidebarInsightsExpanded()">
+              <div class="expand-body__inner">
+                <div class="p-3 pt-0">
+                  <ux-ai-card-bg class="motion-safe:animate-enter-liquid block rounded-2xl overflow-hidden">
+                    <div class="p-3 flex flex-col gap-3">
+                      <input
+                        pInputText
+                        type="search"
+                        class="w-full"
+                        [placeholder]="'placeholder.searchInsights' | translate"
+                        [ngModel]="aiSearchQuery()"
+                        (ngModelChange)="aiSearchQuery.set($event); aiCurrentPage.set(0)"
+                      />
+                      <div class="flex flex-col gap-3 max-h-[min(24rem,50vh)] overflow-y-auto">
+                        @for (insight of paginatedAiInsights(); track insight.title) {
+                          <div
+                            class="rounded-unops-md border border-surface-200 dark:border-surface-700 p-3 bg-surface-50/80 dark:bg-surface-800/50"
+                          >
+                            <div class="flex items-start gap-2">
+                              <span
+                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm"
+                                [class]="insight.iconBg"
+                              >
+                                <i [class]="insight.icon"></i>
+                              </span>
+                              <div class="min-w-0 flex-1">
+                                <div class="font-medium text-sm text-surface-900 dark:text-surface-0">
+                                  {{ insight.title }}
+                                </div>
+                                <p class="text-xs text-surface-600 dark:text-surface-300 mt-1 leading-snug">
+                                  {{ insight.description }}
+                                </p>
+                                <p-button
+                                  [label]="insight.action"
+                                  [text]="true"
+                                  size="small"
+                                  styleClass="mt-2 p-0! self-start"
+                                  (onClick)="$event.stopPropagation()"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                      @if (filteredAiInsights().length > 0) {
+                        <p-paginator
+                          [first]="aiCurrentPage() * aiPageSize"
+                          [rows]="aiPageSize"
+                          [totalRecords]="filteredAiInsights().length"
+                          (onPageChange)="onOpportunityAiPageChange($event)"
+                          [alwaysShow]="true"
+                          [showFirstLastIcon]="false"
+                          [showPageLinks]="false"
+                        />
+                      }
+                    </div>
+                  </ux-ai-card-bg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="rounded-unops-md border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 shadow-unops-sm p-4"
+          >
+            <div class="font-semibold text-sm text-surface-900 dark:text-surface-0 mb-3">
+              {{ 'label.opportunity.activityTimeline' | translate }}
+            </div>
+            <ul class="flex flex-col gap-3">
+              @for (entry of activityTimelineEntries(); track entry.labelKey) {
+                <li class="flex gap-3">
+                  <span
+                    class="mt-1.5 h-2 w-2 shrink-0 rounded-full"
+                    [class]="entry.dotClass"
+                  ></span>
+                  <div class="min-w-0">
+                    <div class="text-xs font-medium text-surface-800 dark:text-surface-200">
+                      {{ entry.labelKey | translate }}
+                    </div>
+                    @if (entry.date) {
+                      <div class="text-xs text-surface-500 dark:text-surface-400">
+                        {{ entry.date | date: 'medium' }}
+                      </div>
+                    }
+                  </div>
+                </li>
+              }
+            </ul>
+          </div>
+
+          <p-button
+            [label]="'label.opportunity.openTasks' | translate"
+            icon="pi pi-list"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="w-full"
+            (onClick)="taskDrawerVisible.set(true)"
+          />
+        </aside>
+      </div>
+    </div>
+  }
+
+  @if (opportunity()) {
+    <p-drawer
+      [header]="'label.opportunity.tasksPanel' | translate"
+      position="right"
+      [visible]="taskDrawerVisible()"
+      (visibleChange)="taskDrawerVisible.set($event)"
+      [style]="{ width: '22rem' }"
+      [appendTo]="'body'"
+    >
+      <p class="text-surface-600 dark:text-surface-300 text-sm m-0">
+        {{ 'label.opportunity.tasksPlaceholder' | translate }}
+      </p>
+    </p-drawer>
+  }
+</div>
+
+@if (opportunity()) {
+  <app-approve-opportunity-dialog
+    [(visible)]="showApproveDialog"
+    [opportunity]="opportunity()!"
+    (decisionConfirmed)="onApproveConfirmed($event)"
+  />
+
+  <app-reject-opportunity-dialog
+    [(visible)]="showRejectDialog"
+    [opportunity]="opportunity()!"
+    (decisionConfirmed)="onRejectConfirmed($event)"
+  />
+}

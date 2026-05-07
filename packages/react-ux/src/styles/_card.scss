@@ -1,0 +1,11 @@
+.card {
+    margin-bottom: 0;
+}
+
+.layout-card-filled .card{
+    background: var(--surface-card);
+}
+
+.layout-card-transparent .card{
+    background: transparent;
+}

@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+/* Tab list background: local Prime variable override (see primeng-brand-theme for global tab styles). */
+:host :deep {
+  --p-tabs-tablist-background: transparent;
+}

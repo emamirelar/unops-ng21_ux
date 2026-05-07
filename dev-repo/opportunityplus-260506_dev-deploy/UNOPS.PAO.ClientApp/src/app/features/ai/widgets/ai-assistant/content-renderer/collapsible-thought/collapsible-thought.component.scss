@@ -1,0 +1,193 @@
+.collapsible-thought-container {
+  background: var(--color-gray-50);
+  border-left: 3px solid var(--color-blue-500);
+  border-radius: 0.375rem;
+  margin: 0.75rem 0;
+  overflow: hidden;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapsible-thought-container:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.thought-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.thought-header.clickable {
+  cursor: pointer;
+}
+
+.thought-header.clickable:hover {
+  background: color-mix(in srgb, var(--color-gray-900) 3%, var(--color-gray-50));
+}
+
+.thought-header.expanded {
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.thought-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.thought-header:hover .thought-icon {
+  transform: scale(1.1);
+}
+
+.thought-preview {
+  flex: 1;
+  overflow: hidden;
+  font-style: italic;
+  color: var(--color-gray-700);
+  line-height: 1.5;
+}
+
+.thought-preview:not(.expanded) {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.thought-preview.expanded {
+  color: var(--color-gray-900);
+}
+
+/* Override markdown styles in preview for inline display */
+.thought-preview :deep p {
+  margin: 0;
+  display: inline;
+  font-style: inherit;
+  color: inherit;
+}
+
+.thought-preview :deep strong {
+  font-weight: 600;
+  font-style: italic;
+  color: inherit;
+}
+
+.thought-preview :deep em {
+  font-style: italic;
+  color: inherit;
+}
+
+.thought-preview :deep code {
+  font-size: 0.9em;
+  padding: 2px 0.25rem;
+  background: var(--surface-card, #fff);
+  border-radius: 0.25rem;
+}
+
+/* Ensure all markdown elements display inline in collapsed state */
+.thought-preview:not(.expanded) :deep * {
+  display: inline;
+  white-space: nowrap;
+}
+
+.toggle-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-blue-500);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chevron-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chevron-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.thought-content {
+  padding: 1rem;
+  font-style: italic;
+  color: var(--color-gray-700);
+  animation: slideDown 0.3s cubic-bezier(0.0, 0.0, 0.2, 1.0);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Markdown content styling within thought */
+.thought-content :deep p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.thought-content :deep p:first-child {
+  margin-top: 0;
+}
+
+.thought-content :deep p:last-child {
+  margin-bottom: 0;
+}
+
+.thought-content :deep strong {
+  font-weight: 600;
+  color: var(--color-gray-900);
+}
+
+.thought-content :deep em {
+  font-style: italic;
+}
+
+.thought-content :deep code {
+  background: var(--surface-card, #fff);
+  padding: 2px calc(0.25rem + 2px);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.thought-content :deep ul,
+.thought-content :deep ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.thought-content :deep li {
+  margin-bottom: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .thought-header {
+    padding: 0.75rem;
+  }
+  
+  .thought-content {
+    padding: 0.75rem;
+  }
+  
+  .thought-icon {
+    font-size: 1rem;
+  }
+}

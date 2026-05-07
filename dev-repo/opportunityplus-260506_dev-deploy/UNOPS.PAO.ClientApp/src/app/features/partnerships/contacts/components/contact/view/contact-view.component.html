@@ -1,0 +1,334 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="flex flex-col gap-6 animate-fade-in">
+  <!-- Back button -->
+  <a routerLink="/partnerships/contacts" class="inline-flex items-center gap-2 text-sm text-surface-600 dark:text-surface-300 hover:text-primary transition-colors no-underline w-fit">
+    <i class="pi pi-arrow-left text-xs"></i>
+    {{ 'button.backToContacts' | translate }}
+  </a>
+
+  <!-- Header -->
+  <div class="card p-6 animate-fade-in-up stagger-1">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+      <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 shrink-0">
+        @if (recordData().profilePictureUrl) {
+          <img [src]="recordData().profilePictureUrl" [alt]="getFullName()" class="w-16 h-16 rounded-2xl object-cover" />
+        } @else {
+          <span class="text-2xl font-bold text-primary">{{ getInitials() }}</span>
+        }
+      </div>
+
+      <div class="flex flex-col gap-2 flex-1 min-w-0">
+        <div class="flex items-center gap-3 flex-wrap">
+          <h1 class="text-2xl font-extrabold text-deepsea-500 dark:text-surface-0 m-0">{{ getFullName() }}</h1>
+          @if (recordData().status) {
+            <p-tag [value]="recordData().status!" severity="success" />
+          }
+          @if (recordData().department) {
+            <p-tag [value]="recordData().department!" severity="info" />
+          }
+        </div>
+        <div class="flex items-center gap-4 text-sm text-surface-600 dark:text-surface-300 flex-wrap">
+          @if (recordData().title) {
+            <span class="flex items-center gap-1"><i class="pi pi-briefcase text-xs"></i> {{ recordData().title }}</span>
+          }
+          @if (recordData().partner?.name) {
+            <a [routerLink]="['/partnerships/partners', recordData().partner?.id]" class="flex items-center gap-1 no-underline text-inherit hover:text-primary transition-colors">
+              <i class="pi pi-building text-xs"></i> {{ recordData().partner?.name }}
+            </a>
+          }
+          @if (recordData().mailingCity || recordData().mailingCountry) {
+            <span class="flex items-center gap-1"><i class="pi pi-map-marker text-xs"></i> {{ recordData().mailingCity ? recordData().mailingCity + ', ' : '' }}{{ recordData().mailingCountry }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        @if (recordPermissions().permissions.canUpdate) {
+          <p-button icon="pi pi-pencil" rounded text (onClick)="handleEditClick()" />
+        }
+        @if (recordPermissions().permissions.canDelete) {
+          <p-button icon="pi pi-trash" rounded text severity="danger" (onClick)="deleteContact()" />
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Two column layout -->
+  <div class="flex flex-col xl:flex-row gap-6">
+    <!-- Left column -->
+    <div class="flex flex-col gap-6 flex-1 min-w-0">
+
+      <!-- Contact Information Card -->
+      <div class="card animate-fade-in-up stagger-2">
+        <div class="flex items-center justify-between px-6 py-4 cursor-pointer" (click)="contactInfoExpanded.set(!contactInfoExpanded())">
+          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0 flex items-center gap-2">
+            <i class="pi pi-phone text-primary"></i>
+            {{ 'label.contact.information' | translate }}
+          </h2>
+          <i class="pi text-surface-400" [class.pi-chevron-down]="!contactInfoExpanded()" [class.pi-chevron-up]="contactInfoExpanded()"></i>
+        </div>
+        <div class="expand-body" [class.expand-body--open]="contactInfoExpanded()">
+          <div class="expand-body__inner">
+            <div class="px-6 pb-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                @if (recordData().email) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.email' | translate }}</span>
+                    <a [href]="'mailto:' + recordData().email" class="text-sm text-surface-900 dark:text-surface-0 font-medium no-underline hover:text-primary transition-colors">{{ recordData().email }}</a>
+                  </div>
+                }
+                @if (recordData().phone) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.phone' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().phone }}</span>
+                  </div>
+                }
+                @if (recordData().mobile) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.mobile' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().mobile }}</span>
+                  </div>
+                }
+                @if (recordData().pronouns) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.pronouns' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().pronouns }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Organization & Location Card -->
+      <div class="card animate-fade-in-up stagger-3">
+        <div class="flex items-center justify-between px-6 py-4 cursor-pointer" (click)="orgLocationExpanded.set(!orgLocationExpanded())">
+          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0 flex items-center gap-2">
+            <i class="pi pi-building text-primary"></i>
+            {{ 'label.contact.orgAndLocation' | translate }}
+          </h2>
+          <i class="pi text-surface-400" [class.pi-chevron-down]="!orgLocationExpanded()" [class.pi-chevron-up]="orgLocationExpanded()"></i>
+        </div>
+        <div class="expand-body" [class.expand-body--open]="orgLocationExpanded()">
+          <div class="expand-body__inner">
+            <div class="px-6 pb-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                @if (recordData().partner?.name) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'fieldLabels.partner' | translate }}</span>
+                    <a [routerLink]="['/partnerships/partners', recordData().partner?.id]" class="text-sm text-surface-900 dark:text-surface-0 font-medium no-underline hover:text-primary transition-colors">{{ recordData().partner?.name }}</a>
+                  </div>
+                }
+                @if (recordData().department) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.department' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().department }}</span>
+                  </div>
+                }
+                @if (getPrimaryOrganizationUnit(recordData())) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.organization.primaryUnit' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ getPrimaryOrganizationUnit(recordData())?.name }}</span>
+                  </div>
+                }
+                @if (recordData().mailingCountry) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.country' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().mailingCountry }}</span>
+                  </div>
+                }
+                @if (recordData().mailingCity) {
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.mailingCity' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().mailingCity }}</span>
+                  </div>
+                }
+                @if (recordData().mailingStreet) {
+                  <div class="flex flex-col gap-1 sm:col-span-2">
+                    <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.street' | translate }}</span>
+                    <span class="text-sm text-surface-900 dark:text-surface-0 font-medium">{{ recordData().mailingStreet }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents & Links Card -->
+      <div class="card animate-fade-in-up stagger-3">
+        <div class="flex items-center justify-between px-6 py-4">
+          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0 flex items-center gap-2">
+            <i class="pi pi-file text-primary"></i>
+            {{ 'title.doc' | translate }}
+          </h2>
+          <div class="flex items-center gap-2">
+            @if (recordPermissions().permissions.canUpdate) {
+              <p-button icon="pi pi-link" rounded text size="small" (onClick)="openAddLinkDialog()" />
+              <p-button icon="pi pi-google" rounded text size="small" (onClick)="openGoogleDriveDialog()" />
+            }
+          </div>
+        </div>
+        <div class="px-6 pb-5">
+          @if (recordData().id && +(recordData().id!) > 0) {
+            <app-link-list #linkListComponent
+              [entityType]="entityTypeContact"
+              [entityId]="+(recordData().id!)"
+              [showAddButton]="false"
+              [disabled]="!recordPermissions().permissions.canUpdate" />
+          }
+          <app-document #appDocument
+            [entityId]="recordId"
+            [entityName]="'contact'"
+            [acceptedFormat]="'.pdf, .xls, .xlsx, .doc, .docx'"
+            [showUploadButton]="false"
+            [disabled]="!recordPermissions().permissions.canUpdate">
+            <div ngProjectAs="document-toolbar">
+              @if (recordPermissions().permissions.canUpdate) {
+                <app-document-gdrive #gdriveComponent
+                  [entityId]="recordId"
+                  [entityName]="'contact'"
+                  [appDocumentRef]="appDocument"
+                  [showUploadButton]="false"
+                  [acceptedMIMETypes]="acceptedMiMIETypesForgDrive" />
+              }
+            </div>
+          </app-document>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="flex flex-col gap-6 w-full xl:w-[380px] shrink-0">
+
+      <!-- AI Contact Analysis -->
+      <div class="card overflow-hidden animate-fade-in-up stagger-2">
+        <div
+          class="flex items-center justify-between px-6 py-4 cursor-pointer"
+          (click)="aiInsightsExpanded.set(!aiInsightsExpanded())"
+        >
+          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0 flex items-center gap-2">
+            <i class="pi pi-sparkles text-primary"></i>
+            {{ 'label.aiContactAnalysis' | translate }}
+          </h2>
+          <i
+            class="pi text-surface-400"
+            [class.pi-chevron-down]="!aiInsightsExpanded()"
+            [class.pi-chevron-up]="aiInsightsExpanded()"
+          ></i>
+        </div>
+        <div class="expand-body" [class.expand-body--open]="aiInsightsExpanded()">
+          <div class="expand-body__inner">
+            <div class="p-4 pt-0">
+              <ux-ai-card-bg class="motion-safe:animate-enter-liquid block rounded-2xl overflow-hidden">
+                <div class="p-4 flex flex-col gap-4">
+                  <input
+                    pInputText
+                    [ngModel]="aiSearchQuery()"
+                    (ngModelChange)="aiSearchQuery.set($event); aiCurrentPage.set(0)"
+                    [placeholder]="'placeholder.searchInsights' | translate"
+                    class="w-full! py-2! rounded-xl! text-sm!"
+                  />
+
+                  <div class="flex flex-col gap-3 max-h-[min(24rem,50vh)] overflow-y-auto">
+                    @for (insight of paginatedInsights(); track insight.title) {
+                      <div
+                        class="flex gap-3 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                      >
+                        <div class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0" [class]="insight.iconBg">
+                          <i [class]="insight.icon + ' text-sm'"></i>
+                        </div>
+                        <div class="flex flex-col gap-1 flex-1 min-w-0">
+                          <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ insight.title }}</span>
+                          <span class="text-xs text-surface-600 dark:text-surface-300 leading-relaxed">{{ insight.description }}</span>
+                          <p-button
+                            [label]="insight.action"
+                            [text]="true"
+                            size="small"
+                            styleClass="self-start p-0!"
+                            (onClick)="$event.stopPropagation()"
+                          />
+                        </div>
+                      </div>
+                    }
+                  </div>
+
+                  @if (filteredInsights().length > 0) {
+                    <p-paginator
+                      [first]="aiCurrentPage() * aiPageSize"
+                      [rows]="aiPageSize"
+                      [totalRecords]="filteredInsights().length"
+                      (onPageChange)="onContactAiPageChange($event)"
+                      [alwaysShow]="true"
+                      [showFirstLastIcon]="false"
+                      [showPageLinks]="false"
+                    />
+                  }
+                </div>
+              </ux-ai-card-bg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Record Information Card -->
+      <div class="card animate-fade-in-up stagger-3">
+        <div class="px-6 py-4">
+          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0 flex items-center gap-2">
+            <i class="pi pi-info-circle text-primary"></i>
+            Record Information
+          </h2>
+        </div>
+        <div class="px-6 pb-5 flex flex-col gap-3">
+          @if (recordData().id) {
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-medium text-surface-500 dark:text-surface-400">ID</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0 font-mono">{{ recordData().id }}</span>
+            </div>
+          }
+          @if (recordData().createdDate) {
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.audit.createdDate' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0">{{ recordData().createdDate | date:'mediumDate' }}</span>
+            </div>
+          }
+          @if (recordData().lastModifiedDate) {
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.audit.lastModifiedDate' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0">{{ recordData().lastModifiedDate | date:'mediumDate' }}</span>
+            </div>
+          }
+          @if (recordData().contactNumber) {
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-medium text-surface-500 dark:text-surface-400">{{ 'label.contact.contactNumber' | translate }}</span>
+              <span class="text-sm text-surface-900 dark:text-surface-0">{{ recordData().contactNumber }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Notes Card -->
+      <div class="card animate-fade-in-up stagger-3">
+        <div class="px-6 py-4">
+          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0 flex items-center gap-2">
+            <i class="pi pi-pencil text-primary"></i>
+            {{ 'label.contact.notes' | translate }}
+          </h2>
+        </div>
+        <div class="px-6 pb-5">
+          <textarea
+            pInputText
+            [ngModel]="notesText()"
+            (ngModelChange)="notesText.set($event)"
+            rows="5"
+            class="w-full! rounded-xl! text-sm! resize-y"
+            [placeholder]="'placeholder.addNotes' | translate"
+            [disabled]="!recordPermissions().permissions.canUpdate"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

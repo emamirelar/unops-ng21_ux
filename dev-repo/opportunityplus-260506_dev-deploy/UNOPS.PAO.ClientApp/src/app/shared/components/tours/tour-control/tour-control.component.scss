@@ -1,0 +1,27 @@
+:host :deep .tour-button {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:host :deep .tour-button:hover {
+  background: var(--color-gray-50);
+  transform: translateY(-2px);
+}
+
+:host :deep .tour-button:focus {
+  box-shadow: 0 0 0 3px var(--color-blue-300);
+}
+
+:host :deep .tour-button i {
+  color: var(--color-blue-500);
+}
+
+:host :deep .tour-button:hover i {
+  color: var(--color-blue-600);
+}

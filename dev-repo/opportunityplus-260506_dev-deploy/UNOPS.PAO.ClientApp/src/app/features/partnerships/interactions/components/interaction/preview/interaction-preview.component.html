@@ -1,0 +1,85 @@
+<div
+  class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 min-w-80 max-w-md"
+>
+  <!-- Header with icon and type -->
+  <div class="flex items-center gap-4 mb-4">
+    <i [class]="getInteractionIcon(interaction.type)" class="text-lg text-blue-500"></i>
+    <div class="flex-1 min-w-0">
+      <h4 class="font-semibold text-gray-950 text-sm mb-1 truncate">{{ interaction.subject }}</h4>
+      <p class="text-[0.625rem] text-gray-500">{{ 'interaction.type.' + interaction.type | translate }}</p>
+    </div>
+    <p-tag [value]="interaction.status" severity="info" class="text-[0.625rem] shrink-0"></p-tag>
+  </div>
+
+  <!-- Date and Location -->
+  <div class="space-y-2 mb-4">
+    <div class="flex items-center gap-2 text-sm text-gray-600">
+      <i class="pi pi-calendar text-[0.625rem]"></i>
+      <span>{{ formatDate(interaction.date) }}</span>
+    </div>
+    @if (interaction.location) {
+      <div class="flex items-center gap-2 text-sm text-gray-600">
+        <i class="pi pi-map-marker text-[0.625rem]"></i>
+        <span>{{ interaction.location }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Description Preview -->
+  @if (interaction.description) {
+    <p class="text-sm text-gray-700 leading-relaxed mb-4">
+      {{ truncateText(interaction.description, 120) }}
+    </p>
+  }
+
+  <p-divider class="my-4"></p-divider>
+
+  <!-- Quick Info -->
+  <div class="space-y-2">
+    @if (interaction.contactIds && interaction.contactIds.length > 0) {
+      <div class="flex items-center gap-2">
+        <i class="pi pi-users text-[0.625rem] text-gray-500"></i>
+        <span class="text-[0.625rem] text-gray-600">
+          @if (interaction.contactIds.length === 1) {
+            {{ 'interaction.preview.contactsOne' | translate }}
+          } @else {
+            {{ 'interaction.preview.contactsMany' | translate: { count: interaction.contactIds.length } }}
+          }
+        </span>
+      </div>
+    }
+
+    @if (interaction.partnerIds && interaction.partnerIds.length > 0) {
+      <div class="flex items-center gap-2">
+        <i class="pi pi-building text-[0.625rem] text-gray-500"></i>
+        <span class="text-[0.625rem] text-gray-600">
+          @if (interaction.partnerIds.length === 1) {
+            {{ 'interaction.preview.partnersOne' | translate }}
+          } @else {
+            {{ 'interaction.preview.partnersMany' | translate: { count: interaction.partnerIds.length } }}
+          }
+        </span>
+      </div>
+    }
+
+    @if (interaction.documents && interaction.documents.length > 0) {
+      <div class="flex items-center gap-2">
+        <i class="pi pi-paperclip text-[0.625rem] text-gray-500"></i>
+        <span class="text-[0.625rem] text-gray-600">
+          @if (interaction.documents.length === 1) {
+            {{ 'interaction.preview.attachmentsOne' | translate }}
+          } @else {
+            {{ 'interaction.preview.attachmentsMany' | translate: { count: interaction.documents.length } }}
+          }
+        </span>
+      </div>
+    }
+  </div>
+
+  <!-- Footer hint -->
+  <div class="mt-4 pt-2 border-t border-gray-100">
+    <p class="text-[0.625rem] text-gray-500 text-center">
+      {{ 'interaction.preview.clickForDetails' | translate }}
+    </p>
+  </div>
+</div>

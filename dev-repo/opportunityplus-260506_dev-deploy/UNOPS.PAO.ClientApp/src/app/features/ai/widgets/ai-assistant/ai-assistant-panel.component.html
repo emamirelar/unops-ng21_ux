@@ -1,0 +1,474 @@
+<div *ngIf="aiAssistantService.isLoadingSession()" class="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-60">
+  <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+</div>
+<div class="h-full flex flex-col min-h-0 bg-transparent overflow-hidden w-full font-sans" 
+     [class.mobile-keyboard-active]="isMobileKeyboardActive()"
+     [style.height.px]="getContainerHeight()">
+  
+  <!-- Header section with UNOPS design system -->
+  <div *ngIf="!hideHeader" class="bg-gray-50 shadow-sm">
+    <!-- Single controls row -->
+    <div class="flex items-center justify-between px-6 py-4">
+      <!-- Left side - AI icon and title (either default or session title) -->
+      <div class="flex items-center gap-2 flex-1 min-w-0">
+        <!-- Default AI Assistant label when no session and no title -->
+        <ng-container *ngIf="!aiAssistantService.currentSessionId() && !aiAssistantService.sessionTitle()">
+          <div class="flex items-center justify-center w-6 h-6">
+            <img src="assets/images/AI_visual_64.svg" [alt]="'aiAssistant.aiAssistant' | translate" class="w-4 h-4" />
+          </div>
+        </ng-container>
+        
+        <!-- Session title when there's an active session or title -->
+        <ng-container *ngIf="aiAssistantService.currentSessionId() || aiAssistantService.sessionTitle()">
+          <!-- Non-editing state -->
+          <ng-container *ngIf="!isEditingTitle()">
+            <div class="flex items-center justify-center w-6 h-6">
+              <img src="assets/images/AI_visual_64.svg" [alt]="'aiAssistant.aiAssistant' | translate" class="w-4 h-4" />
+            </div>
+            <!-- Title is hidden for now until we figure out what to do with it -->
+            <span class="hidden text-sm font-semibold text-gray-700 truncate min-w-0 block overflow-hidden whitespace-nowrap max-h-6 leading-6 cursor-pointer hover:text-gray-950 transition"
+                  [class.cursor-pointer]="!aiAssistantService.isLoadingSession()"
+                  [class.max-w-[100px]]="!isInFullscreenMode()"
+                  [class.max-w-[300px]]="isInFullscreenMode()"
+                  (click)="!aiAssistantService.isLoadingSession() && startEditingTitle()"
+                  [pTooltip]="!aiAssistantService.isLoadingSession() ? ('aiAssistant.clickToEditTitle' | translate) : ''">
+              {{ aiAssistantService.isLoadingSession() ? ('aiAssistant.loadingChat' | translate) : aiAssistantService.sessionTitle() }}
+            </span>
+          </ng-container>
+          
+          <!-- Editing state -->
+          <ng-container *ngIf="isEditingTitle()">
+            <div class="flex items-center justify-center w-6 h-6 shrink-0">
+              <img src="assets/images/AI_visual_64.svg" [alt]="'aiAssistant.aiAssistant' | translate" class="w-4 h-4" />
+            </div>
+            <input 
+              #titleInput
+              type="text"
+              [value]="editingTitle()"
+              (input)="editingTitle.set($any($event.target).value)"
+              (keydown.enter)="saveTitle()"
+              (keydown.escape)="cancelEditingTitle()"
+              (blur)="saveTitle()"
+              class="flex-1 px-2 py-1 text-sm font-semibold bg-white border border border-blue-500 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
+              [placeholder]="'aiAssistant.enterTitle' | translate">
+            <p-button
+              icon="pi pi-check"
+              (onClick)="saveTitle()"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="success">
+            </p-button>
+            <p-button
+              icon="pi pi-times"
+              (onClick)="cancelEditingTitle()"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="secondary">
+            </p-button>
+          </ng-container>
+        </ng-container>
+      </div>
+      
+      <!-- Right side - Action buttons -->
+      <div class="flex items-center gap-1">
+        <!-- Archive button - only show when there's an active session -->
+        <p-button 
+          *ngIf="aiAssistantService.currentSessionId()"
+          [icon]="aiAssistantService.sessionArchived() ? 'pi pi-folder-open' : 'pi pi-archive'"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          [pTooltip]="'aiAssistant.toggleArchive' | translate"
+          (onClick)="toggleArchive()"
+          tooltipPosition="bottom">
+        </p-button>
+
+        <!-- Chat History Dropdown -->
+        <div class="relative">
+          <p-button 
+            #historyButton
+            label="{{ 'aiAssistant.chatHistory' | translate }}"
+            icon="pi pi-history"
+            [text]="true"
+            [rounded]="true"
+            size="small"
+            (onClick)="toggleSessionMenu($event)"
+            [loading]="aiAssistantService.isLoadingSessions()"
+            tooltipPosition="bottom">
+          </p-button>
+          
+          <p-menu 
+            #sessionMenu
+            [model]="sessionMenuItems()"
+            [popup]="true"
+            appendTo="body"
+            styleClass="scrollable-chat-menu unops-ai-chat-menu">
+          </p-menu>
+        </div>
+
+        <!-- Fullscreen/Minimize toggle button - Hidden on mobile -->
+        <p-button 
+          *ngIf="!isMobile()"
+          [icon]="isInFullscreenMode() ? 'pi pi-window-minimize' : 'pi pi-window-maximize'"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          [pTooltip]="isInFullscreenMode() ? ('aiAssistant.minimizeToPopup' | translate) : ('aiAssistant.expandToFullscreen' | translate)"
+          (onClick)="toggleFullscreen()"
+          tooltipPosition="bottom">
+        </p-button>
+
+        <!-- New Chat button -->
+        <p-button 
+          icon="pi pi-plus"
+          (onClick)="clearConversation()"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          [pTooltip]="'aiAssistant.newConversation' | translate"
+          tooltipPosition="bottom"
+          class="new-chat-button">
+        </p-button>
+
+        <!-- Close button -->
+        <p-button
+          icon="pi pi-times"
+          (onClick)="closeAiAssistant()"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          [pTooltip]="'aiAssistant.close' | translate"
+          tooltipPosition="bottom">
+        </p-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat messages section -->
+  <div #chatContainer 
+       class="relative flex-1 overflow-y-auto min-h-0 ai-chat-container bg-gray-50"
+       [ngClass]="{
+         'bg-blue-100 border-2 border-dashed border-blue-500': isDragging(),
+         'p-4 space-y-4': chatMessages().length > 0,
+         'p-6': hideHeader,
+         'flex items-center justify-center': chatMessages().length === 0
+       }"
+       (dragover)="onDragOver($event)"
+       (dragleave)="onDragLeave($event)"
+       (drop)="onDrop($event)">
+
+    <!-- Drag and drop overlay -->
+    <div *ngIf="isDragging()"
+         class="pointer-events-none ai-chat-drop-overlay">
+      <div class="text-blue-500 flex flex-col items-center gap-4">
+        <i class="pi pi-upload text-3xl"></i>
+        <span class="text-lg font-medium">{{ 'aiAssistant.dropFilesHere' | translate }}</span>
+      </div>
+    </div>
+
+    <!-- Welcome state - UNOPS styled (only on first page load) -->
+    <div *ngIf="chatMessages().length === 0 && aiAssistantService.isFirstPageLoad()" class="text-center px-4 unops-tablet:px-6 max-w-3xl w-full ai-welcome-screen">
+      <!-- AI Assistant Icon -->
+      <div class="mb-6 unops-tablet:mb-8">
+        <div class="w-16 h-16 unops-tablet:w-20 unops-tablet:h-20 mx-auto mb-4 unops-tablet:mb-6 rounded-full bg-gradient-to-br from-blue-500 to-midnight-500 flex items-center justify-center shadow-lg">
+          <img src="assets/images/AI_visual_64.svg" [alt]="'aiAssistant.aiAssistant' | translate" class="w-8 h-8 unops-tablet:w-10 unops-tablet:h-10" />
+        </div>
+      </div>
+
+      <!-- Personalized Greeting -->
+      <div class="mb-8 unops-tablet:mb-12">
+        <!-- Placeholder to reserve space before user info loads -->
+        <h1 *ngIf="!userName()" class="text-2xl unops-tablet:text-[2rem] unops-desktop:text-4xl font-normal mb-4 unops-tablet:mb-6 leading-tight opacity-0">
+          &nbsp;
+        </h1>
+        <!-- Actual greeting with blur-in animation -->
+        <h1 *ngIf="userName()" class="text-2xl unops-tablet:text-[2rem] unops-desktop:text-4xl font-normal text-gray-950 mb-4 unops-tablet:mb-6 leading-tight greeting-blur-in">
+          {{ 'aiAssistant.hello' | translate }} {{ userName() }}
+        </h1>
+        <p class="text-lg unops-tablet:text-xl unops-desktop:text-2xl text-gray-600 font-light max-w-2xl leading-relaxed mb-4 unops-tablet:mb-6">
+          {{ 'aiAssistant.welcomeMessage' | translate }}
+        </p>
+        <p class="text-sm unops-tablet:text-base text-gray-500 font-normal max-w-2xl leading-relaxed">
+          {{ 'aiAssistant.welcomeDescription' | translate }}
+        </p>
+      </div>
+
+      <!-- AI Capabilities info -->
+      <!-- Hide for now until we actually have some capabilities! -->
+      <!-- <div class="w-full max-w-2xl">
+        <div class="grid grid-cols-2 unops-tablet:grid-cols-4 gap-4 text-sm text-gray-600 bg-gray-50 px-6 py-8 rounded-xl border border-gray-200 shadow-sm">
+          <div class="flex flex-col items-center gap-2 text-center">
+            <div class="w-10 h-10 rounded-lg bg-blue-200 flex items-center justify-center">
+              <i class="pi pi-upload text-blue-500 text-lg"></i>
+            </div>
+            <span class="font-medium">Upload documents</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 text-center">
+            <div class="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center">
+              <i class="pi pi-microphone text-teal-500 text-lg"></i>
+            </div>
+            <span class="font-medium">Voice messages</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 text-center">
+            <div class="w-10 h-10 rounded-lg bg-ocean-50 flex items-center justify-center">
+              <i class="pi pi-search text-ocean-500 text-lg"></i>
+            </div>
+            <span class="font-medium">Smart search</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 text-center">
+            <div class="w-10 h-10 rounded-lg bg-lime-50 flex items-center justify-center">
+              <i class="pi pi-chart-line text-lime-500 text-lg"></i>
+            </div>
+            <span class="font-medium">Data analysis</span>
+          </div>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- New Chat blank state (when user manually starts new chat) -->
+    <div *ngIf="chatMessages().length === 0 && !aiAssistantService.isFirstPageLoad()" class="flex flex-col items-center justify-center px-4 unops-tablet:px-6 max-w-2xl w-full ai-new-chat-screen">
+      <div class="flex flex-col items-center mb-12">
+        <!-- Butterfly icon - same style as retrieving indicator -->
+        <div class="flex items-center justify-center mb-6">
+          <img src="assets/images/AI_visual_64.svg" [alt]="'aiAssistant.aiAssistant' | translate" class="ai-icon block w-6 h-6" />
+        </div>
+        <h2 class="text-2xl font-normal text-gray-950 mb-4 text-center">{{ 'aiAssistant.newChat' | translate }}</h2>
+        <p class="text-lg text-gray-600 font-light max-w-md leading-relaxed text-center">
+          {{ 'aiAssistant.startConversation' | translate }}
+        </p>
+      </div>
+    </div>
+
+    <!-- UNIFIED DYNAMIC CONTENT CONTAINER - Single container for all messages -->
+    <div #dynamicContentContainer class="dynamic-content-container"></div>
+
+    <!-- Thinking indicator -->
+    <div *ngIf="isWaitingResponse() || aiAssistantService.isLoadingSession()" class="flex flex-col items-start animate-in fade-in-0 slide-in-from-bottom-2 duration-300 w-full">
+      <!-- AI Indicator (butterfly icon) -->
+      <div class="flex items-center justify-start mb-2">
+        <img src="assets/images/AI_visual_64.svg" [alt]="'aiAssistant.aiAssistant' | translate" class="ai-icon block w-6 h-6 animate-pulse" />
+      </div>
+      
+      <!-- Generating/Retrieving text -->
+      <div class="flex items-center">
+        <span class="text-base font-medium text-gray-950" style="min-width: 120px;">
+          {{ aiAssistantService.isLoadingSession() ? ('aiAssistant.retrieving' | translate) : ('aiAssistant.generating' | translate) }}<span class="inline-block" style="width: 1.5em; text-align: left;">{{ getGeneratingDotsText() }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggested user responses for the most recent message -->
+  <div *ngIf="getLatestSuggestedUserResponses().length > 0 && !isWaitingResponse()" class="px-4 pb-4 border-t border-gray-200 bg-gray-50">
+    <div class="flex flex-wrap gap-2 suggestions-up-buttons-container">
+      <p-button
+        *ngFor="let userResponse of getLatestSuggestedUserResponses()"
+        [label]="userResponse"
+        [text]="true"
+        [rounded]="true"
+        size="small"
+        class="suggestions-up-button"
+        severity="secondary"
+        (onClick)="selectUserResponse(userResponse)">
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Input section -->
+  <div class="border-t border-gray-200 bg-gray-50">
+    <!-- File attachments preview -->
+    <div *ngIf="selectedFiles().length > 0 && !isWaitingResponse()"
+         class="p-4 border-b border-gray-200">
+      <div class="text-sm font-medium mb-2 text-gray-950 flex items-center gap-2">
+        <i class="pi pi-paperclip text-blue-500"></i>
+        {{ 'aiAssistant.filesToSend' | translate }}
+      </div>
+      <div class="space-y-2">
+        <div *ngFor="let fileData of selectedFiles(); let i = index"
+             class="flex items-center gap-4 p-2 bg-white rounded-lg border border-gray-200">
+          <div class="flex items-center gap-2 flex-1">
+            <!-- Image preview -->
+            <div *ngIf="fileData.file.type.startsWith('image/')" 
+                 class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
+              <img [src]="fileData.file | safeUrl" class="w-full h-full object-cover" [alt]="'aiAssistant.thumbnail' | translate" />
+            </div>
+            <!-- Audio preview -->
+            <div *ngIf="fileData.file.type.startsWith('audio/')" class="flex items-center">
+              <audio controls class="h-8 max-w-[200px]">
+                <source [src]="fileData.file | safeUrl" [type]="fileData.file.type">
+              </audio>
+            </div>
+            <!-- Other files -->
+            <div *ngIf="!fileData.file.type.startsWith('image/') && !fileData.file.type.startsWith('audio/')" 
+                 class="flex items-center gap-2">
+              <i class="pi pi-file text-blue-500"></i>
+              <span class="text-sm truncate max-w-[150px]">{{ fileData.name }}</span>
+            </div>
+          </div>
+          <p-button
+            icon="pi pi-times"
+            [rounded]="true"
+            [outlined]="true"
+            size="small"
+            severity="secondary"
+            (click)="removeFile(i)">
+          </p-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input area -->
+    <div class="p-4 ai-input-area">
+      <div class="bg-white border border-gray-300 rounded-xl p-4 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 focus-within:ring-opacity-20 transition-all duration-150 shadow-sm">
+        <textarea
+          #messageInput
+          pTextarea
+          [ngModel]="message()"
+          (ngModelChange)="updateMessage($event)"
+          (paste)="onPaste($event)"
+          (focus)="onTextareaFocus()"
+          placeholder="{{ 'aiAssistant.typeMessageOrPaste' | translate }}"
+          [rows]="1"
+          [autoResize]="true"
+          [style.max-height]="'120px'"
+          [style.min-height]="'44px'"
+          class="w-full resize-none border-0 focus:ring-0 focus:outline-none bg-transparent text-base font-normal text-gray-950 placeholder:text-gray-500 leading-relaxed"
+          (keydown.enter)="$event.preventDefault(); !isWaitingResponse() && sendMessage()">
+        </textarea>
+
+        <div class="flex justify-between items-center mt-2">
+          <div class="flex gap-1">
+            <p-button
+              icon="pi pi-camera"
+              (onClick)="startCamera()"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              pTooltip="{{ 'aiAssistant.takePhoto' | translate }}"
+              [disabled]="isWaitingResponse()">
+            </p-button>
+            
+            <!-- Hidden file input for local file selection -->
+            <input
+              #fileInput
+              type="file"
+              class="hidden"
+              (change)="onFileSelect($event)"
+              [accept]="'image/*,application/pdf,text/*,audio/*,.doc,.docx,.xls,.xlsx,.ppt,.pptx'"
+              [multiple]="true">
+            
+            <!-- Attach button with menu for upload options -->
+            <p-button
+              icon="pi pi-paperclip"
+              (onClick)="showAttachMenu($event)"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              pTooltip="{{ 'aiAssistant.attachFile' | translate }}"
+              [disabled]="isProcessingFile()">
+            </p-button>
+            
+            <!-- Attach menu with upload options -->
+            <p-menu
+              #attachMenu
+              [model]="attachMenuItems()"
+              [popup]="true"
+              appendTo="body"
+              styleClass="scrollable-chat-menu unops-ai-chat-menu">
+            </p-menu>
+          </div>
+          
+          <div class="flex gap-1">
+            <p-button
+              icon="pi pi-microphone"
+              (onClick)="toggleRecording()"
+              [text]="!isRecording()"
+              [rounded]="true"
+              size="small"
+              [ngClass]="{'recording': isRecording()}"
+              pTooltip="{{ 'aiAssistant.recordAudio' | translate }}"
+              [disabled]="isWaitingResponse()">
+            </p-button>
+
+            <p-button
+              icon="pi pi-send"
+              (onClick)="sendMessage()"
+              [disabled]="(!message().trim() && selectedFiles().length === 0) || isWaitingResponse()"
+              [rounded]="true"
+              size="small"
+              severity="primary"
+              class="ai-send-button">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Disclaimer Footer -->
+  <div class="px-4 py-2 text-center bg-gray-50 border-t border-gray-200">
+    <div class="flex items-center justify-center gap-2 text-[0.625rem] text-gray-600 font-normal">
+      <i class="pi pi-exclamation-triangle text-yellow-600"></i>
+      <span>{{ 'aiAssistant.disclaimer' | translate }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Audio Recording Overlay -->
+<div *ngIf="isRecording()" 
+     class="fixed inset-0 z-[9999] flex items-center justify-center bg-deepsea-500 bg-opacity-75 backdrop-blur-sm"
+     style="margin: 0; padding: 0;">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 animate-fade-in">
+    <!-- Recording Header -->
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-cherry-50 mb-4 animate-pulse">
+        <i class="pi pi-microphone text-3xl text-cherry-500"></i>
+      </div>
+      <h3 class="text-2xl font-semibold text-gray-950 mb-2">{{ 'aiAssistant.recordingAudio' | translate }}</h3>
+      <p class="text-gray-600">{{ 'aiAssistant.speakNow' | translate }}</p>
+    </div>
+
+    <!-- Audio Level Visualization -->
+    <div class="mb-8">
+      <div class="flex items-center justify-center gap-1 h-24">
+        <!-- Multiple bars for visual feedback -->
+        <div *ngFor="let i of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]" 
+             class="w-2 bg-gradient-to-t from-cherry-500 to-cherry-500 rounded-full transition-all duration-75"
+             [style.height.px]="getBarHeight(i)">
+        </div>
+      </div>
+      
+      <!-- Level indicator text -->
+      <div class="text-center mt-4">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full">
+          <i class="pi pi-volume-up text-gray-700"></i>
+          <span class="text-sm font-medium text-gray-700">
+            {{ audioLevel() > 60 ? ('aiAssistant.loudLevel' | translate) : 
+               audioLevel() > 30 ? ('aiAssistant.goodLevel' | translate) : 
+               ('aiAssistant.lowLevel' | translate) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stop Recording Button -->
+    <button 
+      (click)="stopRecording()"
+      class="w-full bg-cherry-500 hover:bg-cherry-500 text-white font-semibold py-4 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-3">
+      <div class="w-6 h-6 bg-white rounded-sm"></div>
+      <span class="text-lg">{{ 'aiAssistant.stopRecording' | translate }}</span>
+    </button>
+
+    <!-- Cancel hint -->
+    <p class="text-center text-sm text-gray-500 mt-4">
+      {{ 'aiAssistant.clickToStop' | translate }}
+    </p>
+  </div>
+</div>
+
+<app-ai-assistant-scan
+  #scanComponent
+  (onImageCaptured)="onImageCaptured($event)">
+</app-ai-assistant-scan> 

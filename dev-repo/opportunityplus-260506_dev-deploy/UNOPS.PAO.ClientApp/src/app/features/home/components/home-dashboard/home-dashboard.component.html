@@ -1,0 +1,845 @@
+<section class="flex flex-col gap-7">
+
+  <!-- ═══════════════ Hero Header ═══════════════ -->
+  <div class="text-center animate-fade-in-down">
+    <h1 class="text-surface-900 dark:text-surface-0 text-3xl sm:text-4xl font-semibold leading-tight m-0">
+      {{ 'dashboard.welcome' | translate }}
+    </h1>
+    <p class="text-surface-500 dark:text-surface-400 text-base mt-2 mb-0">
+      {{ 'dashboard.subtitle' | translate }}
+    </p>
+  </div>
+
+  <!-- ═══════════════ Announcement Banner ═══════════════ -->
+  <div class="card mb-0! rounded-2xl border border-surface bg-gradient-to-r from-primary to-teal-400 animate-fade-in">
+    <div class="px-6 py-5">
+      <span class="text-white text-xl font-medium">
+        {{ 'dashboard.announcementBanner' | translate }}
+      </span>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Loading State ═══════════════ -->
+  @if (loading()) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-7 animate-fade-in-up">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface">
+          <div class="px-4 pt-3.5 pb-3">
+            <p-skeleton width="60%" height="1rem" />
+            <p-skeleton width="40%" height="1.5rem" styleClass="mt-3" />
+            <p-skeleton width="80%" height="0.75rem" styleClass="mt-2" />
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="flex xl:flex-row flex-col gap-6">
+      <div class="flex-1">
+        <div class="card mb-0! rounded-2xl border border-surface">
+          <p-skeleton width="50%" height="1.25rem" />
+          <div class="mt-4 space-y-3">
+            @for (j of [1,2,3]; track j) {
+              <p-skeleton height="3rem" />
+            }
+          </div>
+        </div>
+      </div>
+      <div class="w-full xl:w-[380px]">
+        <div class="card mb-0! rounded-2xl border border-surface">
+          <p-skeleton width="50%" height="1.25rem" />
+          <div class="mt-4 space-y-3">
+            @for (j of [1,2,3]; track j) {
+              <p-skeleton height="2.5rem" />
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ═══════════════ Error State ═══════════════ -->
+  @if (error() && !loading()) {
+    <div class="card mb-0! rounded-2xl border border-surface animate-fade-in">
+      <div class="p-16 text-center">
+        <div class="flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 mb-6 mx-auto">
+          <i class="pi pi-exclamation-triangle text-4xl text-red-500"></i>
+        </div>
+        <h3 class="text-surface-900 dark:text-surface-0 text-2xl font-semibold mb-4">
+          {{ 'dashboard.error.title' | translate }}
+        </h3>
+        <p class="body-xsmall mb-8 max-w-md mx-auto">
+          {{ error() }}
+        </p>
+        <p-button
+          [label]="'dashboard.retry' | translate"
+          icon="pi pi-refresh"
+          severity="primary"
+          (onClick)="refreshDashboard()" />
+      </div>
+    </div>
+  }
+
+  <!-- ═══════════════ Dashboard Content ═══════════════ -->
+  @if (!loading() && !error() && dashboardData()) {
+
+    <!-- ─── Stat Cards Row ─── -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-7 animate-fade-in-up">
+      <!-- Partners stat -->
+      <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="px-4 pt-3.5 pb-3">
+          <div class="flex items-start gap-2">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-teal-100 dark:bg-teal-900/40">
+              <i class="pi pi-building text-sm text-teal-600 dark:text-teal-300"></i>
+            </div>
+            <span class="flex-1 label-medium mt-0.5 text-surface-500 dark:text-surface-400">{{ 'dashboard.partners' | translate }}</span>
+          </div>
+          <div class="mt-2 flex items-center gap-3">
+            <span class="label-large text-surface-900 dark:text-surface-0">{{ summary().totalMyPartners }}</span>
+          </div>
+          <p class="body-xsmall text-left mt-1">{{ 'dashboard.myPartners' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Contacts stat -->
+      <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="px-4 pt-3.5 pb-3">
+          <div class="flex items-start gap-2">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-lime-100 dark:bg-lime-900/40">
+              <i class="pi pi-users text-sm text-lime-600 dark:text-lime-300"></i>
+            </div>
+            <span class="flex-1 label-medium mt-0.5 text-surface-500 dark:text-surface-400">{{ 'dashboard.contacts' | translate }}</span>
+          </div>
+          <div class="mt-2 flex items-center gap-3">
+            <span class="label-large text-surface-900 dark:text-surface-0">{{ summary().totalMyContacts }}</span>
+          </div>
+          <p class="body-xsmall text-left mt-1">{{ 'dashboard.myContacts' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Opportunities stat -->
+      <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="px-4 pt-3.5 pb-3">
+          <div class="flex items-start gap-2">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-100 dark:bg-purple-900/40">
+              <i class="pi pi-briefcase text-sm text-purple-600 dark:text-purple-300"></i>
+            </div>
+            <span class="flex-1 label-medium mt-0.5 text-surface-500 dark:text-surface-400">{{ 'dashboard.opportunities' | translate }}</span>
+          </div>
+          <div class="mt-2 flex items-center gap-3">
+            <span class="label-large text-surface-900 dark:text-surface-0">{{ summary().totalMyOpportunities }}</span>
+          </div>
+          <p class="body-xsmall text-left mt-1">{{ 'dashboard.myOpportunities' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Actions Required stat -->
+      <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="px-4 pt-3.5 pb-3">
+          <div class="flex items-start gap-2">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-amber-100 dark:bg-amber-900/40">
+              <i class="pi pi-exclamation-circle text-sm text-amber-600 dark:text-amber-300"></i>
+            </div>
+            <span class="flex-1 label-medium mt-0.5 text-surface-500 dark:text-surface-400">{{ 'dashboard.actionsRequired' | translate }}</span>
+          </div>
+          <div class="mt-2 flex items-center gap-3">
+            <span class="label-large text-surface-900 dark:text-surface-0">{{ summary().totalDraftActions }}</span>
+          </div>
+          <p class="body-xsmall text-left mt-1">{{ 'dashboard.itemsNeedAttention' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Quick Actions Bar ─── -->
+    @if (!permissionsLoading() && hasAnyCreatePermission()) {
+      <div class="card mb-0! rounded-2xl border border-surface animate-fade-in-up stagger-1">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="label-medium text-surface-900 dark:text-surface-0">{{ 'dashboard.quickActions' | translate }}</span>
+            <div class="flex flex-wrap items-center gap-2">
+              @if (partnerPermissions().permissions.canCreate) {
+                <p-button
+                  [label]="'dashboard.newPartner' | translate"
+                  icon="pi pi-building"
+                  severity="primary"
+                  size="small"
+                  (onClick)="openNewPartnerModal()" />
+              }
+              @if (contactPermissions().permissions.canCreate) {
+                <p-button
+                  [label]="'dashboard.newContact' | translate"
+                  icon="pi pi-user-plus"
+                  severity="primary"
+                  size="small"
+                  (onClick)="openNewContactModal()" />
+              }
+              @if (interactionPermissions().permissions.canCreate) {
+                <p-button
+                  [label]="'dashboard.newInteraction' | translate"
+                  icon="pi pi-comments"
+                  severity="primary"
+                  size="small"
+                  (onClick)="openNewInteractionModal()" />
+              }
+              @if (opportunityPermissions().permissions.canCreate) {
+                <p-button
+                  [label]="'dashboard.newOpportunity' | translate"
+                  icon="pi pi-briefcase"
+                  severity="primary"
+                  size="small"
+                  (onClick)="openNewOpportunityModal()" />
+              }
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="body-xsmall hidden sm:inline">{{ 'dashboard.lastUpdated' | translate }} {{ lastUpdatedTime() }}</span>
+            <p-button
+              icon="pi pi-refresh"
+              [outlined]="true"
+              severity="secondary"
+              size="small"
+              [loading]="loading()"
+              pTooltip="{{ 'dashboard.refresh' | translate }}"
+              tooltipPosition="bottom"
+              (onClick)="refreshDashboard()" />
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (!permissionsLoading() && !hasAnyCreatePermission()) {
+      <div class="flex items-center justify-end gap-3">
+        <span class="body-xsmall">{{ 'dashboard.lastUpdated' | translate }} {{ lastUpdatedTime() }}</span>
+        <p-button
+          icon="pi pi-refresh"
+          [outlined]="true"
+          severity="secondary"
+          size="small"
+          [loading]="loading()"
+          pTooltip="{{ 'dashboard.refresh' | translate }}"
+          tooltipPosition="bottom"
+          (onClick)="refreshDashboard()" />
+      </div>
+    }
+
+    <!-- ═══════════════ Expanded Panel Views ═══════════════ -->
+    @if (expandedPanel()) {
+      <div class="animate-fade-in-up stagger-2">
+
+        <!-- Expanded: Actions Required -->
+        @if (expandedPanel() === 'actions') {
+          <div class="card mb-0! rounded-2xl border border-surface">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-100 dark:bg-amber-900/40">
+                  <i class="pi pi-exclamation-circle text-xl text-amber-600 dark:text-amber-300"></i>
+                </div>
+                <div>
+                  <span class="label-medium text-surface-900 dark:text-surface-0">{{ 'dashboard.allActionsRequired' | translate }}</span>
+                  <p class="body-xsmall mt-0.5 mb-0">{{ getTotalDraftActions() }} {{ 'dashboard.itemsNeedAttention' | translate }}</p>
+                </div>
+              </div>
+              <p-button icon="pi pi-times" [outlined]="true" severity="secondary" size="small" (onClick)="collapsePanel()" pTooltip="{{ 'dashboard.collapse' | translate }}" tooltipPosition="bottom" />
+            </div>
+
+            @if (getTotalDraftActions() > 0) {
+              @if (getDraftActionTypes().length > 1) {
+                <div class="flex flex-wrap gap-2 mb-5">
+                  @for (type of getDraftActionTypes(); track type) {
+                    <button
+                      class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors border"
+                      [class]="selectedDraftActionType() === type
+                        ? 'bg-amber-500 text-white border-amber-500'
+                        : 'bg-surface-0 dark:bg-surface-800 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                      (click)="setDraftActionFilter(type)">
+                      {{ type }} ({{ getDraftActionCount(type) }})
+                    </button>
+                  }
+                  @if (selectedDraftActionType()) {
+                    <button class="px-2 py-1.5 rounded-full bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300 hover:bg-surface-300 dark:hover:bg-surface-600 transition-colors" (click)="clearDraftActionFilter()">
+                      <i class="pi pi-times text-xs"></i>
+                    </button>
+                  }
+                </div>
+              }
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                @for (item of getDisplayedDraftActions(); track item.id) {
+                  <div class="p-4 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-amber-400 dark:hover:border-amber-600 hover:bg-emphasis cursor-pointer transition-all"
+                       (click)="navigateToEntity(getDraftActionEntityType(item), getEntityId(item.id))">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5 mb-1.5">
+                          @if (getDraftActionEntityType(item) === 'Partner') {
+                            <div class="w-2 h-2 bg-teal-500 rounded-full"></div>
+                          } @else if (getDraftActionEntityType(item) === 'Contact') {
+                            <div class="w-2 h-2 bg-lime-500 rounded-full"></div>
+                          } @else if (getDraftActionEntityType(item) === 'Opportunity') {
+                            <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          } @else {
+                            <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          }
+                          <span class="body-xsmall">{{ ('dashboard.' + getDraftActionEntityType(item).toLowerCase()) | translate }}</span>
+                          @if (getDraftActionEntityType(item) === 'Opportunity' && item.userRole) {
+                            <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300">{{ item.userRole }}</span>
+                          }
+                        </div>
+                        <h4 class="text-sm font-medium text-surface-900 dark:text-surface-0 mb-1 mt-0 line-clamp-2">{{ getDraftActionDisplayName(item) }}</h4>
+                        @if (getDraftActionDescription(item)) {
+                          <p class="body-xsmall mb-1 line-clamp-2">{{ getDraftActionDescription(item) }}</p>
+                        }
+                        <span class="body-xsmall">{{ formatDate(item.createdDate || item.date) }}</span>
+                      </div>
+                      <span class="ml-2 px-2 py-1 rounded-lg text-[0.625rem] font-semibold bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 shrink-0">{{ 'dashboard.draft' | translate }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-center py-16">
+                <div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-100 dark:bg-surface-800 mb-6 mx-auto">
+                  <i class="pi pi-check-circle text-2xl text-surface-400"></i>
+                </div>
+                <h4 class="text-base font-medium text-surface-900 dark:text-surface-0 mb-2">{{ 'dashboard.allCaughtUp' | translate }}</h4>
+                <p class="body-xsmall">{{ 'dashboard.noActionsRequired' | translate }}</p>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Expanded: Recent Activity -->
+        @if (expandedPanel() === 'activity') {
+          <div class="card mb-0! rounded-2xl border border-surface">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-100 dark:bg-blue-900/40">
+                  <i class="pi pi-history text-xl text-blue-600 dark:text-blue-300"></i>
+                </div>
+                <div>
+                  <span class="label-medium text-surface-900 dark:text-surface-0">{{ 'dashboard.allRecentActivity' | translate }}</span>
+                  <p class="body-xsmall mt-0.5 mb-0">{{ 'dashboard.latestUpdatesFrom' | translate }} {{ dashboardData()!.orgUnitName }}</p>
+                </div>
+              </div>
+              <p-button icon="pi pi-times" [outlined]="true" severity="secondary" size="small" (onClick)="collapsePanel()" pTooltip="{{ 'dashboard.collapse' | translate }}" tooltipPosition="bottom" />
+            </div>
+
+            @if (dashboardData()!.orgUnitRecentUpdates.length > 0) {
+              @if (getOrgUnitUpdateTypes().length > 1) {
+                <div class="flex flex-wrap gap-2 mb-5">
+                  @for (type of getOrgUnitUpdateTypes(); track type) {
+                    <button
+                      class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors border"
+                      [class]="selectedOrgUnitUpdateType() === type
+                        ? 'bg-blue-500 text-white border-blue-500'
+                        : 'bg-surface-0 dark:bg-surface-800 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                      (click)="setOrgUnitUpdateFilter(type)">
+                      {{ getOrgUnitUpdateCount(type) }} {{ type }}{{ getOrgUnitUpdateCount(type) === 1 ? '' : 's' }}
+                    </button>
+                  }
+                  @if (selectedOrgUnitUpdateType()) {
+                    <button class="px-2 py-1.5 rounded-full bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300 hover:bg-surface-300 dark:hover:bg-surface-600 transition-colors" (click)="clearOrgUnitUpdateFilter()">
+                      <i class="pi pi-times text-xs"></i>
+                    </button>
+                  }
+                </div>
+              }
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                @for (update of getDisplayedOrgUnitUpdates(); track update.id) {
+                  <div class="p-4 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-blue-400 dark:hover:border-blue-600 hover:bg-emphasis cursor-pointer transition-all"
+                       (click)="navigateToEntity(update.type, update.id)">
+                    <div class="flex items-start gap-2 mb-2">
+                      @if (update.type === 'Partner') {
+                        <div class="w-3 h-3 bg-teal-500 rounded-full mt-1 shrink-0"></div>
+                      } @else if (update.type === 'Contact') {
+                        <div class="w-3 h-3 bg-lime-500 rounded-full mt-1 shrink-0"></div>
+                      } @else if (update.type === 'Opportunity') {
+                        <div class="w-3 h-3 bg-purple-500 rounded-full mt-1 shrink-0"></div>
+                      } @else {
+                        <div class="w-3 h-3 bg-orange-500 rounded-full mt-1 shrink-0"></div>
+                      }
+                      <div class="flex-1 min-w-0">
+                        <span class="body-xsmall">{{ formatDate(update.lastModifiedDate) }}</span>
+                        <h4 class="text-sm font-medium text-surface-900 dark:text-surface-0 mt-0.5 mb-1 line-clamp-2">{{ update.name }}</h4>
+                        <div class="flex items-center gap-2">
+                          <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium"
+                                [class]="update.type === 'Partner' ? 'bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300'
+                                       : update.type === 'Contact' ? 'bg-lime-100 dark:bg-lime-900/40 text-lime-600 dark:text-lime-300'
+                                       : update.type === 'Interaction' ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-300'
+                                       : 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300'">
+                            {{ ('dashboard.' + update.type.toLowerCase()) | translate }}
+                          </span>
+                          <span class="body-xsmall truncate">by {{ update.lastModifiedByName || ('User ' + update.lastModifiedBy) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Expanded: My Workspace -->
+        @if (expandedPanel() === 'workspace') {
+          <div class="card mb-0! rounded-2xl border border-surface">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/40">
+                  <i class="pi pi-th-large text-xl text-indigo-600 dark:text-indigo-300"></i>
+                </div>
+                <div>
+                  <span class="label-medium text-surface-900 dark:text-surface-0">{{ 'dashboard.myWorkspaceAllItems' | translate }}</span>
+                  <p class="body-xsmall mt-0.5 mb-0">{{ 'dashboard.allPartnersContactsActions' | translate }}</p>
+                </div>
+              </div>
+              <p-button icon="pi pi-times" [outlined]="true" severity="secondary" size="small" (onClick)="collapsePanel()" pTooltip="{{ 'dashboard.collapse' | translate }}" tooltipPosition="bottom" />
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              @if (dashboardData()!.myPartners.length > 0) {
+                <div>
+                  <h4 class="label-medium text-surface-900 dark:text-surface-0 mb-3 flex items-center gap-2">
+                    <i class="pi pi-building text-teal-500"></i>
+                    {{ 'dashboard.myPartners' | translate }} ({{ dashboardData()!.myPartners.length }})
+                  </h4>
+                  <div class="space-y-2">
+                    @for (partner of dashboardData()!.myPartners; track partner.id) {
+                      <div class="flex items-center gap-3 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-teal-400 dark:hover:border-teal-600 hover:bg-emphasis cursor-pointer transition-all"
+                           (click)="navigateToEntity('Partner', getEntityId(partner.id))">
+                        <div class="w-2 h-2 bg-teal-500 rounded-full shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                          <span class="text-sm font-medium text-surface-900 dark:text-surface-0 truncate block">{{ partner.name }}</span>
+                          <span class="body-xsmall">{{ getDisplayDate(partner) }}</span>
+                        </div>
+                        <span class="px-2 py-1 rounded-lg text-[0.625rem] font-medium shrink-0"
+                              [class]="partner.status === 'Active' ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-300'
+                                     : partner.status === 'Pending' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300'
+                                     : 'bg-surface-100 dark:bg-surface-800 text-surface-500'">
+                          {{ partner.status || ('dashboard.unknownStatus' | translate) }}
+                        </span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (dashboardData()!.myContacts.length > 0) {
+                <div>
+                  <h4 class="label-medium text-surface-900 dark:text-surface-0 mb-3 flex items-center gap-2">
+                    <i class="pi pi-users text-lime-500"></i>
+                    {{ 'dashboard.myContacts' | translate }} ({{ dashboardData()!.myContacts.length }})
+                  </h4>
+                  <div class="space-y-2">
+                    @for (contact of dashboardData()!.myContacts; track contact.id) {
+                      <div class="flex items-center gap-3 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-lime-400 dark:hover:border-lime-600 hover:bg-emphasis cursor-pointer transition-all"
+                           (click)="navigateToEntity('Contact', getEntityId(contact.id))">
+                        <div class="w-2 h-2 bg-lime-500 rounded-full shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                          <span class="text-sm font-medium text-surface-900 dark:text-surface-0 truncate block">{{ contact.firstName }} {{ contact.lastName }}</span>
+                          <span class="body-xsmall">{{ contact.title || ('dashboard.noTitle' | translate) }}</span>
+                        </div>
+                        <span class="px-2 py-1 rounded-lg text-[0.625rem] font-medium shrink-0"
+                              [class]="contact.status === 'Active' ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-300'
+                                     : contact.status === 'Pending' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300'
+                                     : 'bg-surface-100 dark:bg-surface-800 text-surface-500'">
+                          {{ contact.status || ('dashboard.unknownStatus' | translate) }}
+                        </span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (dashboardData()!.myOpportunities.length > 0) {
+                <div>
+                  <h4 class="label-medium text-surface-900 dark:text-surface-0 mb-3 flex items-center gap-2">
+                    <i class="pi pi-briefcase text-purple-500"></i>
+                    {{ 'dashboard.myOpportunities' | translate }} ({{ dashboardData()!.myOpportunities.length }})
+                  </h4>
+                  <div class="space-y-2">
+                    @for (opportunity of dashboardData()!.myOpportunities; track opportunity.id) {
+                      <div class="flex items-center gap-3 p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-purple-400 dark:hover:border-purple-600 hover:bg-emphasis cursor-pointer transition-all"
+                           (click)="navigateToEntity('Opportunity', getEntityId(opportunity.id))">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                          <span class="text-sm font-medium text-surface-900 dark:text-surface-0 truncate block">{{ opportunity.name }}</span>
+                          <span class="body-xsmall">{{ opportunity.stage || opportunity.status || ('dashboard.unknownStatus' | translate) }}</span>
+                        </div>
+                        <span class="px-2 py-1 rounded-lg text-[0.625rem] font-medium shrink-0"
+                              [class]="opportunity.status === 'Active' ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-300'
+                                     : opportunity.status === 'Draft' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300'
+                                     : 'bg-surface-100 dark:bg-surface-800 text-surface-500'">
+                          {{ opportunity.status || ('dashboard.unknownStatus' | translate) }}
+                        </span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Expanded: Recent Interactions -->
+        @if (expandedPanel() === 'interactions') {
+          <div class="card mb-0! rounded-2xl border border-surface">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-orange-100 dark:bg-orange-900/40">
+                  <i class="pi pi-comments text-xl text-orange-600 dark:text-orange-300"></i>
+                </div>
+                <div>
+                  <span class="label-medium text-surface-900 dark:text-surface-0">{{ 'dashboard.allRecentInteractions' | translate }}</span>
+                  <p class="body-xsmall mt-0.5 mb-0">{{ summary().totalMyInteractions }} {{ 'dashboard.interactionsLatestActivity' | translate }}</p>
+                </div>
+              </div>
+              <p-button icon="pi pi-times" [outlined]="true" severity="secondary" size="small" (onClick)="collapsePanel()" pTooltip="{{ 'dashboard.collapse' | translate }}" tooltipPosition="bottom" />
+            </div>
+
+            @if (dashboardData()!.myInteractions && dashboardData()!.myInteractions.length > 0) {
+              @if (getInteractionTypes().length > 1) {
+                <div class="flex flex-wrap gap-2 mb-5">
+                  @for (type of getInteractionTypes(); track type) {
+                    <button
+                      class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors border"
+                      [class]="selectedInteractionType() === type
+                        ? 'bg-orange-500 text-white border-orange-500'
+                        : 'bg-surface-0 dark:bg-surface-800 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-700'"
+                      (click)="setInteractionFilter(type)">
+                      {{ type }}
+                    </button>
+                  }
+                  @if (selectedInteractionType()) {
+                    <button class="px-2 py-1.5 rounded-full bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300 hover:bg-surface-300 dark:hover:bg-surface-600 transition-colors" (click)="clearInteractionFilter()">
+                      <i class="pi pi-times text-xs"></i>
+                    </button>
+                  }
+                </div>
+              }
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                @for (interaction of getDisplayedInteractions(); track interaction.id) {
+                  <div class="p-4 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-orange-400 dark:hover:border-orange-600 hover:bg-emphasis cursor-pointer transition-all"
+                       (click)="navigateToEntity('Interaction', getEntityId(interaction.id))">
+                    <div class="flex items-center gap-1.5 mb-1.5">
+                      @if (interaction.type === 'Meeting' || interaction.type === 'VirtualMeeting' || interaction.type === 'InPersonMeeting') {
+                        <i class="pi pi-video text-sm text-orange-500"></i>
+                      } @else if (interaction.type === 'Email') {
+                        <i class="pi pi-envelope text-sm text-orange-500"></i>
+                      } @else if (interaction.type === 'Call') {
+                        <i class="pi pi-phone text-sm text-orange-500"></i>
+                      } @else {
+                        <i class="pi pi-comments text-sm text-orange-500"></i>
+                      }
+                      <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-300">
+                        {{ interaction.type || ('dashboard.unknownStatus' | translate) }}
+                      </span>
+                    </div>
+                    <h4 class="text-sm font-medium text-surface-900 dark:text-surface-0 mb-1 mt-0 line-clamp-2">{{ interaction.subject || ('dashboard.untitledInteraction' | translate) }}</h4>
+                    @if (interaction.description) {
+                      <p class="body-xsmall mb-1 line-clamp-2">{{ interaction.description }}</p>
+                    }
+                    <span class="body-xsmall block mb-1">{{ formatDate(interaction.date) }}</span>
+                    <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium"
+                          [class]="interaction.status === 'Completed' ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-300'
+                                 : interaction.status === 'Pending' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300'
+                                 : 'bg-surface-100 dark:bg-surface-800 text-surface-500'">
+                      {{ interaction.status || ('dashboard.unknownStatus' | translate) }}
+                    </span>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-center py-16">
+                <div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-100 dark:bg-surface-800 mb-6 mx-auto">
+                  <i class="pi pi-comments text-2xl text-surface-400"></i>
+                </div>
+                <h4 class="text-base font-medium text-surface-900 dark:text-surface-0 mb-2">{{ 'dashboard.noInteractionsYet' | translate }}</h4>
+                <p class="body-xsmall mb-4">{{ 'dashboard.startLoggingCommunications' | translate }}</p>
+                @if (!permissionsLoading() && interactionPermissions().permissions.canCreate) {
+                  <p-button
+                    [label]="'dashboard.logFirstInteraction' | translate"
+                    icon="pi pi-plus"
+                    severity="primary"
+                    size="small"
+                    (onClick)="openNewInteractionModal()" />
+                }
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    }
+
+    <!-- ═══════════════ Normal Panel Views (Two-Column) ═══════════════ -->
+    @if (!expandedPanel()) {
+      <div class="flex xl:flex-row flex-col gap-6 animate-fade-in-up stagger-2">
+
+        <!-- ─── Main Content Column ─── -->
+        <div class="flex-1 flex flex-col gap-6">
+
+          <!-- Actions Required Card -->
+          <app-dashboard-card
+            [config]="actionsRequiredConfig"
+            [filters]="actionsRequiredFilters"
+            [isExpanded]="false"
+            [showViewAllButton]="getRemainingDraftActionsCount() > 0"
+            [remainingCount]="getRemainingDraftActionsCount()"
+            [hasContent]="getTotalDraftActions() > 0"
+            [isMobile]="false"
+            (filterClick)="onActionsFilterClick($event)"
+            (clearFilter)="clearDraftActionFilter()"
+            (viewAllClick)="expandPanel('actions')"
+            (emptyStateAction)="navigateToPartnersPage()">
+
+            @if (getTotalDraftActions() > 0) {
+              <div class="space-y-2">
+                @for (item of getTruncatedDraftActions(); track item.id || item.entityId) {
+                  @if (isWorkflowApproval(item)) {
+                    <div class="p-3 rounded-xl border border-blue-200 dark:border-blue-800 hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-all"
+                         (click)="navigateToApproval(item)">
+                      <div class="flex items-start justify-between">
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-center gap-1.5 mb-1">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            <span class="text-[0.625rem] font-medium text-blue-500">{{ 'home.actionsRequired.workflowApproval' | translate }}</span>
+                          </div>
+                          <h4 class="text-sm font-medium text-surface-900 dark:text-surface-0 mb-1 mt-0 line-clamp-1">{{ item.entityDisplayName }}</h4>
+                          <p class="body-xsmall mb-0.5">{{ item.orgUnitName }}</p>
+                          <span class="body-xsmall">{{ 'home.actionsRequired.submittedBy' | translate }}: {{ item.submittedBy }} &bull; {{ formatDate(item.submittedOn) }}</span>
+                        </div>
+                        <div class="ml-2 flex flex-col items-end gap-1">
+                          <span class="px-2 py-1 rounded-lg text-[0.625rem] font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300">{{ 'home.actionsRequired.reviewGoDecision' | translate }}</span>
+                          @if (isApprovalNavigating(item)) {
+                            <i class="pi pi-spin pi-spinner text-blue-500"></i>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-amber-400 dark:hover:border-amber-600 hover:bg-emphasis cursor-pointer transition-all"
+                         (click)="navigateToEntity(getDraftActionEntityType(item), getEntityId(item.id))">
+                      <div class="flex items-start justify-between">
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-center gap-1.5 mb-1">
+                            @if (getDraftActionEntityType(item) === 'Partner') {
+                              <div class="w-2 h-2 bg-teal-500 rounded-full"></div>
+                            } @else if (getDraftActionEntityType(item) === 'Contact') {
+                              <div class="w-2 h-2 bg-lime-500 rounded-full"></div>
+                            } @else if (getDraftActionEntityType(item) === 'Opportunity') {
+                              <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            } @else {
+                              <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                            }
+                            <span class="body-xsmall">{{ ('dashboard.' + getDraftActionEntityType(item).toLowerCase()) | translate }}</span>
+                            @if (getDraftActionEntityType(item) === 'Opportunity' && item.userRole) {
+                              <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300">{{ item.userRole }}</span>
+                            }
+                          </div>
+                          <h4 class="text-sm font-medium text-surface-900 dark:text-surface-0 mb-0.5 mt-0 line-clamp-1">{{ getDraftActionDisplayName(item) }}</h4>
+                          <span class="body-xsmall">{{ formatDate(item.createdDate || item.date) }}</span>
+                        </div>
+                        <span class="ml-2 px-2 py-1 rounded-lg text-[0.625rem] font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 shrink-0">{{ 'dashboard.draft' | translate }}</span>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </app-dashboard-card>
+
+          <!-- Recent Activity Card -->
+          <app-dashboard-card
+            [config]="recentActivityConfig"
+            [filters]="recentActivityFilters"
+            [isExpanded]="false"
+            [showViewAllButton]="getRemainingOrgUnitUpdatesCount() > 0"
+            [remainingCount]="getRemainingOrgUnitUpdatesCount()"
+            [hasContent]="dashboardData()!.orgUnitRecentUpdates.length > 0"
+            [isMobile]="false"
+            (filterClick)="onActivityFilterClick($event)"
+            (clearFilter)="clearOrgUnitUpdateFilter()"
+            (viewAllClick)="expandPanel('activity')">
+
+            @if (dashboardData()!.orgUnitRecentUpdates.length > 0) {
+              <div class="space-y-2">
+                @for (update of getTruncatedOrgUnitUpdates(); track update.id) {
+                  <div class="flex items-start gap-3 cursor-pointer hover:bg-emphasis p-2 rounded-lg transition-colors"
+                       (click)="navigateToEntity(update.type, update.id)">
+                    <div class="shrink-0 mt-1.5">
+                      @if (update.type === 'Partner') {
+                        <div class="w-2 h-2 bg-teal-500 rounded-full"></div>
+                      } @else if (update.type === 'Contact') {
+                        <div class="w-2 h-2 bg-lime-500 rounded-full"></div>
+                      } @else if (update.type === 'Opportunity') {
+                        <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      } @else {
+                        <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                      }
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between mb-0.5">
+                        <h4 class="text-sm font-medium text-surface-900 dark:text-surface-0 m-0 line-clamp-1">{{ update.name }}</h4>
+                        <span class="body-xsmall shrink-0 ml-2">{{ formatDate(update.lastModifiedDate) }}</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium"
+                              [class]="update.type === 'Partner' ? 'bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300'
+                                     : update.type === 'Contact' ? 'bg-lime-100 dark:bg-lime-900/40 text-lime-600 dark:text-lime-300'
+                                     : update.type === 'Interaction' ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-300'
+                                     : 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300'">
+                          {{ ('dashboard.' + update.type.toLowerCase()) | translate }}
+                        </span>
+                        <span class="body-xsmall truncate">by {{ update.lastModifiedByName || ('User ' + update.lastModifiedBy) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </app-dashboard-card>
+        </div>
+
+        <!-- ─── Right Sidebar Column ─── -->
+        <div class="w-full xl:w-[380px] flex flex-col gap-6">
+
+          <!-- My Workspace Card -->
+          <app-dashboard-card
+            [config]="myWorkspaceConfig"
+            [filters]="myWorkspaceFilters"
+            [isExpanded]="false"
+            [showViewAllButton]="getRemainingPartnersCount() > 0 || getRemainingContactsCount() > 0 || getRemainingOpportunitiesCount() > 0"
+            [remainingCount]="getRemainingWorkspaceCount()"
+            [hasContent]="dashboardData()!.myPartners.length > 0 || dashboardData()!.myContacts.length > 0 || dashboardData()!.myOpportunities.length > 0"
+            [isMobile]="false"
+            (filterClick)="onWorkspaceFilterClick($event)"
+            (clearFilter)="clearOrgUnitUpdateFilter()"
+            (viewAllClick)="expandPanel('workspace')">
+
+            <div class="space-y-4">
+              @if (dashboardData()!.myPartners.length > 0 && (!selectedOrgUnitUpdateType() || selectedOrgUnitUpdateType() === 'Partner')) {
+                <div>
+                  <h4 class="label-small text-surface-900 dark:text-surface-0 mb-2 flex items-center gap-1.5">
+                    <i class="pi pi-building text-sm text-teal-500"></i>
+                    {{ 'dashboard.partners' | translate }} ({{ dashboardData()!.myPartners.length }})
+                  </h4>
+                  <div class="space-y-1">
+                    @for (partner of getTruncatedPartners(); track partner.id) {
+                      <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-emphasis cursor-pointer transition-colors"
+                           (click)="navigateToEntity('Partner', getEntityId(partner.id))">
+                        <div class="w-2 h-2 bg-teal-500 rounded-full shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                          <span class="text-xs font-medium text-surface-900 dark:text-surface-0 line-clamp-1">{{ partner.name }}</span>
+                          <span class="body-xsmall block">{{ partner.status || ('dashboard.unknownStatus' | translate) }} &bull; {{ getDisplayDate(partner) }}</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (dashboardData()!.myContacts.length > 0 && (!selectedOrgUnitUpdateType() || selectedOrgUnitUpdateType() === 'Contact')) {
+                <div>
+                  <h4 class="label-small text-surface-900 dark:text-surface-0 mb-2 flex items-center gap-1.5">
+                    <i class="pi pi-users text-sm text-lime-500"></i>
+                    {{ 'dashboard.contacts' | translate }} ({{ dashboardData()!.myContacts.length }})
+                  </h4>
+                  <div class="space-y-1">
+                    @for (contact of getTruncatedContacts(); track contact.id) {
+                      <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-emphasis cursor-pointer transition-colors"
+                           (click)="navigateToEntity('Contact', getEntityId(contact.id))">
+                        <div class="w-2 h-2 bg-lime-500 rounded-full shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                          <span class="text-xs font-medium text-surface-900 dark:text-surface-0 line-clamp-1">{{ contact.firstName }} {{ contact.lastName }}</span>
+                          <span class="body-xsmall block">{{ contact.title || ('dashboard.noTitle' | translate) }}</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (dashboardData()!.myOpportunities.length > 0 && (!selectedOrgUnitUpdateType() || selectedOrgUnitUpdateType() === 'Opportunity')) {
+                <div>
+                  <h4 class="label-small text-surface-900 dark:text-surface-0 mb-2 flex items-center gap-1.5">
+                    <i class="pi pi-briefcase text-sm text-purple-500"></i>
+                    {{ 'dashboard.opportunities' | translate }} ({{ dashboardData()!.myOpportunities.length }})
+                  </h4>
+                  <div class="space-y-1">
+                    @for (opportunity of getTruncatedOpportunities(); track opportunity.id) {
+                      <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-emphasis cursor-pointer transition-colors"
+                           (click)="navigateToEntity('Opportunity', getEntityId(opportunity.id))">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                          <span class="text-xs font-medium text-surface-900 dark:text-surface-0 line-clamp-1">{{ opportunity.name }}</span>
+                          <span class="body-xsmall block">{{ opportunity.stage || opportunity.status || ('dashboard.unknownStatus' | translate) }}</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </app-dashboard-card>
+
+          <!-- Recent Interactions Card -->
+          @if (expandedPanel() !== 'interactions') {
+            <app-dashboard-card
+              [config]="recentInteractionsConfig"
+              [isExpanded]="false"
+              [showViewAllButton]="getRemainingInteractionsCount() > 0"
+              [remainingCount]="getRemainingInteractionsCount()"
+              [hasContent]="dashboardData()!.myInteractions && dashboardData()!.myInteractions.length > 0"
+              [isMobile]="false"
+              (viewAllClick)="expandPanel('interactions')"
+              (emptyStateAction)="openNewInteractionModal()">
+
+              @if (dashboardData()!.myInteractions && dashboardData()!.myInteractions.length > 0) {
+                <div class="space-y-2">
+                  @for (interaction of getTruncatedInteractions(); track interaction.id) {
+                    <div class="p-3 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-orange-400 dark:hover:border-orange-600 hover:bg-emphasis cursor-pointer transition-all"
+                         (click)="navigateToEntity('Interaction', getEntityId(interaction.id))">
+                      <div class="flex items-center gap-1.5 mb-1">
+                        @if (interaction.type === 'Meeting') {
+                          <i class="pi pi-video text-xs text-orange-500"></i>
+                        } @else if (interaction.type === 'Email') {
+                          <i class="pi pi-envelope text-xs text-orange-500"></i>
+                        } @else if (interaction.type === 'Call') {
+                          <i class="pi pi-phone text-xs text-orange-500"></i>
+                        } @else {
+                          <i class="pi pi-comments text-xs text-orange-500"></i>
+                        }
+                        <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-300">
+                          {{ interaction.type || ('dashboard.unknownStatus' | translate) }}
+                        </span>
+                      </div>
+                      <h4 class="text-xs font-medium text-surface-900 dark:text-surface-0 mb-0.5 mt-0 line-clamp-1">{{ interaction.subject || ('dashboard.untitledInteraction' | translate) }}</h4>
+                      <p class="body-xsmall mb-0.5 line-clamp-1">{{ interaction.description || ('dashboard.noDescription' | translate) }}</p>
+                      <span class="body-xsmall block mb-1">{{ formatDate(interaction.date) }}</span>
+                      <span class="px-1.5 py-0.5 rounded text-[0.625rem] font-medium"
+                            [class]="interaction.status === 'Completed' ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-300'
+                                   : interaction.status === 'Pending' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300'
+                                   : 'bg-surface-100 dark:bg-surface-800 text-surface-500'">
+                        {{ interaction.status || ('dashboard.unknownStatus' | translate) }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+            </app-dashboard-card>
+          }
+        </div>
+      </div>
+    }
+
+  }
+
+</section>
+
+<!-- Create Opportunity Dialog -->
+<app-create-opportunity-from-interactions-dialog
+  [(visible)]="showCreateOpportunityDialog"
+  [config]="createOpportunityConfig()"
+  (opportunityCreated)="handleOpportunityCreated($event)">
+</app-create-opportunity-from-interactions-dialog>

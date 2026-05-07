@@ -1,0 +1,185 @@
+<!-- Header -->
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-semibold text-surface-900">{{ 'title.partnersNew' | translate }}</h1>
+
+  <div class="flex items-center gap-3">
+    <!-- Search -->
+    <p-iconfield>
+      <p-inputicon styleClass="pi pi-search" />
+      <input
+        pInputText
+        type="text"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        placeholder="Search partners..."
+        class="w-80"
+      />
+    </p-iconfield>
+
+    <!-- Layout toggle -->
+    <p-selectbutton
+      [options]="layoutOptions"
+      [(ngModel)]="layout"
+      [allowEmpty]="false"
+    >
+      <ng-template #item let-item>
+        <i [class]="item === 'list' ? 'pi pi-list' : 'pi pi-table'"></i>
+      </ng-template>
+    </p-selectbutton>
+  </div>
+</div>
+
+<!-- Filter Tags -->
+<div class="flex flex-wrap items-center gap-2 mb-4">
+  @for (tag of filterTags(); track tag.value) {
+    <p-tag
+      [value]="tag.label"
+      [severity]="isTagActive(tag) ? 'info' : 'secondary'"
+      [rounded]="true"
+      class="cursor-pointer select-none"
+      (click)="toggleTag(tag)"
+    />
+  }
+  @if (hasActiveFilters()) {
+    <span
+      class="text-sm text-primary cursor-pointer hover:underline ml-2"
+      (click)="clearFilters()"
+    >
+      Clear
+    </span>
+  }
+</div>
+
+<!-- Summary Stats -->
+<div class="flex items-center gap-6 mb-6 px-4 py-3 bg-surface-50 rounded-lg border border-surface-200">
+  <div class="flex items-center gap-2">
+    <i class="pi pi-building text-surface-500"></i>
+    <span class="text-lg font-semibold text-surface-800">{{ filteredPartners().length }}</span>
+    <span class="text-sm text-surface-500">Partners</span>
+  </div>
+  <div class="w-px h-6 bg-surface-300"></div>
+  <div class="flex items-center gap-2">
+    <i class="pi pi-check-circle text-green-600"></i>
+    <span class="text-lg font-semibold text-surface-800">{{ activeCount() }}</span>
+    <span class="text-sm text-surface-500">Active</span>
+  </div>
+  <div class="w-px h-6 bg-surface-300"></div>
+  <div class="flex items-center gap-2">
+    <i class="pi pi-globe text-blue-600"></i>
+    <span class="text-lg font-semibold text-surface-800">{{ keyGlobalCount() }}</span>
+    <span class="text-sm text-surface-500">Key Global</span>
+  </div>
+</div>
+
+<!-- DataView -->
+<p-dataview
+  [value]="filteredPartners()"
+  [layout]="layout"
+>
+  <!-- LIST layout -->
+  <ng-template #list let-items>
+    <div class="flex flex-col">
+      @for (item of items; track item.id; let i = $index) {
+        <div
+          class="flex items-center gap-4 px-4 py-3 cursor-pointer hover:bg-surface-50 transition-colors"
+          [class.border-t]="i > 0"
+          [class.border-surface-200]="i > 0"
+          (click)="navigateToDetail(item)"
+        >
+          <!-- Flag -->
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-surface-100 flex items-center justify-center overflow-hidden">
+            <img [src]="getFlagUrl(item)" [alt]="item.address1Country || 'globe'" class="w-6 h-6 object-contain" />
+          </div>
+
+          <!-- Main info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-semibold text-surface-900 truncate">{{ item.name }}</span>
+              @if (item.shortName) {
+                <span class="text-sm text-surface-500">({{ item.shortName }})</span>
+              }
+              @if (item.keyGlobalPartner) {
+                <p-tag value="Key Global" severity="info" [rounded]="true" />
+              }
+            </div>
+            <div class="flex items-center gap-4 mt-1 text-sm text-surface-500">
+              @if (item.address1Country) {
+                <span>{{ item.address1City ? item.address1City + ', ' : '' }}{{ item.address1Country }}</span>
+              }
+              @if (item.liaisonOfficeName) {
+                <span>{{ item.liaisonOfficeName }}</span>
+              }
+              @if (item.partnerFocalPointName) {
+                <span>{{ item.partnerFocalPointName }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Tags -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            @if (item.partnerCategoryName) {
+              <p-tag [value]="item.partnerCategoryName" severity="secondary" />
+            }
+            @if (item.status) {
+              <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
+            }
+            @if (item.partnerApprovalStatus) {
+              <p-tag [value]="item.partnerApprovalStatus" [severity]="getApprovalSeverity(item.partnerApprovalStatus)" />
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+
+  <!-- GRID layout -->
+  <ng-template #grid let-items>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
+      @for (item of items; track item.id) {
+        <div
+          class="bg-surface-0 rounded-xl border border-surface-200 p-4 cursor-pointer hover:shadow-md transition-shadow flex flex-col"
+          (click)="navigateToDetail(item)"
+        >
+          <!-- Card header -->
+          <div class="flex items-start gap-3 mb-3">
+            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-surface-100 flex items-center justify-center overflow-hidden">
+              <img [src]="getFlagUrl(item)" [alt]="item.address1Country || 'globe'" class="w-8 h-8 object-contain" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="font-semibold text-surface-900 truncate">{{ item.shortName || item.name }}</div>
+              @if (item.shortName) {
+                <div class="text-xs text-surface-500 truncate">{{ item.name }}</div>
+              }
+            </div>
+            @if (item.keyGlobalPartner) {
+              <p-tag value="Key Global" severity="info" [rounded]="true" />
+            }
+          </div>
+
+          <!-- Card body -->
+          <div class="flex flex-col gap-1 text-sm text-surface-600 mb-3 flex-1">
+            @if (item.partnerCategoryName) {
+              <span>{{ item.partnerCategoryName }} · {{ item.partnerGroupName }}</span>
+            }
+            @if (item.address1Country) {
+              <span>{{ item.address1City ? item.address1City + ', ' : '' }}{{ item.address1Country }}</span>
+            }
+            @if (item.partnerFocalPointName) {
+              <span>{{ item.partnerFocalPointName }}</span>
+            }
+          </div>
+
+          <!-- Card footer tags -->
+          <div class="flex items-center gap-2 mt-auto pt-3 border-t border-surface-100">
+            @if (item.status) {
+              <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)" />
+            }
+            @if (item.partnerApprovalStatus) {
+              <p-tag [value]="item.partnerApprovalStatus" [severity]="getApprovalSeverity(item.partnerApprovalStatus)" />
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-dataview>

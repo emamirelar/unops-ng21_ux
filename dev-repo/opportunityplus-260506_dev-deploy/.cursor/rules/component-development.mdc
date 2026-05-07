@@ -1,0 +1,948 @@
+---
+description: UNOPS Opportunity+ System - Angular Component Development Guidelines
+globs: *.ts, *.html, *.css, *.scss
+alwaysApply: true
+---
+# UNOPS Opportunity+ System - Angular Component Development Guidelines
+
+Comprehensive development guidelines for Angular components in the UNOPS Opportunity+ Partnership and Opportunity Management System.
+
+This application (`UNOPS.PAO.ClientApp`) is a comprehensive partnership management platform built with Angular 21, featuring:
+- **Partnership Management**: Organizations, contacts, interactions, and relationship tracking
+- **Opportunity Management**: Business opportunity pipeline and tracking
+- **Administration**: Entity management, user management, translation workbench
+- **AI Integration**: AI assistant with prompt management and content generation
+- **Advanced Search**: Cross-entity search capabilities
+
+The application is built using modern Angular 21 signals architecture with Tailwind-first styling and PrimeNG components.
+
+Based on established patterns, the actual project structure, and alignment with the `unops-ng21_ux` UX reference app.
+
+---
+
+## Tech Stack
+
+| Layer | Version / Package |
+|-------|------------------|
+| Angular | 21 (standalone, Zone.js — targeting zoneless) |
+| TypeScript | ~5.9 (strict mode) |
+| PrimeNG | 21 (`@primeuix/themes` 2.x) |
+| Tailwind CSS | 4 (CSS-first, `@theme` from UX package) |
+| UI Library | `unops-ng_ux` (`@emamirelar/ux`) — layout shell, brand theme, tokens |
+| Icons | PrimeIcons 7 |
+| i18n | `@ngx-translate/core` (4 languages: en, fr, es, pt) |
+
+---
+
+## Formatting & Editor Configuration
+
+### Prettier (add `.prettierrc.json` to `UNOPS.PAO.ClientApp/`)
+
+```json
+{
+    "useTabs": false,
+    "tabWidth": 4,
+    "trailingComma": "none",
+    "semi": true,
+    "singleQuote": true,
+    "printWidth": 250,
+    "bracketSameLine": false
+}
+```
+
+### EditorConfig (`.editorconfig`)
+
+```ini
+indent_style = space
+indent_size = 4
+quote_type = single   # for *.ts
+```
+
+### Summary
+
+- **4-space indentation** in all TypeScript, HTML, SCSS files
+- **Single quotes** in TypeScript
+- **No trailing commas**
+- **Semicolons** always
+- **Print width** 250 (avoids unnecessary line wrapping in templates)
+
+---
+
+## Component Creation & Structure
+
+### Standalone-Only Architecture
+
+- **No NgModules.** All components, directives, and pipes are standalone.
+- `standalone: true` is **implicit** in Angular 21 — do **NOT** set it explicitly in decorators.
+
+```typescript
+// ❌ WRONG — do not write standalone: true
+@Component({
+    standalone: true,
+    selector: 'app-partner',
+    ...
+})
+
+// ✅ CORRECT — standalone is implied
+@Component({
+    selector: 'app-partner',
+    ...
+})
+```
+
+### Inline Templates (Mandatory for New Components)
+
+All new components must use **inline templates** (`template:`) and inline or no styles. Do NOT use `templateUrl` or `styleUrl`.
+
+```typescript
+// ✅ CORRECT — inline template
+@Component({
+    selector: 'app-partner',
+    imports: [CommonModule, ButtonModule, TableModule, TranslateModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
+        <div class="card">
+            @if (isLoading()) {
+                <p-skeleton />
+            } @else {
+                <p-table [value]="partners()">
+                    <!-- table content -->
+                </p-table>
+            }
+        </div>
+    `
+})
+export class Partner { }
+
+// ❌ WRONG — external template files
+@Component({
+    selector: 'app-partner',
+    templateUrl: './partner.component.html',
+    styleUrl: './partner.component.scss',
+})
+export class PartnerComponent { }
+```
+
+SCSS files are still acceptable alongside inline templates for complex patterns that Tailwind cannot express, but should be minimal.
+
+### Dependency Injection: Use `inject()`
+
+Prefer the `inject()` function over constructor injection for all new code.
+
+```typescript
+// ✅ CORRECT — inject() function
+export class Partner {
+    private readonly partnerService = inject(PartnerService);
+    private readonly feedbackService = inject(FeedbackDialogService);
+    private readonly router = inject(Router);
+}
+
+// ❌ WRONG — constructor injection
+export class PartnerComponent {
+    constructor(
+        private partnerService: PartnerService,
+        private feedbackService: FeedbackDialogService,
+        private router: Router
+    ) { }
+}
+```
+
+### Change Detection
+
+- The UX reference app uses `provideZonelessChangeDetection()` globally.
+- This app currently uses `provideZoneChangeDetection({ eventCoalescing: true })`.
+- For new components, always use `ChangeDetectionStrategy.OnPush` to prepare for eventual zoneless migration.
+- Use signals for all reactive state — do NOT rely on Zone.js change detection triggers.
+
+### Templates — Modern Control Flow
+
+- Use `@if`, `@for`, `@switch` — do NOT use `*ngIf`, `*ngFor`, `*ngSwitch`.
+- Use `[class.active]="condition"` or `[class]="{'active': condition}"` — do NOT use `ngClass`.
+- Use `[style.font-size.px]="value"` — do NOT use `ngStyle`.
+
+### Naming Convention & Folder Structure
+
+**MANDATORY**: Follow this consistent naming and folder organization pattern for all entity components.
+
+**CRITICAL**: All folder and file names MUST use **kebab-case**.
+
+**File Naming** (for NEW components):
+- File: `entity-name.ts` (no `.component.ts` suffix)
+- Class: `export class EntityName` (no `Component` suffix)
+- Selector: `app-entity-name`
+
+**Existing** components using `.component.ts` / `Component` suffix do not need to be renamed. All **new** code follows the simplified convention.
+
+**Pattern Structure:**
+```
+entity-name/
+├── entity-name.ts                            # List/overview component
+├── entity-name.scss                          # Optional — only for complex patterns
+├── entity-name-item/                         # Detail component folder
+│   └── entity-name-item.ts
+├── new-entity-name/                          # Create dialog component folder
+│   └── new-entity-name.ts
+├── delete-entity-name/                       # Other dialog components
+│   └── delete-entity-name.ts
+├── custom-action-entity-name/                # Custom action dialogs
+│   └── custom-action-entity-name.ts
+└── child-entity/                             # Child entities (recursive pattern)
+    ├── child-entity.ts
+    ├── child-entity-item/
+    │   └── child-entity-item.ts
+    ├── new-child-entity/
+    │   └── new-child-entity.ts
+    └── delete-child-entity/
+        └── delete-child-entity.ts
+```
+
+**Real-World Example - Partner Entity:**
+```
+partner/
+├── partner.ts                                # Partner list component
+├── partner.scss                              # Optional SCSS
+├── partner-item/
+│   └── partner-item.ts
+├── new-partner/
+│   └── new-partner.ts
+├── delete-partner/
+│   └── delete-partner.ts
+└── contacts/                                 # Child entity (recursive)
+    ├── contacts.ts
+    ├── contact-item/
+    │   └── contact-item.ts
+    ├── new-contact/
+    │   └── new-contact.ts
+    └── delete-contact/
+        └── delete-contact.ts
+```
+
+**Naming Rules:**
+
+1. **List Component**: `entity-name.ts`
+   - Selector: `app-entity-name` (e.g., `app-partner`, `app-opportunity`)
+
+2. **Detail Component**: `entity-name-item/entity-name-item.ts`
+   - Selector: `app-entity-name-item` (e.g., `app-partner-item`)
+
+3. **Create Dialog**: `new-entity-name/new-entity-name.ts`
+   - Selector: `app-new-entity-name` (e.g., `app-new-partner`)
+
+4. **Other Dialogs**: `action-entity-name/action-entity-name.ts`
+   - **CRITICAL**: Dialog names MUST include the entity name (not generic names)
+   - Pattern: `{action}-{entity-name}` in kebab-case
+   - Example: `partner/delete-partner/delete-partner.ts` (NOT `delete-confirmation-dialog`)
+   - **Note**: Edit functionality is handled by `entity-name-item` component, not a separate dialog
+
+5. **Child Entities**: Follow same pattern recursively inside parent folder
+
+**Component Selector Naming:**
+- Always prefix with `app-`
+- Use kebab-case matching folder/file name
+- ESLint config should enforce `prefix: 'app'` (not `'p'`)
+
+### Application Structure
+
+**Feature Modules** (`UNOPS.PAO.ClientApp/src/app/features/`):
+  - **partnerships/** — contacts, interactions, partners
+  - **opportunities/** — opportunity components
+  - **admin/** — entity manager, user management, translation workbench
+  - **ai/** — AI assistant components
+  - **search/** — search result components
+  - **shared/** — base engagement, overrides
+
+**Layouts** (`UNOPS.PAO.ClientApp/src/app/layouts/`):
+  - footer, layout, menu, sidebar, topbar
+
+**Shared/Common** (`UNOPS.PAO.ClientApp/src/app/shared/`):
+  - `components/` — generic reusable (dashboard-card, entity-tags, etc.)
+  - `pages/components/` — home, listview, login, access-denied, not-found
+  - `reusables/components/` — document, workflow, ai-panel, timeline, etc.
+  - `interfaces/`, `models/`, `services/`, `themes/`
+
+**Core** (`UNOPS.PAO.ClientApp/src/app/core/`):
+  - `directives/`, `guards/`, `interceptors/`, `services/`
+
+### New Components Workflow
+
+* Create component folder in appropriate location
+* Required files:
+  - `[entity-name].ts` — component with inline template and signals
+  - `[entity-name].scss` — optional, only for complex patterns
+  - `[entity-name].spec.ts` — test specifications
+* **CRITICAL**: Tailwind-first — use Tailwind classes directly in inline templates
+
+---
+
+## Signals-First State Management
+
+### Input Signals Pattern
+
+**MANDATORY**: Use `input()` function with transforms, NOT `@Input()` decorators.
+
+```typescript
+// ✅ CORRECT Pattern
+readonly variant = input<ButtonVariant, ButtonVariant | null | undefined>('primary', {
+    transform: ComponentUtilsService.createButtonVariantTransform('primary')
+});
+
+readonly disabled = input<boolean, boolean | null | undefined>(false, {
+    transform: ComponentUtilsService.createBooleanTransform(false)
+});
+
+readonly title = input<string | undefined, string | null | undefined>(undefined, {
+    transform: ComponentUtilsService.createOptionalStringTransform()
+});
+
+// ❌ INCORRECT — Don't use decorators
+@Input() variant: string = 'primary';
+```
+
+### Output Signals Pattern
+
+**MANDATORY**: Use `output()` function, NOT `@Output()` decorators.
+
+```typescript
+// ✅ CORRECT Pattern
+readonly buttonClick = output<MouseEvent>();
+readonly selectionChange = output<SelectChangeEvent>();
+readonly dismiss = output<void>();
+
+// ❌ INCORRECT — Don't use decorators
+@Output() buttonClick = new EventEmitter<MouseEvent>();
+```
+
+### Computed Signals Pattern
+
+Use `computed()` for derived values:
+
+```typescript
+readonly effectiveInputType = computed(() => {
+    if (this.type() === 'password' && this.showPasswordToggle() && this.passwordVisible) {
+        return 'text';
+    }
+    return this.type();
+});
+```
+
+### Service State Pattern
+
+Services use signals with private write / public readonly:
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class PartnerService {
+    private readonly _partners = signal<PartnerModel[]>([]);
+    readonly partners = this._partners.asReadonly();
+
+    private readonly _isLoading = signal(false);
+    readonly isLoading = this._isLoading.asReadonly();
+}
+```
+
+---
+
+## Permission Handling
+
+### MANDATORY: Server-Side Permission Checks Only
+
+**CRITICAL**: NEVER manually handle permissions on the client side. ALL permission checks must be performed server-side via dedicated permission endpoints.
+
+### Correct Pattern — Server-Side Permission Endpoint
+
+```typescript
+// ✅ CORRECT — Component TypeScript
+export class PartnerItem {
+    private readonly partnerService = inject(PartnerService);
+
+    readonly recordPermissions = signal<any>(null);
+    readonly permissionsLoading = signal(false);
+
+    readonly canEdit = computed(() => this.recordPermissions()?.canEdit === true);
+    readonly canDelete = computed(() => this.recordPermissions()?.canDelete === true);
+    readonly canChangeStage = computed(() => {
+        const permissions = this.recordPermissions();
+        return permissions?.canActivate === true || permissions?.canCancel === true;
+    });
+
+    ngOnInit(): void {
+        this.loadRecord();
+        this.loadPermissions();
+    }
+
+    private loadPermissions(): void {
+        this.permissionsLoading.set(true);
+        this.partnerService.getRecordDetailPermissionsById(this.recordId).subscribe({
+            next: (data: any) => {
+                this.recordPermissions.set(data);
+                this.permissionsLoading.set(false);
+            },
+            error: () => {
+                this.permissionsLoading.set(false);
+            }
+        });
+    }
+}
+```
+
+```typescript
+// ✅ CORRECT — Service with permission endpoint
+export class PartnerService {
+    private readonly http = inject(HttpClient);
+
+    getRecordDetailPermissionsById(recordId: string): Observable<any> {
+        this.isLoading.set(true);
+        return this.http.get(`/api/partner/${recordId}/permissions`).pipe(
+            tap({
+                next: () => this.isLoading.set(false),
+                error: () => this.isLoading.set(false)
+            })
+        );
+    }
+}
+```
+
+```html
+<!-- ✅ CORRECT — Use computed permissions in template -->
+<div class="flex gap-2">
+    @if (canEdit()) {
+        <p-button
+            [label]="'button.edit' | translate"
+            icon="pi pi-pencil"
+            severity="primary"
+            (onClick)="onEdit()"
+        />
+    }
+    @if (canDelete()) {
+        <p-button
+            [label]="'button.delete' | translate"
+            icon="pi pi-trash"
+            severity="danger"
+            (onClick)="onDelete()"
+        />
+    }
+</div>
+```
+
+### Incorrect Patterns — DO NOT DO THIS
+
+```typescript
+// ❌ WRONG — Manual client-side permission logic
+canEdit = computed(() => {
+    const currentUser = this.authService.currentUser();
+    const isOwner = this.record()?.createdBy === currentUser.id;
+    return isOwner && this.record()?.stage === 'Draft';
+});
+
+// ❌ WRONG — Hardcoded permission flags
+canEdit = signal(true);
+
+// ❌ WRONG — Role-based checks in component
+canApprove = computed(() => this.authService.hasRole('Administrator'));
+```
+
+### Permission Endpoint Pattern
+
+**Standard URL:** `GET /api/{entity-name}/{recordId}/permissions`
+
+**Standard Response:**
+```json
+{
+    "canEdit": true,
+    "canDelete": false,
+    "canSubmit": true,
+    "canApprove": false,
+    "canActivate": true,
+    "canCancel": false,
+    "canReview": true
+}
+```
+
+### Permission Integration Checklist
+
+- [ ] Add `recordPermissions` signal to store server response
+- [ ] Add `permissionsLoading` signal for loading state
+- [ ] Create computed signals for each permission flag
+- [ ] Add service method `getRecordDetailPermissionsById(recordId: string)`
+- [ ] Call `loadPermissions()` in `ngOnInit()`
+- [ ] Reload permissions after state-changing actions
+- [ ] Use computed permission signals in template with `@if` conditions
+- [ ] **NEVER** manually check roles, user ID, or entity state for permissions
+- [ ] **ALWAYS** get permissions from server endpoint
+
+---
+
+## Workflow Component Usage
+
+### MANDATORY: Use Workflow Component for All Workflow-Related UI
+
+**CRITICAL**: Always use the `app-workflow` component for displaying workflow stages and actions. NEVER create separate buttons or display stage status independently.
+
+### Correct Pattern
+
+```typescript
+import { WorkflowComponent } from '@shared/reusables/components/workflow/components/workflow/workflow.component';
+
+@Component({
+    selector: 'app-opportunity-item',
+    imports: [WorkflowComponent],
+    template: `
+        @if (!isLoading()) {
+            <app-workflow
+                [entityName]="'opportunity'"
+                [entityId]="opportunityId().toString()"
+                [canChangeStage]="canChangeStage()"
+                [beforeStageChange]="beforeStageChange"
+                (onStageChangeSuccess)="handleStageChangeSuccess()"
+            />
+        }
+    `
+})
+export class OpportunityItem {
+    opportunityId = signal<number>(0);
+    readonly canChangeStage = signal(false);
+
+    handleStageChangeSuccess(): void {
+        this.loadOpportunity();
+    }
+
+    beforeStageChange = async (nextStage: string): Promise<boolean> => {
+        if (this.hasUnsavedChanges()) {
+            return await this.feedbackService.confirm({
+                title: 'Unsaved Changes',
+                message: 'You have unsaved changes. Do you want to continue?'
+            });
+        }
+        return true;
+    };
+}
+```
+
+### Component Inputs and Outputs
+
+**Required Inputs:**
+- `entityName` (string): Entity type identifier (e.g., `'opportunity'`, `'partner'`)
+- `entityId` (string): Unique identifier (must be converted to string)
+
+**Optional Inputs:**
+- `canChangeStage` (boolean): Whether the user can perform workflow actions (default: `true`)
+- `beforeStageChange` (function): `(nextStage: string) => Promise<boolean>` — return `true` to allow
+
+**Outputs:**
+- `onStageChangeSuccess`: Emitted when a stage change is completed successfully
+
+### Dialog Components — Separation Pattern
+
+**MANDATORY**: All dialogs (`p-dialog`) must be extracted into separate dedicated dialog components.
+
+```typescript
+// ✅ CORRECT — Dialog in separate component
+@Component({
+    selector: 'app-new-partner',
+    imports: [DialogModule, ReactiveFormsModule, ButtonModule],
+    template: `
+        <p-dialog [(visible)]="visible" (onHide)="visibleChange.emit(false)">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <!-- Dialog content -->
+            </form>
+        </p-dialog>
+    `
+})
+export class NewPartner {
+    readonly visible = model<boolean>(false);
+    readonly partnerCreated = output<PartnerModel>();
+}
+
+// ✅ Parent component uses dialog as a child
+@Component({
+    selector: 'app-partner',
+    imports: [NewPartner, ButtonModule, TableModule],
+    template: `
+        <div>
+            <p-button (onClick)="showCreateDialog = true" />
+            <app-new-partner
+                [(visible)]="showCreateDialog"
+                (partnerCreated)="onPartnerCreated($event)"
+            />
+        </div>
+    `
+})
+export class Partner {
+    showCreateDialog = false;
+}
+```
+
+**Exception:** Very simple confirmations — use `FeedbackDialogService` instead.
+
+---
+
+## PrimeNG Component Imports
+
+### CRITICAL: Module Import Pattern
+
+**MANDATORY**: Always import **PrimeNG Modules**, not standalone components.
+
+```typescript
+// ✅ CORRECT — Import PrimeNG Modules
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+
+// ❌ WRONG — Don't import standalone components
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+```
+
+### Common PrimeNG Components Reference
+
+| Template Directive | Module Import Statement |
+|-------------------|------------------------|
+| `<p-button>` | `import { ButtonModule } from 'primeng/button';` |
+| `pInputText` | `import { InputTextModule } from 'primeng/inputtext';` |
+| `pTextarea` | `import { TextareaModule } from 'primeng/textarea';` |
+| `<p-select>` | `import { SelectModule } from 'primeng/select';` |
+| `<p-multiselect>` | `import { MultiSelectModule } from 'primeng/multiselect';` |
+| `<p-datepicker>` | `import { DatePickerModule } from 'primeng/datepicker';` |
+| `<p-inputnumber>` | `import { InputNumberModule } from 'primeng/inputnumber';` |
+| `<p-checkbox>` | `import { CheckboxModule } from 'primeng/checkbox';` |
+| `<p-radiobutton>` | `import { RadioButtonModule } from 'primeng/radiobutton';` |
+| `<p-panel>` | `import { PanelModule } from 'primeng/panel';` |
+| `<p-table>` | `import { TableModule } from 'primeng/table';` |
+| `<p-message>` | `import { MessageModule } from 'primeng/message';` |
+| `<p-tag>` | `import { TagModule } from 'primeng/tag';` |
+| `<p-dialog>` | `import { DialogModule } from 'primeng/dialog';` |
+| `<p-floatlabel>` | `import { FloatLabelModule } from 'primeng/floatlabel';` |
+| `<p-tabs>` | `import { TabsModule } from 'primeng/tabs';` |
+| `<p-fieldset>` | `import { FieldsetModule } from 'primeng/fieldset';` |
+
+### Panel with Header Template
+
+In PrimeNG 21, `<p-panel>` uses `ng-template` with `#header`:
+
+```html
+<!-- ✅ CORRECT -->
+<p-panel>
+    <ng-template #header>
+        <span>{{ 'title.myPanel' | translate }}</span>
+    </ng-template>
+</p-panel>
+
+<!-- ❌ WRONG -->
+<p-panel [header]="'title.myPanel' | translate"></p-panel>
+```
+
+---
+
+## Tailwind-First Styling
+
+### Template Styling
+
+**MANDATORY**: Use Tailwind classes directly in templates, NOT custom CSS classes.
+
+```html
+<!-- ✅ CORRECT — standard Tailwind / PrimeNG token utilities -->
+<div class="flex items-center justify-center gap-4 p-6 bg-surface-card rounded-md shadow-sm border border-surface-border">
+    <button class="bg-primary text-white px-6 py-2 rounded-md hover:bg-primary-emphasis transition-colors duration-200">
+        {{ text() }}
+    </button>
+</div>
+```
+
+### No Hardcoded Visual Values
+
+| Avoid | Prefer |
+|-------|--------|
+| `color: #0092d1` | `var(--color-darkblue-500)` or `text-darkblue-500` |
+| `background: #ffffff` | `var(--surface-card)` or `bg-white` |
+| `padding: 16px` | Tailwind `p-4` |
+| `font-size: 14px` | Tailwind `text-sm` |
+| `border-radius: 8px` | Tailwind `rounded-md` |
+| `unops-*` utilities | Standard Tailwind names (`text-darkblue-500`, `bg-gray-50`) — the `unops-*` prefix utilities do not exist |
+
+### Dark Mode
+
+- Single CSS class: `.app-dark` on `<html>`
+- PrimeNG: `darkModeSelector: '.app-dark'`
+- Tailwind: `@custom-variant dark (.app-dark)` in `tailwind.css`
+- Custom responsive variants: `unops-mobile:`, `unops-tablet:`, `unops-desktop:` (defined in `tailwind.css`)
+
+### SCSS Only for Complex Patterns
+
+Use SCSS sparingly, only for patterns that Tailwind cannot express. Minimal component-scoped SCSS is acceptable.
+
+---
+
+## Floating Labels with Form Controls
+
+### PrimeNG Float Label Pattern
+
+**MANDATORY**: Use `p-floatlabel` with `variant="on"` for all form inputs and dropdowns.
+
+**CRITICAL**: When using `p-select` with `p-floatlabel`, **DO NOT** include a `placeholder` attribute.
+
+```html
+<p-floatlabel variant="on">
+    <p-select
+        id="partner"
+        formControlName="partnerId"
+        [options]="partners()"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+        [disabled]="isSubmitting()"
+        class="w-full"
+    />
+    <label for="partner">{{ 'title.partner' | translate }} *</label>
+</p-floatlabel>
+```
+
+---
+
+## User Feedback & Confirmation Patterns
+
+### Confirmation Dialogs
+
+**MANDATORY**: Use the feedback service, NOT browser `alert()`, `confirm()`, or `prompt()`.
+
+```typescript
+// ✅ CORRECT — Use feedback service
+export class MyFeature {
+    private readonly feedbackService = inject(FeedbackDialogService);
+
+    handleDelete() {
+        this.feedbackService.showConfirmDialog(
+            {
+                summary: 'Delete Item',
+                detail: 'Are you sure you want to delete this item? This action cannot be undone.',
+            },
+            () => {
+                this.deleteItem();
+                this.feedbackService.showSuccessToast({
+                    summary: 'Success',
+                    detail: 'Item deleted successfully'
+                });
+            }
+        );
+    }
+}
+```
+
+### DON'T Handle HTTP Errors Locally
+
+**MANDATORY**: Use the global HTTP error handler (interceptor).
+
+```typescript
+// ✅ CORRECT — Let global error handler manage HTTP errors
+this.partnerService.createPartner(requestJson).subscribe({
+    next: (data: any) => {
+        this.feedbackService.showSuccessToast({ summary: 'Success', detail: 'Partner created!' });
+        this.loadData();
+    }
+});
+
+// ❌ WRONG — Local error handling
+this.partnerService.createPartner(requestJson).subscribe({
+    next: (data: any) => { /* ... */ },
+    error: (error: any) => {
+        console.error('Error:', error);
+        this.feedbackService.showErrorToast({ summary: 'Error', detail: 'Failed.' });
+    }
+});
+```
+
+---
+
+## Interface & Type Management
+
+### Union Types
+
+Define in appropriate interface files:
+- **Shared**: `src/app/shared/interfaces/`
+- **Feature-specific**: `src/app/features/{feature}/models/`
+
+```typescript
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
+export type ComponentSize = 'small' | 'normal' | 'large';
+export type EntityStatus = 'active' | 'inactive' | 'pending' | 'archived';
+```
+
+### Decompose Complex Interfaces
+
+Break complex interfaces into constituent parts. Use primitives for input signals that receive a primitive.
+
+---
+
+## JSDoc Documentation Standards
+
+### File-Level JSDoc (Required at Line 1)
+
+```typescript
+/**
+ * @fileoverview Brief description of the component's purpose
+ * @author UNOPS Opportunity+ System Development Team
+ */
+```
+
+### Class-Level JSDoc (Required above export class)
+
+```typescript
+/**
+ * @class Partner
+ * @description Partner list component with filtering, pagination, and CRUD operations.
+ *
+ * @example
+ * ```html
+ * <app-partner />
+ * ```
+ *
+ * @since 1.0.0
+ */
+export class Partner { }
+```
+
+### Input/Output Signal Documentation (Required)
+
+```typescript
+/**
+ * @description Entity ID to load partner details
+ * @type {Signal<string>}
+ * @default ''
+ */
+readonly partnerId = input<string>('');
+
+/**
+ * @description Event emitted when partner is updated
+ * @type {OutputEmitterRef<PartnerModel>}
+ */
+readonly partnerUpdated = output<PartnerModel>();
+```
+
+---
+
+## Internationalization & Translation Requirements
+
+### Translation Keys Usage
+
+**MANDATORY**: Use translation keys instead of hardcoded English text in templates and components.
+
+```html
+<!-- ✅ CORRECT -->
+<h1>{{ 'page.title' | translate }}</h1>
+<button>{{ 'button.save' | translate }}</button>
+
+<!-- ❌ WRONG -->
+<h1>Dashboard</h1>
+<button>Save Changes</button>
+```
+
+### Multi-Language Support
+
+**MANDATORY**: All user-facing text must be available in all 4 supported languages.
+
+**Translation File Locations:**
+```
+UNOPS.PAO.ClientApp/public/assets/i18n/en.json    # English (Primary)
+UNOPS.PAO.ClientApp/public/assets/i18n/fr.json    # French
+UNOPS.PAO.ClientApp/public/assets/i18n/es.json    # Spanish
+UNOPS.PAO.ClientApp/public/assets/i18n/pt.json    # Portuguese
+```
+
+---
+
+## ESLint & Code Quality
+
+### ESLint Compliance
+
+**MANDATORY**: All modified files must pass ESLint checks before submission.
+
+```bash
+npx eslint --fix src/app/**/*.ts
+npx eslint --fix path/to/your/file.ts
+```
+
+**Requirements:**
+- **Single quotes** in TypeScript
+- **4-space indentation** consistently
+- **Print width** 250
+- **Selector prefix** `app-` (fix ESLint config if it says `'p'`)
+- Run `npx eslint --fix` after code changes
+
+---
+
+## Component Development Checklist
+
+### Before Submitting Any Component:
+
+- [ ] **No `standalone: true`** in decorator — it is implicit in Angular 21
+- [ ] **Inline template** (`template:`) — no `templateUrl`
+- [ ] **`inject()` function** — no constructor injection
+- [ ] **`ChangeDetectionStrategy.OnPush`** set on component
+- [ ] **4-space indentation** throughout
+- [ ] All input signals use `input()` function with appropriate transforms
+- [ ] All output signals use `output()` function
+- [ ] Computed signals for derived values
+- [ ] Templates use Tailwind classes directly (no hardcoded hex/px)
+- [ ] Modern control flow (`@if`, `@for`) — no `*ngIf`/`*ngFor`
+- [ ] PrimeNG imported as **modules** (not standalone components)
+- [ ] File-level JSDoc at line 1 with `@fileoverview` and `@author`
+- [ ] Class-level JSDoc with `@class`, `@description`, `@example`, `@since`
+- [ ] User confirmations use `FeedbackDialogService`, NOT browser dialogs
+- [ ] HTTP errors handled globally — no local error handlers in subscribe calls
+- [ ] **Translation keys** for all user-facing text, NO hardcoded English
+- [ ] Translation keys added to all 4 language files (en, fr, es, pt)
+- [ ] ESLint passes with `npx eslint --fix`
+
+### Transform Requirements
+
+- Boolean: `ComponentUtilsService.createBooleanTransform(defaultValue)`
+- String: `ComponentUtilsService.createStringTransform(defaultValue)` or `createOptionalStringTransform()`
+- Number: `ComponentUtilsService.createNumberTransform()` or `createNumberWithDefaultTransform()`
+- Array: `ComponentUtilsService.createArrayTransform<T>()`
+- Enum/Union: custom validation transforms
+
+---
+
+## Common Anti-Patterns to Avoid
+
+```typescript
+// ❌ Legacy decorators
+@Input() variant: string = 'primary';
+@Output() buttonClick = new EventEmitter<MouseEvent>();
+// ✅ Modern signals
+readonly variant = input<ButtonVariant>('primary');
+readonly buttonClick = output<MouseEvent>();
+
+// ❌ Constructor injection
+constructor(private myService: MyService) { }
+// ✅ inject() function
+private readonly myService = inject(MyService);
+
+// ❌ External template files (for new components)
+templateUrl: './my.component.html',
+styleUrl: './my.component.scss',
+// ✅ Inline template
+template: `<div>...</div>`
+
+// ❌ Explicit standalone (implicit in Angular 21)
+standalone: true,
+// ✅ Just omit it
+
+// ❌ Old structural directives
+*ngIf="condition"
+*ngFor="let item of items"
+// ✅ Modern control flow
+@if (condition) { }
+@for (item of items; track item.id) { }
+
+// ❌ ngClass directive
+[ngClass]="{'active': isActive}"
+// ✅ Native class binding
+[class.active]="isActive"
+
+// ❌ Hardcoded colors/spacing
+style="color: #0092d1; padding: 16px"
+// ✅ Tailwind utilities
+class="text-darkblue-500 p-4"
+```

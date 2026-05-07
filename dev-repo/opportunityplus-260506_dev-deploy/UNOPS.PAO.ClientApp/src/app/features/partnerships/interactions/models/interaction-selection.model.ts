@@ -1,0 +1,323 @@
+/**
+ * @fileoverview Models for creating opportunities from interactions
+ * @author UNOPS Opportunity+ System Development Team
+ */
+
+/**
+ * Summary model for interaction selection in dialogs
+ */
+export interface InteractionSummary {
+  id: number;
+  subject: string;
+  type: string;
+  date: string;
+  description?: string;
+  partnerNames?: string[];
+  contactNames?: string[];
+  selected?: boolean;
+}
+
+/**
+ * Dialog configuration for creating opportunity from interactions
+ */
+export interface CreateOpportunityFromInteractionsConfig {
+  preSelectedInteractionIds?: number[];
+  currentInteractionId?: number;
+  partnerId: number;
+  partnerName: string;
+  mode: 'list-view' | 'detail-view';
+}
+
+/**
+ * Dialog state for step management
+ */
+export interface DialogState {
+  currentStep: 'select' | 'review' | 'creating';
+  selectedInteractions: InteractionSummary[];
+  opportunityName: string;
+  opportunityDescription: string;
+  showAdditionalSelection: boolean;
+  searchQuery: string;
+  generating: boolean;
+}
+
+/**
+ * Proposed opportunity field from AI analysis
+ */
+export interface ProposedField {
+  fieldName: string;
+  fieldLabel: string;
+  proposedValue: any;
+  confidence: number; // 0-100
+  justification: string;
+  sourceInteractionIds: number[];
+  isAccepted: boolean;
+  isHighlighted: boolean;
+}
+
+/**
+ * Proposed deliverable from /generate-proposal
+ * Matches backend BuildDeliverableObject response: outputId, outputName, level0-4, definitionLevel1-4, serviceLine, quantity
+ */
+export interface ProposedDeliverable {
+  outputId?: number;
+  outputName: string;
+  level0?: string;
+  level1?: string;
+  level2?: string;
+  level3?: string;
+  level4?: string;
+  definitionLevel1?: string;
+  definitionLevel2?: string;
+  definitionLevel3?: string;
+  definitionLevel4?: string;
+  serviceLine?: string;
+  quantity?: number | null;
+}
+
+/**
+ * Proposed country from AI analysis
+ */
+export interface ProposedCountry {
+  countryName: string;
+  iso2Code?: string;
+  specificAreas?: string;
+  country?: {
+    id?: number;
+    name: string;
+    iso2Code: string;
+    continent?: string;
+    region?: string;
+  };
+}
+
+/**
+ * Proposed SDG from AI analysis
+ */
+export interface ProposedSDG {
+  sdgNumber: string;
+  sdgName: string;
+  isPrimary: boolean;
+}
+
+/**
+ * Proposed funding partner from AI analysis
+ */
+export interface ProposedFundingPartner {
+  partnerId?: number;
+  partnerName: string;
+  partnerLogoUrl?: string;
+  amount?: number;
+  currencyCode?: string;
+  feeAmount?: number;
+  partnershipAgreementReference?: string;
+}
+
+/**
+ * Proposed client partner from AI analysis
+ */
+export interface ProposedClientPartner {
+  partnerId?: number;
+  partnerName: string;
+  partnerLogoUrl?: string;
+}
+
+/**
+ * Proposed stakeholder from AI analysis
+ */
+export interface ProposedStakeholder {
+  userName: string;
+  entityRoleName: string;
+}
+
+/**
+ * Proposed opportunity response from backend (raw format with stringified collections)
+ * Aligned with ProposedOpportunityData in C# backend
+ */
+export interface ProposedOpportunityResponseRaw {
+  opportunity: {
+    // Basic Information
+    name: string;
+    description: string;
+    partnerReference?: string;
+    
+    // Organizational & Initiative Type
+    responsibleOrgUnitId?: number | null;
+    responsibleOrgUnitName?: string | null;
+    proposedInitiativeTypeId?: number | null;
+    proposedInitiativeTypeName?: string | null;
+    
+    // Financial Information
+    initiativeBudgetUSD?: number | null;
+    partnershipAgreementReference?: string | null;
+    
+    // WHEN Section - Timeline Fields (aligned with ApplyOpportunityAiChangesRequest)
+    targetSigningDate?: string | null;
+    isTargetSigningDateFirm?: boolean | null;
+    signingDateNotes?: string | null;
+    submissionDeadline?: string | null;
+    implementationStartDate?: string | null;
+    targetDeliveryDate?: string | null;
+    
+    // WHY Section - Strategic Information
+    challenges?: string | null;
+    resultsFocus?: string | null;
+    expectedImpact?: string | null;
+    expectedOutcomes?: string | null;
+    expectedBeneficiaries?: string | null;
+    estimatedDirectBeneficiaries?: number | null;
+    estimatedIndirectBeneficiaries?: number | null;
+    beneficiariesToBeDetermined?: boolean | null;
+    
+    // WHAT Section - Delivery & Stakeholders
+    deliveryModality?: number | null;
+    miscExternalStakeholders?: string | null;
+    externalStakeholderNotes?: string | null;
+    
+    // Collection fields are stringified JSON from backend
+    fundingPartners?: string | null;
+    clientPartners?: string | null;
+    stakeholders?: string | null;
+    deliverables?: string | null;
+    countries?: string | null;
+    sdGs?: string | null;
+    unopsMissions?: string | null;
+    dependents?: string | null;
+    // Cross-cutting concerns (WHY section)
+    crossCuttingConcernPeopleBenefitting?: boolean | null;
+    crossCuttingConcernGenderEquality?: boolean | null;
+    crossCuttingConcernCreateJobs?: boolean | null;
+    crossCuttingConcernSupplierCapacity?: boolean | null;
+    crossCuttingConcernProcurementCapacity?: boolean | null;
+    crossCuttingConcernEnvironmentalSafeguards?: boolean | null;
+    crossCuttingConcernClimateChange?: boolean | null;
+    crossCuttingConcernsOther?: string | null;
+  };
+  interactionsAnalyzed: number;
+  sourceInteractionIds?: number[] | null;
+  documentsAnalyzed: number;
+  sourceDocumentIds?: number[] | null;
+  partnerId: number;
+  partnerName: string;
+  isFundingPartner: boolean;
+  isClientPartner: boolean;
+}
+
+/**
+ * Proposed opportunity response (parsed format with typed collections)
+ * Aligned with ProposedOpportunityData in C# backend and opportunity-documents field mappings
+ */
+export interface ProposedOpportunityResponse {
+  opportunity: {
+    // Basic Information
+    name: string;
+    description: string;
+    partnerReference?: string;
+    
+    // Organizational & Initiative Type
+    responsibleOrgUnitId?: number | null;
+    responsibleOrgUnitName?: string | null;
+    proposedInitiativeTypeId?: number | null;
+    proposedInitiativeTypeName?: string | null;
+    
+    // Financial Information
+    initiativeBudgetUSD?: number | null;
+    partnershipAgreementReference?: string | null;
+    
+    // WHEN Section - Timeline Fields (aligned with ApplyOpportunityAiChangesRequest)
+    targetSigningDate?: string | null;
+    isTargetSigningDateFirm?: boolean | null;
+    signingDateNotes?: string | null;
+    submissionDeadline?: string | null;
+    implementationStartDate?: string | null;
+    targetDeliveryDate?: string | null;
+    
+    // WHY Section - Strategic Information
+    challenges?: string | null;
+    resultsFocus?: string | null;
+    expectedImpact?: string | null;
+    expectedOutcomes?: string | null;
+    expectedBeneficiaries?: string | null;
+    estimatedDirectBeneficiaries?: number | null;
+    estimatedIndirectBeneficiaries?: number | null;
+    beneficiariesToBeDetermined?: boolean | null;
+    
+    // WHAT Section - Delivery & Stakeholders
+    deliveryModality?: number | null;
+    miscExternalStakeholders?: string | null;
+    externalStakeholderNotes?: string | null;
+    
+    // Collection fields (parsed from stringified JSON)
+    fundingPartners?: ProposedFundingPartner[] | null;
+    clientPartners?: ProposedClientPartner[] | null;
+    stakeholders?: ProposedStakeholder[] | null;
+    deliverables?: ProposedDeliverable[] | null;
+    countries?: ProposedCountry[] | null;
+    sdGs?: ProposedSDG[] | null;
+    unopsMissions?: { unopsMissionId: number; name?: string; code?: string }[] | null;
+    unopsMissionsNotApplicable?: boolean;
+    dependents?: string[] | null;
+    // Cross-cutting concerns (WHY section)
+    crossCuttingConcernPeopleBenefitting?: boolean | null;
+    crossCuttingConcernGenderEquality?: boolean | null;
+    crossCuttingConcernCreateJobs?: boolean | null;
+    crossCuttingConcernSupplierCapacity?: boolean | null;
+    crossCuttingConcernProcurementCapacity?: boolean | null;
+    crossCuttingConcernEnvironmentalSafeguards?: boolean | null;
+    crossCuttingConcernClimateChange?: boolean | null;
+    crossCuttingConcernsOther?: string | null;
+  };
+  interactionsAnalyzed: number;
+  sourceInteractionIds?: number[] | null;
+  documentsAnalyzed: number;
+  sourceDocumentIds?: number[] | null;
+  partnerId: number;
+  partnerName: string;
+  isFundingPartner: boolean;
+  isClientPartner: boolean;
+  /** Raw AI response (for debugging - compare with processed opportunity data) */
+  rawAiResponse?: string | null;
+}
+
+/**
+ * Request to propose opportunity from interactions, documents, or both
+ * Unified request for the generate-proposal endpoint
+ */
+export interface ProposeOpportunityRequest {
+  opportunityName: string;
+  opportunityDescription: string;
+  partnerId?: number;
+  isFundingPartner: boolean;
+  isClientPartner: boolean;
+  responsibleOrgUnitId?: number; // User-selected org unit (takes precedence over document-inferred)
+  responsibleOrgUnitName?: string; // Org unit name for prompt context
+  interactionIds?: number[];
+  newDocumentStoragePaths?: string[]; // GCS URIs for newly uploaded documents
+  newDocumentMimeTypes?: string[]; // MIME types for newly uploaded documents
+  newDocumentTypeIds?: (number | null)[]; // Document type IDs for newly uploaded documents
+  existingDocumentIds?: number[]; // IDs of existing documents in database
+}
+
+/**
+ * Accepted field for final opportunity creation
+ */
+export interface AcceptedField {
+  fieldName: string;
+  proposedValue: any;
+  confidence: number;
+}
+
+/**
+ * Request to create opportunity from proposal
+ */
+export interface CreateOpportunityFromProposalRequest {
+  name: string;
+  description: string;
+  partnerId: number;
+  isFundingPartner: boolean;
+  isClientPartner: boolean;
+  acceptedFields: AcceptedField[];
+  rejectedFields?: ProposedField[];
+  sourceInteractionIds: number[];
+}
+

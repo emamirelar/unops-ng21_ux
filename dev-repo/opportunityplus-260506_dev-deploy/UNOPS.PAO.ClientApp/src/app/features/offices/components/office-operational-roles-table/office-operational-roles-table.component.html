@@ -1,0 +1,90 @@
+﻿<p-table
+  [value]="operationalRoles()"
+  [scrollable]="true"
+  styleClass="data-table p-datatable-sm p-datatable-gridlines office-datatable-header-muted office-roles-table"
+  [tableStyle]="{ 'min-width': '56rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>{{ 'office.rolesDoa.columnRole' | translate }}</th>
+      <th>{{ 'office.rolesDoa.columnPersonnel' | translate }}</th>
+      <th>{{ 'office.rolesDoa.columnPositionTitle' | translate }}</th>
+      <th>{{ 'office.rolesDoa.columnOrgUnit' | translate }}</th>
+      <th>{{ 'office.rolesDoa.columnEffectiveFrom' | translate }}</th>
+      <th>{{ 'office.rolesDoa.columnStatus' | translate }}</th>
+      <th>{{ 'office.rolesDoa.columnActions' | translate }}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-role>
+    <tr>
+      <td>
+        <strong class="inline-flex flex-wrap items-center gap-1">
+          @if (role.entityRoleCode === organizationalDeputyDirectorRoleCode) {
+            {{ 'office.rolesDoa.labelDeputyDirectorManager' | translate }}
+          } @else {
+            {{ getTranslatedRoleLabel(role) }}
+          }
+          @if (role.worksAtMismatch) {
+            <i
+              class="pi pi-exclamation-triangle text-amber-500 cursor-default"
+              [pTooltip]="'office.rolesDoa.worksAtMismatchTooltip' | translate"
+              tooltipPosition="top"
+              role="img"
+              [attr.aria-label]="'office.rolesDoa.worksAtMismatchAria' | translate"></i>
+          }
+        </strong>
+      </td>
+      @if (hasPersonnel(role)) {
+        <td>{{ role.holderName }}</td>
+        <td>{{ role.positionTitle ?? '—' }}</td>
+        <td>{{ role.orgUnitWorksAt ?? '—' }}</td>
+        <td>{{ formatEffectiveFrom(role.applicabilityPeriodStart) }}</td>
+      } @else {
+        <td colspan="3" class="office-roles-not-assigned">{{ 'office.rolesDoa.notAssigned' | translate }}</td>
+        <td>{{ formatEffectiveFrom(role.applicabilityPeriodStart) }}</td>
+      }
+      @if (role.isActive) {
+        <td><span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-green-500/10 text-green-500">{{ 'office.rolesDoa.statusActive' | translate }}</span></td>
+      } @else {
+        <td></td>
+      }
+      <td class="align-top">
+        <div class="inline-flex flex-wrap items-center gap-2">
+          @if (canEditRow(role)) {
+            <p-button
+              type="button"
+              [label]="'office.rolesDoa.editRole.button' | translate"
+              icon="pi pi-user-edit"
+              severity="secondary"
+              size="small"
+              styleClass="text-unops-body-small"
+              (onClick)="requestEditRole.emit(role)" />
+          }
+          @if (canEditRow(role)) {
+            <p-button
+              type="button"
+              [label]="'office.rolesDoa.historyButton' | translate"
+              icon="pi pi-history"
+              severity="secondary"
+              size="small"
+              styleClass="text-unops-body-small"
+              [attr.aria-label]="'office.rolesDoa.historyButtonAria' | translate"
+              (onClick)="openHistory(role)" />
+          }
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="7" class="text-center py-12 text-gray-500">{{ 'office.rolesDoa.noRoles' | translate }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<app-office-operational-role-history-dialog
+  [visible]="historyDialogOpen()"
+  (visibleChange)="onHistoryVisible($event)"
+  [officeId]="officeId()"
+  [entityRoleCode]="historyEntityRoleCode()"
+  [roleTitle]="historyRoleTitle()"
+  [refreshTrigger]="assignmentHistoryRefreshTrigger()" />

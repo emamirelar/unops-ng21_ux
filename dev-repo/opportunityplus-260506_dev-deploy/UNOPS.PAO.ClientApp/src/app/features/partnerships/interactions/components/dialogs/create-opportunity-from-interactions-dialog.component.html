@@ -1,0 +1,2309 @@
+﻿<p-dialog
+  [header]="'title.createNewOpportunity' | translate"
+  [(visible)]="visible"
+  [modal]="true"
+  styleClass="unops-create-opp-from-interactions-dialog"
+  [closable]="!generating()"
+  [closeOnEscape]="!generating()"
+  [dismissableMask]="!generating()"
+  [maximizable]="true">
+
+  <!-- Step 1: Select Interactions & Basic Info -->
+  @if (currentStep() === 'select') {
+    
+    <!-- Validation Error Message -->
+      @if (showValidationError()) {
+        <p-message 
+          severity="error" 
+          icon="pi pi-info-circle" 
+          styleClass="mb-4 w-full">
+          @if (!opportunityName().trim()) {
+            {{ 'message.validation.opportunityNameRequired' | translate }}
+          } @else if (opportunityName().trim().length > 120) {
+            {{ 'message.validation.opportunityNameTooLong' | translate }}
+          } @else if (showPartnerFields() && !isFundingPartner() && !isClientPartner()) {
+            {{ 'message.validation.selectAtLeastOnePartnerRole' | translate }}
+          } @else if (!selectedOrgUnitId()) {
+            {{ 'message.validation.orgUnitRequired' | translate }}
+          }
+        </p-message>
+      }
+
+    <!-- Opportunity Basic Info -->
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">
+        {{ 'title.opportunityBasicInfo' | translate }}
+      </h3>
+
+      <div class="flex flex-col gap-4">
+        <!-- Opportunity Name -->
+        <div>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="opp-name"
+              [(ngModel)]="opportunityName"
+              class="w-full"
+              maxlength="120"
+              [disabled]="generating()">
+            <label for="opp-name">{{ 'label.opportunityName' | translate }} *</label>
+          </p-floatlabel>
+          <small class="text-gray-500">{{ opportunityName().length }} / 120</small>
+        </div>
+
+        <!-- Opportunity Description -->
+        <div>
+          <p-floatlabel variant="on">
+            <textarea
+              pInputTextarea
+              id="opp-desc"
+              [(ngModel)]="opportunityDescription"
+              [rows]="4"
+              class="w-full"
+              [disabled]="generating()">
+            </textarea>
+            <label for="opp-desc">{{ 'label.opportunityDescription' | translate }} *</label>
+          </p-floatlabel>
+        </div>
+
+        <!-- Partner Role Selection (Only show when partner is provided) -->
+        @if (showPartnerFields()) {
+          <div class="border border-gray-200 rounded p-4 bg-gray-50">
+            <div class="font-medium mb-3 text-gray-800">
+              {{ 'label.partnerRole' | translate }} *
+            </div>
+            <div class="flex flex-col gap-3">
+              <div class="flex items-center">
+                <p-checkbox
+                  [(ngModel)]="isFundingPartner"
+                  [binary]="true"
+                  inputId="funding-partner"
+                  [disabled]="generating()"
+                />
+                <label for="funding-partner" class="ml-2 cursor-pointer">
+                  {{ 'label.fundingPartner' | translate }}
+                </label>
+              </div>
+              <div class="flex items-center">
+                <p-checkbox
+                  [(ngModel)]="isClientPartner"
+                  [binary]="true"
+                  inputId="client-partner"
+                  [disabled]="generating()"
+                />
+                <label for="client-partner" class="ml-2 cursor-pointer">
+                  {{ 'label.clientPartner' | translate }}
+                </label>
+              </div>
+            </div>
+            @if (showValidationError() && !isFundingPartner() && !isClientPartner()) {
+              <p-message severity="error" variant="simple" styleClass="mt-2 w-full">
+                {{ 'message.validation.selectAtLeastOnePartnerRole' | translate }}
+              </p-message>
+            }
+          </div>
+
+          <!-- Partner Context Info -->
+          <div class="text-sm text-gray-600 bg-blue-50 p-3 rounded border border-blue-200">
+            <i class="pi pi-info-circle mr-2"></i>
+            {{ 'message.opportunityWillBeCreatedForPartner' | translate: { partnerName: partnerName() } }}
+          </div>
+        }
+
+        <!-- Org Unit Responsible for Opportunity development (required) -->
+        <div>
+          <h4 class="text-sm font-semibold text-gray-700 mb-2">
+            {{ 'label.opportunity.responsibleOrgUnit' | translate }} *
+          </h4>
+          <p-select
+            [ngModel]="selectedOrgUnitId()"
+            (ngModelChange)="onOrgUnitChange($event)"
+            [options]="organizationUnits()"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name,code"
+            [placeholder]="'label.opportunity.selectOrgUnit' | translate"
+            [showClear]="true"
+            class="w-full"
+            [disabled]="generating()"
+            appendTo="body"
+          />
+          @if (selectedOrgUnitId()) {
+            <div class="mt-3 space-y-3">
+              @if (loadingOrgUnitStakeholders()) {
+                <div class="p-3 bg-gray-50 rounded-lg border border-gray-300 flex items-center gap-2 text-gray-600">
+                  <i class="pi pi-spin pi-spinner"></i>
+                  <span>{{ 'message.loadingAutoPopulatedStakeholders' | translate }}</span>
+                </div>
+              } @else {
+                @if (decisionPathwayPreview(); as pathwayWarn) {
+                  @if (!loadingOrgUnitStakeholders() && !pathwayWarn.hasPathway && pathwayWarn.warningMessageKey) {
+                    <p-message severity="warn" [text]="pathwayWarn.warningMessageKey | translate" styleClass="w-full mb-3" />
+                  }
+                }
+                @if (groupedDirectorRoles().length > 0 || decisionMakingPathwayRoles().length > 0) {
+                  <div class="text-xs text-midnight-500 mb-3 flex items-center gap-1">
+                    <i class="pi pi-lock text-midnight-500"></i>
+                    <span>{{ 'label.opportunity.autoPopulatedFromOrgUnit' | translate }}</span>
+                  </div>
+                  @if (selectedOrgUnitName()) {
+                    <div class="text-sm font-semibold text-blue-500 mb-2 flex items-center gap-2">
+                      <i class="pi pi-building text-blue-500"></i>
+                      <span>{{ selectedOrgUnitName() }}</span>
+                      <span class="text-gray-500 font-normal text-xs">({{ groupedDirectorRoles().length + decisionMakingPathwayRoles().length }})</span>
+                    </div>
+                  }
+                }
+                @if (groupedDirectorRoles().length > 0) {
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                    @for (stakeholder of groupedDirectorRoles(); track $index) {
+                      <div class="bg-gray-50 rounded-md p-2.5 border border-gray-300 opacity-90">
+                        <div class="flex items-center gap-2">
+                          <p-avatar label="A" shape="circle" size="normal" styleClass="bg-green-500 text-white flex-shrink-0" />
+                          <div class="min-w-0 flex-1">
+                            <div class="font-semibold text-midnight-500 text-sm truncate">{{ getTranslatedRoleName(stakeholder) }}</div>
+                            @if (stakeholder.userName) {
+                              <div class="text-xs text-gray-600 truncate" [title]="stakeholder.userName">{{ stakeholder.userName }}</div>
+                            }
+                            @if (stakeholder.position) {
+                              <div class="text-xs text-blue-500 font-medium truncate" [title]="stakeholder.position">{{ stakeholder.position }}</div>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+                @if (decisionMakingPathwayRoles().length > 0) {
+                  <div class="pt-4 mt-4 border-t border-gray-300">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                      <i class="pi pi-sitemap text-blue-500"></i>
+                      <span>{{ 'label.opportunity.decisionMakingPathway' | translate }}</span>
+                      @if (decisionPathwayPreview(); as pathwayInfo) {
+                        @if (pathwayInfo.hasPathway && (pathwayInfo.steps.length > 0 || (pathwayInfo.skippedSteps && pathwayInfo.skippedSteps.length > 0))) {
+                          <button
+                            type="button"
+                            class="ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full text-blue-500 hover:bg-blue-50 cursor-pointer border-0 bg-transparent"
+                            [attr.aria-label]="'opportunity.decisionPathway.popoverAriaLabel' | translate"
+                            (click)="$event.stopPropagation(); decisionPathwayInfoPopoverInitial.toggle($event)">
+                            <i class="pi pi-info-circle text-sm"></i>
+                          </button>
+                          <p-popover
+                            #decisionPathwayInfoPopoverInitial
+                            [appendTo]="'body'"
+                            [style]="{ maxWidth: '420px' }"
+                            styleClass="unops-decision-pathway-popover">
+                            <div class="p-1 text-sm">
+                              @if (pathwayInfo.steps.length > 0) {
+                                <div class="font-semibold text-midnight-500 mb-1">
+                                  {{ 'opportunity.decisionPathway.requiredHeader' | translate }}
+                                </div>
+                                <ul class="m-0 mb-3 pl-0 list-none space-y-1">
+                                  @for (step of pathwayInfo.steps; track step.workflowRoleId + '-' + step.sequence) {
+                                    <li class="flex items-start gap-2">
+                                      <i class="pi pi-check text-green-500 mt-0.5 flex-shrink-0"></i>
+                                      <span class="min-w-0">
+                                        <span class="text-gray-800">{{ step.workflowRoleName }}</span>
+                                        @if (step.usedDelegateFallback) {
+                                          <span class="text-xs italic text-gray-500 ml-1">
+                                            {{ 'opportunity.decisionPathway.viaDelegate' | translate }}
+                                          </span>
+                                        }
+                                      </span>
+                                    </li>
+                                  }
+                                </ul>
+                              }
+
+                              @if (pathwayInfo.skippedSteps && pathwayInfo.skippedSteps.length > 0) {
+                                <div class="font-semibold text-midnight-500 mb-1">
+                                  {{ 'opportunity.decisionPathway.notRequiredHeader' | translate }}
+                                </div>
+                                <ul class="m-0 mb-3 pl-0 list-none space-y-1">
+                                  @for (step of pathwayInfo.skippedSteps; track step.workflowRoleId + '-' + step.sequence) {
+                                    <li class="flex items-start gap-2">
+                                      <i class="pi pi-times text-gray-400 mt-0.5 flex-shrink-0"></i>
+                                      <span class="min-w-0">
+                                        <span class="text-gray-800">{{ step.workflowRoleName }}</span>
+                                        <span class="text-xs italic text-gray-500 ml-1">
+                                          {{ 'opportunity.decisionPathway.conditionsNotMet' | translate }}
+                                        </span>
+                                      </span>
+                                    </li>
+                                  }
+                                </ul>
+                              }
+
+                              <div class="text-xs text-gray-500 italic border-t border-gray-200 pt-2 mt-1">
+                                <i class="pi pi-clock mr-1"></i>
+                                {{ 'opportunity.decisionPathway.evaluatedFromDraft' | translate }}
+                              </div>
+                            </div>
+                          </p-popover>
+                        }
+                      }
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                      @for (stakeholder of decisionMakingPathwayRoles(); track $index) {
+                        <div class="bg-green-500 rounded-md p-2.5 border border-green-500">
+                          <div class="flex items-center gap-2">
+                            <p-avatar label="D" shape="circle" size="normal" styleClass="bg-green-500 text-white flex-shrink-0" />
+                            <div class="min-w-0 flex-1">
+                              <div class="font-semibold text-midnight-500 text-sm truncate">{{ getTranslatedRoleName(stakeholder) }}</div>
+                              @if (
+                                stakeholder.entityRoleCode === decisionPathwayDoa2RoleCode &&
+                                stakeholder.officerInChargeResourceId
+                              ) {
+                                <div class="text-xs text-gray-950 mt-0.5 truncate" [title]="stakeholder.userName ?? ''">
+                                  {{ stakeholder.officerInChargeDisplayName || stakeholder.officerInChargeResourceId }}
+                                  <span class="italic">
+                                    {{
+                                      'office.rolesDoa.oicForOriginalHolder'
+                                        | translate: {
+                                            original: stakeholder.userName?.trim() ? stakeholder.userName : 'Ã¢â‚¬â€'
+                                          }
+                                    }}
+                                  </span>
+                                </div>
+                              } @else if (stakeholder.userName) {
+                                <div class="text-xs text-gray-600 truncate" [title]="stakeholder.userName">{{ stakeholder.userName }}</div>
+                              }
+                              @if (stakeholder.position) {
+                                <div class="text-xs text-blue-500 font-medium truncate" [title]="stakeholder.position">{{ stakeholder.position }}</div>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    
+    <p-divider />
+    
+    <!-- Document Upload Section -->
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">
+        {{ 'title.documents' | translate }} 
+        <span class="text-sm font-normal text-gray-600">({{ 'label.optional' | translate }})</span>
+      </h3>
+      
+      <!-- Helper Text (matching opportunity-documents component) -->
+      <div class="mb-4 p-3 bg-blue-50 border border-blue-100 rounded text-sm text-blue-900">
+        <div class="flex items-start gap-2">
+          <i class="pi pi-info-circle text-blue-600 mt-0.5 flex-shrink-0"></i>
+          <span>{{ 'helpText.document.uploadForAutoFill' | translate }}</span>
+        </div>
+      </div>
+      
+      <!-- Upload Progress -->
+      @if (isUploadingToGCS()) {
+        <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded">
+          <div class="flex items-center gap-3">
+            <p-progressSpinner styleClass="w-8 h-8" />
+            <div class="flex-1">
+              <div class="font-medium text-gray-950">{{ 'message.uploadingDocuments' | translate }}</div>
+              <div class="text-sm text-gray-600 mt-1">{{ uploadProgress() }}</div>
+            </div>
+          </div>
+        </div>
+      }
+      
+      <!-- File Upload -->
+      <div class="mb-4">
+        <div class="flex gap-2 mb-3">
+          <input
+            #fileInput
+            type="file"
+            multiple
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+            (change)="onFilesSelected($event)"
+            class="hidden"
+            [disabled]="generating() || isUploadingToGCS()">
+            
+          <button
+            pButton
+            [label]="'button.upload' | translate"
+            icon="pi pi-upload"
+            styleClass="flex-1"
+            (click)="fileInput.click()"
+            [disabled]="generating() || isUploadingToGCS()">
+          </button>
+          
+          <button
+            pButton
+            [label]="'button.uploadFromDrive' | translate"
+            icon="pi pi-google"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="flex-1"
+            (click)="openGoogleDrivePicker()"
+            [disabled]="generating() || isUploadingToGCS()">
+          </button>
+        </div>
+        
+        <div class="text-xs text-gray-500">
+          {{ 'message.acceptedFileTypes' | translate }}
+        </div>
+        
+        <!-- Selected Local Files List -->
+        @if (selectedFiles().length > 0) {
+          <div class="mt-3 p-3 bg-gray-50 rounded border border-gray-200">
+            <div class="font-medium text-sm mb-2">
+              {{ 'label.selectedFiles' | translate }} - {{ 'label.fromComputer' | translate }} ({{ selectedFiles().length }})
+            </div>
+            <div class="flex flex-col gap-2">
+              @for (file of selectedFiles(); track $index) {
+                <div class="flex items-center gap-2 p-2 bg-white rounded border border-gray-200">
+                  <i class="pi pi-file text-gray-600"></i>
+                  <span class="flex-1 text-sm text-gray-950 truncate">{{ file.file.name }}</span>
+                  <span class="text-xs text-gray-500">{{ (file.file.size / 1024 / 1024).toFixed(2) }} MB</span>
+                  <p-tag [value]="getDocumentTypeName(file.documentTypeId)" severity="info" styleClass="text-xs" />
+                  <button
+                    pButton
+                    icon="pi pi-times"
+                    severity="danger"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    (click)="removeSelectedFile($index)"
+                    [disabled]="generating() || isUploadingToGCS()">
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        
+        <!-- Selected Google Drive Files List -->
+        @if (selectedGoogleDriveFiles().length > 0) {
+          <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
+            <div class="font-medium text-sm mb-2 flex items-center gap-2">
+              <i class="pi pi-google text-blue-600"></i>
+              <span>{{ 'label.selectedFiles' | translate }} - {{ 'label.fromGoogleDrive' | translate }} ({{ selectedGoogleDriveFiles().length }})</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              @for (file of selectedGoogleDriveFiles(); track $index) {
+                <div class="flex items-center gap-2 p-2 bg-white rounded border border-blue-200">
+                  <i class="pi pi-google text-blue-600"></i>
+                  <span class="flex-1 text-sm text-gray-950 truncate">{{ file.name }}</span>
+                  <p-tag [value]="getDocumentTypeName(file.documentTypeId)" severity="info" styleClass="text-xs" />
+                  <button
+                    pButton
+                    icon="pi pi-times"
+                    severity="danger"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    (click)="removeGoogleDriveFile($index)"
+                    [disabled]="generating() || isUploadingToGCS()">
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+      
+      <!-- Existing Documents Selection -->
+      @if (partnerId() && partnerId() > 0) {
+        <div class="mb-4">
+          <button
+            pButton
+            [label]="showExistingDocuments() 
+              ? ('button.hideExistingDocuments' | translate) 
+              : ('button.selectExistingDocuments' | translate)"
+            icon="pi pi-{{ showExistingDocuments() ? 'minus' : 'file' }}"
+            severity="secondary"
+            [text]="true"
+            (click)="toggleExistingDocuments()"
+            [disabled]="generating() || isUploadingToGCS()">
+          </button>
+          
+          @if (showExistingDocuments()) {
+            <div class="mt-3 p-4 border border-gray-200 rounded bg-gray-50">
+              <div class="text-sm text-gray-600 mb-3">
+                <i class="pi pi-info-circle mr-1"></i>
+                {{ 'message.selectExistingDocumentsFromPartner' | translate }}
+              </div>
+              
+              <div class="flex flex-col gap-2 max-h-60 overflow-y-auto">
+                @if (availablePartnerDocuments().length === 0) {
+                  <div class="text-center text-gray-500 py-4">
+                    {{ 'message.noDocumentsAvailable' | translate }}
+                  </div>
+                } @else {
+                  @for (doc of availablePartnerDocuments(); track doc.id) {
+                    <div
+                      class="flex items-center gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer transition-colors"
+                      (click)="toggleExistingDocument(doc.id)">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isExistingDocumentSelected(doc.id)"
+                        (ngModelChange)="toggleExistingDocument(doc.id)"
+                        (click)="$event.stopPropagation()"
+                        [disabled]="generating() || isUploadingToGCS()">
+                      </p-checkbox>
+                      
+                      <i class="pi pi-file text-gray-600"></i>
+                      
+                      <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm text-gray-950 truncate">{{ doc.name }}</div>
+                        <div class="text-xs text-gray-600">
+                          {{ doc.documentTypeName || doc.documentType?.name || 'Document' }}
+                        </div>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+      
+    </div>
+    
+    <p-divider />
+
+    <!-- Source Content Section (Interactions) -->
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">
+        {{ 'title.sourceContent' | translate }} 
+        <span class="text-sm font-normal text-gray-600">({{ 'label.optional' | translate }})</span>
+      </h3>
+      
+      <!-- Selected Interactions Summary -->
+      <div class="mb-6">
+        <h4 class="text-md font-semibold mb-3 text-gray-700">
+          {{ 'label.interactions' | translate }} ({{ selectedCount() }})
+        </h4>
+
+        @if (selectedInteractions().length === 0) {
+          <div class="p-4 bg-gray-50 border border-gray-200 rounded text-center text-gray-600">
+            {{ 'message.noInteractionsSelected' | translate }}
+          </div>
+        } @else {
+          <!-- Ã¢Å“â€¦ Fixed height container with scrollbar -->
+          <div class="flex flex-col gap-2 max-h-60 overflow-y-auto border border-gray-200 rounded p-2 bg-gray-50">
+            @for (interaction of selectedInteractions(); track interaction.id) {
+              <div class="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium text-gray-950">{{ interaction.subject }}</span>
+                    @if (isCurrentInteraction(interaction.id)) {
+                      <p-tag 
+                        value="{{ 'label.current' | translate }}" 
+                        severity="info" 
+                        styleClass="text-xs"
+                      />
+                    }
+                  </div>
+                  <div class="text-sm text-gray-600 flex items-center gap-2">
+                    <span>{{ interaction.type }}</span>
+                    <span>Ã¢â‚¬Â¢</span>
+                    <span>{{ interaction.date | date }}</span>
+                  </div>
+                  @if (interaction.description) {
+                    <div class="text-xs text-gray-500 mt-1 line-clamp-1">
+                      {{ interaction.description }}
+                    </div>
+                  }
+                </div>
+
+                @if (!isCurrentInteraction(interaction.id)) {
+                  <button
+                    pButton
+                    icon="pi pi-times"
+                    severity="danger"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    (click)="removeInteraction(interaction.id)"
+                    [pTooltip]="'button.remove' | translate"
+                    tooltipStyleClass="unops-tooltip-nowrap"
+                  >
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    <!-- Select Interactions Section (List View Mode - from Partner Interactions tab) -->
+    @if (mode() === 'list-view') {
+      <div class="mb-6">
+        <button
+          pButton
+          [label]="showAdditionalSelection() 
+            ? ('button.hideInteractionSelection' | translate) 
+            : ('button.selectInteractions' | translate)"
+          icon="pi pi-{{ showAdditionalSelection() ? 'minus' : 'list' }}"
+          severity="primary"
+          [outlined]="true"
+          (click)="toggleAdditionalSelection()">
+        </button>
+
+        @if (showAdditionalSelection()) {
+          <div class="mt-3 p-4 border border-gray-200 rounded bg-gray-50">
+            <!-- Search -->
+            <div class="mb-3">
+              <span class="p-input-icon-left w-full">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  [(ngModel)]="searchQuery"
+                  (ngModelChange)="searchInteractions($event)"
+                  [placeholder]="'search.interactions' | translate"
+                  [disabled]="loadingInteractions()"
+                  class="w-full">
+              </span>
+            </div>
+
+            <!-- Loading Indicator -->
+            @if (loadingInteractions()) {
+              <div class="flex justify-center items-center py-8">
+                <p-progressSpinner styleClass="w-12 h-12" />
+              </div>
+            }
+
+            <!-- Available Interactions List with Infinite Scroll -->
+            @if (!loadingInteractions()) {
+              <div 
+                class="flex flex-col gap-2 max-h-60 overflow-y-auto"
+                (scroll)="onInteractionListScroll($event)">
+                @if (filteredAvailableInteractions().length === 0) {
+                  <div class="text-center text-gray-500 py-4">
+                    {{ 'message.noInteractionsAvailable' | translate }}
+                  </div>
+                } @else {
+                  @for (interaction of filteredAvailableInteractions(); track interaction.id) {
+                    <div
+                      [class]="'flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ' + 
+                        (isSelected(interaction.id) ? 'bg-blue-50 border border-blue-300' : 'hover:bg-gray-100')"
+                      (click)="addInteraction(interaction)">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isSelected(interaction.id)"
+                        (ngModelChange)="addInteraction(interaction)"
+                        (click)="$event.stopPropagation()">
+                      </p-checkbox>
+
+                      <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm text-gray-950">{{ interaction.subject }}</div>
+                        <div class="text-xs text-gray-600">
+                          {{ interaction.type }} Ã¢â‚¬Â¢ {{ interaction.date | date }}
+                        </div>
+                      </div>
+                    </div>
+                  }
+                  
+                  <!-- Loading More Indicator -->
+                  @if (loadingMoreInteractions()) {
+                    <div class="flex justify-center items-center py-3">
+                      <p-progressSpinner styleClass="w-8 h-8" />
+                      <span class="ml-2 text-sm text-gray-600">Loading more...</span>
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Add More Interactions Section (Detail View Only) -->
+    @if (mode() === 'detail-view') {
+      <div class="mb-6">
+        <button
+          pButton
+          [label]="showAdditionalSelection() 
+            ? ('button.hideAdditionalInteractions' | translate) 
+            : ('button.addMoreInteractions' | translate)"
+          icon="pi pi-{{ showAdditionalSelection() ? 'minus' : 'plus' }}"
+          severity="secondary"
+          [text]="true"
+          (click)="toggleAdditionalSelection()">
+        </button>
+
+        @if (showAdditionalSelection()) {
+          <div class="mt-3 p-4 border border-gray-200 rounded bg-gray-50">
+            <!-- Search -->
+            <div class="mb-3">
+              <span class="p-input-icon-left w-full">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  [(ngModel)]="searchQuery"
+                  (ngModelChange)="searchInteractions($event)"
+                  [placeholder]="'search.interactions' | translate"
+                  [disabled]="loadingInteractions()"
+                  class="w-full">
+              </span>
+            </div>
+
+            <!-- Loading Indicator -->
+            @if (loadingInteractions()) {
+              <div class="flex justify-center items-center py-8">
+                <p-progressSpinner styleClass="w-12 h-12" />
+              </div>
+            }
+
+            <!-- Available Interactions List with Infinite Scroll -->
+            @if (!loadingInteractions()) {
+              <div 
+                class="flex flex-col gap-2 max-h-60 overflow-y-auto"
+                (scroll)="onInteractionListScroll($event)">
+                @if (filteredAvailableInteractions().length === 0) {
+                  <div class="text-center text-gray-500 py-4">
+                    {{ 'message.noMoreInteractions' | translate }}
+                  </div>
+                } @else {
+                  @for (interaction of filteredAvailableInteractions(); track interaction.id) {
+                    <div
+                      [class]="'flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ' + 
+                        (isSelected(interaction.id) ? 'bg-blue-50 border border-blue-300' : 'hover:bg-gray-100')"
+                      (click)="addInteraction(interaction)">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isSelected(interaction.id)"
+                        (ngModelChange)="addInteraction(interaction)"
+                        (click)="$event.stopPropagation()">
+                      </p-checkbox>
+
+                      <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm text-gray-950">{{ interaction.subject }}</div>
+                        <div class="text-xs text-gray-600">
+                          {{ interaction.type }} Ã¢â‚¬Â¢ {{ interaction.date | date }}
+                        </div>
+                      </div>
+                    </div>
+                  }
+                  
+                  <!-- Loading More Indicator -->
+                  @if (loadingMoreInteractions()) {
+                    <div class="flex justify-center items-center py-3">
+                      <p-progressSpinner styleClass="w-8 h-8" />
+                      <span class="ml-2 text-sm text-gray-600">Loading more...</span>
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+    </div>
+    <!-- End Source Content Section -->
+
+  }
+
+  <!-- Step 2: Review Proposed Content -->
+  @if (currentStep() === 'review') {
+    <div class="space-y-6">
+      @if (proposedOpportunity()) {
+        <!-- AI Proposal Header -->
+        <div class="bg-gradient-to-r from-blue-50 to-midnight-50 border border-blue-200 rounded-lg p-4">
+          <div class="flex items-start gap-3">
+            <i class="pi pi-sparkles text-blue-600 text-2xl"></i>
+            <div class="flex-1">
+              <h4 class="font-semibold text-blue-900 mb-1 text-lg">{{ 'title.aiGeneratedProposal' | translate }}</h4>
+              <p class="text-sm text-blue-800">
+                {{ 'message.reviewAndEditProposal' | translate }}
+              </p>
+              <div class="mt-2 flex gap-2 text-xs text-blue-700">
+                <span class="bg-blue-100 px-2 py-1 rounded">
+                  <i class="pi pi-file-edit mr-1"></i>
+                  {{ proposedOpportunity()!.interactionsAnalyzed || 0 }} {{ 'label.interactions' | translate }}
+                </span>
+                <span class="bg-midnight-100 px-2 py-1 rounded">
+                  <i class="pi pi-file mr-1"></i>
+                  {{ proposedOpportunity()!.documentsAnalyzed || 0 }} {{ 'label.documents' | translate }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Field Selection Statistics & Controls -->
+        <div class="bg-white border border-gray-300 rounded-lg p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2">
+                <span class="font-semibold text-gray-700">{{ 'label.totalProposalFields' | translate }}:</span>
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-bold">{{ totalProposalFields() }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-semibold text-gray-700">{{ 'label.selectedProposalFields' | translate }}:</span>
+                <span class="px-3 py-1 bg-green-500 text-white rounded-full font-bold">{{ selectedFieldsCount() }}</span>
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <p-checkbox
+                [binary]="true"
+                [ngModel]="allFieldsSelected()"
+                (ngModelChange)="toggleAllFields()"
+                inputId="select-all-fields"
+              />
+              <label for="select-all-fields" class="cursor-pointer font-medium text-gray-950">
+                {{ 'label.selectAll' | translate }}
+              </label>
+            </div>
+          </div>
+          <div class="mt-3 text-sm text-gray-600">
+            <i class="pi pi-info-circle mr-2"></i>
+            {{ 'message.selectFieldsToAccept' | translate }}
+          </div>
+        </div>
+
+        <!-- Ã°Å¸Å½Â¯ WHAT Section -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+            <h3 class="font-semibold text-gray-950 flex items-center gap-2">
+              <span>Ã°Å¸Å½Â¯</span>
+              {{ 'label.opportunity.what' | translate }} - {{ 'label.opportunity.overview' | translate }}
+            </h3>
+          </div>
+          <div class="p-4 space-y-4">
+            <!-- Name -->
+            <div 
+              class="border rounded-lg p-4 transition-all cursor-pointer"
+              [ngClass]="{
+                'bg-blue-50 border-blue-300': isFieldSelected('name'),
+                'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('name')
+              }"
+              (click)="toggleField('name')">
+              <div class="flex items-start gap-3 mb-3">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isFieldSelected('name')"
+                  (ngModelChange)="toggleField('name')"
+                  (click)="$event.stopPropagation()"
+                />
+                <label class="block text-sm font-semibold text-gray-700 flex-1">
+                  {{ 'label.opportunityName' | translate }} *
+                </label>
+              </div>
+              <input
+                pInputText
+                [(ngModel)]="proposedOpportunity()!.opportunity.name"
+                class="w-full bg-yellow-600 border-yellow-600"
+                placeholder="{{ 'label.opportunityName' | translate }}"
+                (click)="$event.stopPropagation()" />
+            </div>
+
+            <!-- Description -->
+            <div 
+              class="border rounded-lg p-4 transition-all cursor-pointer"
+              [ngClass]="{
+                'bg-blue-50 border-blue-300': isFieldSelected('description'),
+                'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('description')
+              }"
+              (click)="toggleField('description')">
+              <div class="flex items-start gap-3 mb-3">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isFieldSelected('description')"
+                  (ngModelChange)="toggleField('description')"
+                  (click)="$event.stopPropagation()"
+                />
+                <label class="block text-sm font-semibold text-gray-700 flex-1">
+                  {{ 'label.opportunityDescription' | translate }}
+                </label>
+              </div>
+              <textarea
+                pTextarea
+                [(ngModel)]="proposedOpportunity()!.opportunity.description"
+                rows="6"
+                class="w-full bg-yellow-600 border-yellow-600"
+                placeholder="{{ 'label.opportunityDescription' | translate }}"
+                (click)="$event.stopPropagation()">
+              </textarea>
+            </div>
+
+            <!-- Responsible Org Unit & Initiative Type -->
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Org Unit Responsible - dropdown with director roles and DoA pathway (like Team section) -->
+              <div 
+                class="border rounded-lg p-4 transition-all"
+                [ngClass]="{
+                  'bg-blue-50 border-blue-300': isFieldSelected('responsibleOrgUnitName') || !!selectedOrgUnitId(),
+                  'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('responsibleOrgUnitName') && !selectedOrgUnitId()
+                }">
+                <div class="flex items-start gap-3 mb-2">
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="isFieldSelected('responsibleOrgUnitName') || !!selectedOrgUnitId()"
+                    (ngModelChange)="toggleOrgUnitField($event)"
+                    (click)="$event.stopPropagation()"
+                  />
+                  <label class="block text-sm font-semibold text-gray-700 flex-1">
+                    {{ 'label.opportunity.responsibleOrgUnit' | translate }}
+                  </label>
+                </div>
+                <p-select
+                  [ngModel]="selectedOrgUnitId() ?? proposedOpportunity()!.opportunity.responsibleOrgUnitId"
+                  (ngModelChange)="onOrgUnitChange($event)"
+                  [options]="organizationUnits()"
+                  optionLabel="name"
+                  optionValue="id"
+                  [filter]="true"
+                  filterBy="name,code"
+                  [placeholder]="'label.opportunity.selectOrgUnit' | translate"
+                  [showClear]="true"
+                  class="w-full"
+                  appendTo="body"
+                  (click)="$event.stopPropagation()"
+                />
+                @if (selectedOrgUnitId() || proposedOpportunity()!.opportunity.responsibleOrgUnitId) {
+                  <div class="mt-3 space-y-3">
+                    @if (loadingOrgUnitStakeholders()) {
+                      <div class="p-3 bg-gray-50 rounded-lg border border-gray-300 flex items-center gap-2 text-gray-600">
+                        <i class="pi pi-spin pi-spinner"></i>
+                        <span>{{ 'message.loadingAutoPopulatedStakeholders' | translate }}</span>
+                      </div>
+                    } @else {
+                      @if (decisionPathwayPreview(); as pathwayWarnReview) {
+                        @if (!loadingOrgUnitStakeholders() && !pathwayWarnReview.hasPathway && pathwayWarnReview.warningMessageKey) {
+                          <p-message severity="warn" [text]="pathwayWarnReview.warningMessageKey | translate" styleClass="w-full mb-3" />
+                        }
+                      }
+                      @if (groupedDirectorRoles().length > 0 || decisionMakingPathwayRoles().length > 0) {
+                        <div class="text-xs text-midnight-500 mb-3 flex items-center gap-1">
+                          <i class="pi pi-lock text-midnight-500"></i>
+                          <span>{{ 'label.opportunity.autoPopulatedFromOrgUnit' | translate }}</span>
+                        </div>
+                        @if (selectedOrgUnitName()) {
+                          <div class="text-sm font-semibold text-blue-500 mb-2 flex items-center gap-2 flex-wrap">
+                            <i class="pi pi-building text-blue-500"></i>
+                            <span>{{ selectedOrgUnitName() }}</span>
+                            <span class="text-gray-500 font-normal text-xs">({{ groupedDirectorRoles().length + decisionMakingPathwayRoles().length }})</span>
+                          </div>
+                        }
+                      }
+                      @if (groupedDirectorRoles().length > 0) {
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                          @for (stakeholder of groupedDirectorRoles(); track $index) {
+                            <div class="bg-gray-50 rounded-md p-2.5 border border-gray-300 opacity-90">
+                              <div class="flex items-center gap-2">
+                                <p-avatar label="A" shape="circle" size="normal" styleClass="bg-green-500 text-white flex-shrink-0" />
+                                <div class="min-w-0 flex-1">
+                                  <div class="font-semibold text-midnight-500 text-sm truncate">{{ getTranslatedRoleName(stakeholder) }}</div>
+                                  @if (stakeholder.userName) {
+                                    <div class="text-xs text-gray-600 truncate" [title]="stakeholder.userName">{{ stakeholder.userName }}</div>
+                                  }
+                                  @if (stakeholder.position) {
+                                    <div class="text-xs text-blue-500 font-medium truncate" [title]="stakeholder.position">{{ stakeholder.position }}</div>
+                                  }
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      }
+                      @if (decisionMakingPathwayRoles().length > 0) {
+                        <div class="pt-4 mt-4 border-t border-gray-300">
+                          <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                            <i class="pi pi-sitemap text-blue-500"></i>
+                            <span>{{ 'label.opportunity.decisionMakingPathway' | translate }}</span>
+                            @if (decisionPathwayPreview(); as pathwayInfoReview) {
+                              @if (pathwayInfoReview.hasPathway && (pathwayInfoReview.steps.length > 0 || (pathwayInfoReview.skippedSteps && pathwayInfoReview.skippedSteps.length > 0))) {
+                                <button
+                                  type="button"
+                                  class="ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full text-blue-500 hover:bg-blue-50 cursor-pointer border-0 bg-transparent"
+                                  [attr.aria-label]="'opportunity.decisionPathway.popoverAriaLabel' | translate"
+                                  (click)="$event.stopPropagation(); decisionPathwayInfoPopoverReview.toggle($event)">
+                                  <i class="pi pi-info-circle text-sm"></i>
+                                </button>
+                                <p-popover
+                                  #decisionPathwayInfoPopoverReview
+                                  [appendTo]="'body'"
+                                  [style]="{ maxWidth: '420px' }"
+                                  styleClass="unops-decision-pathway-popover">
+                                  <div class="p-1 text-sm">
+                                    @if (pathwayInfoReview.steps.length > 0) {
+                                      <div class="font-semibold text-midnight-500 mb-1">
+                                        {{ 'opportunity.decisionPathway.requiredHeader' | translate }}
+                                      </div>
+                                      <ul class="m-0 mb-3 pl-0 list-none space-y-1">
+                                        @for (step of pathwayInfoReview.steps; track step.workflowRoleId + '-' + step.sequence) {
+                                          <li class="flex items-start gap-2">
+                                            <i class="pi pi-check text-green-500 mt-0.5 flex-shrink-0"></i>
+                                            <span class="min-w-0">
+                                              <span class="text-gray-800">{{ step.workflowRoleName }}</span>
+                                              @if (step.usedDelegateFallback) {
+                                                <span class="text-xs italic text-gray-500 ml-1">
+                                                  {{ 'opportunity.decisionPathway.viaDelegate' | translate }}
+                                                </span>
+                                              }
+                                            </span>
+                                          </li>
+                                        }
+                                      </ul>
+                                    }
+
+                                    @if (pathwayInfoReview.skippedSteps && pathwayInfoReview.skippedSteps.length > 0) {
+                                      <div class="font-semibold text-midnight-500 mb-1">
+                                        {{ 'opportunity.decisionPathway.notRequiredHeader' | translate }}
+                                      </div>
+                                      <ul class="m-0 mb-3 pl-0 list-none space-y-1">
+                                        @for (step of pathwayInfoReview.skippedSteps; track step.workflowRoleId + '-' + step.sequence) {
+                                          <li class="flex items-start gap-2">
+                                            <i class="pi pi-times text-gray-400 mt-0.5 flex-shrink-0"></i>
+                                            <span class="min-w-0">
+                                              <span class="text-gray-800">{{ step.workflowRoleName }}</span>
+                                              <span class="text-xs italic text-gray-500 ml-1">
+                                                {{ 'opportunity.decisionPathway.conditionsNotMet' | translate }}
+                                              </span>
+                                            </span>
+                                          </li>
+                                        }
+                                      </ul>
+                                    }
+
+                                    <div class="text-xs text-gray-500 italic border-t border-gray-200 pt-2 mt-1">
+                                      <i class="pi pi-clock mr-1"></i>
+                                      {{ 'opportunity.decisionPathway.evaluatedFromDraft' | translate }}
+                                    </div>
+                                  </div>
+                                </p-popover>
+                              }
+                            }
+                          </h4>
+                          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                            @for (stakeholder of decisionMakingPathwayRoles(); track $index) {
+                              <div class="bg-green-500 rounded-md p-2.5 border border-green-500">
+                                <div class="flex items-center gap-2">
+                                  <p-avatar label="D" shape="circle" size="normal" styleClass="bg-green-500 text-white flex-shrink-0" />
+                                  <div class="min-w-0 flex-1">
+                                    <div class="font-semibold text-midnight-500 text-sm truncate">{{ getTranslatedRoleName(stakeholder) }}</div>
+                                    @if (
+                                      stakeholder.entityRoleCode === decisionPathwayDoa2RoleCode &&
+                                      stakeholder.officerInChargeResourceId
+                                    ) {
+                                      <div class="text-xs text-gray-950 mt-0.5 truncate" [title]="stakeholder.userName ?? ''">
+                                        {{ stakeholder.officerInChargeDisplayName || stakeholder.officerInChargeResourceId }}
+                                        <span class="italic">
+                                          {{
+                                            'office.rolesDoa.oicForOriginalHolder'
+                                              | translate: {
+                                                  original: stakeholder.userName?.trim() ? stakeholder.userName : 'Ã¢â‚¬â€'
+                                                }
+                                          }}
+                                        </span>
+                                      </div>
+                                    } @else if (stakeholder.userName) {
+                                      <div class="text-xs text-gray-600 truncate" [title]="stakeholder.userName">{{ stakeholder.userName }}</div>
+                                    }
+                                    @if (stakeholder.position) {
+                                      <div class="text-xs text-blue-500 font-medium truncate" [title]="stakeholder.position">{{ stakeholder.position }}</div>
+                                    }
+                                  </div>
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+              @if (proposedOpportunity()!.opportunity.proposedInitiativeTypeName) {
+                <div 
+                  class="border rounded-lg p-4 transition-all cursor-pointer"
+                  [ngClass]="{
+                    'bg-blue-50 border-blue-300': isFieldSelected('proposedInitiativeTypeName'),
+                    'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('proposedInitiativeTypeName')
+                  }"
+                  (click)="toggleField('proposedInitiativeTypeName')">
+                  <div class="flex items-start gap-3 mb-2">
+                    <p-checkbox
+                      [binary]="true"
+                      [ngModel]="isFieldSelected('proposedInitiativeTypeName')"
+                      (ngModelChange)="toggleField('proposedInitiativeTypeName')"
+                      (click)="$event.stopPropagation()"
+                    />
+                    <label class="block text-sm font-semibold text-gray-700 flex-1">
+                      {{ 'label.opportunity.initiativeType' | translate }}
+                    </label>
+                  </div>
+                  <input
+                    pInputText
+                    [value]="proposedOpportunity()!.opportunity.proposedInitiativeTypeName"
+                    class="w-full bg-yellow-600 border-yellow-600"
+                    readonly
+                    (click)="$event.stopPropagation()" />
+                </div>
+              }
+            </div>
+
+            <!-- Delivery Modality & Pooled Funding -->
+            <div class="grid grid-cols-2 gap-4">
+              @if ($any(proposedOpportunity()!.opportunity).deliveryModality !== null && $any(proposedOpportunity()!.opportunity).deliveryModality !== undefined) {
+                <div 
+                  class="border rounded-lg p-4 transition-all cursor-pointer"
+                  [ngClass]="{
+                    'bg-blue-50 border-blue-300': isFieldSelected('deliveryModality'),
+                    'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('deliveryModality')
+                  }"
+                  (click)="toggleField('deliveryModality')">
+                  <div class="flex items-start gap-3 mb-2">
+                    <p-checkbox
+                      [binary]="true"
+                      [ngModel]="isFieldSelected('deliveryModality')"
+                      (ngModelChange)="toggleField('deliveryModality')"
+                      (click)="$event.stopPropagation()"
+                    />
+                    <label class="block text-sm font-semibold text-gray-700 flex-1">
+                      {{ 'label.deliveryModality' | translate }}
+                    </label>
+                  </div>
+                  <p-select
+                    [(ngModel)]="$any(proposedOpportunity()!.opportunity).deliveryModality"
+                    [options]="deliveryModalityOptions"
+                    optionValue="value"
+                    class="w-full"
+                    styleClass="w-full bg-yellow-600"
+                    appendTo="body"
+                    (click)="$event.stopPropagation()">
+                    <ng-template pTemplate="selectedItem" let-selected>
+                      {{ getDeliveryModalityLabel(selected?.value || $any(proposedOpportunity()!.opportunity).deliveryModality) }}
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                      {{ item.label | translate }}
+                    </ng-template>
+                  </p-select>
+                </div>
+              }
+              @if ($any(proposedOpportunity()!.opportunity).isPooledFunding !== null && $any(proposedOpportunity()!.opportunity).isPooledFunding !== undefined) {
+                <div 
+                  class="border rounded-lg p-4 transition-all cursor-pointer"
+                  [ngClass]="{
+                    'bg-blue-50 border-blue-300': isFieldSelected('isPooledFunding'),
+                    'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('isPooledFunding')
+                  }"
+                  (click)="toggleField('isPooledFunding')">
+                  <div class="flex items-start gap-3 mb-2">
+                    <p-checkbox
+                      [binary]="true"
+                      [ngModel]="isFieldSelected('isPooledFunding')"
+                      (ngModelChange)="toggleField('isPooledFunding')"
+                      (click)="$event.stopPropagation()"
+                    />
+                    <label class="block text-sm font-semibold text-gray-700 flex-1">
+                      {{ 'label.pooledFunding' | translate }}
+                    </label>
+                  </div>
+                  <div class="flex items-center gap-2" (click)="$event.stopPropagation()">
+                    <span class="text-sm px-3 py-1 rounded" 
+                          [ngClass]="$any(proposedOpportunity()!.opportunity).isPooledFunding ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-800'">
+                      {{ $any(proposedOpportunity()!.opportunity).isPooledFunding ? ('label.yes' | translate) : ('label.no' | translate) }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Budget -->
+            @if (proposedOpportunity()!.opportunity.initiativeBudgetUSD) {
+              <div 
+                class="border rounded-lg p-4 transition-all cursor-pointer"
+                [ngClass]="{
+                  'bg-blue-50 border-blue-300': isFieldSelected('initiativeBudgetUSD'),
+                  'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('initiativeBudgetUSD')
+                }"
+                (click)="toggleField('initiativeBudgetUSD')">
+                <div class="flex items-start gap-3 mb-3">
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="isFieldSelected('initiativeBudgetUSD')"
+                    (ngModelChange)="toggleField('initiativeBudgetUSD')"
+                    (click)="$event.stopPropagation()"
+                  />
+                  <label class="block text-sm font-semibold text-gray-700 flex-1">
+                    {{ 'label.proposedBudgetForInitiative' | translate }} (USD)
+                  </label>
+                </div>
+                <input
+                  pInputText
+                  [(ngModel)]="proposedOpportunity()!.opportunity.initiativeBudgetUSD"
+                  type="number"
+                  class="w-full bg-yellow-600 border-yellow-600"
+                  (click)="$event.stopPropagation()" />
+              </div>
+            }
+
+            <!-- Partner Budget Allocations -->
+            @if ($any(proposedOpportunity()!.opportunity).partnerBudgets && $any(proposedOpportunity()!.opportunity).partnerBudgets.length > 0) {
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <i class="pi pi-dollar text-green-500"></i>
+                    {{ 'label.partnerBudgetAllocations' | translate }} ({{ $any(proposedOpportunity()!.opportunity).partnerBudgets.length }})
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <p-checkbox
+                      [binary]="true"
+                      [ngModel]="isFieldSelected('partnerBudgets')"
+                      (ngModelChange)="toggleField('partnerBudgets')"
+                      inputId="field-partnerBudgets"
+                    />
+                    <label for="field-partnerBudgets" class="cursor-pointer text-sm font-medium text-gray-700">
+                      {{ 'label.selectAll' | translate }}
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  @for (budget of $any(proposedOpportunity()!.opportunity).partnerBudgets; track $index) {
+                    <div 
+                      class="rounded-lg p-3 transition-all cursor-pointer"
+                      [ngClass]="{
+                        'bg-blue-50 border border-blue-300': isFieldSelected('partnerBudgets[' + $index + ']'),
+                        'bg-yellow-600 border border-yellow-600 hover:shadow-sm': !isFieldSelected('partnerBudgets[' + $index + ']')
+                      }"
+                      (click)="toggleField('partnerBudgets[' + $index + ']')">
+                      <div class="flex items-center gap-3">
+                        <p-checkbox
+                          [binary]="true"
+                          [ngModel]="isFieldSelected('partnerBudgets[' + $index + ']')"
+                          (ngModelChange)="toggleField('partnerBudgets[' + $index + ']')"
+                          [inputId]="'partnerBudget-' + $index"
+                          (click)="$event.stopPropagation()"
+                        />
+                        <i class="pi pi-building text-gray-600"></i>
+                        <div class="flex-1 min-w-0">
+                          <span class="font-medium text-gray-950">{{ budget.partnerName }}</span>
+                        </div>
+                        <div class="text-right">
+                          <span class="font-semibold text-green-500">
+                            {{ budget.currency || 'USD' }} {{ budget.amount?.toLocaleString('en-US') || 0 }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Deliverables - aligned with opportunity-what-section display -->
+            @if (proposedOpportunity()!.opportunity.deliverables && proposedOpportunity()!.opportunity.deliverables!.length > 0) {
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <i class="pi pi-box text-midnight-600"></i>
+                    {{ 'label.opportunity.deliverables' | translate }} ({{ proposedOpportunity()!.opportunity.deliverables!.length }})
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <p-checkbox
+                      [binary]="true"
+                      [ngModel]="isFieldSelected('deliverables')"
+                      (ngModelChange)="toggleField('deliverables')"
+                      inputId="field-deliverables"
+                    />
+                    <label for="field-deliverables" class="cursor-pointer text-sm font-medium text-gray-700">
+                      {{ 'label.selectAll' | translate }}
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                  @for (deliverable of proposedOpportunity()!.opportunity.deliverables; track deliverable.outputId || $index; let idx = $index) {
+                    <div 
+                      class="bg-gray-50 rounded-lg p-4 border border-gray-300 shadow-sm transition-all cursor-pointer"
+                      [ngClass]="{
+                        'ring-2 ring-blue-400': isFieldSelected('deliverables[' + idx + ']'),
+                        'hover:shadow-md': true
+                      }"
+                      (click)="toggleField('deliverables[' + idx + ']')">
+                      <div class="flex items-start justify-between">
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-start gap-3">
+                            <p-checkbox
+                              [binary]="true"
+                              [ngModel]="isFieldSelected('deliverables[' + idx + ']')"
+                              (ngModelChange)="toggleField('deliverables[' + idx + ']')"
+                              [inputId]="'deliverable-' + idx"
+                              (click)="$event.stopPropagation()"
+                            />
+                            <div class="flex-1">
+                              <!-- Product/Service Name (level4 || level3 || level2 || level1 || level0 - same as opportunity-what-section) -->
+                              <h4 class="font-semibold text-midnight-500 mb-2">
+                                {{ deliverable.level4 || deliverable.level3 || deliverable.level2 || deliverable.level1 || deliverable.level0 || deliverable.outputName }}
+                              </h4>
+                              
+                              <!-- Hierarchical Path (same condition as opportunity-what-section) -->
+                              @if (deliverable.level0 || deliverable.level1 || deliverable.level2) {
+                                <div class="text-xs text-gray-600 mb-3 space-y-0.5">
+                                  @if (deliverable.level0) {
+                                    <div><span class="font-medium">Level 0:</span> {{ deliverable.level0 }}</div>
+                                  }
+                                  @if (deliverable.level1) {
+                                    <div><span class="font-medium">Level 1:</span> {{ deliverable.level1 }}</div>
+                                  }
+                                  @if (deliverable.level2) {
+                                    <div><span class="font-medium">Level 2:</span> {{ deliverable.level2 }}</div>
+                                  }
+                                  @if (deliverable.level3 && deliverable.level4) {
+                                    <div><span class="font-medium">Level 3:</span> {{ deliverable.level3 }}</div>
+                                  }
+                                </div>
+                              }
+                              
+                              <div class="flex items-center gap-2 flex-wrap">
+                                @if (deliverable.serviceLine) {
+                                  <p-chip 
+                                    [label]="deliverable.serviceLine" 
+                                    styleClass="text-xs"
+                                    [style]="{ 'background-color': '#f0f9ff', 'color': '#005a8a' }"
+                                  />
+                                }
+                                @if (deliverable.level0) {
+                                  <p-chip 
+                                    [label]="deliverable.level0" 
+                                    styleClass="text-xs"
+                                    [style]="{ 'background-color': '#f3f4f6', 'color': '#1a1b1c' }"
+                                  />
+                                }
+                                @if (deliverable.quantity !== null && deliverable.quantity !== undefined) {
+                                  <p-chip 
+                                    [label]="'Qty: ' + deliverable.quantity.toString()" 
+                                    styleClass="text-xs font-bold"
+                                    [style]="{ 'background-color': '#fefce8', 'color': '#92400e' }"
+                                  />
+                                }
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Ã°Å¸â€™Â¡ WHY Section -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+            <h3 class="font-semibold text-gray-950 flex items-center gap-2">
+              <span>Ã°Å¸â€™Â¡</span>
+              {{ 'label.opportunity.why' | translate }} - {{ 'label.opportunity.impactAlignment' | translate }}
+            </h3>
+          </div>
+          <div class="p-4 space-y-4">
+            <!-- Context and Challenges -->
+            @if ($any(proposedOpportunity()!.opportunity).challenges) {
+              <div 
+                class="border rounded-lg p-4 transition-all cursor-pointer"
+                [ngClass]="{
+                  'bg-blue-50 border-blue-300': isFieldSelected('challenges'),
+                  'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('challenges')
+                }"
+                (click)="toggleField('challenges')">
+                <div class="flex items-start gap-3 mb-3">
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="isFieldSelected('challenges')"
+                    (ngModelChange)="toggleField('challenges')"
+                    (click)="$event.stopPropagation()"
+                  />
+                  <label class="block text-sm font-semibold text-gray-700 flex-1 flex items-center gap-2">
+                    <i class="pi pi-exclamation-circle text-yellow-600"></i>
+                    {{ 'label.contextAndChallenges' | translate }}
+                  </label>
+                </div>
+              <textarea
+                pTextarea
+                [(ngModel)]="$any(proposedOpportunity()!.opportunity).challenges"
+                rows="4"
+                class="w-full bg-yellow-600 border-yellow-600"
+                maxlength="1020"
+                (click)="$event.stopPropagation()">
+              </textarea>
+              <div class="flex justify-end mt-1" (click)="$event.stopPropagation()">
+                <small class="text-gray-500">{{ ($any(proposedOpportunity()!.opportunity).challenges?.length || 0) }} / 1020</small>
+              </div>
+            </div>
+            }
+
+            <!-- Results Focus - Always shown -->
+            <div 
+              class="border rounded-lg p-4 transition-all cursor-pointer"
+              [ngClass]="{
+                'bg-blue-50 border-blue-300': isFieldSelected('resultsFocus'),
+                'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('resultsFocus')
+              }"
+              (click)="toggleField('resultsFocus')">
+              <div class="flex items-start gap-3 mb-3">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isFieldSelected('resultsFocus')"
+                  (ngModelChange)="toggleField('resultsFocus')"
+                  (click)="$event.stopPropagation()"
+                />
+                <label class="block text-sm font-semibold text-gray-700 flex-1 flex items-center gap-2">
+                  <i class="pi pi-flag text-midnight-600"></i>
+                  {{ 'label.resultsFocus' | translate }}
+                </label>
+              </div>
+              <textarea
+                pTextarea
+                [(ngModel)]="proposedOpportunity()!.opportunity.resultsFocus"
+                rows="3"
+                class="w-full bg-yellow-600 border-yellow-600"
+                maxlength="2000"
+                (click)="$event.stopPropagation()">
+              </textarea>
+            </div>
+
+
+            <!-- Expected Beneficiaries - Always shown -->
+            <div 
+              class="border rounded-lg p-4 transition-all cursor-pointer"
+              [ngClass]="{
+                'bg-blue-50 border-blue-300': isFieldSelected('expectedBeneficiaries'),
+                'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('expectedBeneficiaries')
+              }"
+              (click)="toggleField('expectedBeneficiaries')">
+              <div class="flex items-start gap-3 mb-3">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isFieldSelected('expectedBeneficiaries')"
+                  (ngModelChange)="toggleField('expectedBeneficiaries')"
+                  (click)="$event.stopPropagation()"
+                />
+                <label class="block text-sm font-semibold text-gray-700 flex-1 flex items-center gap-2">
+                  <i class="pi pi-users text-orange-500"></i>
+                  {{ 'label.opportunity.expectedBeneficiaries' | translate }}
+                </label>
+              </div>
+              <textarea
+                pTextarea
+                [(ngModel)]="proposedOpportunity()!.opportunity.expectedBeneficiaries"
+                rows="3"
+                class="w-full bg-yellow-600 border-yellow-600"
+                maxlength="1000"
+                (click)="$event.stopPropagation()">
+              </textarea>
+            </div>
+
+            <!-- Expected Impact - Always shown -->
+            <div 
+              class="border rounded-lg p-4 transition-all cursor-pointer"
+              [ngClass]="{
+                'bg-blue-50 border-blue-300': isFieldSelected('expectedImpact'),
+                'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('expectedImpact')
+              }"
+              (click)="toggleField('expectedImpact')">
+              <div class="flex items-start gap-3 mb-3">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isFieldSelected('expectedImpact')"
+                  (ngModelChange)="toggleField('expectedImpact')"
+                  (click)="$event.stopPropagation()"
+                />
+                <label class="block text-sm font-semibold text-gray-700 flex-1 flex items-center gap-2">
+                  <i class="pi pi-chart-line text-blue-600"></i>
+                  {{ 'label.opportunity.expectedImpact' | translate }}
+                </label>
+              </div>
+              <textarea
+                pTextarea
+                [(ngModel)]="proposedOpportunity()!.opportunity.expectedImpact"
+                rows="2"
+                class="w-full bg-yellow-600 border-yellow-600"
+                maxlength="510"
+                (click)="$event.stopPropagation()">
+              </textarea>
+            </div>
+
+            <!-- Expected Outcomes - Always shown -->
+            <div 
+              class="border rounded-lg p-4 transition-all cursor-pointer"
+              [ngClass]="{
+                'bg-blue-50 border-blue-300': isFieldSelected('expectedOutcomes'),
+                'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('expectedOutcomes')
+              }"
+              (click)="toggleField('expectedOutcomes')">
+              <div class="flex items-start gap-3 mb-3">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isFieldSelected('expectedOutcomes')"
+                  (ngModelChange)="toggleField('expectedOutcomes')"
+                  (click)="$event.stopPropagation()"
+                />
+                <label class="block text-sm font-semibold text-gray-700 flex-1 flex items-center gap-2">
+                  <i class="pi pi-check-circle text-green-500"></i>
+                  {{ 'label.opportunity.expectedOutcomes' | translate }}
+                </label>
+              </div>
+              <textarea
+                pTextarea
+                [(ngModel)]="proposedOpportunity()!.opportunity.expectedOutcomes"
+                rows="2"
+                class="w-full bg-yellow-600 border-yellow-600"
+                maxlength="510"
+                (click)="$event.stopPropagation()">
+              </textarea>
+            </div>
+
+            <!-- Estimated Beneficiaries (Numbers) - 0 is valid, use != null to avoid treating 0 as falsy -->
+            @if ($any(proposedOpportunity()!.opportunity).estimatedDirectBeneficiaries != null || $any(proposedOpportunity()!.opportunity).estimatedIndirectBeneficiaries != null) {
+              <div class="grid grid-cols-2 gap-4">
+                @if ($any(proposedOpportunity()!.opportunity).estimatedDirectBeneficiaries != null) {
+                  <div 
+                    class="border rounded-lg p-4 transition-all cursor-pointer"
+                    [ngClass]="{
+                      'bg-blue-50 border-blue-300': isFieldSelected('estimatedDirectBeneficiaries'),
+                      'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('estimatedDirectBeneficiaries')
+                    }"
+                    (click)="toggleField('estimatedDirectBeneficiaries')">
+                    <div class="flex items-start gap-3 mb-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('estimatedDirectBeneficiaries')"
+                        (ngModelChange)="toggleField('estimatedDirectBeneficiaries')"
+                        (click)="$event.stopPropagation()"
+                      />
+                      <label class="block text-sm font-semibold text-gray-700 flex-1">
+                        {{ 'label.estimatedDirectBeneficiaries' | translate }}
+                      </label>
+                    </div>
+                    <input
+                      pInputText
+                      [(ngModel)]="$any(proposedOpportunity()!.opportunity).estimatedDirectBeneficiaries"
+                      type="number"
+                      class="w-full bg-yellow-600 border-yellow-600"
+                      (click)="$event.stopPropagation()" />
+                  </div>
+                }
+                @if ($any(proposedOpportunity()!.opportunity).estimatedIndirectBeneficiaries != null) {
+                  <div 
+                    class="border rounded-lg p-4 transition-all cursor-pointer"
+                    [ngClass]="{
+                      'bg-blue-50 border-blue-300': isFieldSelected('estimatedIndirectBeneficiaries'),
+                      'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('estimatedIndirectBeneficiaries')
+                    }"
+                    (click)="toggleField('estimatedIndirectBeneficiaries')">
+                    <div class="flex items-start gap-3 mb-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('estimatedIndirectBeneficiaries')"
+                        (ngModelChange)="toggleField('estimatedIndirectBeneficiaries')"
+                        (click)="$event.stopPropagation()"
+                      />
+                      <label class="block text-sm font-semibold text-gray-700 flex-1">
+                        {{ 'label.estimatedIndirectBeneficiaries' | translate }}
+                      </label>
+                    </div>
+                    <input
+                      pInputText
+                      [(ngModel)]="$any(proposedOpportunity()!.opportunity).estimatedIndirectBeneficiaries"
+                      type="number"
+                      class="w-full bg-yellow-600 border-yellow-600"
+                      (click)="$event.stopPropagation()" />
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- SDG Alignment -->
+            @if (proposedOpportunity()!.opportunity.sdGs && proposedOpportunity()!.opportunity.sdGs!.length > 0) {
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <i class="pi pi-globe text-green-500"></i>
+                    {{ 'label.opportunity.sdgAlignment' | translate }} ({{ proposedOpportunity()!.opportunity.sdGs!.length }})
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <p-checkbox
+                      [binary]="true"
+                      [ngModel]="isFieldSelected('sdGs')"
+                      (ngModelChange)="toggleField('sdGs')"
+                      inputId="field-sdGs"
+                    />
+                    <label for="field-sdGs" class="cursor-pointer text-sm font-medium text-gray-700">
+                      {{ 'label.selectAll' | translate }}
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-3">
+                  @for (sdg of proposedOpportunity()!.opportunity.sdGs; track $index) {
+                    <div 
+                      class="rounded-lg p-4 transition-shadow cursor-pointer"
+                      [ngClass]="{
+                        'bg-blue-50 border border-blue-300': isFieldSelected('sdGs[' + $index + ']'),
+                        'bg-yellow-600 border border-yellow-600 hover:shadow-md': !isFieldSelected('sdGs[' + $index + ']')
+                      }"
+                      (click)="toggleField('sdGs[' + $index + ']')">
+                      <div class="flex items-start justify-between gap-4">
+                        <div class="flex items-center gap-4 flex-1">
+                          <p-checkbox
+                            [binary]="true"
+                            [ngModel]="isFieldSelected('sdGs[' + $index + ']')"
+                            (ngModelChange)="toggleField('sdGs[' + $index + ']')"
+                            [inputId]="'sdg-' + $index"
+                            (click)="$event.stopPropagation()"
+                          />
+                          <!-- SDG Logo/Number -->
+                          <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 text-white font-bold text-2xl rounded shadow-sm">
+                            {{ sdg.sdgNumber }}
+                          </div>
+                          <div class="flex-1">
+                            <h4 class="font-semibold text-gray-950 mb-1">
+                              {{ 'label.opportunity.sdg' | translate }} {{ sdg.sdgNumber }}: {{ sdg.sdgName }}
+                            </h4>
+                            <div class="flex items-center gap-2">
+                              @if (sdg.isPrimary) {
+                                <p-chip
+                                  [label]="'label.opportunity.sdgPrimary' | translate"
+                                  styleClass="text-xs font-bold"
+                                  [style]="{ 'background-color': '#34d399', 'color': '#ffffff' }"
+                                />
+                              } @else {
+                                <p-chip
+                                  [label]="'label.opportunity.sdgSecondary' | translate"
+                                  styleClass="text-xs font-bold"
+                                  [style]="{ 'background-color': '#0891b2', 'color': '#ffffff' }"
+                                />
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- UNOPS Strategic Missions Alignment -->
+            @if ((proposedOpportunity()!.opportunity.unopsMissions && proposedOpportunity()!.opportunity.unopsMissions!.length > 0) || proposedOpportunity()!.opportunity.unopsMissionsNotApplicable) {
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <i class="pi pi-building text-blue-600"></i>
+                    {{ 'label.opportunity.alignmentToUNOPSStrategy' | translate }}
+                    @if (proposedOpportunity()!.opportunity.unopsMissions && proposedOpportunity()!.opportunity.unopsMissions!.length > 0) {
+                      ({{ proposedOpportunity()!.opportunity.unopsMissions!.length }})
+                    }
+                  </label>
+                  @if (proposedOpportunity()!.opportunity.unopsMissions && proposedOpportunity()!.opportunity.unopsMissions!.length > 0) {
+                    <div class="flex items-center gap-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('unopsMissions')"
+                        (ngModelChange)="toggleField('unopsMissions')"
+                        inputId="field-unopsMissions"
+                      />
+                      <label for="field-unopsMissions" class="cursor-pointer text-sm font-medium text-gray-700">
+                        {{ 'label.selectAll' | translate }}
+                      </label>
+                    </div>
+                  }
+                </div>
+                <div class="space-y-3">
+                  @if (proposedOpportunity()!.opportunity.unopsMissions && proposedOpportunity()!.opportunity.unopsMissions!.length > 0) {
+                    @for (mission of proposedOpportunity()!.opportunity.unopsMissions; track $index) {
+                      <div 
+                        class="rounded-lg p-4 transition-shadow cursor-pointer"
+                        [ngClass]="{
+                          'bg-blue-50 border border-blue-300': isFieldSelected('unopsMissions[' + $index + ']'),
+                          'bg-yellow-600 border border-yellow-600 hover:shadow-md': !isFieldSelected('unopsMissions[' + $index + ']')
+                        }"
+                        (click)="toggleField('unopsMissions[' + $index + ']')">
+                        <div class="flex items-start gap-4">
+                          <p-checkbox
+                            [binary]="true"
+                            [ngModel]="isFieldSelected('unopsMissions[' + $index + ']')"
+                            (ngModelChange)="toggleField('unopsMissions[' + $index + ']')"
+                            [inputId]="'unopsMission-' + $index"
+                            (click)="$event.stopPropagation()"
+                          />
+                          <i class="pi pi-check-circle text-2xl text-blue-600"></i>
+                          <div class="flex-1">
+                            <h4 class="font-semibold text-gray-950 mb-1">
+                              {{ mission.name || 'UNOPS Mission ' + ($index + 1) }}
+                            </h4>
+                            @if (mission.code) {
+                              <span class="text-xs px-2 py-0.5 bg-blue-100 text-blue-800 rounded">
+                                {{ mission.code }}
+                              </span>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  } @else if (proposedOpportunity()!.opportunity.unopsMissionsNotApplicable) {
+                    <!-- Not Applicable - matches manual screen (opportunity-why-section) -->
+                    <div
+                      class="rounded-lg p-4 transition-shadow cursor-pointer"
+                      [ngClass]="{
+                        'bg-blue-50 border border-blue-300': isFieldSelected('unopsMissionsNotApplicable'),
+                        'bg-gray-50 border border-gray-200 hover:shadow-md': !isFieldSelected('unopsMissionsNotApplicable')
+                      }"
+                      (click)="toggleField('unopsMissionsNotApplicable')">
+                      <div class="flex items-start gap-4">
+                        <p-checkbox
+                          [binary]="true"
+                          [ngModel]="isFieldSelected('unopsMissionsNotApplicable')"
+                          (ngModelChange)="toggleField('unopsMissionsNotApplicable')"
+                          inputId="field-unopsMissionsNotApplicable"
+                          (click)="$event.stopPropagation()"
+                        />
+                        <i class="pi pi-minus-circle text-2xl text-gray-400"></i>
+                        <div class="flex-1">
+                          <p class="text-sm text-gray-600">
+                            {{ 'label.opportunity.unopsMissionsNotApplicable' | translate }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Cross-cutting concerns (WHY section) - per-item checkbox + radio buttons -->
+            @if (hasCrossCuttingConcernsData()) {
+              <div>
+                <div class="mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <i class="pi pi-sitemap text-midnight-600"></i>
+                    {{ 'label.crossCuttingConcerns.title' | translate }}
+                  </label>
+                </div>
+                <div class="rounded-lg border border-gray-200 bg-gray-50/50 p-4 space-y-3">
+                  @for (item of crossCuttingConcernItems; track item.key) {
+                    <div
+                      class="flex flex-wrap items-center gap-4 py-3 border-b border-gray-200 last:border-b-0"
+                      [ngClass]="{
+                        'bg-blue-50 -mx-2 px-2 rounded': isFieldSelected(item.oppKey)
+                      }">
+                      <div class="flex items-center gap-2" (click)="toggleField(item.oppKey)" style="cursor: pointer;">
+                        <p-checkbox
+                          [binary]="true"
+                          [ngModel]="isFieldSelected(item.oppKey)"
+                          (ngModelChange)="toggleField(item.oppKey)"
+                          (click)="$event.stopPropagation()"
+                          [inputId]="'field-' + item.oppKey"
+                        />
+                        <label [for]="'field-' + item.oppKey" class="cursor-pointer text-sm font-medium text-gray-800 min-w-[200px]">
+                          {{ item.labelKey | translate }}
+                        </label>
+                      </div>
+                      <div class="flex items-center gap-6" (click)="$event.stopPropagation()">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="item.key"
+                            [checked]="getCrossCuttingValue(item.oppKey) === true"
+                            (change)="setCrossCuttingValue(item.oppKey, true)"
+                            [id]="item.key + '-yes'"
+                            class="w-4 h-4 accent-blue-500" />
+                          <span class="text-sm text-gray-700">{{ 'label.yes' | translate }}</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="item.key"
+                            [checked]="getCrossCuttingValue(item.oppKey) === false"
+                            (change)="setCrossCuttingValue(item.oppKey, false)"
+                            [id]="item.key + '-no'"
+                            class="w-4 h-4 accent-blue-500" />
+                          <span class="text-sm text-gray-700">{{ 'label.no' | translate }}</span>
+                        </label>
+                      </div>
+                    </div>
+                  }
+                  <div class="mt-4 pt-4 border-t border-gray-200">
+                    <div
+                      class="flex items-start gap-3"
+                      [ngClass]="{
+                        'bg-blue-50 -mx-2 px-2 py-2 rounded': isFieldSelected('crossCuttingConcernsOther')
+                      }">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('crossCuttingConcernsOther')"
+                        (ngModelChange)="toggleField('crossCuttingConcernsOther')"
+                        inputId="field-crossCuttingConcernsOther"
+                      />
+                      <div class="flex-1">
+                        <label for="field-crossCuttingConcernsOther" class="block text-sm font-medium text-gray-800 mb-2 cursor-pointer">
+                          {{ 'label.crossCuttingConcerns.other' | translate }}
+                        </label>
+                        <input
+                          pInputText
+                          [(ngModel)]="$any(proposedOpportunity()!.opportunity).crossCuttingConcernsOther"
+                          maxlength="150"
+                          class="w-full bg-yellow-600 border-yellow-600"
+                          placeholder="{{ 'label.crossCuttingConcerns.other' | translate }}"
+                        />
+                        <small class="text-gray-500 block mt-1">
+                          {{ ($any(proposedOpportunity()!.opportunity).crossCuttingConcernsOther?.length || 0) }} / 150
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+          </div>
+        </div>
+
+        <!-- Ã°Å¸â€œÂ WHERE Section -->
+        @if (proposedOpportunity()!.opportunity.countries && proposedOpportunity()!.opportunity.countries!.length > 0) {
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+              <h3 class="font-semibold text-gray-950 flex items-center gap-2">
+                <span>Ã°Å¸â€œÂ</span>
+                {{ 'label.opportunity.where' | translate }} - {{ 'label.opportunity.geographicScope' | translate }}
+              </h3>
+              <div class="flex items-center gap-2">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isFieldSelected('countries')"
+                  (ngModelChange)="toggleField('countries')"
+                  inputId="field-countries"
+                />
+                <label for="field-countries" class="cursor-pointer text-sm font-medium text-gray-700">
+                  {{ 'label.selectSection' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="space-y-2">
+                @for (country of proposedOpportunity()!.opportunity.countries; track $index) {
+                  <div class="bg-yellow-600 border border-yellow-600 rounded-lg p-4">
+                    <div class="flex items-start justify-between mb-2">
+                      <div class="flex items-center gap-3">
+                        @if (country.country?.iso2Code) {
+                          <span class="text-2xl font-bold text-gray-700">{{ country.country?.iso2Code }}</span>
+                        }
+                        <div>
+                          <h4 class="font-semibold text-gray-950">
+                            {{ country.country?.name || country.countryName || 'Unknown Country' }}
+                          </h4>
+                          @if (country.country && country.country.continent) {
+                            <p class="text-sm text-gray-600">
+                              <span>{{ country.country.continent }}</span>
+                            </p>
+                          }
+                          @if (country.specificAreas) {
+                            <p class="text-xs text-gray-600 mt-1">
+                              <i class="pi pi-map-marker mr-1"></i>
+                              {{ country.specificAreas }}
+                            </p>
+                          }
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <p-checkbox
+                          [binary]="true"
+                          [ngModel]="isFieldSelected('countries[' + $index + ']')"
+                          (ngModelChange)="toggleField('countries[' + $index + ']')"
+                          [inputId]="'country-' + $index"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+          <!-- Ã¢ÂÂ° WHEN Section -->
+          @if ($any(proposedOpportunity()!.opportunity).targetSigningDate || $any(proposedOpportunity()!.opportunity).targetDeliveryDate || $any(proposedOpportunity()!.opportunity).submissionDeadline || $any(proposedOpportunity()!.opportunity).implementationStartDate || $any(proposedOpportunity()!.opportunity).isPooledFunding !== undefined || $any(proposedOpportunity()!.opportunity).partnershipAgreementReference) {
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+              <h3 class="font-semibold text-gray-950 flex items-center gap-2">
+                <span>Ã¢ÂÂ°</span>
+                {{ 'label.opportunity.when' | translate }} - {{ 'label.opportunity.timeline' | translate }}
+              </h3>
+            </div>
+            <div class="p-4 space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Submission Deadline (Proposal Submission Date) -->
+                @if ($any(proposedOpportunity()!.opportunity).submissionDeadline) {
+                  <div 
+                    class="border rounded-lg p-4 transition-all"
+                    [ngClass]="{
+                      'bg-blue-50 border-blue-300': isFieldSelected('submissionDeadline'),
+                      'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('submissionDeadline')
+                    }">
+                    <div class="flex items-start gap-3 mb-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('submissionDeadline')"
+                        (ngModelChange)="toggleField('submissionDeadline')"
+                      />
+                      <label class="block text-sm font-semibold text-gray-700 flex-1">
+                        {{ 'label.submissionDeadline' | translate }}
+                      </label>
+                    </div>
+                    <p-datepicker
+                      [(ngModel)]="$any(proposedOpportunity()!.opportunity).submissionDeadline"
+                      dateFormat="M dd, yy"
+                      [showIcon]="true"
+                      class="w-full"
+                      styleClass="w-full" />
+                  </div>
+                }
+
+                <!-- Target Signing Date -->
+                @if (proposedOpportunity()!.opportunity.targetSigningDate) {
+                  <div 
+                    class="border rounded-lg p-4 transition-all"
+                    [ngClass]="{
+                      'bg-blue-50 border-blue-300': isFieldSelected('targetSigningDate'),
+                      'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('targetSigningDate')
+                    }">
+                    <div class="flex items-start gap-3 mb-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('targetSigningDate')"
+                        (ngModelChange)="toggleField('targetSigningDate')"
+                      />
+                      <label class="block text-sm font-semibold text-gray-700 flex-1">
+                        {{ 'label.opportunity.targetSigningDate' | translate }}
+                      </label>
+                    </div>
+                    <p-datepicker
+                      [(ngModel)]="proposedOpportunity()!.opportunity.targetSigningDate"
+                      dateFormat="M dd, yy"
+                      [showIcon]="true"
+                      class="w-full"
+                      styleClass="w-full" />
+                  </div>
+                }
+
+                <!-- Implementation Start Date -->
+                @if ($any(proposedOpportunity()!.opportunity).implementationStartDate) {
+                  <div 
+                    class="border rounded-lg p-4 transition-all"
+                    [ngClass]="{
+                      'bg-blue-50 border-blue-300': isFieldSelected('implementationStartDate'),
+                      'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('implementationStartDate')
+                    }">
+                    <div class="flex items-start gap-3 mb-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('implementationStartDate')"
+                        (ngModelChange)="toggleField('implementationStartDate')"
+                      />
+                      <label class="block text-sm font-semibold text-gray-700 flex-1">
+                        {{ 'label.implementationStartDate' | translate }}
+                      </label>
+                    </div>
+                    <p-datepicker
+                      [(ngModel)]="$any(proposedOpportunity()!.opportunity).implementationStartDate"
+                      dateFormat="M dd, yy"
+                      [showIcon]="true"
+                      class="w-full"
+                      styleClass="w-full" />
+                  </div>
+                }
+
+                <!-- Target Delivery Date -->
+                @if (proposedOpportunity()!.opportunity.targetDeliveryDate) {
+                  <div 
+                    class="border rounded-lg p-4 transition-all"
+                    [ngClass]="{
+                      'bg-blue-50 border-blue-300': isFieldSelected('targetDeliveryDate'),
+                      'hover:shadow-sm bg-white border-gray-200': !isFieldSelected('targetDeliveryDate')
+                    }">
+                    <div class="flex items-start gap-3 mb-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('targetDeliveryDate')"
+                        (ngModelChange)="toggleField('targetDeliveryDate')"
+                      />
+                      <label class="block text-sm font-semibold text-gray-700 flex-1">
+                        {{ 'label.opportunity.targetDeliveryDate' | translate }}
+                      </label>
+                    </div>
+                    <p-datepicker
+                      [(ngModel)]="proposedOpportunity()!.opportunity.targetDeliveryDate"
+                      dateFormat="M dd, yy"
+                      [showIcon]="true"
+                      class="w-full"
+                      styleClass="w-full" />
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Ã°Å¸â€˜Â¥ WHO Section -->
+        @if ((proposedOpportunity()!.opportunity.fundingPartners && proposedOpportunity()!.opportunity.fundingPartners!.length > 0) || 
+             (proposedOpportunity()!.opportunity.clientPartners && proposedOpportunity()!.opportunity.clientPartners!.length > 0) || 
+             (proposedOpportunity()!.opportunity.stakeholders && proposedOpportunity()!.opportunity.stakeholders!.length > 0)) {
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+              <h3 class="font-semibold text-gray-950 flex items-center gap-2">
+                <span>Ã°Å¸â€˜Â¥</span>
+                {{ 'label.opportunity.who' | translate }} - {{ 'label.opportunity.partnersTeam' | translate }}
+              </h3>
+            </div>
+            <div class="p-4 space-y-4">
+              <!-- Partners (Unified with Role Selection) -->
+              @if (allProposedPartners() && allProposedPartners().length > 0) {
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                      <i class="pi pi-building text-blue-500 text-base"></i>
+                      {{ 'label.opportunity.partners' | translate }} ({{ allProposedPartners().length }})
+                    </label>
+                    <div class="flex items-center gap-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="areAllPartnersSelected()"
+                        (ngModelChange)="toggleAllPartners()"
+                        inputId="field-all-partners"
+                      />
+                      <label for="field-all-partners" class="cursor-pointer text-sm font-medium text-gray-700">
+                        {{ 'label.selectAll' | translate }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="space-y-3">
+                    @for (partner of allProposedPartners(); track partner.partnerId) {
+                      <div class="bg-yellow-600 border border-yellow-600 rounded-lg p-4">
+                        <div class="flex items-start justify-between mb-3">
+                          <div class="flex items-center gap-3 flex-1">
+                            <!-- Partner Logo with fallback -->
+                            <img
+                              [src]="partner.partnerLogoUrl || 'assets/images/Partner.png'"
+                              (error)="$any($event.target).src='assets/images/Partner.png'"
+                              [alt]="partner.partnerName"
+                              class="w-12 h-12 object-contain rounded"
+                            />
+                            <div class="flex-1">
+                              <div class="font-semibold text-gray-950">{{ partner.partnerName }}</div>
+                              @if (partner.amount) {
+                                <div class="text-sm text-gray-600 mt-1">
+                                  <span class="text-gray-600">{{ 'label.amount' | translate }}:</span>
+                                  <span class="font-semibold ml-2">${{ partner.amount | number }}</span>
+                                </div>
+                              }
+                              @if (partner.partnershipAgreementReference) {
+                                <div class="text-xs text-blue-700 mt-2">
+                                  <i class="pi pi-file"></i>
+                                  {{ partner.partnershipAgreementReference }}
+                                </div>
+                              }
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <p-checkbox
+                              [binary]="true"
+                              [ngModel]="isPartnerSelected(partner.partnerId)"
+                              (ngModelChange)="togglePartnerSelection(partner.partnerId)"
+                              [inputId]="'partner-' + partner.partnerId"
+                            />
+                          </div>
+                        </div>
+                        
+                        <!-- Partner Role Selection -->
+                        <div class="flex items-center gap-4 pl-15 border-t border-yellow-600 pt-3">
+                          <div class="text-sm text-gray-600 font-medium">{{ 'label.partnerRole' | translate }}:</div>
+                          <div class="flex items-center gap-2">
+                            <p-checkbox
+                              [binary]="true"
+                              [ngModel]="partnerRoleSelections().get(partner.partnerId)?.isFunding || false"
+                              (ngModelChange)="togglePartnerRole(partner.partnerId, 'funding')"
+                              [inputId]="'funding-' + partner.partnerId"
+                            />
+                            <label [for]="'funding-' + partner.partnerId" class="cursor-pointer text-sm text-gray-700">
+                              <i class="pi pi-dollar text-green-500 mr-1"></i>
+                              {{ 'label.fundingPartner' | translate }}
+                            </label>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <p-checkbox
+                              [binary]="true"
+                              [ngModel]="partnerRoleSelections().get(partner.partnerId)?.isClient || false"
+                              (ngModelChange)="togglePartnerRole(partner.partnerId, 'client')"
+                              [inputId]="'client-' + partner.partnerId"
+                            />
+                            <label [for]="'client-' + partner.partnerId" class="cursor-pointer text-sm text-gray-700">
+                              <i class="pi pi-building text-blue-500 mr-1"></i>
+                              {{ 'label.clientPartner' | translate }}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- Stakeholders -->
+              @if (proposedOpportunity()!.opportunity.stakeholders && proposedOpportunity()!.opportunity.stakeholders!.length > 0) {
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                      <i class="pi pi-users text-blue-500 text-base"></i>
+                      {{ 'label.opportunity.stakeholders' | translate }} ({{ proposedOpportunity()!.opportunity.stakeholders!.length }})
+                    </label>
+                    <div class="flex items-center gap-2">
+                      <p-checkbox
+                        [binary]="true"
+                        [ngModel]="isFieldSelected('stakeholders')"
+                        (ngModelChange)="toggleField('stakeholders')"
+                        inputId="field-stakeholders"
+                      />
+                      <label for="field-stakeholders" class="cursor-pointer text-sm font-medium text-gray-700">
+                        {{ 'label.selectSection' | translate }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    @for (stakeholder of proposedOpportunity()!.opportunity.stakeholders; track $index) {
+                      <div class="bg-yellow-600 border border-yellow-600 rounded-lg p-3">
+                        <div class="flex items-start justify-between">
+                          <div class="flex items-center gap-3 flex-1">
+                            <p-avatar
+                              [label]="stakeholder.userName.charAt(0) || '?'"
+                              shape="circle"
+                              styleClass="bg-blue-100 text-blue-600"
+                            />
+                            <div class="flex-1">
+                              <div class="font-semibold text-gray-950">{{ stakeholder.userName }}</div>
+                              <div class="text-sm text-blue-600">{{ stakeholder.entityRoleName }}</div>
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <p-checkbox
+                              [binary]="true"
+                              [ngModel]="isFieldSelected('stakeholders[' + $index + ']')"
+                              (ngModelChange)="toggleField('stakeholders[' + $index + ']')"
+                              [inputId]="'stakeholder-' + $index"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Ã°Å¸â€œâ€ž Source Documents Section -->
+        @if (selectedFiles().length > 0 || selectedGoogleDriveFiles().length > 0 || selectedExistingDocumentIds().length > 0) {
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+              <h3 class="font-semibold text-gray-950 flex items-center gap-2">
+                <i class="pi pi-file text-blue-600"></i>
+                {{ 'title.sourceDocuments' | translate }}
+              </h3>
+            </div>
+            <div class="p-4 space-y-3">
+              <!-- Local Files -->
+              @for (file of selectedFiles(); track $index) {
+                <div class="bg-gray-50 border border-gray-200 rounded p-3 flex items-center gap-3">
+                  <i class="pi pi-file text-gray-600"></i>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium text-sm text-gray-950 truncate">{{ file.file.name }}</div>
+                    <div class="text-xs text-gray-600">{{ getDocumentTypeName(file.documentTypeId) }}</div>
+                  </div>
+                  <span class="text-xs text-gray-500">{{ (file.file.size / 1024 / 1024).toFixed(2) }} MB</span>
+                </div>
+              }
+              <!-- Google Drive Files -->
+              @for (file of selectedGoogleDriveFiles(); track $index) {
+                <div class="bg-blue-50 border border-blue-200 rounded p-3 flex items-center gap-3">
+                  <i class="pi pi-google text-blue-600"></i>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium text-sm text-gray-950 truncate">{{ file.name }}</div>
+                    <div class="text-xs text-gray-600">{{ getDocumentTypeName(file.documentTypeId) }}</div>
+                  </div>
+                </div>
+              }
+              <!-- Existing Partner Documents -->
+              @for (docId of selectedExistingDocumentIds(); track docId) {
+                @if (getExistingDocumentInfo(docId); as docInfo) {
+                  <div class="bg-green-500 border border-green-500 rounded p-3 flex items-center gap-3">
+                    <i class="pi pi-folder text-green-500"></i>
+                    <div class="flex-1 min-w-0">
+                      <div class="font-medium text-sm text-gray-950 truncate">{{ docInfo.name }}</div>
+                      <div class="text-xs text-gray-600">{{ docInfo.documentTypeName || docInfo.documentType?.name || 'Document' }}</div>
+                    </div>
+                    <span class="text-xs text-green-500 px-2 py-1 bg-green-500 rounded">{{ 'label.existingDocument' | translate }}</span>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Ã°Å¸â€â€” Source Interactions Section -->
+        @if (selectedInteractions().length > 0) {
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+              <h3 class="font-semibold text-gray-950 flex items-center gap-2">
+                <i class="pi pi-comments text-midnight-600"></i>
+                {{ 'title.sourceInteractions' | translate }} ({{ selectedInteractions().length }})
+              </h3>
+            </div>
+            <div class="p-4 space-y-3">
+              @for (interaction of selectedInteractions(); track interaction.id) {
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center bg-midnight-100 text-midnight-600 flex-shrink-0">
+                      <i class="pi pi-calendar text-sm"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="font-semibold text-gray-950 mb-1">{{ interaction.subject }}</div>
+                      <div class="flex items-center gap-2 text-xs text-gray-600 mb-2">
+                        <span class="px-2 py-1 bg-midnight-100 text-midnight-700 rounded">{{ interaction.type }}</span>
+                        <span>{{ interaction.date | date:'mediumDate' }}</span>
+                      </div>
+                      @if (interaction.description) {
+                        <p class="text-sm text-gray-700 line-clamp-2">{{ interaction.description }}</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  }
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    @if (currentStep() === 'select') {
+      <button
+        pButton
+        [label]="'button.cancel' | translate"
+        severity="secondary"
+        (click)="cancel()"
+        [disabled]="generating()">
+      </button>
+      <button
+        pButton
+        [label]="'button.create' | translate"
+        icon="pi pi-plus"
+        severity="success"
+        [disabled]="!canCreate()"
+        [loading]="generating()"
+        (click)="createDirectly()">
+      </button>
+      <button
+        pButton
+        [label]="'button.generateProposal' | translate"
+        icon="pi pi-sparkles"
+        [disabled]="!canGenerate()"
+        [loading]="generating()"
+        (click)="generateProposal()">
+      </button>
+    }
+
+    @if (currentStep() === 'review') {
+      <button
+        pButton
+        [label]="'button.back' | translate"
+        severity="secondary"
+        icon="pi pi-arrow-left"
+        (click)="backToEdit()"
+        [disabled]="generating()">
+      </button>
+      <button
+        pButton
+        [label]="'button.createOpportunity' | translate"
+        icon="pi pi-check"
+        severity="success"
+        [disabled]="!canCreate()"
+        [loading]="generating()"
+        (click)="createOpportunity()">
+      </button>
+    }
+  </ng-template>
+</p-dialog>
+
+<!-- Document Type Selection Dialog -->
+<p-dialog
+  header="{{ 'title.selectDocumentType' | translate }}"
+  [(visible)]="showDocumentTypeDialog"
+  [modal]="true"
+  [style]="{ width: '35rem' }"
+  [closable]="false">
+  
+  <div class="mb-4">
+    <p class="text-sm text-gray-700 mb-3">
+      {{ 'message.selectDocumentTypeForFiles' | translate: { count: pendingFiles().length + pendingGoogleDriveFiles().length } }}
+    </p>
+    
+    <!-- Files to be added -->
+    <div class="bg-gray-50 p-3 rounded border border-gray-200 mb-4 max-h-40 overflow-y-auto">
+      <ul class="list-disc list-inside space-y-1 text-sm text-gray-800">
+        @for (file of pendingFiles(); track $index) {
+          <li>{{ file.name }}</li>
+        }
+        @for (file of pendingGoogleDriveFiles(); track $index) {
+          <li class="flex items-center gap-2">
+            <i class="pi pi-google text-blue-600"></i>
+            <span>{{ file.name }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+    
+    <!-- Document Type Selection -->
+    <label for="documentTypeSelect" class="block text-sm font-medium text-gray-700 mb-2">
+      {{ 'label.documentType' | translate }} *
+    </label>
+    <p-select
+      id="documentTypeSelect"
+      [(ngModel)]="selectedDocumentTypeForDialog"
+      [options]="documentTypes()"
+      optionLabel="name"
+      optionValue="id"
+      placeholder="{{ 'label.selectDocumentType' | translate }}"
+      appendTo="body"
+      styleClass="w-full"
+      [style]="{ width: '100%' }"
+      [disabled]="loadingDocumentTypes()"
+      [loading]="loadingDocumentTypes()"
+    />
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      [label]="'button.cancel' | translate"
+      severity="secondary"
+      (click)="cancelDocumentTypeSelection()">
+    </button>
+    <button
+      pButton
+      [label]="'button.confirm' | translate"
+      severity="primary"
+      (click)="confirmDocumentType()"
+      [disabled]="!selectedDocumentTypeForDialog()">
+    </button>
+  </ng-template>
+</p-dialog>
+

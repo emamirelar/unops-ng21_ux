@@ -1,0 +1,13 @@
+.access-static-page-outer {
+  border-radius: 3.5rem;
+  padding: 0.3rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-blue-500), transparent 60%) 10%,
+    var(--color-gray-50) 30%
+  );
+}
+
+.access-static-page-inner {
+  border-radius: 3.3125rem;
+}

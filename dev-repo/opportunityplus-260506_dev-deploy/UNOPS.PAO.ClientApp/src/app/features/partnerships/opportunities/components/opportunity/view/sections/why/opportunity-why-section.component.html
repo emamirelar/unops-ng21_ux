@@ -1,0 +1,2894 @@
+﻿<!-- WHY - Impact & Alignment -->
+<p-panel
+  [toggleable]="true"
+  [collapsed]="false"
+  styleClass="border-surface-200 dark:border-surface-700"
+  class="{{ isSaving() ? 'opacity-50 pointer-events-none' : '' }}"
+>
+  <ng-template pTemplate="header">
+    <div class="flex flex-col w-full pr-4">
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-lightbulb text-midnight-500"></i>
+          <span class="font-semibold">{{ 'label.opportunity.whyImpactAlignment' | translate }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          @if (isSaving()) {
+            <i class="pi pi-spin pi-spinner text-xl text-primary"></i>
+          }
+          @if (canUpdate()) {
+            @if (!isEditing()) {
+              <p-button
+                icon="pi pi-pencil"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                size="small"
+                (onClick)="startEditing()"
+                pTooltip="{{ 'button.edit' | translate }}"
+                tooltipStyleClass="unops-tooltip-nowrap"
+                [disabled]="isSaving()"
+              />
+            }
+          }
+        </div>
+      </div>
+      
+      <!-- Unsaved Changes Warning Bar (shown when editing with unsaved changes) -->
+      @if (isEditing() && hasUnsavedChangesSignal()) {
+        <div class="mt-3 bg-lemon-50 border-l-4 border-yellow-600 px-4 py-3 rounded">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-start gap-2 flex-1">
+              <i class="pi pi-exclamation-triangle text-yellow-800 text-lg flex-shrink-0 mt-0.5"></i>
+              <div class="flex flex-col">
+                <span class="text-sm font-bold text-yellow-800">
+                  {{ 'message.unsavedChanges' | translate }}
+                </span>
+                <span class="text-xs font-medium text-yellow-800">
+                  {{ 'message.unsavedChangesSectionDetail' | translate }}
+                </span>
+              </div>
+            </div>
+            <div class="flex gap-2 w-full sm:w-auto">
+              <p-button
+                [label]="'button.discardChanges' | translate"
+                icon="pi pi-times"
+                severity="danger"
+                [outlined]="true"
+                (onClick)="cancelEditing()"
+                [disabled]="isSaving()"
+                styleClass="flex-1 sm:flex-none"
+                size="small"
+              />
+              <p-button
+                [label]="'button.saveChanges' | translate"
+                icon="pi pi-check"
+                severity="success"
+                (onClick)="saveSection()"
+                [disabled]="isSaving()"
+                styleClass="flex-1 sm:flex-none"
+                size="small"
+              />
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+
+  <div class="space-y-6">
+    <!-- AI Suggestions -->
+    @if (loadingInsightsSuggestions()) {
+      <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-md border border-gray-300">
+        <i class="pi pi-spin pi-spinner text-xl text-blue-500"></i>
+        <span class="text-gray-700">{{ 'message.opportunity.refreshingInsights' | translate }}</span>
+      </div>
+    } @else if (suggestions() && suggestions().length > 0) {
+      <div
+        class="bg-lemon-50 rounded-lg p-3 border border-yellow-400"
+      >
+        <div class="flex items-start gap-2 mb-2">
+          <i
+            class="pi pi-lightbulb text-yellow-800 text-sm mt-0.5"
+          ></i>
+          <h4 class="text-xs font-semibold text-midnight-500">
+            {{ "label.aiSuggestions" | translate }}
+          </h4>
+        </div>
+        <div class="space-y-2 pl-5">
+          @for (suggestion of suggestions(); track $index) {
+            <div
+              class="bg-white rounded p-2 border border-yellow-400 shadow-sm"
+            >
+              <div class="font-semibold text-xs text-midnight-500 mb-1">
+                {{ suggestion.title }}
+              </div>
+              <p class="text-xs text-gray-800">
+                {{ suggestion.description }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Context and Challenge(s) -->
+    <div id="field-challenges">
+      <h3
+        class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2"
+      >
+        <i class="pi pi-exclamation-triangle text-yellow-600"></i>
+        {{ "label.opportunity.contextAndChallenges" | translate }} *
+      </h3>
+      @if (isEditing()) {
+        <textarea
+          pInputTextarea
+          [formControl]="challengesControl"
+          rows="4"
+          class="w-full"
+          maxlength="1000"
+          [placeholder]="'label.opportunity.challengesPlaceholder' | translate"
+        ></textarea>
+        <div class="flex justify-end mt-1">
+          <small class="text-gray-600">{{ (challengesControl.value?.length || 0) }} / 1000</small>
+        </div>
+      } @else {
+        <p class="text-gray-800 leading-relaxed">
+          {{ opportunity().challenges || "-" }}
+        </p>
+      }
+    </div>
+
+    <!-- Partner Objective(s) and Expected Results -->
+    <div>
+      <h3
+        class="text-lg font-semibold text-midnight-500 mb-4 flex items-center gap-2"
+      >
+        <i class="pi pi-bullseye text-blue-500"></i>
+        {{ "label.opportunity.partnerObjectivesAndResults" | translate }}
+      </h3>
+
+      <div class="space-y-6">
+        <!-- Impact -->
+        <div id="field-expectedImpact">
+          <h3
+            class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2"
+          >
+            <i class="pi pi-chart-line text-midnight-500"></i>
+            {{ "label.opportunity.impact" | translate }} *
+          </h3>
+          @if (isEditing()) {
+            <textarea
+              pInputTextarea
+              [formControl]="expectedImpactControl"
+              rows="4"
+              class="w-full"
+              maxlength="510"
+              [placeholder]="
+                'label.opportunity.impactPlaceholder' | translate
+              "
+            ></textarea>
+            <div class="flex justify-end mt-1">
+              <small class="text-gray-600">{{ (expectedImpactControl.value?.length || 0) }} / 510</small>
+            </div>
+            @if (
+              expectedImpactControl.invalid &&
+              expectedImpactControl.touched &&
+              expectedImpactControl.errors?.['maxlength']
+            ) {
+              <p-message
+                severity="error"
+                variant="simple"
+                styleClass="mt-2"
+                [text]="
+                  'validation.maxLength' | translate: { max: 510 }
+                "
+              ></p-message>
+            }
+          } @else {
+            <p class="text-gray-800 leading-relaxed">
+              {{ opportunity().expectedImpact || "-" }}
+            </p>
+          }
+        </div>
+
+        <!-- Outcome(s) -->
+        <div id="field-expectedOutcomes">
+          <h3
+            class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2"
+          >
+            <i class="pi pi-chart-line text-midnight-500"></i>
+            {{ "label.opportunity.outcomes" | translate }} *
+          </h3>
+          @if (isEditing()) {
+            <textarea
+              pInputTextarea
+              [formControl]="expectedOutcomesControl"
+              rows="4"
+              class="w-full"
+              maxlength="510"
+              [placeholder]="
+                'label.opportunity.outcomesPlaceholder' | translate
+              "
+            ></textarea>
+            <div class="flex justify-end mt-1">
+              <small class="text-gray-600">{{ (expectedOutcomesControl.value?.length || 0) }} / 510</small>
+            </div>
+            @if (
+              expectedOutcomesControl.invalid &&
+              expectedOutcomesControl.touched &&
+              expectedOutcomesControl.errors?.['maxlength']
+            ) {
+              <p-message
+                severity="error"
+                variant="simple"
+                styleClass="mt-2"
+                [text]="
+                  'validation.maxLength' | translate: { max: 510 }
+                "
+              ></p-message>
+            }
+          } @else {
+            <p class="text-gray-800 leading-relaxed">
+              {{ opportunity().expectedOutcomes || "-" }}
+            </p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Beneficiaries -->
+    <div id="field-beneficiaries">
+      <h3
+        class="text-lg font-semibold text-midnight-500 mb-4 flex items-center gap-2"
+      >
+        <i class="pi pi-users text-blue-500"></i>
+        {{ "label.opportunity.beneficiaries" | translate }} *
+      </h3>
+
+      <!-- "To Be Determined" Option (Edit Mode - Shown First) -->
+      @if (isEditing()) {
+        <div class="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <p-checkbox
+              [formControl]="beneficiariesToBeDeterminedControl"
+              [binary]="true"
+            />
+            <span class="text-sm text-gray-700">
+              {{
+                "label.opportunity.beneficiaryNumbersToBeDetermined" | translate
+              }}
+            </span>
+          </label>
+        </div>
+      }
+
+      <!-- View Mode -->
+      @if (!isEditing()) {
+        <div class="space-y-3">
+          @if (opportunity().beneficiariesToBeDetermined) {
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div class="flex items-center gap-2 text-blue-800 text-sm">
+                <i class="pi pi-info-circle"></i>
+                <span>{{
+                  "message.opportunity.beneficiariesToBeDetermined" | translate
+                }}</span>
+              </div>
+            </div>
+          } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <!-- Direct Beneficiaries -->
+              <div
+                class="bg-gradient-to-br from-midnight-50 to-blue-50 border border-midnight-200 rounded-lg p-4"
+              >
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 border-2 border-midnight-300"
+                  >
+                    <i class="pi pi-user text-midnight-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-600 mb-1">
+                      {{ "label.opportunity.directBeneficiaries" | translate }}
+                    </p>
+                    <p class="text-2xl font-bold text-midnight-700">
+                      {{
+                        opportunity().estimatedDirectBeneficiaries != null
+                          ? (opportunity().estimatedDirectBeneficiaries!
+                            | number)
+                          : "Ã¢â‚¬â€"
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Indirect Beneficiaries -->
+              <div
+                class="bg-gradient-to-br from-midnight-50 to-midnight-50 border border-midnight-200 rounded-lg p-4"
+              >
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 border-2 border-midnight-300"
+                  >
+                    <i class="pi pi-users text-midnight-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-600 mb-1">
+                      {{
+                        "label.opportunity.indirectBeneficiaries" | translate
+                      }}
+                    </p>
+                    <p class="text-2xl font-bold text-midnight-700">
+                      {{
+                        opportunity().estimatedIndirectBeneficiaries != null
+                          ? (opportunity().estimatedIndirectBeneficiaries!
+                            | number)
+                          : "Ã¢â‚¬â€"
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Total Beneficiaries (if both are provided) -->
+            @if (
+              opportunity().estimatedDirectBeneficiaries != null &&
+              opportunity().estimatedIndirectBeneficiaries != null
+            ) {
+              <div
+                class="bg-gradient-to-r from-midnight-500 to-midnight-500 text-white rounded-lg p-4"
+              >
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium opacity-90">
+                      {{ "label.opportunity.totalBeneficiaries" | translate }}
+                    </p>
+                    <p class="text-3xl font-bold">
+                      {{
+                        opportunity().estimatedDirectBeneficiaries! +
+                          opportunity().estimatedIndirectBeneficiaries! | number
+                      }}
+                    </p>
+                  </div>
+                  <i class="pi pi-chart-bar text-4xl opacity-20"></i>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+
+      <!-- Edit Mode -->
+      @if (isEditing()) {
+        <div class="space-y-4">
+          <!-- Option: Enter Numbers -->
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Direct Beneficiaries Input -->
+              <div>
+                <p-floatlabel variant="on">
+                  <p-inputnumber
+                    id="directBeneficiaries"
+                    [formControl]="estimatedDirectBeneficiariesControl"
+                    [min]="0"
+                    [showButtons]="false"
+                    [useGrouping]="false"
+                    class="w-full"
+                  />
+                  <label for="directBeneficiaries">{{
+                    "label.opportunity.directBeneficiaries" | translate
+                  }}</label>
+                </p-floatlabel>
+              </div>
+
+              <!-- Indirect Beneficiaries Input -->
+              <div>
+                <p-floatlabel variant="on">
+                  <p-inputnumber
+                    id="indirectBeneficiaries"
+                    [formControl]="estimatedIndirectBeneficiariesControl"
+                    [min]="0"
+                    [showButtons]="false"
+                    [useGrouping]="false"
+                    class="w-full"
+                  />
+                  <label for="indirectBeneficiaries">{{
+                    "label.opportunity.indirectBeneficiaries" | translate
+                  }}</label>
+                </p-floatlabel>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Expected Beneficiaries -->
+      <div class="mt-6">
+        <h3
+          class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2"
+        >
+          <i class="pi pi-users text-orange-500"></i>
+          {{ "label.opportunity.expectedBeneficiaries" | translate }}
+        </h3>
+        @if (isEditing()) {
+          <textarea
+            pInputTextarea
+            [formControl]="expectedBeneficiariesControl"
+            rows="4"
+            class="w-full"
+            maxlength="1000"
+            [placeholder]="
+              'label.opportunity.expectedBeneficiariesPlaceholder' | translate
+            "
+          ></textarea>
+          @if (
+            expectedBeneficiariesControl.invalid &&
+            expectedBeneficiariesControl.touched &&
+            expectedBeneficiariesControl.errors?.['maxlength']
+          ) {
+            <p-message
+              severity="error"
+              variant="simple"
+              styleClass="mt-2"
+              [text]="
+                'validation.maxLength' | translate: { max: 1000 }
+              "
+            ></p-message>
+          }
+        } @else {
+          <p class="text-gray-800 leading-relaxed">
+            {{ opportunity().expectedBeneficiaries || "-" }}
+          </p>
+        }
+      </div>
+    </div>
+
+    <!-- Cross-cutting concerns -->
+    <div id="field-crossCuttingConcerns" class="border-t border-gray-300 pt-6 mt-6">
+      <h3 class="text-lg font-semibold text-midnight-500 mb-4 flex items-center gap-2">
+        <i class="pi pi-sitemap text-midnight-500"></i>
+        <span>{{ 'label.crossCuttingConcerns.title' | translate }}</span>
+      </h3>
+      <p class="text-sm text-gray-700 mb-4">
+        {{ 'message.crossCuttingConcerns.description' | translate }}
+      </p>
+
+      @if (isEditing()) {
+        <div class="rounded-lg border border-gray-200 bg-gray-50/50 py-4">
+          @for (item of crossCuttingConcernItems; track item.key) {
+            <div
+              class="flex flex-wrap items-center gap-4 py-3 border-b border-gray-200 last:border-b-0">
+              <label class="text-sm font-medium text-gray-800 min-w-[12.5rem] flex-1">
+                {{ item.labelKey | translate }}
+              </label>
+              <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    [name]="item.key"
+                    [checked]="item.control.value === true"
+                    (change)="item.control.setValue(true)"
+                    [id]="item.key + '-yes'"
+                    class="w-4 h-4 accent-blue-500" />
+                  <span class="text-sm text-gray-700">{{ 'label.yes' | translate }}</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    [name]="item.key"
+                    [checked]="item.control.value === false"
+                    (change)="item.control.setValue(false)"
+                    [id]="item.key + '-no'"
+                    class="w-4 h-4 accent-blue-500" />
+                  <span class="text-sm text-gray-700">{{ 'label.no' | translate }}</span>
+                </label>
+              </div>
+            </div>
+          }
+          <div class="mt-4 cross-cutting-other-field">
+            <p-floatlabel variant="on">
+              <input
+                pInputText
+                id="crossCuttingConcernsOther"
+                [formControl]="crossCuttingConcernsOtherControl"
+                maxlength="150"
+                class="w-full text-sm" />
+              <label for="crossCuttingConcernsOther"
+                >{{ 'label.crossCuttingConcerns.other' | translate }}</label
+              >
+            </p-floatlabel>
+            @if (
+              crossCuttingConcernsOtherControl.invalid &&
+              crossCuttingConcernsOtherControl.touched &&
+              crossCuttingConcernsOtherControl.errors?.['maxlength']
+            ) {
+              <p-message
+                severity="error"
+                variant="simple"
+                styleClass="mt-2"
+                [text]="'validation.maxLength' | translate: { max: 150 }"
+              ></p-message>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="rounded-lg border border-gray-200 bg-gray-50/50 py-4">
+          @for (item of crossCuttingConcernItems; track item.key) {
+            <div
+              class="flex items-center gap-4 py-3 border-b border-gray-200 last:border-b-0">
+              <span class="text-sm font-medium text-gray-800 min-w-[12.5rem] flex-1">
+                {{ item.labelKey | translate }}:
+              </span>
+              @if (getCrossCuttingValue(item.oppKey) === true) {
+                <span
+                  class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-500/10 text-green-800 border border-green-400"
+                >
+                  {{ 'label.yes' | translate }}
+                </span>
+              } @else if (getCrossCuttingValue(item.oppKey) === false) {
+                <span
+                  class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  {{ 'label.no' | translate }}
+                </span>
+              } @else if (getCrossCuttingValue(item.oppKey) == null) {
+                <span class="text-sm text-gray-500 italic">Ã¢â‚¬â€</span>
+              }
+            </div>
+          }
+          <div class="pt-3 mt-1 border-t border-gray-200">
+            <span
+              class="text-sm font-medium text-gray-800 min-w-[12.5rem]"
+            >
+              {{ 'label.crossCuttingConcerns.other' | translate }}:
+            </span>
+            <span class="text-sm text-gray-800">
+              {{ opportunity().crossCuttingConcernsOther?.trim() || 'Ã¢â‚¬â€' }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Alignment with UN, Global and National Goals and Priorities -->
+    <div class="pt-4">
+      <h2 class="text-xl font-bold text-midnight-500 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+        <i class="pi pi-globe text-blue-500"></i>
+        {{ "label.opportunity.alignmentWithGoalsAndPriorities" | translate }}
+      </h2>
+    </div>
+    <!-- SDG Alignment -->
+    <div id="field-sdgs">
+      <div class="flex items-center justify-between mb-4">
+        <h3
+          class="text-lg font-semibold text-midnight-500 flex items-center gap-2"
+        >
+          <i class="pi pi-globe text-green-500"></i>
+          {{ "label.opportunity.sdgAlignment" | translate }} * ({{ sdgCount() }})
+        </h3>
+        @if (isEditing()) {
+          <p-button
+            [label]="'button.addSDG' | translate"
+            icon="pi pi-plus"
+            size="small"
+            [outlined]="true"
+            (onClick)="openSDGDialog()"
+          />
+        }
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+        @if (opportunity().sdGs && opportunity().sdGs!.length > 0) {
+          @for (sdg of sortedOpportunitySDGs(); track sdg.sdgId; let idx = $index) {
+            <div
+              class="bg-white dark:bg-surface-900 border border-gray-300 dark:border-surface-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-center gap-4 flex-1">
+                  <!-- SDG Logo -->
+                  @if (sdg.sdgId === 'N/A') {
+                    <div
+                      class="flex items-center justify-center w-16 h-16 bg-gray-200 text-gray-700 font-semibold rounded shadow-sm text-center px-2 text-sm"
+                    >
+                      {{ sdg.sdgNumber }}
+                    </div>
+                  } @else if (getSDGLogo(sdg.sdgId)) {
+                    <img
+                      [src]="getSDGLogo(sdg.sdgId)"
+                      [alt]="'SDG ' + sdg.sdgNumber"
+                      class="w-16 h-16 object-contain rounded"
+                    />
+                  } @else {
+                    <div
+                      class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 text-white font-bold text-2xl rounded shadow-sm"
+                    >
+                      {{ sdg.sdgNumber }}
+                    </div>
+                  }
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-midnight-500 mb-1">
+                      @if (sdg.sdgId === 'N/A') {
+                        {{ sdg.sdgName }}
+                      } @else {
+                        {{ "label.opportunity.sdg" | translate }}
+                        {{ sdg.sdgName }}
+                      }
+                    </h4>
+                    <div class="flex items-center gap-2 mb-2">
+                      <div
+                        class="text-xs font-bold px-2 py-1 rounded-lg text-center"
+                        [style]="{
+                          'background-color': sdg.isPrimary
+                            ? '#10b981'
+                            : 'var(--p-badge-info-background)',
+                          color: sdg.isPrimary
+                            ? '#ffffff'
+                            : 'var(--p-badge-info-color)',
+                          'min-width': '4.75rem',
+                        }"
+                      >
+                        {{ sdg.isPrimary ? ("label.opportunity.sdgPrimary" | translate) : ("label.opportunity.sdgSecondary" | translate) }}
+                      </div>
+                    </div>
+
+                    <!-- Display Targets and Indicators or Opt-Out Status -->
+                    @if (sdg.skipTargetsAndIndicators) {
+                      <div class="mt-3">
+                        <div class="bg-lemon-50 flex items-start gap-2 border border-yellow-400 rounded-lg p-3">
+                          <i class="pi pi-info-circle text-yellow-800 text-sm mt-0.5"></i>
+                          <div class="text-sm">
+                            <span class="font-medium text-midnight-500">{{ "label.opportunity.skipTargetsAndIndicators" | translate }}</span>
+                            <p class="text-xs text-gray-800 mt-1">
+                              {{ "message.opportunity.skipTargetsAndIndicatorsInfo" | translate }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    } @else if (sdg.targets && sdg.targets.length > 0) {
+                      <div
+                        class="mt-3 pl-4 border-l-2 border-blue-200 space-y-2"
+                      >
+                        @for (target of sdg.targets; track target.id) {
+                          <div class="text-sm">
+                            <div
+                              class="font-medium text-blue-500 flex items-center gap-2"
+                            >
+                              <i class="pi pi-check-circle text-xs"></i>
+                              {{ "label.target" | translate }}
+                              {{ target.sdgTargetId }}
+                            </div>
+                            <div
+                              class="text-gray-700 ml-5 text-xs mt-1"
+                            >
+                              {{ target.targetDescription }}
+                            </div>
+
+                            <!-- Display Indicators for this target -->
+                            @if (
+                              target.indicators && target.indicators.length > 0
+                            ) {
+                              <div class="ml-5 mt-2 space-y-1">
+                                @for (
+                                  indicator of target.indicators;
+                                  track indicator.id
+                                ) {
+                                  <div class="flex items-start gap-1.5">
+                                    <i
+                                      class="pi pi-angle-right text-xs text-gray-500 mt-0.5"
+                                    ></i>
+                                    <div class="text-xs text-gray-700">
+                                      {{
+                                        indicator.sdgIndicatorLongDescription
+                                      }}
+                                    </div>
+                                  </div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        } @else {
+          <div class="text-center py-8 text-gray-500">
+            <i class="pi pi-globe text-4xl mb-3 text-gray-400"></i>
+            <p>{{ "message.opportunity.noSDGs" | translate }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- UNCF Alignment (Country-specific UN Cooperation Framework) -->
+    @if (countriesWithUNCF().length > 0) {
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3
+            class="text-lg font-semibold text-midnight-500 flex items-center gap-2"
+          >
+            <i class="pi pi-flag text-blue-500"></i>
+            {{ "label.opportunity.uncfAlignment" | translate }} ({{
+              uncfCount()
+            }})
+          </h3>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Always show all countries with HasActiveUNSDCF = true -->
+          @for (oppCountry of countriesWithUNCF(); track oppCountry.id) {
+            @let outcomesForCountry =
+              getUNCFOutcomesForOpportunityCountry(oppCountry.id);
+            <div
+              class="border border-gray-200 rounded-lg p-2 bg-white shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <!-- Country Info and Outcomes -->
+                <div class="flex-1">
+                  <!-- Country Header with Edit/Delete buttons (like SDG) -->
+                  <div class="flex items-center justify-between mb-3">
+                    <h4
+                      class="text-sm font-semibold text-gray-500 flex items-center gap-2"
+                    >
+                      <i class="pi pi-map-marker text-blue-600"></i>
+                      {{ oppCountry.country?.name }}
+                    </h4>
+
+                    <!-- Edit Action next to country name (only in edit mode) -->
+                    @if (isEditing()) {
+                      <div class="flex gap-2">
+                        <p-button
+                          icon="pi pi-pencil"
+                          [text]="true"
+                          [rounded]="true"
+                          severity="secondary"
+                          size="small"
+                          (onClick)="editUNCFForCountry(oppCountry, $index)"
+                          pTooltip="{{ 'button.edit' | translate }}"
+                          tooltipStyleClass="unops-tooltip-nowrap"
+                        />
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Warning banners for inactive UNCF data (per country) -->
+                  @if (hasInactiveUNCFWithUpdatesForCountry(oppCountry.id)) {
+                    <p-message severity="warn" styleClass="mb-3 w-full">
+                      {{
+                        "message.opportunity.uncfUpdatesAvailable" | translate
+                      }}
+                    </p-message>
+                  }
+                  @if (hasInactiveUNCFWithoutUpdatesForCountry(oppCountry.id)) {
+                    <p-message severity="warn" styleClass="mb-3 w-full">
+                      {{
+                        "message.opportunity.uncfInactiveNoUpdates" | translate
+                      }}
+                    </p-message>
+                  }
+
+                  <!-- Display Outcomes and Indicators (if any are selected) -->
+                  @if (outcomesForCountry.length > 0) {
+                    @let firstOutcome = outcomesForCountry[0];
+                    @if (firstOutcome.versionNo) {
+                      <div class="text-xs font-semibold text-gray-600 mb-2">
+                        {{ "label.outcomes" | translate }} ({{
+                          "label.version" | translate
+                        }}: {{ firstOutcome.versionNo }})
+                      </div>
+                    }
+                    <div class="mt-3 pl-4 border-l-2 border-blue-200 space-y-2">
+                      @for (
+                        uncfOutcome of outcomesForCountry;
+                        track uncfOutcome.id
+                      ) {
+                        <div class="text-sm">
+                          <!-- Outcome -->
+                          <div
+                            class="font-medium text-gray-700 flex items-center gap-2"
+                          >
+                            <i class="pi pi-check-circle text-xs"></i>
+                            {{ uncfOutcome.uncfOutcomeName }}
+                          </div>
+
+                          <!-- Indicators for this outcome -->
+                          @if (
+                            uncfOutcome.indicators &&
+                            uncfOutcome.indicators.length > 0
+                          ) {
+                            <div class="ml-5 mt-2 space-y-1">
+                              @for (
+                                indicator of uncfOutcome.indicators;
+                                track indicator.id
+                              ) {
+                                <div class="flex items-start gap-1.5">
+                                  <i
+                                    class="pi pi-angle-right text-xs text-gray-400 mt-0.5"
+                                  ></i>
+                                  <div class="text-xs text-gray-600">
+                                    {{ indicator.uncfIndicatorName }}
+                                  </div>
+                                </div>
+                              }
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <!-- No outcomes selected for this country -->
+                    <div class="text-sm text-gray-500 italic">
+                      {{ "label.noOutcomesSelected" | translate }}
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    } @else {
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3
+            class="text-lg font-semibold text-midnight-500 flex items-center gap-2"
+          >
+            <i class="pi pi-flag text-blue-500"></i>
+            {{ "label.opportunity.uncfAlignment" | translate }}
+          </h3>
+        </div>
+        <div class="bg-blue-100 rounded p-4">
+          <p class="text-sm text-gray-500 italic">
+            {{ "message.opportunity.uncfNotAvailable" | translate }}
+          </p>
+        </div>
+      </div>
+    }
+
+    <!-- Humanitarian, Peace & Security Framework Alignment -->
+    <div>
+      <h3
+        class="text-lg font-semibold text-midnight-500 mb-4 flex items-center gap-2"
+      >
+        <i class="pi pi-shield text-blue-500"></i>
+        {{ "label.opportunity.humanitarianFramework" | translate }}
+      </h3>
+
+      @if (opportunity().countries && opportunity().countries!.length > 0) {
+        <div class="space-y-3">
+          @for (country of opportunity().countries!; track country.id) {
+            @if (country.hasHumanitarianFramework) {
+              <!-- Countries WITH framework -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-green-500"
+                  >
+                    <span class="text-sm font-bold text-green-500">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-gray-950 mb-2">
+                      {{ country.country?.name }}
+                    </h4>
+                    <p class="text-xs text-gray-600 mb-3">
+                      {{
+                        "message.opportunity.humanitarianFrameworkAvailable"
+                          | translate
+                      }}
+                    </p>
+
+                    @if (isEditing()) {
+                      <div class="space-y-2">
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-2"
+                        >
+                          {{
+                            "label.opportunity.frameworkAlignmentStatus"
+                              | translate
+                          }}
+                        </label>
+                        <div class="flex flex-col gap-2">
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'framework-' + country.countryId"
+                              [checked]="
+                                getFrameworkAlignment(country.countryId) ===
+                                true
+                              "
+                              (change)="
+                                setFrameworkAlignment(country.countryId, true)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.frameworkWillAlign"
+                                  | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'framework-' + country.countryId"
+                              [checked]="
+                                getFrameworkAlignment(country.countryId) ===
+                                false
+                              "
+                              (change)="
+                                setFrameworkAlignment(country.countryId, false)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.frameworkNotAtThisTime"
+                                  | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'framework-' + country.countryId"
+                              [checked]="
+                                getFrameworkAlignment(country.countryId) ===
+                                null
+                              "
+                              (change)="
+                                setFrameworkAlignment(country.countryId, null)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.frameworkNotSpecified"
+                                  | translate
+                              }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="flex items-center gap-2">
+                        @if (country.humanitarianFrameworkAlignment === true) {
+                          <i class="pi pi-check-circle text-green-500"></i>
+                          <span class="text-xs font-medium text-green-500">
+                            {{
+                              "label.opportunity.frameworkWillAlign" | translate
+                            }}
+                          </span>
+                        } @else if (
+                          country.humanitarianFrameworkAlignment === false
+                        ) {
+                          <i class="pi pi-times-circle text-yellow-600"></i>
+                          <span class="text-xs font-medium text-yellow-600">
+                            {{
+                              "label.opportunity.frameworkNotAtThisTime"
+                                | translate
+                            }}
+                          </span>
+                        } @else {
+                          <i class="pi pi-info-circle text-gray-400"></i>
+                          <span class="text-xs text-gray-500 italic">
+                            {{
+                              "label.opportunity.frameworkNotSpecified"
+                                | translate
+                            }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <!-- Countries WITHOUT framework - Show warning but allow selection -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-yellow-600"
+                  >
+                    <span class="text-sm font-bold text-yellow-600">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-gray-950 mb-2">
+                      {{ country.country?.name }}
+                    </h4>
+                    
+                    <!-- Warning message -->
+                    <div class="bg-lemon-50 mb-3 border border-yellow-400 rounded-md p-2">
+                      <div class="flex items-start gap-2">
+                        <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0 text-xs"></i>
+                        <p class="text-xs text-midnight-500">
+                          {{
+                            "message.opportunity.countriesWithoutFramework" | translate
+                          }}
+                        </p>
+                      </div>
+                    </div>
+
+                    @if (isEditing()) {
+                      <div class="space-y-2">
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-2"
+                        >
+                          {{
+                            "label.opportunity.frameworkAlignmentStatus"
+                              | translate
+                          }}
+                        </label>
+                        <div class="flex flex-col gap-2">
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'framework-' + country.countryId"
+                              [checked]="
+                                getFrameworkAlignment(country.countryId) ===
+                                true
+                              "
+                              (change)="
+                                setFrameworkAlignment(country.countryId, true)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.frameworkWillAlign"
+                                  | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'framework-' + country.countryId"
+                              [checked]="
+                                getFrameworkAlignment(country.countryId) ===
+                                false
+                              "
+                              (change)="
+                                setFrameworkAlignment(country.countryId, false)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.frameworkNotAtThisTime"
+                                  | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'framework-' + country.countryId"
+                              [checked]="
+                                getFrameworkAlignment(country.countryId) ===
+                                null
+                              "
+                              (change)="
+                                setFrameworkAlignment(country.countryId, null)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.frameworkNotSpecified"
+                                  | translate
+                              }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="flex items-center gap-2">
+                        @if (country.humanitarianFrameworkAlignment === true) {
+                          <i class="pi pi-check-circle text-green-500"></i>
+                          <span class="text-xs font-medium text-green-500">
+                            {{
+                              "label.opportunity.frameworkWillAlign" | translate
+                            }}
+                          </span>
+                        } @else if (
+                          country.humanitarianFrameworkAlignment === false
+                        ) {
+                          <i class="pi pi-times-circle text-yellow-600"></i>
+                          <span class="text-xs font-medium text-yellow-600">
+                            {{
+                              "label.opportunity.frameworkNotAtThisTime"
+                                | translate
+                            }}
+                          </span>
+                        } @else {
+                          <i class="pi pi-info-circle text-gray-400"></i>
+                          <span class="text-xs text-gray-500 italic">
+                            {{
+                              "label.opportunity.frameworkNotSpecified"
+                                | translate
+                            }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <!-- No countries added yet -->
+        <div class="bg-lemon-50 border border-yellow-400 rounded-lg p-4">
+          <div class="flex items-start gap-3">
+            <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs font-medium text-midnight-500">
+              {{ "message.opportunity.noCountriesAddedForAlignment" | translate }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- NDC (Nationally Determined Contributions) Alignment -->
+    <div>
+      <h3
+        class="text-lg font-semibold text-midnight-500 mb-4 flex items-center gap-2"
+      >
+        <i class="pi pi-sun text-blue-500"></i>
+        {{ "label.opportunity.ndc" | translate }}
+      </h3>
+
+      @if (opportunity().countries && opportunity().countries!.length > 0) {
+        <div class="space-y-3">
+          @for (country of opportunity().countries!; track country.id) {
+            @if (country.hasNdc) {
+              <!-- Countries WITH NDC -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-green-500"
+                  >
+                    <span class="text-sm font-bold text-green-500">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-gray-950 mb-2">
+                      {{ country.country?.name }}
+                    </h4>
+                    <p class="text-xs text-gray-600 mb-3">
+                      {{ "message.opportunity.ndcAvailable" | translate }}
+                    </p>
+
+                    @if (isEditing()) {
+                      <div class="space-y-2">
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-2"
+                        >
+                          {{
+                            "label.opportunity.ndcAlignmentStatus" | translate
+                          }}
+                        </label>
+                        <div class="flex flex-col gap-2">
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'ndc-' + country.countryId"
+                              [checked]="
+                                getNdcAlignment(country.countryId) === true
+                              "
+                              (change)="
+                                setNdcAlignment(country.countryId, true)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{ "label.opportunity.ndcWillAlign" | translate }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'ndc-' + country.countryId"
+                              [checked]="
+                                getNdcAlignment(country.countryId) === false
+                              "
+                              (change)="
+                                setNdcAlignment(country.countryId, false)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.ndcNotAtThisTime" | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'ndc-' + country.countryId"
+                              [checked]="
+                                getNdcAlignment(country.countryId) === null
+                              "
+                              (change)="
+                                setNdcAlignment(country.countryId, null)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.ndcNotSpecified" | translate
+                              }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="flex items-center gap-2">
+                        @if (country.ndcAlignment === true) {
+                          <i class="pi pi-check-circle text-green-500"></i>
+                          <span class="text-xs font-medium text-green-500">
+                            {{ "label.opportunity.ndcWillAlign" | translate }}
+                          </span>
+                        } @else if (country.ndcAlignment === false) {
+                          <i class="pi pi-times-circle text-yellow-600"></i>
+                          <span class="text-xs font-medium text-yellow-600">
+                            {{
+                              "label.opportunity.ndcNotAtThisTime" | translate
+                            }}
+                          </span>
+                        } @else {
+                          <i class="pi pi-info-circle text-gray-400"></i>
+                          <span class="text-xs text-gray-500 italic">
+                            {{
+                              "label.opportunity.ndcNotSpecified" | translate
+                            }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <!-- Countries WITHOUT NDC - Show warning but allow selection -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-yellow-600"
+                  >
+                    <span class="text-sm font-bold text-yellow-600">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-gray-950 mb-2">
+                      {{ country.country?.name }}
+                    </h4>
+                    
+                    <!-- Warning message -->
+                    <div class="bg-lemon-50 mb-3 border border-yellow-400 rounded-md p-2">
+                      <div class="flex items-start gap-2">
+                        <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0 text-xs"></i>
+                        <p class="text-xs text-midnight-500">
+                          {{ "message.opportunity.countriesWithoutNdc" | translate }}
+                        </p>
+                      </div>
+                    </div>
+
+                    @if (isEditing()) {
+                      <div class="space-y-2">
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-2"
+                        >
+                          {{
+                            "label.opportunity.ndcAlignmentStatus" | translate
+                          }}
+                        </label>
+                        <div class="flex flex-col gap-2">
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'ndc-' + country.countryId"
+                              [checked]="
+                                getNdcAlignment(country.countryId) === true
+                              "
+                              (change)="
+                                setNdcAlignment(country.countryId, true)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{ "label.opportunity.ndcWillAlign" | translate }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'ndc-' + country.countryId"
+                              [checked]="
+                                getNdcAlignment(country.countryId) === false
+                              "
+                              (change)="
+                                setNdcAlignment(country.countryId, false)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.ndcNotAtThisTime" | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'ndc-' + country.countryId"
+                              [checked]="
+                                getNdcAlignment(country.countryId) === null
+                              "
+                              (change)="
+                                setNdcAlignment(country.countryId, null)
+                              "
+                              class="w-4 h-4 accent-blue-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.ndcNotSpecified" | translate
+                              }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="flex items-center gap-2">
+                        @if (country.ndcAlignment === true) {
+                          <i class="pi pi-check-circle text-green-500"></i>
+                          <span class="text-xs font-medium text-green-500">
+                            {{ "label.opportunity.ndcWillAlign" | translate }}
+                          </span>
+                        } @else if (country.ndcAlignment === false) {
+                          <i class="pi pi-times-circle text-yellow-600"></i>
+                          <span class="text-xs font-medium text-yellow-600">
+                            {{
+                              "label.opportunity.ndcNotAtThisTime" | translate
+                            }}
+                          </span>
+                        } @else {
+                          <i class="pi pi-info-circle text-gray-400"></i>
+                          <span class="text-xs text-gray-500 italic">
+                            {{
+                              "label.opportunity.ndcNotSpecified" | translate
+                            }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <!-- No countries added yet -->
+        <div class="bg-lemon-50 border border-yellow-400 rounded-lg p-4">
+          <div class="flex items-start gap-3">
+            <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs font-medium text-midnight-500">
+              {{ "message.opportunity.noCountriesAddedForAlignment" | translate }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- NAP (National Adaptation Plan) Alignment -->
+    <div>
+      <h3
+        class="text-lg font-semibold text-midnight-500 mb-4 flex items-center gap-2"
+      >
+        <i class="pi pi-cloud text-blue-500"></i>
+        {{ "label.opportunity.nap" | translate }}
+      </h3>
+
+      @if (opportunity().countries && opportunity().countries!.length > 0) {
+        <div class="space-y-3">
+          @for (country of opportunity().countries!; track country.id) {
+            @if (country.hasNap) {
+              <!-- Countries WITH NAP -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-teal-500"
+                  >
+                    <span class="text-sm font-bold text-teal-500">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-gray-950 mb-2">
+                      {{ country.country?.name }}
+                    </h4>
+                    <p class="text-xs text-gray-600 mb-3">
+                      {{ "message.opportunity.napAvailable" | translate }}
+                    </p>
+
+                    @if (isEditing()) {
+                      <div class="space-y-2">
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-2"
+                        >
+                          {{
+                            "label.opportunity.napAlignmentStatus" | translate
+                          }}
+                        </label>
+                        <div class="flex flex-col gap-2">
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'nap-' + country.countryId"
+                              [checked]="
+                                getNapAlignment(country.countryId) === true
+                              "
+                              (change)="
+                                setNapAlignment(country.countryId, true)
+                              "
+                              class="w-4 h-4 text-teal-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{ "label.opportunity.napWillAlign" | translate }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'nap-' + country.countryId"
+                              [checked]="
+                                getNapAlignment(country.countryId) === false
+                              "
+                              (change)="
+                                setNapAlignment(country.countryId, false)
+                              "
+                              class="w-4 h-4 text-teal-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.napNotAtThisTime" | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'nap-' + country.countryId"
+                              [checked]="
+                                getNapAlignment(country.countryId) === null
+                              "
+                              (change)="
+                                setNapAlignment(country.countryId, null)
+                              "
+                              class="w-4 h-4 text-teal-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.napNotSpecified" | translate
+                              }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="flex items-center gap-2">
+                        @if (country.napAlignment === true) {
+                          <i class="pi pi-check-circle text-green-500"></i>
+                          <span class="text-xs font-medium text-green-500">
+                            {{ "label.opportunity.napWillAlign" | translate }}
+                          </span>
+                        } @else if (country.napAlignment === false) {
+                          <i class="pi pi-times-circle text-yellow-600"></i>
+                          <span class="text-xs font-medium text-yellow-600">
+                            {{
+                              "label.opportunity.napNotAtThisTime" | translate
+                            }}
+                          </span>
+                        } @else {
+                          <i class="pi pi-info-circle text-gray-400"></i>
+                          <span class="text-xs text-gray-500 italic">
+                            {{
+                              "label.opportunity.napNotSpecified" | translate
+                            }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <!-- Countries WITHOUT NAP - Show warning but allow selection -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-yellow-600"
+                  >
+                    <span class="text-sm font-bold text-yellow-600">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-gray-950 mb-2">
+                      {{ country.country?.name }}
+                    </h4>
+                    
+                    <!-- Warning message -->
+                    <div class="bg-lemon-50 mb-3 border border-yellow-400 rounded-md p-2">
+                      <div class="flex items-start gap-2">
+                        <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0 text-xs"></i>
+                        <p class="text-xs text-midnight-500">
+                          {{ "message.opportunity.countriesWithoutNap" | translate }}
+                        </p>
+                      </div>
+                    </div>
+
+                    @if (isEditing()) {
+                      <div class="space-y-2">
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-2"
+                        >
+                          {{
+                            "label.opportunity.napAlignmentStatus" | translate
+                          }}
+                        </label>
+                        <div class="flex flex-col gap-2">
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'nap-' + country.countryId"
+                              [checked]="
+                                getNapAlignment(country.countryId) === true
+                              "
+                              (change)="
+                                setNapAlignment(country.countryId, true)
+                              "
+                              class="w-4 h-4 text-teal-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{ "label.opportunity.napWillAlign" | translate }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'nap-' + country.countryId"
+                              [checked]="
+                                getNapAlignment(country.countryId) === false
+                              "
+                              (change)="
+                                setNapAlignment(country.countryId, false)
+                              "
+                              class="w-4 h-4 text-teal-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.napNotAtThisTime" | translate
+                              }}
+                            </span>
+                          </label>
+                          <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              [name]="'nap-' + country.countryId"
+                              [checked]="
+                                getNapAlignment(country.countryId) === null
+                              "
+                              (change)="
+                                setNapAlignment(country.countryId, null)
+                              "
+                              class="w-4 h-4 text-teal-500"
+                            />
+                            <span class="text-xs text-gray-700">
+                              {{
+                                "label.opportunity.napNotSpecified" | translate
+                              }}
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="flex items-center gap-2">
+                        @if (country.napAlignment === true) {
+                          <i class="pi pi-check-circle text-green-500"></i>
+                          <span class="text-xs font-medium text-green-500">
+                            {{ "label.opportunity.napWillAlign" | translate }}
+                          </span>
+                        } @else if (country.napAlignment === false) {
+                          <i class="pi pi-times-circle text-yellow-600"></i>
+                          <span class="text-xs font-medium text-yellow-600">
+                            {{
+                              "label.opportunity.napNotAtThisTime" | translate
+                            }}
+                          </span>
+                        } @else {
+                          <i class="pi pi-info-circle text-gray-400"></i>
+                          <span class="text-xs text-gray-500 italic">
+                            {{
+                              "label.opportunity.napNotSpecified" | translate
+                            }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <!-- No countries added yet -->
+        <div class="bg-lemon-50 border border-yellow-400 rounded-lg p-4">
+          <div class="flex items-start gap-3">
+            <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs font-medium text-midnight-500">
+              {{ "message.opportunity.noCountriesAddedForAlignment" | translate }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Alignment to UNOPS Strategic Missions -->
+    <div id="field-unopsMissions">
+      <div class="flex items-center justify-between mb-4">
+        <h3
+          class="text-lg font-semibold text-midnight-500 flex items-center gap-2"
+        >
+          <i class="pi pi-building text-blue-500"></i>
+          {{ "label.opportunity.alignmentToUNOPSStrategy" | translate }} * ({{ unopsMissionCount() }})
+        </h3>
+        @if (isEditing()) {
+          <p-button
+            [label]="'button.selectUNOPSMissions' | translate"
+            icon="pi pi-plus"
+            size="small"
+            [outlined]="true"
+            (onClick)="openUNOPSMissionsDialog()"
+          />
+        }
+      </div>
+
+      <p class="text-xs text-gray-600 mb-3">
+        {{ "helpText.opportunity.unopsMissions" | translate }}
+      </p>
+
+      <!-- Display selected missions (prioritized over "not applicable") -->
+      @if (displayedUNOPSMissionsForView().length > 0) {
+        <div class="space-y-2">
+          @for (mission of displayedUNOPSMissionsForView(); track mission.id) {
+            <div
+              class="bg-gradient-to-r from-blue-50 to-midnight-50 border border-blue-200 rounded-lg p-3"
+              [class.opacity-60]="mission.status !== 'Active'"
+            >
+              <div class="flex items-start gap-3">
+                @if (mission.iconClass) {
+                  <i
+                    [class]="mission.iconClass + ' text-2xl text-blue-600'"
+                  ></i>
+                } @else {
+                  <i class="pi pi-check-circle text-2xl text-blue-600"></i>
+                }
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <h4 class="font-medium text-gray-950 text-sm">
+                      {{ mission.name }}
+                    </h4>
+                    @if (mission.status !== 'Active') {
+                      <span class="text-xs px-2 py-0.5 bg-lemon-50 text-yellow-800 rounded-full border border-yellow-400">
+                        {{ 'label.inactive' | translate }}
+                      </span>
+                    }
+                  </div>
+                  @if (mission.description) {
+                    <p class="text-xs text-gray-600 mt-1">
+                      {{ mission.description }}
+                    </p>
+                  }
+                </div>
+                @if (isEditing() && mission.status !== 'Active') {
+                  <p-button
+                    icon="pi pi-times"
+                    [text]="true"
+                    [rounded]="true"
+                    severity="danger"
+                    size="small"
+                    (onClick)="removeUNOPSMission(mission.id)"
+                    [pTooltip]="'button.remove' | translate"
+                    tooltipStyleClass="unops-tooltip-nowrap"
+                  />
+                }
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (displayUNOPSMissionsNotApplicable()) {
+        <!-- Display "Not Applicable" only when no missions are selected -->
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center gap-3">
+            <i class="pi pi-minus-circle text-xl text-gray-400"></i>
+            <div>
+              <p class="text-sm text-gray-600">
+                {{ "label.opportunity.unopsMissionsNotApplicable" | translate }}
+              </p>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <p class="text-sm text-gray-400 italic">
+          {{ "message.opportunity.noUNOPSMissionsSelected" | translate }}
+        </p>
+      }
+    </div>
+
+    <!-- Organization Unit Strategy Alignment -->
+    <div>
+      <h3
+        class="text-lg font-semibold text-midnight-500 mb-4 flex items-center gap-2"
+      >
+        <i class="pi pi-building text-blue-500"></i>
+        {{ "label.opportunity.orgUnitStrategy" | translate }}
+      </h3>
+
+      @if (opportunity().countries && opportunity().countries!.length > 0) {
+        <div class="space-y-3">
+          @for (country of opportunity().countries!; track country.id) {
+            @if (country.hasOrgUnitStrategy) {
+              <!-- Countries WITH Organization Unit Strategy -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-blue-300"
+                  >
+                    <span class="text-sm font-bold text-blue-700">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="text-sm font-medium text-gray-950">{{
+                        country.country?.name
+                      }}</span>
+                      @if (country.orgUnitWithStrategyName) {
+                        <span
+                          class="inline-flex items-center gap-1 text-xs text-blue-700 bg-white px-2 py-0.5 rounded-full border border-blue-300"
+                        >
+                          <i class="pi pi-building text-xs"></i>
+                          {{ country.orgUnitWithStrategyName }}
+                        </span>
+                      }
+                    </div>
+
+                    <!-- Alert: More Local Strategy Available -->
+                    @if (country.hasMoreLocalStrategyAvailable) {
+                      <div
+                        class="mt-2 mb-3 bg-blue-50 border border-blue-300 rounded-md p-3"
+                      >
+                        <div class="flex items-start gap-2">
+                          <i
+                            class="pi pi-info-circle text-blue-600 mt-0.5 flex-shrink-0"
+                          ></i>
+                          <div class="flex-1">
+                            <p class="text-xs font-semibold text-blue-900 mb-1">
+                              {{
+                                "message.opportunity.moreLocalStrategyAvailable"
+                                  | translate
+                              }}
+                            </p>
+                            <div class="text-xs text-blue-800 space-y-1">
+                              <div class="flex items-center gap-2">
+                                <span class="font-medium"
+                                  >{{
+                                    "label.opportunity.previousOrgUnit"
+                                      | translate
+                                  }}:</span
+                                >
+                                <span
+                                  class="inline-flex items-center gap-1 bg-white px-2 py-0.5 rounded border border-blue-200"
+                                >
+                                  <span class="font-mono text-blue-700">{{
+                                    country.currentOrgUnitWithStrategyCode
+                                  }}</span>
+                                  <span class="text-gray-600">{{
+                                    country.currentOrgUnitWithStrategyName
+                                  }}</span>
+                                </span>
+                              </div>
+                              <div class="flex items-center gap-2">
+                                <span class="font-medium"
+                                  >{{
+                                    "label.opportunity.newLocalOrgUnit"
+                                      | translate
+                                  }}:</span
+                                >
+                                <span
+                                  class="inline-flex items-center gap-1 bg-white px-2 py-0.5 rounded border border-blue-200"
+                                >
+                                  <span
+                                    class="font-mono text-blue-700 font-semibold"
+                                    >{{ country.orgUnitWithStrategyCode }}</span
+                                  >
+                                  <span class="text-gray-950 font-medium">{{
+                                    country.orgUnitWithStrategyName
+                                  }}</span>
+                                </span>
+                              </div>
+                            </div>
+                            <p class="text-xs text-blue-700 mt-2 italic">
+                              {{
+                                "message.opportunity.reviewNewStrategy"
+                                  | translate
+                              }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    }
+
+                    <!-- View mode -->
+                    @if (!isEditing()) {
+                      <div class="text-xs text-gray-600 mt-2">
+                        @if (country.orgUnitStrategyAlignment === true) {
+                          <div class="flex items-center gap-1.5 text-green-500">
+                            <i class="pi pi-check-circle"></i>
+                            <span>{{
+                              "message.opportunity.willAlignToStrategy"
+                                | translate
+                            }}</span>
+                          </div>
+                        } @else if (
+                          country.orgUnitStrategyAlignment === false
+                        ) {
+                          <div class="flex items-center gap-1.5 text-yellow-600">
+                            <i class="pi pi-clock"></i>
+                            <span>{{
+                              "message.opportunity.notAlignedAtThisTime"
+                                | translate
+                            }}</span>
+                          </div>
+                        } @else {
+                          <div class="flex items-center gap-1.5 text-gray-500">
+                            <i class="pi pi-minus-circle"></i>
+                            <span>{{
+                              "message.opportunity.notSpecified" | translate
+                            }}</span>
+                          </div>
+                        }
+                      </div>
+                    }
+
+                    <!-- Edit mode -->
+                    @if (isEditing()) {
+                      <div class="mt-2 flex flex-col gap-1.5">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="'orgStrategy-' + country.countryId"
+                            [checked]="
+                              getOrgUnitStrategyAlignment(country.countryId) ===
+                              true
+                            "
+                            (change)="
+                              setOrgUnitStrategyAlignment(
+                                country.countryId,
+                                true
+                              )
+                            "
+                            class="w-4 h-4 text-blue-600"
+                          />
+                          <span class="text-xs text-gray-700">{{
+                            "label.opportunity.willAlignToStrategyPriorities"
+                              | translate
+                          }}</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="'orgStrategy-' + country.countryId"
+                            [checked]="
+                              getOrgUnitStrategyAlignment(country.countryId) ===
+                              false
+                            "
+                            (change)="
+                              setOrgUnitStrategyAlignment(
+                                country.countryId,
+                                false
+                              )
+                            "
+                            class="w-4 h-4 text-blue-600"
+                          />
+                          <span class="text-xs text-gray-700">{{
+                            "label.opportunity.notAlignedAtThisTime" | translate
+                          }}</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="'orgStrategy-' + country.countryId"
+                            [checked]="
+                              getOrgUnitStrategyAlignment(country.countryId) ===
+                              null
+                            "
+                            (change)="
+                              setOrgUnitStrategyAlignment(
+                                country.countryId,
+                                null
+                              )
+                            "
+                            class="w-4 h-4 text-blue-600"
+                          />
+                          <span class="text-xs text-gray-700">{{
+                            "message.opportunity.notSpecified" | translate
+                          }}</span>
+                        </label>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <!-- Countries WITHOUT Organization Unit Strategy - Show warning but allow selection -->
+              <div class="bg-blue-100 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-white rounded flex items-center justify-center flex-shrink-0 border border-yellow-600"
+                  >
+                    <span class="text-sm font-bold text-yellow-600">{{
+                      country.country?.iso2Code || "XX"
+                    }}</span>
+                  </div>
+
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-sm font-medium text-gray-950">{{
+                        country.country?.name
+                      }}</span>
+                    </div>
+
+                    <!-- Warning message -->
+                    <div class="bg-lemon-50 mb-3 border border-yellow-400 rounded-md p-2">
+                      <div class="flex items-start gap-2">
+                        <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0 text-xs"></i>
+                        <p class="text-xs text-midnight-500">
+                          {{
+                            "message.opportunity.countriesWithoutOrgUnitStrategy"
+                              | translate
+                          }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Edit mode -->
+                    @if (isEditing()) {
+                      <div class="mt-2 flex flex-col gap-1.5">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="'orgStrategy-' + country.countryId"
+                            [checked]="
+                              getOrgUnitStrategyAlignment(country.countryId) ===
+                              true
+                            "
+                            (change)="
+                              setOrgUnitStrategyAlignment(
+                                country.countryId,
+                                true
+                              )
+                            "
+                            class="w-4 h-4 text-blue-600"
+                          />
+                          <span class="text-xs text-gray-700">{{
+                            "label.opportunity.willAlignToStrategyPriorities"
+                              | translate
+                          }}</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="'orgStrategy-' + country.countryId"
+                            [checked]="
+                              getOrgUnitStrategyAlignment(country.countryId) ===
+                              false
+                            "
+                            (change)="
+                              setOrgUnitStrategyAlignment(
+                                country.countryId,
+                                false
+                              )
+                            "
+                            class="w-4 h-4 text-blue-600"
+                          />
+                          <span class="text-xs text-gray-700">{{
+                            "label.opportunity.notAlignedAtThisTime" | translate
+                          }}</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            [name]="'orgStrategy-' + country.countryId"
+                            [checked]="
+                              getOrgUnitStrategyAlignment(country.countryId) ===
+                              null
+                            "
+                            (change)="
+                              setOrgUnitStrategyAlignment(
+                                country.countryId,
+                                null
+                              )
+                            "
+                            class="w-4 h-4 text-blue-600"
+                          />
+                          <span class="text-xs text-gray-700">{{
+                            "message.opportunity.notSpecified" | translate
+                          }}</span>
+                        </label>
+                      </div>
+                    }
+
+                    <!-- View mode -->
+                    @if (!isEditing()) {
+                      <div class="text-xs text-gray-600 mt-2">
+                        @if (country.orgUnitStrategyAlignment === true) {
+                          <div class="flex items-center gap-1.5 text-green-500">
+                            <i class="pi pi-check-circle"></i>
+                            <span>{{
+                              "message.opportunity.willAlignToStrategy"
+                                | translate
+                            }}</span>
+                          </div>
+                        } @else if (
+                          country.orgUnitStrategyAlignment === false
+                        ) {
+                          <div class="flex items-center gap-1.5 text-yellow-600">
+                            <i class="pi pi-clock"></i>
+                            <span>{{
+                              "message.opportunity.notAlignedAtThisTime"
+                                | translate
+                            }}</span>
+                          </div>
+                        } @else {
+                          <div class="flex items-center gap-1.5 text-gray-500">
+                            <i class="pi pi-minus-circle"></i>
+                            <span>{{
+                              "message.opportunity.notSpecified" | translate
+                            }}</span>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <!-- No countries added yet -->
+        <div class="bg-lemon-50 border border-yellow-400 rounded-lg p-4">
+          <div class="flex items-start gap-3">
+            <i class="pi pi-info-circle text-yellow-800 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs font-medium text-midnight-500">
+              {{ "message.opportunity.noCountriesAddedForAlignment" | translate }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+    
+  </div>
+  
+  <!-- Footer with Unsaved Changes Warning -->
+  <ng-template pTemplate="footer">
+    @if (isEditing() && hasUnsavedChangesSignal()) {
+      <div class="bg-lemon-50 border-t-4 border-yellow-600 px-4 py-3 rounded-b">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-start gap-2 flex-1">
+            <i class="pi pi-exclamation-triangle text-yellow-800 text-lg flex-shrink-0 mt-0.5"></i>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold text-yellow-800">
+                {{ 'message.unsavedChanges' | translate }}
+              </span>
+              <span class="text-xs font-medium text-yellow-800">
+                {{ 'message.unsavedChangesSectionDetail' | translate }}
+              </span>
+            </div>
+          </div>
+          <div class="flex gap-2 w-full sm:w-auto">
+            <p-button
+              [label]="'button.discardChanges' | translate"
+              icon="pi pi-times"
+              severity="danger"
+              [outlined]="true"
+              (onClick)="cancelEditing()"
+              [disabled]="isSaving()"
+              styleClass="flex-1 sm:flex-none"
+              size="small"
+            />
+            <p-button
+              [label]="'button.saveChanges' | translate"
+              icon="pi pi-check"
+              severity="success"
+              (onClick)="saveSection()"
+              [disabled]="isSaving()"
+              styleClass="flex-1 sm:flex-none"
+              size="small"
+            />
+          </div>
+        </div>
+      </div>
+    }
+  </ng-template>
+</p-panel>
+
+<!-- SDG Dialog - Two-Step Flow -->
+<p-dialog
+  [header]="sdgDialogStep() === 1 ? ('label.opportunity.selectSDGs' | translate) : ('label.opportunity.selectTargetsAndIndicators' | translate)"
+  [(visible)]="showSDGDialog"
+  [modal]="true"
+  [appendTo]="'body'"
+  [style]="{
+    width:
+      sdgDialogStep() === 1
+        ? '50rem'
+        : '65rem',
+    'max-height': '90vh',
+  }"
+  [contentStyle]="{
+    'max-height': '75vh',
+    'overflow-y': 'auto',
+  }"
+>
+  <div class="space-y-6">
+    <!-- Step Indicator -->
+    <div class="flex items-center justify-center gap-4 mb-6">
+      <div class="flex items-center gap-2">
+        <div
+          class="w-8 h-8 rounded-full flex items-center justify-center font-bold"
+          [class.bg-blue-500]="sdgDialogStep() === 1"
+          [class.text-white]="sdgDialogStep() === 1"
+          [class.bg-gray-200]="sdgDialogStep() !== 1"
+          [class.text-gray-600]="sdgDialogStep() !== 1"
+        >
+          1
+        </div>
+        <span
+          class="text-sm font-medium"
+          [class.text-blue-500]="sdgDialogStep() === 1"
+          [class.text-gray-600]="sdgDialogStep() !== 1"
+        >
+          {{ "label.selectSDGs" | translate }}
+        </span>
+      </div>
+      <div class="w-16 h-0.5 bg-gray-300"></div>
+      <div class="flex items-center gap-2">
+        <div
+          class="w-8 h-8 rounded-full flex items-center justify-center font-bold"
+          [class.bg-blue-500]="sdgDialogStep() === 2"
+          [class.text-white]="sdgDialogStep() === 2"
+          [class.bg-gray-200]="sdgDialogStep() !== 2"
+          [class.text-gray-600]="sdgDialogStep() !== 2"
+        >
+          2
+        </div>
+        <span
+          class="text-sm font-medium"
+          [class.text-blue-500]="sdgDialogStep() === 2"
+          [class.text-gray-600]="sdgDialogStep() !== 2"
+        >
+          {{ "label.selectTargetsAndIndicators" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Validation Error Message -->
+    @if (sdgDialogValidationError()) {
+      <p-message
+        severity="error"
+        icon="pi pi-exclamation-triangle"
+        styleClass="mb-4 w-full"
+        [text]="sdgDialogValidationError()!"
+      ></p-message>
+    }
+
+    <!-- STEP 1: Multi-Select SDGs -->
+    @if (sdgDialogStep() === 1) {
+      <div class="space-y-4">
+        <!-- SDG Selection List -->
+        <div
+          class="space-y-2 overflow-y-auto pr-2"
+          [style.max-height]="'31.25rem'"
+        >
+          @for (sdg of sortedSDGs(); track sdg.id) {
+            @let isSelected = isSDGSelected(sdg.sdgId || '');
+            @let primarySecondary = getPrimarySecondaryInStep1(sdg.sdgId || '');
+            @let isNASDG = sdg.sdgId === 'N/A';
+            <div
+              class="border rounded-lg p-4 transition-all hover:shadow-md cursor-pointer"
+              [class.bg-blue-50]="isSelected"
+              [class.border-blue-300]="isSelected"
+              [class.bg-white]="!isSelected"
+              [class.border-gray-200]="!isSelected"
+              (click)="toggleSDGSelection(sdg)"
+            >
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 mt-0.5" (click)="$event.stopPropagation()">
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="isSelected"
+                    (ngModelChange)="toggleSDGSelection(sdg)"
+                    [inputId]="'sdg-' + sdg.sdgId"
+                  />
+                </div>
+                @if (isNASDG) {
+                  <div
+                    class="flex items-center justify-center w-16 h-16 bg-gray-200 text-gray-700 font-semibold rounded shadow-sm flex-shrink-0 text-center px-2 text-sm"
+                  >
+                    {{ sdg.sdgNumber }}
+                  </div>
+                } @else if (sdg.sdgLogo) {
+                  <img
+                    [src]="sdg.sdgLogo"
+                    [alt]="'SDG ' + sdg.sdgNumber"
+                    class="w-16 h-16 object-contain rounded flex-shrink-0"
+                  />
+                } @else {
+                  <div
+                    class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 text-white font-bold text-2xl rounded shadow-sm flex-shrink-0"
+                  >
+                    {{ sdg.sdgNumber }}
+                  </div>
+                }
+                <div class="flex-1 min-w-0">
+                  <h4 class="font-semibold text-midnight-500 mb-1">
+                    @if (isNASDG) {
+                      {{ sdg.name }}
+                    } @else {
+                      {{ "label.opportunity.sdg" | translate }}
+                      {{ sdg.name }}
+                    }
+                  </h4>
+                  
+                  <!-- Primary/Secondary Selection (shown when SDG is selected) -->
+                  @if (isSelected) {
+                    <div class="mt-3 pt-3 border-t border-gray-200" (click)="$event.stopPropagation()">
+                      <label class="block text-sm font-semibold text-gray-600 mb-2">
+                        {{ "label.opportunity.alignmentType" | translate }} *
+                      </label>
+                      <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2" [class.cursor-pointer]="!isNASDG" [class.opacity-50]="isNASDG" [class.cursor-not-allowed]="isNASDG">
+                          <input
+                            type="radio"
+                            [name]="'primary-' + sdg.sdgId"
+                            [checked]="primarySecondary === true"
+                            (change)="togglePrimarySecondaryInStep1(sdg.sdgId || '', true)"
+                            [disabled]="isNASDG"
+                            class="w-4 h-4 accent-blue-500"
+                          />
+                          <div
+                            class="text-xs font-bold px-2 py-1 rounded-lg text-center transition-opacity"
+                            [style]="{
+                              'background-color': '#10b981',
+                              color: '#ffffff',
+                              'min-width': '4.75rem',
+                              opacity: primarySecondary === true ? 1 : 0.5
+                            }"
+                          >
+                            {{ "label.opportunity.sdgPrimary" | translate }}
+                          </div>
+                        </label>
+                        <label class="flex items-center gap-2" [class.cursor-pointer]="!isNASDG" [class.opacity-50]="isNASDG" [class.cursor-not-allowed]="isNASDG">
+                          <input
+                            type="radio"
+                            [name]="'primary-' + sdg.sdgId"
+                            [checked]="primarySecondary === false"
+                            (change)="togglePrimarySecondaryInStep1(sdg.sdgId || '', false)"
+                            [disabled]="isNASDG"
+                            class="w-4 h-4 text-blue-600"
+                          />
+                          <div
+                            class="text-xs font-bold px-2 py-1 rounded-lg text-center transition-opacity"
+                            [style]="{
+                              'background-color': 'var(--p-badge-info-background)',
+                              color: 'var(--p-badge-info-color)',
+                              'min-width': '4.75rem',
+                              opacity: primarySecondary === false ? 1 : 0.5
+                            }"
+                          >
+                            {{ "label.opportunity.sdgSecondary" | translate }}
+                          </div>
+                        </label>
+                        @if (isNASDG) {
+                          <span class="text-xs text-gray-500 italic">
+                            ({{ "message.opportunity.naSDGAlwaysPrimary" | translate }})
+                          </span>
+                        }
+                      </div>
+                      @if (primarySecondary === null && !isNASDG) {
+                        <p-message severity="error" variant="simple" styleClass="mt-2">
+                          {{ "message.validation.primarySecondaryRequired" | translate }}
+                        </p-message>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- STEP 2: Targets and Indicators Selection -->
+    @if (sdgDialogStep() === 2) {
+      <div class="space-y-6">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <div class="flex items-start gap-2">
+            <i class="pi pi-info-circle text-blue-600 mt-0.5"></i>
+            <div class="text-sm text-blue-800">
+              <p class="font-medium mb-1">
+                {{ "message.opportunity.selectTargetsStep2" | translate }}
+              </p>
+              <p class="text-xs">
+                {{ "message.opportunity.selectTargetsStep2Description" | translate }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Targets and Indicators for each selected SDG (Collapsible) -->
+        <div
+          class="overflow-y-auto pr-2"
+          [style.max-height]="'31.25rem'"
+        >
+          <p-accordion
+            [multiple]="false"
+            [value]="expandedSDGIdInStep2()"
+            (valueChange)="onAccordionSdgValueChange($event)">
+            @for (sdg of selectedSDGsForStep1(); track sdg.id; let idx = $index) {
+              @let sdgData = sdgTargetsAndIndicators().get(sdg.sdgId || '');
+              @if (sdgData) {
+                <p-accordion-panel [value]="sdg.sdgId || 'N/A'">
+                  <p-accordion-header>
+                    <div class="flex items-center gap-3 w-full">
+                      @if (sdg.sdgId === 'N/A') {
+                        <div
+                          class="flex items-center justify-center w-12 h-12 bg-gray-200 text-gray-700 font-semibold rounded shadow-sm flex-shrink-0 text-center px-1 text-[0.625rem]"
+                        >
+                          {{ sdg.sdgNumber }}
+                        </div>
+                      } @else if (sdg.sdgLogo) {
+                        <img
+                          [src]="sdg.sdgLogo"
+                          [alt]="'SDG ' + sdg.sdgNumber"
+                          class="w-12 h-12 object-contain rounded flex-shrink-0"
+                        />
+                      } @else {
+                        <div
+                          class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 text-white font-bold text-xl rounded shadow-sm flex-shrink-0"
+                        >
+                          {{ sdg.sdgNumber }}
+                        </div>
+                      }
+                      <div class="flex-1 min-w-0">
+                        <div class="font-semibold text-midnight-500">
+                          @if (sdg.sdgId === 'N/A') {
+                            {{ sdg.name }}
+                          } @else {
+                            {{ "label.opportunity.sdg" | translate }}
+                            {{ sdg.name }}
+                          }
+                        </div>
+                        <div class="flex items-center gap-2 mt-1">
+                          <div
+                            class="text-xs font-bold px-2 py-0.5 rounded-lg text-center"
+                            [style]="{
+                              'background-color': sdgData.isPrimary
+                                ? '#10b981'
+                                : '#0891b2',
+                              color: '#ffffff',
+                              'min-width': '4.75rem',
+                            }"
+                          >
+                            {{ sdgData.isPrimary ? ("label.opportunity.sdgPrimary" | translate) : ("label.opportunity.sdgSecondary" | translate) }}
+                          </div>
+                          @if (sdg.sdgId === 'N/A') {
+                            <span class="text-xs text-gray-500 italic">
+                              ({{ "message.opportunity.naSDGAlwaysPrimary" | translate }})
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                  <div class="space-y-4 pt-2">
+                  <!-- Targets and Indicators (only if not N/A) -->
+                  @if (sdg.sdgId !== 'N/A') {
+                    <div class="space-y-3">
+                      <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        {{ "label.opportunity.sdgTargets" | translate }}
+                      </label>
+
+                      @if (sdgData.loadingTargets) {
+                        <div class="flex items-center gap-2 text-sm text-blue-600 py-4">
+                          <i class="pi pi-spin pi-spinner"></i>
+                          <span>{{ "message.loading" | translate }}...</span>
+                        </div>
+                      } @else if (sdgData.availableTargets.length > 0) {
+                        <div class="space-y-2">
+                          @for (target of sdgData.availableTargets; track target.id) {
+                            <div class="border border-gray-200 rounded-lg">
+                              <!-- Target Checkbox -->
+                              <div class="p-3 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                <div class="flex items-start gap-3">
+                                  <p-checkbox
+                                    [binary]="true"
+                                    [ngModel]="isTargetSelectedInStep2(sdg.sdgId || '', target.id)"
+                                    (ngModelChange)="toggleTargetInStep2(sdg.sdgId || '', target)"
+                                    [inputId]="'target-' + sdg.sdgId + '-' + target.id"
+                                  />
+                                  <label
+                                    [for]="'target-' + sdg.sdgId + '-' + target.id"
+                                    class="flex-1 cursor-pointer"
+                                  >
+                                    <div class="font-semibold text-gray-950">
+                                      {{ "label.target" | translate }} {{ target.sdgTargetId }}
+                                    </div>
+                                    <div class="text-sm text-gray-600 mt-1">
+                                      {{ target.targetDescription }}
+                                    </div>
+                                  </label>
+                                </div>
+                              </div>
+
+                              <!-- Indicators for selected target -->
+                              @if (isTargetSelectedInStep2(sdg.sdgId || '', target.id)) {
+                                <div class="p-3 bg-white border-t border-gray-200">
+                                  <div class="text-xs font-semibold text-gray-700 mb-2 uppercase">
+                                    {{ "label.opportunity.sdgIndicators" | translate }}
+                                  </div>
+
+                                  @if (sdgData.loadingIndicatorsForTargets.has(target.id)) {
+                                    <div class="flex items-center gap-2 text-xs text-blue-600 pl-4 py-2">
+                                      <i class="pi pi-spin pi-spinner"></i>
+                                      <span>{{ "message.loading" | translate }}...</span>
+                                    </div>
+                                  } @else if (getIndicatorsForTargetInStep2(sdg.sdgId || '', target.sdgTargetId).length > 0) {
+                                    <div
+                                      class="space-y-2 pl-4 overflow-y-auto"
+                                      [style.max-height]="'12rem'"
+                                    >
+                                      @for (
+                                        indicator of getIndicatorsForTargetInStep2(sdg.sdgId || '', target.sdgTargetId);
+                                        track indicator.id
+                                      ) {
+                                        <div class="flex items-start gap-2">
+                                          <p-checkbox
+                                            [binary]="true"
+                                            [ngModel]="isIndicatorSelectedInStep2(sdg.sdgId || '', target.id, indicator.id)"
+                                            (ngModelChange)="toggleIndicatorInStep2(sdg.sdgId || '', target.id, indicator.id)"
+                                            [inputId]="'indicator-' + sdg.sdgId + '-' + target.id + '-' + indicator.id"
+                                          />
+                                          <label
+                                            [for]="'indicator-' + sdg.sdgId + '-' + target.id + '-' + indicator.id"
+                                            class="flex-1 cursor-pointer text-sm text-gray-700"
+                                          >
+                                            {{ indicator.sdgIndicatorLongDescription }}
+                                          </label>
+                                        </div>
+                                      }
+                                    </div>
+                                  } @else {
+                                    <div class="text-xs text-yellow-600 pl-4 py-2">
+                                      <i class="pi pi-info-circle"></i>
+                                      <span class="ml-2">
+                                        {{ "message.noIndicatorsAvailable" | translate }}
+                                      </span>
+                                    </div>
+                                  }
+                                </div>
+                              }
+                            </div>
+                          }
+                        </div>
+                      } @else {
+                        <p class="text-sm text-gray-500 italic">
+                          {{ "message.noTargetsAvailable" | translate }}
+                        </p>
+                      }
+                    </div>
+                  }
+                </div>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              }
+            }
+          </p-accordion>
+        </div>
+      </div>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex items-center justify-between w-full">
+      @if (sdgDialogStep() === 1 && selectedSDGCount() > 0) {
+        <div class="flex items-center gap-2 text-green-500">
+          <i class="pi pi-check-circle"></i>
+          <span class="text-sm font-medium">
+            {{ selectedSDGCount() }}
+            {{ selectedSDGCount() === 1 ? ("label.sdgSelected" | translate) : ("label.sdgsSelected" | translate) }}
+          </span>
+        </div>
+      } @else {
+        <span></span>
+      }
+      <div class="flex gap-2">
+        @if (sdgDialogStep() === 1) {
+        <p-button
+          [label]="'button.cancel' | translate"
+          severity="secondary"
+          (onClick)="cancelSDGDialog()"
+        />
+        <p-button
+          [label]="'button.next' | translate"
+          icon="pi pi-arrow-right"
+          severity="primary"
+          [outlined]="true"
+          (onClick)="proceedToStep2()"
+          [disabled]="selectedSDGCount() === 0"
+        />
+        <p-button
+          [label]="'button.finish' | translate"
+          icon="pi pi-check"
+          severity="primary"
+          (onClick)="finalizeSDGSelections()"
+          [disabled]="selectedSDGCount() === 0"
+        />
+        } @else {
+          <p-button
+            [label]="'button.back' | translate"
+            icon="pi pi-arrow-left"
+            severity="secondary"
+            (onClick)="goBackToStep1()"
+          />
+          <p-button
+            [label]="'button.cancel' | translate"
+            severity="secondary"
+            (onClick)="cancelSDGDialog()"
+          />
+          <p-button
+            [label]="'button.finish' | translate"
+          icon="pi pi-check"
+            severity="primary"
+            (onClick)="finalizeSDGSelections()"
+        />
+        }
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- UNCF Dialog -->
+<p-dialog
+  [header]="'label.opportunity.selectUNCFOutcomes' | translate"
+  [(visible)]="showUNCFDialog"
+  [modal]="true"
+  [appendTo]="'body'"
+  [style]="{
+    width: '50rem',
+    'max-height': '90vh',
+  }"
+  [contentStyle]="{ overflow: 'visible' }"
+>
+  <!-- Validation Error Message -->
+  @if (showUNCFValidationError()) {
+    <p-message
+      severity="error"
+      icon="pi pi-info-circle"
+      styleClass="mb-4 w-full"
+    >
+      {{ "message.opportunity.uncfValidation" | translate }}
+    </p-message>
+  }
+
+  <div class="space-y-4">
+    <!-- Country Display -->
+    @if (selectedCountryForUNCF()) {
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-map-marker text-blue-600"></i>
+          <h4 class="font-semibold text-gray-950">
+            {{ selectedCountryForUNCF()!.country?.name }}
+          </h4>
+        </div>
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (loadingUNCFOutcomesForDialog()) {
+      <div class="text-center py-8">
+        <i class="pi pi-spin pi-spinner text-2xl text-blue-600"></i>
+        <p class="text-sm text-gray-600 mt-2">
+          {{ "message.loadingUNCFOutcomes" | translate }}
+        </p>
+      </div>
+    }
+
+    <!-- UNCF Outcomes Section -->
+    @if (
+      !loadingUNCFOutcomesForDialog() && availableUNCFOutcomes().length > 0
+    ) {
+      <div class="border-t border-gray-200 pt-4 mt-4">
+        <label class="block text-sm font-semibold text-gray-700 mb-3">
+          {{ "label.opportunity.selectUNCFOutcomes" | translate }}
+        </label>
+
+        <div
+          class="space-y-3 overflow-y-auto pr-2"
+          [style.max-height]="'25rem'"
+        >
+          @for (outcome of availableUNCFOutcomes(); track outcome.id) {
+            <div
+              class="border rounded-lg p-3 hover:bg-gray-50 transition-colors"
+            >
+              <!-- Outcome Checkbox -->
+              <div class="flex items-start gap-3">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isUNCFOutcomeSelected(outcome.id)"
+                  (ngModelChange)="toggleUNCFOutcome(outcome)"
+                  [inputId]="'outcome-' + outcome.id"
+                />
+                <label
+                  [for]="'outcome-' + outcome.id"
+                  class="flex-1 cursor-pointer"
+                >
+                  <div class="font-medium text-gray-950">
+                    {{ outcome.name }}
+                  </div>
+                  @if (outcome.versionNo) {
+                    <div class="text-xs text-gray-500 mt-1">
+                      {{ "label.version" | translate }}: {{ outcome.versionNo }}
+                    </div>
+                  }
+                </label>
+              </div>
+
+              <!-- Indicators Section (shown when outcome is selected) -->
+              @if (isUNCFOutcomeSelected(outcome.id)) {
+                <div class="mt-3 ml-8 pl-4 border-l-2 border-blue-300">
+                  @if (isLoadingUNCFIndicators(outcome.id)) {
+                    <div class="text-center py-4">
+                      <i class="pi pi-spin pi-spinner text-blue-600"></i>
+                      <p class="text-xs text-gray-600 mt-2">
+                        {{ "message.loadingIndicators" | translate }}
+                      </p>
+                    </div>
+                  } @else if (
+                    getIndicatorsForUNCFOutcome(outcome.id).length > 0
+                  ) {
+                    <div>
+                      <p class="text-sm font-semibold text-gray-700 mb-2">
+                        {{ "label.indicators" | translate }}:
+                      </p>
+                      <div class="space-y-2">
+                        @for (
+                          indicator of getIndicatorsForUNCFOutcome(outcome.id);
+                          track indicator.id
+                        ) {
+                          <div class="flex items-start gap-2">
+                            <p-checkbox
+                              [binary]="true"
+                              [ngModel]="
+                                isUNCFIndicatorSelected(
+                                  outcome.id,
+                                  indicator.id
+                                )
+                              "
+                              (ngModelChange)="
+                                toggleUNCFIndicator(outcome.id, indicator.id)
+                              "
+                              [inputId]="'indicator-' + indicator.id"
+                            />
+                            <label
+                              [for]="'indicator-' + indicator.id"
+                              class="flex-1 text-sm text-gray-700 cursor-pointer"
+                            >
+                              <span class="font-medium">{{ indicator.name }}</span>
+                              @if (indicator.indicators) {
+                                <span class="block text-xs text-gray-500 mt-0.5">{{ indicator.indicators }}</span>
+                              }
+                            </label>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="text-center py-4">
+                      <p class="text-sm text-gray-500">
+                        <i class="pi pi-info-circle"></i>
+                        {{ "message.noIndicatorsAvailable" | translate }}
+                      </p>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (
+      !loadingUNCFOutcomesForDialog() && availableUNCFOutcomes().length === 0
+    ) {
+      <div class="text-center py-8 text-gray-400">
+        <i class="pi pi-flag text-4xl mb-3"></i>
+        <p>{{ "message.opportunity.noUNCFOutcomesForCountry" | translate }}</p>
+      </div>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="'button.cancel' | translate"
+      severity="secondary"
+      (onClick)="cancelUNCFDialog()"
+    />
+    <p-button
+      [label]="'button.confirm' | translate"
+      severity="primary"
+      (onClick)="
+        isEditingUNCFCountry() ? updateUNCFOutcomes() : addUNCFOutcomes()
+      "
+    />
+  </ng-template>
+</p-dialog>
+
+<!-- UNOPS Missions Selection Dialog -->
+<p-dialog
+  [header]="'title.selectUNOPSMissions' | translate"
+  [(visible)]="showUNOPSMissionsDialog"
+  [modal]="true"
+  [appendTo]="'body'"
+  [style]="{
+    width: '45rem',
+    maxHeight: '80vh',
+  }"
+  [contentStyle]="{ overflow: 'auto' }"
+>
+  <div class="space-y-3">
+    <p class="text-sm text-gray-600 mb-4">
+      {{ "helpText.opportunity.unopsMissions" | translate }}
+    </p>
+
+    <!-- Mission Selection List -->
+    <div
+      class="space-y-2 overflow-y-auto pr-2"
+      [style.max-height]="'24rem'"
+    >
+      @for (mission of activeMissionsForDialog(); track mission.id) {
+        <div
+          class="border rounded-lg p-3 cursor-pointer transition-all hover:shadow-md"
+          [class.bg-gradient-to-r]="isUNOPSMissionSelected(mission.id)"
+          [class.from-blue-50]="isUNOPSMissionSelected(mission.id)"
+          [class.to-midnight-50]="isUNOPSMissionSelected(mission.id)"
+          [class.border-blue-300]="isUNOPSMissionSelected(mission.id)"
+          [class.bg-white]="!isUNOPSMissionSelected(mission.id)"
+          [class.border-gray-200]="!isUNOPSMissionSelected(mission.id)"
+          (click)="toggleUNOPSMission(mission.id)"
+        >
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 mt-0.5">
+              <p-checkbox
+                [binary]="true"
+                [ngModel]="isUNOPSMissionSelected(mission.id)"
+                (click)="$event.stopPropagation()"
+                (ngModelChange)="toggleUNOPSMission(mission.id)"
+              />
+            </div>
+            @if (mission.iconClass) {
+              <i [class]="mission.iconClass + ' text-2xl text-blue-600'"></i>
+            } @else {
+              <i class="pi pi-circle text-xl text-blue-600"></i>
+            }
+            <div class="flex-1">
+              <h4
+                class="font-medium text-sm"
+                [class.text-gray-950]="isUNOPSMissionSelected(mission.id)"
+                [class.text-gray-700]="!isUNOPSMissionSelected(mission.id)"
+              >
+                {{ mission.name }}
+              </h4>
+              @if (mission.description) {
+                <p
+                  class="text-xs mt-1"
+                  [class.text-gray-700]="isUNOPSMissionSelected(mission.id)"
+                  [class.text-gray-600]="!isUNOPSMissionSelected(mission.id)"
+                >
+                  {{ mission.description }}
+                </p>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (activeMissionsForDialog().length === 0) {
+        <p class="text-sm text-gray-400 italic">
+          {{ "message.opportunity.loadingUNOPSMissions" | translate }}
+        </p>
+      }
+    </div>
+
+    <!-- Not Applicable Option -->
+    <div class="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+      <label class="flex items-start gap-2 cursor-pointer">
+        <div class="flex-shrink-0 mt-0.5">
+          <p-checkbox
+            [binary]="true"
+            [ngModel]="unopsMissionsNotApplicable()"
+            (ngModelChange)="toggleUNOPSNotApplicable($event)"
+          />
+        </div>
+        <span class="text-sm text-gray-700">
+          {{ "label.opportunity.unopsMissionsNotApplicable" | translate }}
+        </span>
+      </label>
+    </div>
+
+    <!-- Selected Count -->
+    <div
+      class="mt-3 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800"
+    >
+      <i class="pi pi-info-circle mr-2"></i>
+      @if (unopsMissionCount() > 0) {
+        {{ unopsMissionCount() }} {{ "label.missionsSelected" | translate }}
+      } @else {
+        {{ "message.opportunity.noUNOPSMissionsSelected" | translate }}
+      }
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="'button.cancel' | translate"
+      severity="secondary"
+      (onClick)="cancelUNOPSMissionsDialog()"
+    />
+    <p-button
+      [label]="'button.confirm' | translate"
+      severity="primary"
+      [disabled]="!isUNOPSMissionsDialogValid()"
+      (onClick)="saveUNOPSMissionsDialog()"
+    />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,242 @@
+﻿<p-dialog
+  [(visible)]="display"
+  [modal]="true"
+  [styleClass]="'new-partner-dialog'"
+  [header]="'title.newPartner' | translate"
+  (onHide)="hide()">
+
+<p-blockui [blocked]="partnerService.isLoading()" />
+
+  @if( showValidationFailedError() === true ){
+    <p-message severity="error" icon="pi pi-info-circle" class="block gap-2">{{ 'validation.pleaseFullAllRequired' | translate }}</p-message>
+  }
+
+  <form class="w-full flex flex-col gap-8" [formGroup]="formGroup">
+
+    <div class="flex flex-col gap-8">
+      <div class="font-sans text-xl font-semibold text-gray-950">
+        {{ 'title.partnerTitles.partnerInformation' | translate }}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.name" | translate }}&nbsp;*</label>
+          <input pInputText fluid="true" formControlName="name" />
+          @if( formGroup.get("name")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.nameRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.shortName" | translate }}&nbsp;*</label>
+          <input pInputText fluid="true" formControlName="shortName" />
+          @if( formGroup.get("shortName")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.shortNameRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.status" | translate }}&nbsp;*</label>
+          <p-select
+            formControlName="status"
+            [options]="allPartnerStatusData()"
+            optionLabel="name"
+            optionValue="id"
+            fluid="true"
+            [showClear]="true"
+            [appendTo]="'body'"
+            [placeholder]="'placeholder.selectStatus' | translate"
+          />
+          @if( formGroup.get("status")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.statusRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.newEngagement" | translate }}&nbsp;*</label>
+          <p-select formControlName="newEngagement"
+                    [options]="allPartnerNewEngagementData()"
+                    optionLabel="name"
+                    optionValue="id"
+                    fluid="true"
+                    [showClear]="true"
+                    [appendTo]="'body'"
+                    [placeholder]="'placeholder.selectNewEngagement' | translate" />
+          @if( formGroup.get("newEngagement")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.newEngagementRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.phone" | translate }}</label>
+          <input pInputText fluid="true" formControlName="phone" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.website" | translate }}</label>
+          <input pInputText fluid="true" formControlName="website" />
+        </div>
+
+        <p-divider class="col-span-full" />
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.pooledFund" | translate }}&nbsp;*</label>
+          <p-select formControlName="pooledFund"
+                    [options]="allYesNoData()"
+                    optionLabel="name"
+                    optionValue="id"
+                    fluid="true"
+                    [showClear]="true"
+                    [appendTo]="'body'"
+                    [placeholder]="'placeholder.selectPooledFund' | translate" />
+          @if( formGroup.get("pooledFund")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.pooledFundRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.ddRequired" | translate }}&nbsp;*</label>
+          <p-select formControlName="ddRequired"
+                    [options]="allYesNoData()"
+                    optionLabel="name"
+                    optionValue="id"
+                    fluid="true"
+                    [showClear]="true"
+                    [appendTo]="'body'"
+                    [placeholder]="'placeholder.selectDDRequired' | translate" />
+          @if( formGroup.get("ddRequired")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.ddRequiredRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.ddeacDone" | translate }}&nbsp;*</label>
+          <p-select formControlName="ddeacDone"
+                    [options]="allYesNoData()"
+                    optionLabel="name"
+                    optionValue="id"
+                    fluid="true"
+                    [showClear]="true"
+                    [appendTo]="'body'"
+                    [placeholder]="'placeholder.selectDDEACDone' | translate" />
+          @if( formGroup.get("ddeacDone")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.ddeacDoneRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.eacReference" | translate }}</label>
+          <input pInputText fluid="true" formControlName="eacReference" />
+        </div>
+
+        <p-divider class="col-span-full" />
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.levyPotentiallyApplies" | translate }}&nbsp;*</label>
+          <p-select formControlName="levyPotentiallyApplies"
+                    [options]="allPartnerLevyAppliesData()"
+                    optionLabel="name"
+                    optionValue="id"
+                    fluid="true"
+                    [showClear]="true"
+                    [appendTo]="'body'"
+                    [placeholder]="'placeholder.selectLevyPotentiallyApplies' | translate" />
+          @if( formGroup.get("levyPotentiallyApplies")?.invalid && showValidationFailedError() )
+          {
+            <p-message severity="error" variant="simple">{{ 'validation.levyPotentiallyAppliesRequired' | translate }}</p-message>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.reasonForLevyNotApplying" | translate }}</label>
+          <p-select formControlName="reasonForLevyNotApplying"
+                    [options]="allPartnerReasonForLevyNotData()"
+                    optionLabel="name"
+                    optionValue="id"
+                    fluid="true"
+                    [showClear]="true"
+                    [appendTo]="'body'"
+                    [placeholder]="'placeholder.selectReasonForLevyNotApplying' | translate" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label>{{ "label.partner.levyTreatment" | translate }}</label>
+          <p-select formControlName="levyTreatment"
+                    [options]="allPartnerLevyTreatmentData()"
+                    optionLabel="name"
+                    optionValue="id"
+                    [showClear]="true"
+                    [appendTo]="'body'"
+                    fluid="true"
+                    [placeholder]="'placeholder.selectLevyTreatment' | translate" />
+        </div>
+
+        <div class="flex gap-2 items-center">
+          <p-checkbox [binary]="true"
+                      formControlName="globalKeyAccount"
+                      inputId="gka" />
+          <label for="gka" class="ml-2">{{ "label.partner.globalKeyAccount" | translate }}</label>
+        </div>
+
+        <div class="flex gap-2 items-center">
+          <p-checkbox [binary]="true"
+                      formControlName="unSecretariatEntity"
+                      inputId="unse" />
+          <label for="unse" class="ml-2">{{ "label.partner.unSecretariatEntity" | translate }}</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-8">
+      <div class="font-sans text-xl font-semibold text-gray-950">
+        {{ 'title.partnerTitles.addressInformation' | translate }}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+        <div class="flex-col flex  gap-4">
+          <div class="font-semibold">{{ 'title.partnerTitles.address1' | translate }}</div>
+
+          <div>
+            <label>{{ "label.partner.address1Street" | translate }}</label>
+            <input pInputText fluid="true" formControlName="address1Street" />
+          </div>
+          <div>
+            <label>{{ "label.partner.address1Street2" | translate }}</label>
+            <input pInputText fluid="true" formControlName="address1Street2" />
+          </div>
+          <div>
+            <label>{{ "label.partner.address1City" | translate }}</label>
+            <input pInputText fluid="true" formControlName="address1City" />
+          </div>
+          <div>
+            <label>{{ "label.partner.address1StateProvince" | translate }}</label>
+            <input pInputText fluid="true" formControlName="address1StateProvince" />
+          </div>
+          <div>
+            <label>{{ "label.partner.address1PostalCode" | translate }}</label>
+            <input pInputText fluid="true" formControlName="address1PostalCode" />
+          </div>
+          <div>
+            <label>{{ "label.partner.address1Country" | translate }}</label>
+            <input pInputText fluid="true" formControlName="address1Country" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+<ng-template pTemplate="footer">
+  <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+    <p-button icon="pi pi-times" label="{{'button.cancel' | translate}}" (click)="hide()" severity="secondary"/>
+    <p-button icon="pi pi-check" label="{{'button.save' | translate}}" [loading]="isSaving()" (click)="_handleOnSaveClick()"/>
+  </div>
+</ng-template>
+</p-dialog>

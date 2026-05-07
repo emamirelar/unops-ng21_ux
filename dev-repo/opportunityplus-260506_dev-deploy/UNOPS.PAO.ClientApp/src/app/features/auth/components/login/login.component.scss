@@ -1,0 +1,52 @@
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--color-gray-50);
+}
+
+.login-container {
+    background-color: var(--surface-card, #fff);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    max-width: 25rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.brand-header {
+    font-size: 1.5rem;
+    color: var(--color-gray-900);
+}
+
+.username-password-container {
+    margin-top: 2rem;
+}
+
+/* .p-password / .p-password-input: primeng-brand-theme.scss (.unops-login-host) */
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+.login-spinner {
+    border: 0.25rem solid color-mix(in srgb, var(--color-gray-900) 10%, transparent);
+    width: calc(2rem + 0.25rem);
+    height: calc(2rem + 0.25rem);
+    border-radius: 9999px;
+    border-left-color: var(--color-blue-500);
+    animation: login-auth-spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes login-auth-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

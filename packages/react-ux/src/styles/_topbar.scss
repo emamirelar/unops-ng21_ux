@@ -1,0 +1,250 @@
+.layout-topbar {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--surface-border);
+    position: static;
+    width: 100%;
+    margin: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-color);
+    background: transparent;
+
+    @media screen and (min-width: 992px) {
+        padding: 0.75rem 1rem;
+    }
+
+    .topbar-left {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+        gap: 1.8rem;
+
+        .topbar-logo {
+            display: none;
+            align-items: center;
+            flex-shrink: 0;
+            outline: 0 none;
+
+            @media screen and (min-width: 992px) {
+                display: flex;
+            }
+
+            img {
+                height: 2.3rem;
+                width: auto;
+            }
+
+            @media screen and (min-width: 992px) {
+                margin-right: 0.5rem;
+            }
+        }
+
+        .topbar-menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 1rem;
+            border: none;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            transition:
+                background-color var(--transition-duration)
+                color var(--transition-duration),
+                border-color var(--transition-duration);
+
+            &:hover {
+                background: var(--surface-hover);
+            }
+
+            &.active {
+                background: transparent;
+            }
+
+            i {
+                font-size: 1rem;
+            }
+
+            @media screen and (min-width: 992px) {
+                display: flex;
+                margin-left: 0.375rem;
+            }
+        }
+
+        .topbar-logo-separator {
+            display: none;
+            width: 1px;
+            align-self: stretch;
+            background: var(--surface-border);
+
+            @media screen and (min-width: 992px) {
+                display: block;
+            }
+        }
+
+        .horizontal-logo {
+            display: none;
+        }
+
+        .layout-breadcrumb {
+            display: flex;
+        }
+    }
+
+    .menu-button {
+        width: 2.5rem;
+        height: 2.5rem;
+        line-height: 2.5rem;
+        text-align: center;
+        color: inherit;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+        background: transparent;
+        transition:
+            background-color var(--transition-duration),
+            box-shadow var(--transition-duration);
+        display: block;
+        cursor: pointer;
+        outline: 0 none;
+        &:hover {
+            background: var(--surface-hover);
+        }
+
+        &.active {
+            background: transparent;
+        }
+
+        &:focus {
+            box-shadow: var(--focus-ring-shadow);
+        }
+
+        i {
+            line-height: inherit;
+            font-size: 1.125rem;
+        }
+
+    }
+
+    .topbar-separator {
+        display: block;
+        width: 1px;
+        border-left: 1px solid var(--surface-border);
+        align-self: stretch;
+        margin: 0 1.5rem;
+    }
+
+    .mobile-logo {
+        display: none;
+    }
+
+    .mobile-menu-button {
+        display: none;
+    }
+
+    .viewname {
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+
+    .mobile-profile-actions {
+        display: none;
+    }
+
+    @media screen and (max-width: 991px) {
+        .mobile-profile-actions {
+            display: block;
+        }
+    }
+
+    .topbar-menu {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+
+        > li {
+            margin-left: 0.5rem;
+            position: relative;
+
+            @media screen and (min-width: 992px) {
+                margin-left: 1rem;
+            }
+
+            &:first {
+                margin-left: 0;
+            }
+
+            &.profile-item {
+                > a {
+                    width: auto;
+                    height: auto;
+                    display: flex;
+                    align-items: center;
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+
+                    .p-avatar {
+                        background: transparent;
+                    }
+                }
+
+                .profile-image {
+                    width: 2.5rem;
+                    height: 2.5rem;
+                }
+            }
+
+            > a {
+                width: 2.5rem;
+                height: 2.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: inherit;
+                overflow: hidden;
+                border-radius: var(--border-radius-circle);
+                transition:
+                    background-color var(--transition-duration),
+                    box-shadow var(--transition-duration);
+                position: relative;
+                cursor: pointer;
+                user-select: none;
+                outline: 0 none;
+
+                &:hover {
+                    background: var(--surface-hover);
+                }
+
+                &:focus {
+                    box-shadow: var(--focus-ring-shadow);
+                }
+
+                i {
+                    line-height: inherit;
+                    font-size: 1rem;
+                }
+
+                .topbar-badge {
+                    position: absolute;
+                    display: block;
+                    right: 0;
+                    top: 0;
+                    width: 1rem;
+                    height: 1rem;
+                    line-height: 1rem;
+                    font-size: var(--font-size-sm);
+                    border-radius: var(--border-radius-circle);
+                    font-weight: 600;
+                    background: var(--primary-color);
+                    color: var(--primary-contrast-color);
+                }
+            }
+        }
+    }
+}

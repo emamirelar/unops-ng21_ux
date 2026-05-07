@@ -1,0 +1,31 @@
+@if (nodes().length > 0) {
+  <ng-container *ngTemplateOutlet="recursive; context: { items: nodes(), startIndex: 0 }"></ng-container>
+}
+
+<ng-template #recursive let-items="items" let-startIndex="startIndex">
+  @if (items && items.length > 0) {
+    <div class="hierarchy-node" [class.current]="isCurrent(startIndex)">
+      <span class="material-symbols-outlined hierarchy-icon" aria-hidden="true">apartment</span>
+      <div class="hierarchy-name-level">
+        @if (items[0].officeId) {
+          <a
+            [routerLink]="['/offices', items[0].officeId]"
+            class="hierarchy-link"
+            [class.current-name]="isCurrent(startIndex)"
+            >{{ items[0].name }}</a
+          >
+        } @else {
+          <span class="hierarchy-name" [class.current]="isCurrent(startIndex)">{{ items[0].name }}</span>
+        }
+        <span class="hierarchy-level" [class.current]="isCurrent(startIndex)">
+          {{ 'office.detail.level' | translate }} {{ startIndex + 1 }}@if (isCurrent(startIndex)) { — {{ 'office.detail.current' | translate }}}
+        </span>
+      </div>
+    </div>
+    @if (items.length > 1) {
+      <div class="hierarchy-children">
+        <ng-container *ngTemplateOutlet="recursive; context: { items: items.slice(1), startIndex: startIndex + 1 }"></ng-container>
+      </div>
+    }
+  }
+</ng-template>

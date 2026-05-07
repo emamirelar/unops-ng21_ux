@@ -1,0 +1,33 @@
+/**
+ * Data table styles matching office mockups.
+ * Apply class "data-table" to p-table styleClass for thead th and tbody td styling.
+ */
+
+.data-table {
+  thead th {
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-gray-600, #808284);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--color-gray-200, #d8dadf);
+    background: var(--color-gray-50, #f0f3f4);
+  }
+
+  tbody td {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--color-gray-100, #ECF0F5);
+    font-size: 0.875rem;
+    vertical-align: top;
+  }
+
+  tbody tr:hover {
+    background: var(--color-blue-50, #DEEFFF);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}

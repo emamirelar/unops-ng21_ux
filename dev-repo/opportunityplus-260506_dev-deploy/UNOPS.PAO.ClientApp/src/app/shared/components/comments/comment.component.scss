@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+textarea {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-gray-100);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-gray-400);
+    border-radius: 0.25rem;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-600);
+  }
+}
+
+.comment-mention-suggestions {
+  width: calc(100% - 2rem);
+  max-height: 200px;
+}
+
+.new-comment-textarea {
+  border: 2px solid var(--color-blue-200);
+  transition: border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover:not(:focus) {
+    border-color: var(--color-blue-300);
+  }
+
+  &:focus {
+    border-color: var(--color-blue-500);
+  }
+}

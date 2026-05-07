@@ -1,0 +1,61 @@
+@reference "../../../../../tailwind.css";
+
+:host {
+  @apply flex flex-col grow;
+}
+
+.table-container {
+  @apply grow;
+}
+
+.no-data {
+  @apply flex flex-col items-center justify-center;
+}
+
+.dragDrop-container {
+  @apply flex items-center justify-center flex-col pt-4 pb-4 mr-4 ml-4;
+  border: 1px dashed var(--color-blue-200);
+}
+
+:host :deep .upload-file-dialog {
+  width: 60%;
+  height: 60%;
+}
+
+@media (min-width: 768px) {
+  :host :deep .upload-file-dialog {
+    height: 50%;
+  }
+}
+
+.file-pdf {
+  color: var(--color-red-500);
+  font-size: 1.75rem;
+}
+
+.file-sheet {
+  color: var(--color-green-500);
+  font-size: 1.75rem;
+}
+
+.file-doc {
+  color: var(--color-blue-500);
+  font-size: 1.75rem;
+}
+
+:host :deep .pending-file-row {
+  background-color: color-mix(in srgb, var(--color-blue-500) 5%, transparent);
+  border-left: 0.25rem solid color-mix(in srgb, var(--color-blue-500) 50%, transparent);
+}
+
+:host :deep .pending-file-row:hover {
+  background-color: color-mix(in srgb, var(--color-blue-500) 8%, transparent);
+}
+
+:host :deep .save-button {
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+}
+
+:host :deep .save-button:hover:not(:disabled) {
+  transform: scale(1.05);
+}

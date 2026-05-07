@@ -1,0 +1,541 @@
+/**
+ * @fileoverview Opportunity Statement Section Component - Manages AI-generated opportunity statement
+ * @author UNOPS Opportunity+ System Development Team
+ */
+
+import {
+  Component,
+  OnInit,
+  input,
+  output,
+  signal,
+  inject,
+  effect,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+// PrimeNG imports
+import { PanelModule } from 'primeng/panel';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { MessageModule } from 'primeng/message';
+import { TooltipModule } from 'primeng/tooltip';
+import { MarkdownModule } from 'ngx-markdown';
+
+// Services and Models
+import { OpportunityService } from '../../../../../services/opportunity.service';
+import {
+  Opportunity,
+  OpportunityStatementValidationResponse,
+} from '@shared/models/opportunity.model';
+import { FeedbackDialogService } from '@shared/services/ui';
+import { DocumentService } from '@shared/services/api/document.service';
+import { firstValueFrom } from 'rxjs';
+
+/**
+ * @class OpportunityStatementSectionComponent
+ * @description Manages the AI-generated opportunity statement section with generate/regenerate functionality.
+ * Displays markdown-formatted statement content and validates alignment with structured data.
+ *
+ * @example
+ * ```html
+ * <app-opportunity-statement-section
+ *   [opportunity]="opportunity()"
+ *   (opportunityUpdated)="handleOpportunityUpdate($event)"
+ * />
+ * ```
+ *
+ * @implements OnInit
+ * @since 1.0.0
+ */
+@Component({
+  selector: 'app-opportunity-statement-section',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    PanelModule,
+    ButtonModule,
+    DialogModule,
+    MessageModule,
+    TooltipModule,
+    MarkdownModule,
+  ],
+  host: { class: 'unops-opportunity-section-prime' },
+  templateUrl: './opportunity-statement-section.component.html',
+  styleUrls: ['./opportunity-statement-section.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class OpportunityStatementSectionComponent implements OnInit {
+  // Services
+  private readonly opportunityService = inject(OpportunityService);
+  private readonly translateService = inject(TranslateService);
+  private readonly feedbackService = inject(FeedbackDialogService);
+  private readonly documentService = inject(DocumentService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  /**
+   * @description Input signal for opportunity data from parent
+   * @type {Signal<Opportunity>}
+   * @since 1.0.0
+   */
+  readonly opportunity = input.required<Opportunity>();
+
+  /**
+   * @description Input signal for update permission - controls visibility of generate/export buttons
+   */
+  readonly canUpdate = input<boolean>(false);
+
+  /**
+   * @description Input signal to show approver guidance when user is an approver and opportunity is pending approval
+   * @type {Signal<boolean>}
+   * @default false
+   * @since 1.0.0
+   */
+  readonly showApproverGuidance = input<boolean>(false);
+
+  /**
+   * @description Input signal to trigger validation when any section saves.
+   * Parent increments this when a section (What, Why, Who, etc.) saves successfully.
+   * When it changes and a statement exists, validation is triggered.
+   * @type {Signal<number>}
+   * @default 0
+   * @since 1.0.0
+   */
+  readonly sectionSaveTrigger = input<number>(0);
+
+  /**
+   * @description Output event when opportunity statement is generated/regenerated
+   * @type {OutputEmitterRef<Opportunity>}
+   * @param {Opportunity} opportunity - The updated opportunity with new statement
+   * @example
+   * ```html
+   * <app-opportunity-statement-section
+   *   [opportunity]="opportunity()"
+   *   (opportunityUpdated)="handleOpportunityUpdate($event)"
+   * />
+   * ```
+   * @since 1.0.0
+   */
+  readonly opportunityUpdated = output<Opportunity>();
+
+  /**
+   * @description Signal indicating if statement generation is in progress
+   * @type {Signal<boolean>}
+   * @default false
+   * @since 1.0.0
+   */
+  readonly generatingStatement = signal<boolean>(false);
+
+  /**
+   * @description Signal indicating if export to Google Docs is in progress
+   * @type {Signal<boolean>}
+   * @default false
+   * @since 1.0.0
+   */
+  readonly isExporting = signal<boolean>(false);
+
+  /**
+   * @description Signal indicating if statement validation is in progress
+   * @type {Signal<boolean>}
+   * @default false
+   * @since 1.0.0
+   */
+  readonly isValidating = signal<boolean>(false);
+
+  /**
+   * @description Signal to control visibility of export success dialog
+   * @type {Signal<boolean>}
+   * @default false
+   * @since 1.0.0
+   */
+  showExportSuccessDialog = false;
+
+  /**
+   * @description Controls visibility of fullscreen statement dialog
+   * @type {boolean}
+   * @default false
+   * @since 1.0.0
+   */
+  showFullscreenDialog = false;
+
+  /**
+   * @description URL of the exported Google Doc
+   * @type {string | null}
+   * @default null
+   * @since 1.0.0
+   */
+  exportedDocUrl: string | null = null;
+
+  /**
+   * @description Validation result for opportunity statement alignment
+   * @type {OpportunityStatementValidationResponse | null}
+   * @default null
+   * @since 1.0.0
+   */
+  validationResult = signal<OpportunityStatementValidationResponse | null>(
+    null,
+  );
+
+  /**
+   * @description Track the last modified date to detect real changes vs initial load
+   * @type {string | null}
+   * @private
+   * @since 1.0.0
+   */
+  private lastKnownModifiedDate: string | null = null;
+
+  /**
+   * @description Flag to skip validation during statement generation
+   * @type {boolean}
+   * @private
+   * @since 1.0.0
+   */
+  private skipNextValidation = false;
+
+  /**
+   * @description Last sectionSaveTrigger value we processed - prevents re-triggering when isValidating flips to false
+   * @type {number}
+   * @private
+   * @since 1.0.0
+   */
+  private lastProcessedSectionSaveTrigger = 0;
+
+  constructor() {
+    // Effect to watch for opportunity changes and re-run validation
+    // This triggers when other sections are saved and opportunity data is updated
+    effect(() => {
+      const opp = this.opportunity();
+      if (!opp) return;
+
+      const currentModifiedDate = opp.lastModifiedDate?.toString() || null;
+      const hasStatement = !!opp.opportunityStatementMarkdown;
+
+      // Skip if we're currently generating (validation is triggered after generation completes)
+      if (this.generatingStatement() || this.skipNextValidation) {
+        this.skipNextValidation = false;
+        this.lastKnownModifiedDate = currentModifiedDate;
+        return;
+      }
+
+      // Only re-validate if:
+      // 1. There's a statement to validate
+      // 2. The opportunity was modified (lastModifiedDate changed)
+      // 3. We have a previous date to compare (not initial load - ngOnInit handles that)
+      if (
+        hasStatement &&
+        this.lastKnownModifiedDate !== null &&
+        currentModifiedDate !== this.lastKnownModifiedDate
+      ) {
+        // Re-run validation because opportunity data changed
+        this.validateOpportunityStatement();
+      }
+
+      // Update tracking
+      this.lastKnownModifiedDate = currentModifiedDate;
+    });
+
+    // Effect to trigger validation when any section saves (explicit trigger from parent)
+    // Ensures validation runs on every section save when a statement exists
+    // Track lastProcessedSectionSaveTrigger to avoid infinite loop when isValidating flips to false
+    effect(() => {
+      const trigger = this.sectionSaveTrigger();
+      if (trigger <= 0 || trigger === this.lastProcessedSectionSaveTrigger) return;
+
+      const opp = this.opportunity();
+      if (!opp) return;
+
+      const hasStatement = !!(opp.opportunityStatementMarkdown?.trim());
+      if (!hasStatement) return;
+
+      // Skip if generating or already validating
+      if (this.generatingStatement() || this.isValidating()) return;
+
+      this.lastProcessedSectionSaveTrigger = trigger;
+      this.validateOpportunityStatement();
+    });
+  }
+
+  /**
+   * @description Generate or regenerate opportunity statement using AI
+   * @returns {void}
+   * @example
+   * ```typescript
+   * this.generateOpportunityStatement();
+   * ```
+   * @since 1.0.0
+   */
+  generateOpportunityStatement(): void {
+    const opportunityId = this.opportunity()?.id;
+    if (!opportunityId) return;
+
+    this.generatingStatement.set(true);
+    // Skip the effect-triggered validation since we manually call it after generation
+    this.skipNextValidation = true;
+
+    this.opportunityService
+      .generateOpportunityStatement(opportunityId)
+      .subscribe({
+        next: (response) => {
+          this.generatingStatement.set(false);
+
+          // Update the opportunity with the generated statement
+          const currentOpportunity = this.opportunity();
+          if (currentOpportunity) {
+            const updatedOpportunity: Opportunity = {
+              ...currentOpportunity,
+              opportunityStatementMarkdown: response.statementMarkdown,
+            };
+
+            // Emit updated opportunity to parent
+            this.opportunityUpdated.emit(updatedOpportunity);
+
+            // Trigger validation automatically after generating statement
+            this.validateOpportunityStatement();
+          }
+
+          this.feedbackService.showSuccessToast({
+            detail: this.translateService.instant(
+              'message.opportunity.statementGenerated',
+            ),
+            summary: this.translateService.instant('message.success'),
+          });
+
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.generatingStatement.set(false);
+          this.skipNextValidation = false; // Reset flag on error
+          this.cdr.detectChanges();
+          // Error handled by global interceptor
+        },
+      });
+  }
+
+  /**
+   * @description Validate opportunity statement alignment with structured data
+   * @returns {void}
+   * @example
+   * ```typescript
+   * this.validateOpportunityStatement();
+   * ```
+   * @since 1.0.0
+   */
+  validateOpportunityStatement(): void {
+    const opportunityId = this.opportunity()?.id;
+    if (!opportunityId) return;
+
+    // Note: We don't check for statement existence here because the backend
+    // validates against the statement stored in the database, not the frontend state.
+    // This allows validation to work immediately after generating a statement,
+    // even before the parent component updates the opportunity input signal.
+
+    this.isValidating.set(true);
+    this.validationResult.set(null);
+
+    this.opportunityService
+      .validateOpportunityStatement(opportunityId)
+      .subscribe({
+        next: (response) => {
+          this.isValidating.set(false);
+          this.validationResult.set(response);
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.isValidating.set(false);
+          this.cdr.detectChanges();
+          // Error handled by global interceptor
+        },
+      });
+  }
+
+  /**
+   * @description Lifecycle hook - validate statement on component init if it exists
+   * @returns {void}
+   * @since 1.0.0
+   */
+  ngOnInit(): void {
+    const opp = this.opportunity();
+    
+    // Initialize tracking for the effect (prevents double validation on load)
+    this.lastKnownModifiedDate = opp?.lastModifiedDate?.toString() || null;
+    
+    // Validate statement when component initializes if statement exists
+    const statement = opp?.opportunityStatementMarkdown;
+    if (statement) {
+      this.validateOpportunityStatement();
+    }
+  }
+
+  /**
+   * @description Export opportunity statement to Google Docs
+   * @returns {Promise<void>}
+   * @example
+   * ```typescript
+   * await this.exportToGoogleDoc();
+   * ```
+   * @since 1.0.0
+   */
+  async exportToGoogleDoc(): Promise<void> {
+    const markdown = this.opportunity()?.opportunityStatementMarkdown;
+    if (!markdown || this.isExporting()) {
+      return;
+    }
+
+    this.isExporting.set(true);
+    this.cdr.detectChanges();
+
+    try {
+      // Convert via backend (uses same IAP headers as similar-projects)
+      console.log('🌐 Exporting to Google Doc...');
+      const result = await firstValueFrom(
+        this.documentService.convertMarkdownToDoc(markdown)
+      );
+      const docUrl = result?.googleDocUrl;
+
+      if (docUrl) {
+        this.exportedDocUrl = docUrl;
+        this.showExportSuccessDialog = true;
+
+        this.feedbackService.showSuccessToast({
+          summary: this.translateService.instant('message.success'),
+          detail: this.translateService.instant(
+            'message.opportunity.exportSuccess',
+          ),
+        });
+      } else {
+        console.error('No URL found in response:', result);
+        this.feedbackService.showWarningToast({
+          summary: this.translateService.instant('message.warning'),
+          detail: this.translateService.instant(
+            'message.opportunity.exportNoUrl',
+          ),
+        });
+      }
+
+      this.cdr.detectChanges();
+    } catch (error: any) {
+      console.error('Error exporting to Google Doc:', error);
+
+      let errorMessage = this.translateService.instant(
+        'message.opportunity.exportError',
+      );
+      if (error.message) {
+        errorMessage = error.message;
+      }
+
+      this.feedbackService.showErrorToast({
+        summary: this.translateService.instant('message.error'),
+        detail: errorMessage,
+      });
+    } finally {
+      this.isExporting.set(false);
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
+   * @description Open the exported Google Doc in a new tab
+   * @returns {void}
+   * @example
+   * ```typescript
+   * this.openExportedDoc();
+   * ```
+   * @since 1.0.0
+   */
+  openExportedDoc(): void {
+    if (this.exportedDocUrl) {
+      window.open(this.exportedDocUrl, '_blank');
+    }
+  }
+
+  /**
+   * @description Close the export success dialog
+   * @returns {void}
+   * @since 1.0.0
+   */
+  closeExportDialog(): void {
+    this.showExportSuccessDialog = false;
+    this.exportedDocUrl = null;
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * @description Open the fullscreen statement dialog
+   * @param {Event} event - Click event to stop propagation (prevents panel toggle)
+   * @returns {void}
+   * @since 1.0.0
+   */
+  openFullscreenDialog(event: Event): void {
+    event.stopPropagation();
+    this.showFullscreenDialog = true;
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * @description Close the fullscreen statement dialog
+   * @returns {void}
+   * @since 1.0.0
+   */
+  closeFullscreenDialog(): void {
+    this.showFullscreenDialog = false;
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * @description Handle markdown content ready event - configure link behavior
+   * Prevents hash links from triggering Angular routing and opens external links in new tab
+   * @returns {void}
+   * @since 1.0.0
+   */
+  onMarkdownReady(): void {
+    // Find all links in the markdown content and configure them
+    setTimeout(() => {
+      const markdownContainer = document.querySelector('.markdown-content');
+      if (!markdownContainer) return;
+
+      const links = markdownContainer.querySelectorAll('a');
+      links.forEach((link: HTMLAnchorElement) => {
+        const href = link.getAttribute('href');
+
+        if (!href) return;
+
+        // Handle hash links (internal anchors)
+        if (href.startsWith('#')) {
+          // Prevent default Angular routing for hash links
+          link.addEventListener('click', (event: Event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Extract the anchor target (remove the # symbol)
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+
+            if (targetElement) {
+              // Smooth scroll to the target element
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+            }
+          });
+        } else {
+          // For all other links (external or internal paths), open in new tab
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noopener noreferrer');
+
+          // Add external link icon for visual indication
+          if (!link.querySelector('.external-link-icon')) {
+            const icon = document.createElement('i');
+            icon.className =
+              'pi pi-external-link external-link-icon ml-1 text-xs';
+            link.appendChild(icon);
+          }
+        }
+      });
+    }, 100);
+  }
+}

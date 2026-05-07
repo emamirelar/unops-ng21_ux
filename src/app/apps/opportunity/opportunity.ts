@@ -13,12 +13,10 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
-import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { Menu } from 'primeng/menu';
-import { FileUploadModule } from 'primeng/fileupload';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskDrawer } from '../tasklist/task-drawer';
+import { DocumentsCard, DocumentItem } from '../documents';
 import { AiCardBgComponent } from '@unopsitg/ux';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -50,15 +48,7 @@ interface ActivityItem {
     ringColor: string;
 }
 
-interface Document {
-    id: number;
-    fileName: string;
-    type: string;
-    fileSize: string;
-    uploadDate: string;
-    owner: string;
-    icon: string;
-}
+type Document = DocumentItem;
 
 interface AiInsight {
     id: number;
@@ -83,6 +73,7 @@ interface SDGAlignment {
     name: string;
     isPrimary: boolean;
     targets: string[];
+    color: string;
 }
 
 interface CrossCuttingConcern {
@@ -175,10 +166,9 @@ interface SectionNav {
         AccordionModule,
         TableModule,
         PaginatorModule,
-        MenuModule,
         ConfirmDialogModule,
-        FileUploadModule,
         TaskDrawer,
+        DocumentsCard,
         AiCardBgComponent,
         TooltipModule,
         ProgressBarModule
@@ -425,11 +415,11 @@ interface SectionNav {
                                 <!-- SDG Alignment -->
                                 <div class="flex flex-col gap-3">
                                     <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">SDG Alignment</span>
-                                    <div class="flex flex-col gap-3">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                                         @for (sdg of sdgAlignments; track sdg.number) {
                                             <div class="p-4 rounded-xl border border-surface-100 dark:border-surface-700" [class]="sdg.isPrimary ? 'bg-primary-50/50 dark:bg-primary-900/10' : 'bg-surface-50 dark:bg-surface-800'">
                                                 <div class="flex items-center gap-3 mb-2">
-                                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white" [class]="sdg.number === 6 ? 'bg-sky-500' : 'bg-green-600'">{{ sdg.number }}</div>
+                                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white" [style.background-color]="sdg.color">{{ sdg.number }}</div>
                                                     <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ sdg.name }}</span>
                                                     <p-tag [value]="sdg.isPrimary ? 'Primary' : 'Secondary'" [severity]="sdg.isPrimary ? 'info' : 'secondary'" styleClass="text-xs" />
                                                 </div>
@@ -1166,96 +1156,7 @@ interface SectionNav {
                 </ux-ai-card-bg>
 
                 <!-- Documents Section -->
-                <div class="card flex flex-col">
-                    <div class="flex flex-col gap-4">
-                        <div class="flex items-center gap-3">
-                            <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Documents</h4>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2" role="tablist" aria-label="Document type filters">
-                            @for (filter of docFilterOptions(); track filter) {
-                                <button
-                                    role="tab"
-                                    [attr.aria-selected]="activeDocFilter() === filter"
-                                    class="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer"
-                                    [class]="activeDocFilter() === filter
-                                        ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-700'
-                                        : 'bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-600 hover:bg-surface-200 dark:hover:bg-surface-600'"
-                                    (click)="activeDocFilter.set(filter)"
-                                >{{ filter }}</button>
-                            }
-                        </div>
-
-                        <p-iconfield>
-                            <p-inputicon class="pi pi-search" />
-                            <input pInputText [(ngModel)]="docSearchQuery" placeholder="Search documents" class="w-full" />
-                        </p-iconfield>
-
-                        <p-table
-                            [value]="filteredDocuments()"
-                            [paginator]="true"
-                            [rows]="5"
-                            sortMode="multiple"
-                            styleClass="flex flex-col rounded-2xl overflow-hidden [&>[data-pc-section=paginatorcontainer]]:border-0! [&>[data-pc-section=paginatorcontainer]]:mt-auto [&_[data-pc-name=pcpaginator]]:rounded-none!"
-                            tableStyleClass="w-full"
-                            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-                        >
-                            <ng-template #header>
-                                <tr>
-                                    <th pSortableColumn="fileName">File Name <p-sortIcon field="fileName" /></th>
-                                    <th pSortableColumn="type">Type <p-sortIcon field="type" /></th>
-                                    <th>Actions</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template #body let-doc>
-                                <tr>
-                                    <td>
-                                        <div class="flex items-center gap-3 py-1">
-                                            <i class="pi text-xl text-surface-600 dark:text-surface-300" [ngClass]="doc.icon"></i>
-                                            <span class="text-surface-700 dark:text-surface-200 text-sm whitespace-nowrap">{{ doc.fileName }}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p-tag [value]="doc.type" [severity]="getTagSeverity()" styleClass="px-2 py-1" />
-                                    </td>
-                                    <td>
-                                        <div class="flex items-center gap-1">
-                                            <p-button icon="pi pi-download" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" ariaLabel="Download" />
-                                            <p-button icon="pi pi-ellipsis-h" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" ariaLabel="More options" (onClick)="onDocMenuToggle($event, doc, docMenu)" />
-                                            <p-menu #docMenu [model]="docMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
-                                        </div>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-
-                        <p-fileupload
-                            name="documents[]"
-                            [multiple]="true"
-                            maxFileSize="10000000"
-                            mode="advanced"
-                            [auto]="false"
-                            chooseLabel="Upload File"
-                            chooseIcon="pi pi-upload"
-                            [showUploadButton]="false"
-                            [showCancelButton]="false"
-                        >
-                            <ng-template #header let-chooseCallback="chooseCallback">
-                                <div class="flex items-center gap-2 w-full">
-                                    <p-button icon="pi pi-upload" label="Upload File" (onClick)="chooseCallback()" />
-                                    <p-button icon="pi pi-link" label="Share Link" [outlined]="true" styleClass="!text-primary-600 !border-primary-600" (onClick)="shareDocumentLink()" />
-                                </div>
-                            </ng-template>
-                            <ng-template #empty>
-                                <div class="flex flex-col items-center gap-2 py-4">
-                                    <i class="pi pi-cloud-upload text-2xl text-surface-400 dark:text-surface-300"></i>
-                                    <span class="text-surface-500 dark:text-surface-100 text-sm">Drag and drop files here</span>
-                                </div>
-                            </ng-template>
-                        </p-fileupload>
-                    </div>
-                </div>
+                <app-documents-card [documents]="documents()" />
             </div>
         </div>
 
@@ -1348,12 +1249,21 @@ interface SectionNav {
         }
 
         :host-context(.app-dark) .nav-glass {
-            background: linear-gradient(
+            
+        background: linear-gradient(
                 135deg,
                 rgba(255, 255, 255, 0.06) 0%,
                 rgba(255, 255, 255, 0.02) 50%,
                 rgba(255, 255, 255, 0.005) 100%
             );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 
+    0 8px 32px rgba(0, 39, 125, 0.1),
+    inset 0 rgba(0, 47, 142, 0.22),
+    inset 0 rgba(0, 31, 99, 0.1),
+    inset 0 rgba(255, 255, 255, 0.1);
+        
         }
 
     `
@@ -1414,8 +1324,8 @@ export class Opportunity implements OnInit, AfterViewInit {
 
     // ─── SDG Alignment (Why) ───
     sdgAlignments: SDGAlignment[] = [
-        { number: 6, name: 'Clean Water and Sanitation', isPrimary: true, targets: ['6.1 — Safe drinking water', '6.3 — Water quality improvement', '6.b — Local water management'] },
-        { number: 3, name: 'Good Health and Well-being', isPrimary: false, targets: ['3.3 — Waterborne disease reduction', '3.9 — Environmental health risks'] }
+        { number: 6, name: 'Clean Water and Sanitation', isPrimary: true, color: '#26BDE2', targets: ['6.1 — Safe drinking water', '6.3 — Water quality improvement', '6.b — Local water management'] },
+        { number: 3, name: 'Good Health and Well-being', isPrimary: false, color: '#4C9F38', targets: ['3.3 — Waterborne disease reduction', '3.9 — Environmental health risks'] }
     ];
 
     crossCuttingConcerns: CrossCuttingConcern[] = [
@@ -1608,16 +1518,6 @@ export class Opportunity implements OnInit, AfterViewInit {
     completedTasks = computed(() => this.filteredTasks().filter((t) => t.status === 'completed'));
 
     // ─── Documents ───
-    activeDocFilter = signal('All Files');
-    docSearchQuery = model('');
-    docFileTypes = computed(() => {
-        const types = [...new Set(this.documents().map(d => d.type))];
-        types.sort();
-        return types;
-    });
-
-    docFilterOptions = computed(() => ['All Files', ...this.docFileTypes(), 'Other']);
-
     documents = signal<Document[]>([
         { id: 1, fileName: 'PDF File Number One', type: 'DOCX', fileSize: '17.4 MB', uploadDate: 'Apr 21, 2026', owner: 'Olivia Martinez', icon: 'pi-file-word' },
         { id: 2, fileName: 'Table Data', type: 'XLS', fileSize: '24 MB', uploadDate: 'Apr 20, 2026', owner: 'Jessica Davis', icon: 'pi-file-excel' },
@@ -1628,23 +1528,6 @@ export class Opportunity implements OnInit, AfterViewInit {
         { id: 7, fileName: 'Implementation Plan', type: 'DOCX', fileSize: '2.5 MB', uploadDate: 'Apr 8, 2026', owner: 'James Anderson', icon: 'pi-file-word' },
         { id: 8, fileName: 'Budget Projections', type: 'XLS', fileSize: '3.1 MB', uploadDate: 'Apr 5, 2026', owner: 'Jessica Davis', icon: 'pi-file-excel' }
     ]);
-
-    filteredDocuments = computed(() => {
-        let docs = this.documents();
-        const query = this.docSearchQuery().trim().toLowerCase();
-        if (query) {
-            docs = docs.filter(d => d.fileName.toLowerCase().includes(query) || d.owner.toLowerCase().includes(query));
-        }
-        const filter = this.activeDocFilter();
-        if (filter === 'All Files') return docs;
-        if (filter === 'Other') {
-            const knownTypes = this.docFileTypes();
-            return docs.filter(d => !knownTypes.includes(d.type));
-        }
-        return docs.filter(d => d.type === filter);
-    });
-
-    docMenuItems: MenuItem[] = [];
 
     private messageService = inject(MessageService);
 
@@ -1791,36 +1674,6 @@ export class Opportunity implements OnInit, AfterViewInit {
     handleTaskDrawerCancel() {
         this.isTaskDrawerVisible = false;
         this.selectedTask = null;
-    }
-
-    // ─── Document Methods ───
-    onDocMenuToggle(event: Event, doc: Document, menu: Menu) {
-        this.docMenuItems = [
-            { label: 'Edit', icon: 'pi pi-pencil' },
-            { label: 'Share', icon: 'pi pi-share-alt' },
-            { label: 'Delete', icon: 'pi pi-trash', command: () => this.deleteDocument(doc.id) }
-        ];
-        menu.toggle(event);
-    }
-
-    deleteDocument(docId: number) {
-        this.confirmationService.confirm({
-            message: 'Are you sure you want to delete this document?',
-            header: 'Delete Document',
-            icon: 'pi pi-info-circle',
-            rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
-            acceptButtonProps: { label: 'Delete', severity: 'danger' },
-            accept: () => this.documents.set(this.documents().filter((d) => d.id !== docId))
-        });
-    }
-
-    shareDocumentLink() {
-        navigator.clipboard.writeText(window.location.href);
-        this.messageService.add({ severity: 'success', summary: 'Link Copied', detail: 'Document link copied to clipboard' });
-    }
-
-    getTagSeverity(): 'secondary' {
-        return 'secondary';
     }
 
     riskCardClass(risk: Risk): string {
