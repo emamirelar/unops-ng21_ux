@@ -45,7 +45,7 @@ import { FormsModule } from '@angular/forms';
                                     <span class="block text-primary">visitors deserve to see</span>
                                 </h1>
 
-                                <p class="text-surface-0/90 lg:text-surface-700 dark:text-surface-200 text-xl leading-normal mb-8 max-w-xl lg:max-w-none">
+                                <p class="text-surface-0/90 lg:text-surface-700 dark:text-surface-100 text-xl leading-normal mb-8 max-w-xl lg:max-w-none">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                                 </p>
 
@@ -441,7 +441,7 @@ import { FormsModule } from '@angular/forms';
                         <div class="flex flex-col items-center gap-2 w-full">
                             <div class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight text-center w-full">Welcome Back</div>
                             <div class="text-center w-full">
-                                <span class="text-surface-700 dark:text-surface-200 leading-normal">Don't have an account?</span>
+                                <span class="text-surface-700 dark:text-surface-100 leading-normal">Don't have an account?</span>
                                 <a class="text-primary font-medium ml-1 cursor-pointer hover:text-primary-emphasis">Create today!</a>
                             </div>
                         </div>
@@ -587,7 +587,7 @@ export class Blocks {
                         <span class="block text-primary">visitors deserve to see</span>
                     </h1>
 
-                    <p class="text-surface-0/90 lg:text-surface-700 dark:text-surface-200 text-xl leading-normal mb-8 max-w-xl lg:max-w-none">
+                    <p class="text-surface-0/90 lg:text-surface-700 dark:text-surface-100 text-xl leading-normal mb-8 max-w-xl lg:max-w-none">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     </p>
 
@@ -959,7 +959,7 @@ export class Blocks {
             <div class="flex flex-col items-center gap-2 w-full">
                 <div class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight text-center w-full">Welcome Back</div>
                 <div class="text-center w-full">
-                    <span class="text-surface-700 dark:text-surface-200 leading-normal">Don't have an account?</span>
+                    <span class="text-surface-700 dark:text-surface-100 leading-normal">Don't have an account?</span>
                     <a class="text-primary font-medium ml-1 cursor-pointer hover:text-primary-emphasis">Create today!</a>
                 </div>
             </div>

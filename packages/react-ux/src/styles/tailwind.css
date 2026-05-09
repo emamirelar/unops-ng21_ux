@@ -499,7 +499,7 @@
 }
 
 @utility body-large {
-  @apply text-xl text-center text-surface-700 dark:text-surface-200;
+  @apply text-xl text-center text-surface-700 dark:text-surface-100;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv09" on,
@@ -513,7 +513,7 @@
 }
 
 @utility body-medium {
-  @apply text-lg text-center text-surface-700 dark:text-surface-200;
+  @apply text-lg text-center text-surface-700 dark:text-surface-100;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv09" on,
@@ -527,7 +527,7 @@
 }
 
 @utility body-small {
-  @apply text-base text-center text-surface-700 dark:text-surface-200;
+  @apply text-base text-center text-surface-700 dark:text-surface-100;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv09" on,
@@ -541,7 +541,7 @@
 }
 
 @utility body-xsmall {
-  @apply text-sm text-center text-surface-700 dark:text-surface-200;
+  @apply text-sm text-center text-surface-700 dark:text-surface-100;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv09" on,
@@ -585,7 +585,7 @@
 }
 
 @utility label-small {
-  @apply text-surface-700 dark:text-surface-200 font-medium text-sm text-center;
+  @apply text-surface-700 dark:text-surface-100 font-medium text-sm text-center;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv11" on,
@@ -600,7 +600,7 @@
 }
 
 @utility label-xsmall {
-  @apply text-surface-700 dark:text-surface-200 font-medium text-xs text-center;
+  @apply text-surface-700 dark:text-surface-100 font-medium text-xs text-center;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,
@@ -644,7 +644,7 @@
 }
 
 @utility social-button {
-  @apply w-full py-2 flex items-center justify-center gap-2 rounded-lg border border-surface-200 dark:border-surface-800 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all text-center text-surface-700 dark:text-surface-200 font-medium leading-normal;
+  @apply w-full py-2 flex items-center justify-center gap-2 rounded-lg border border-surface-200 dark:border-surface-800 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all text-center text-surface-700 dark:text-surface-100 font-medium leading-normal;
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv08" on,

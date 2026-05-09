@@ -26,6 +26,14 @@ export interface DocumentItem {
     selector: 'app-documents-card',
     imports: [CommonModule, FormsModule, ButtonModule, FileUploadModule, IconFieldModule, InputIconModule, InputTextModule, MenuModule, TableModule, TagModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: `
+        :host :deep .p-fileupload-header {
+            background: transparent;
+        }
+        :host :deep .p-fileupload-content {
+            background: transparent;
+        }
+    `,
     template: `
         <div class="card flex flex-col">
             <div class="flex flex-col gap-4">
@@ -75,7 +83,7 @@ export interface DocumentItem {
                                 <td>
                                     <div class="flex items-center gap-3 py-1">
                                         <i class="pi text-xl text-surface-600 dark:text-surface-300" [ngClass]="doc.icon"></i>
-                                        <span class="text-surface-700 dark:text-surface-200 text-sm whitespace-nowrap">{{ doc.fileName }}</span>
+                                        <span class="text-surface-700 dark:text-surface-100 text-sm whitespace-nowrap">{{ doc.fileName }}</span>
                                     </div>
                                 </td>
                                 <td>

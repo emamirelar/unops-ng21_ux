@@ -87,12 +87,12 @@ const brandOverrides = {
                     50: '{darkblue.50}',
                     100: '{darkblue.100}',
                     200: '{darkblue.200}',
-                    300: '{darkblue.200}',
-                    400: '{darkblue.300}',
-                    500: '{darkblue.400}',
-                    600: '{darkblue.500}',
-                    700: '{darkblue.600}',
-                    800: '{darkblue.700}',
+                    300: '{darkblue.300}',
+                    400: '{darkblue.400}',
+                    500: '{darkblue.500}',
+                    600: '{darkblue.600}',
+                    700: '{darkblue.700}',
+                    800: '{darkblue.800}',
                     900: '{darkblue.900}',
                     950: '{darkblue.950}'
                 }
@@ -128,7 +128,42 @@ const brandOverrides = {
                 }
             }
         },
+        tabs: {
+            tablist: {
+                background: 'transparent'
+            },
+            tab: {
+                background: 'transparent',
+                hoverBackground: '{primary.50}',
+                hoverColor: '{primary.700}',
+                activeBackground: '{primary.100}',
+                activeColor: '{primary.900}',
+                borderColor: 'transparent',
+                activeBorderColor: '{primary.200}',
+                padding: '0.5rem 1rem'
+            },
+            tabpanel: {
+                background: 'transparent',
+                padding: '0'
+            },
+            colorScheme: {
+                dark: {
+                    tab: {
+                        hoverBackground: '{primary.900}',
+                        hoverColor: '{primary.200}',
+                        activeBackground: '{surface.800}',
+                        activeColor: '{primary.200}',
+                        activeBorderColor: '{primary.400}'
+                    }
+                }
+            }
+        },
         paginator: {
+            root: {
+                background: 'transparent'
+            }
+        },
+        fileupload: {
             root: {
                 background: 'transparent'
             }

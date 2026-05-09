@@ -59,7 +59,7 @@ interface CurrentUser {
                     @if (message.isNewDay) {
                         <div class="flex items-center gap-4 xl:gap-6 mb-4 xl:mb-6">
                             <div class="flex-1 h-px bg-surface-200 dark:bg-surface-700"></div>
-                            <span class="text-xs xl:text-sm text-surface-700 dark:text-surface-200">{{ message.dateLabel }}</span>
+                            <span class="text-xs xl:text-sm text-surface-700 dark:text-surface-100">{{ message.dateLabel }}</span>
                             <div class="flex-1 h-px bg-surface-200 dark:bg-surface-700"></div>
                         </div>
                     }
@@ -67,7 +67,7 @@ interface CurrentUser {
                     <!-- Message -->
                     @if (message.senderId === 'me') {
                         <div class="flex justify-end items-start gap-2 xl:gap-4 pl-8 xl:pl-16">
-                            <span class="text-xs text-surface-700 dark:text-surface-200 mt-2">{{ message.time }}</span>
+                            <span class="text-xs text-surface-700 dark:text-surface-100 mt-2">{{ message.time }}</span>
                             <div class="px-3 py-2 bg-primary-100 dark:bg-primary-900 rounded-xl max-w-xs xl:max-w-sm">
                                 <p class="text-sm text-surface-900 dark:text-surface-0 break-words overflow-wrap-anywhere">{{ message.content }}</p>
                             </div>
@@ -82,7 +82,7 @@ interface CurrentUser {
                             <div class="px-3 py-2 bg-surface-100 dark:bg-surface-700 rounded-xl max-w-xs xl:max-w-sm">
                                 <p class="text-sm text-surface-900 dark:text-surface-0 break-words overflow-wrap-anywhere">{{ message.content }}</p>
                             </div>
-                            <span class="text-xs text-surface-700 dark:text-surface-200 mt-2">{{ message.time }}</span>
+                            <span class="text-xs text-surface-700 dark:text-surface-100 mt-2">{{ message.time }}</span>
                         </div>
                     }
                 }

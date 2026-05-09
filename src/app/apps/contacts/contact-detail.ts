@@ -1,22 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { TagModule } from 'primeng/tag';
-import { AiCardBgComponent } from '@unopsitg/ux';
+import { AiInsight, AiInsightsCardComponent } from '@unopsitg/ux';
 import { Contact, ContactService, getContactStatusClass } from './contact.service';
 import { DocumentsCard } from '../documents';
-
-interface AiInsight {
-    id: number;
-    title: string;
-    description: string;
-    actionLabel: string;
-    icon: string;
-    iconColor: string;
-}
 
 const INTERACTION_ICONS: Record<string, string> = {
     Meeting: 'pi pi-calendar',
@@ -36,7 +27,7 @@ const INTERACTION_COLORS: Record<string, string> = {
 
 @Component({
     selector: 'app-contact-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiCardBgComponent, DocumentsCard],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiInsightsCardComponent, DocumentsCard],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (contact(); as c) {
@@ -262,73 +253,11 @@ const INTERACTION_COLORS: Record<string, string> = {
                 <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
 
                     <!-- AI Contact Analysis -->
-                    <ux-ai-card-bg
-                        class="border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 flex flex-col max-h-[calc(100dvh-12rem)]"
-                    >
-                        <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1 min-h-0">
-                        <div class="flex items-center justify-between cursor-pointer shrink-0" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
-                            <div class="flex items-center gap-3">
-                                <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
-                                    <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
-                                </div>
-                                <div class="flex flex-col">
-                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">AI Contact Analysis</h4>
-                                    <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
-                                </div>
-                            </div>
-                            <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-transparent border border-white dark:border-surface-300 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-white/10 transition-colors">
-                                <i class="pi text-xs text-darkblue-500 dark:text-surface-0" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                            </button>
-                        </div>
-
-                        <div class="expand-body" [class.expand-body--open]="isAiCardExpanded()">
-                            <div class="expand-body__inner">
-                            <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0">
-                                <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5 shrink-0">
-                                    <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
-                                    <input
-                                        type="text"
-                                        [ngModel]="aiSearchQuery()"
-                                        (ngModelChange)="aiSearchQuery.set($event); aiInsightsPage.set(0)"
-                                        placeholder="Search insights, risks, or recommendations..."
-                                        class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700 dark:placeholder:text-surface-300"
-                                    />
-                                </div>
-
-                                <div class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-0.5">
-                                    @for (insight of paginatedAiInsights(); track insight.id) {
-                                        <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start shrink-0">
-                                            <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
-                                            <div class="flex flex-col gap-2 flex-1 min-w-0">
-                                                <div class="flex flex-col gap-1">
-                                                    <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
-                                                    <p class="text-[#2b638b] dark:text-surface-300 text-sm leading-normal">{{ insight.description }}</p>
-                                                </div>
-                                                <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-sm font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
-                                                    {{ insight.actionLabel }}
-                                                    <i class="pi pi-arrow-right text-xs"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-
-                                <div class="shrink-0 w-full border-t border-white/50 dark:border-surface-700/50 pt-2 mt-1 relative z-[1] bg-transparent">
-                                    <p-paginator
-                                        [rows]="aiInsightsPerPage()"
-                                        [totalRecords]="filteredAiInsights().length"
-                                        [first]="aiInsightsFirst()"
-                                        (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
-                                        [pageLinkSize]="3"
-                                        styleClass="w-full border-none! bg-transparent!"
-                                        [pt]="{ root: { class: 'bg-transparent! relative! w-full! justify-center!' } }"
-                                    />
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </ux-ai-card-bg>
+                    <ux-ai-insights-card
+                        title="AI Contact Analysis"
+                        [insights]="aiInsights"
+                        searchPlaceholder="Search insights, risks, or recommendations..."
+                    />
 
                     <!-- Partner -->
                     <div class="card">
@@ -477,8 +406,6 @@ export class ContactDetail implements OnInit {
     isRecordInfoExpanded = signal(false);
 
     // ─── AI Analysis ───
-    isAiCardExpanded = signal(false);
-    aiSearchQuery = signal('');
     aiInsights: AiInsight[] = [
         { id: 1, title: 'Engagement Declining', description: 'No interactions logged in the past 45 days. Contacts with similar roles typically have bi-weekly touchpoints.', actionLabel: 'Schedule follow-up', icon: 'pi-exclamation-triangle', iconColor: 'text-orange-500' },
         { id: 2, title: 'Relationship Strength: Strong', description: 'This contact has participated in 5 meetings and 3 calls in the last quarter, above the average for this partner.', actionLabel: 'View relationship report', icon: 'pi-chart-line', iconColor: 'text-green-500' },
@@ -490,39 +417,9 @@ export class ContactDetail implements OnInit {
         { id: 8, title: 'Sentiment Analysis', description: 'Recent email exchanges show a positive sentiment trend. The tone has shifted from neutral to highly engaged.', actionLabel: 'View sentiment details', icon: 'pi-heart', iconColor: 'text-cherry-500' },
     ];
 
-    filteredAiInsights = computed(() => {
-        const query = this.aiSearchQuery().trim().toLowerCase();
-        if (!query) return this.aiInsights;
-        return this.aiInsights.filter(insight =>
-            insight.title.toLowerCase().includes(query) ||
-            insight.description.toLowerCase().includes(query)
-        );
-    });
-
-    private destroyRef = inject(DestroyRef);
-    aiInsightsPerPage = signal(this.calcInsightsPerPage());
-    aiInsightsPage = signal(0);
-    aiInsightsFirst = computed(() => this.aiInsightsPage() * this.aiInsightsPerPage());
-    paginatedAiInsights = computed(() => {
-        const insights = this.filteredAiInsights();
-        return insights.slice(this.aiInsightsFirst(), this.aiInsightsFirst() + this.aiInsightsPerPage());
-    });
-
-    private calcInsightsPerPage(): number {
-        const shellOffset = 12 * 16;
-        const cardChrome = 160 + 72;
-        const insightCardHeight = 150;
-        const available = (typeof window !== 'undefined' ? window.innerHeight : 900) - shellOffset - cardChrome;
-        return Math.max(1, Math.floor(available / insightCardHeight));
-    }
-
     ngOnInit() {
         this.contactService.getContacts();
         this.contactId.set(this.route.snapshot.paramMap.get('id'));
-
-        const onResize = () => this.aiInsightsPerPage.set(this.calcInsightsPerPage());
-        window.addEventListener('resize', onResize);
-        this.destroyRef.onDestroy(() => window.removeEventListener('resize', onResize));
     }
 
     getInitials(contact: Contact): string {

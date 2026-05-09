@@ -236,7 +236,7 @@ interface Document {
                                 <td>
                                     <div class="flex items-center gap-3 py-2">
                                         <i class="pi text-xl text-surface-400 dark:text-surface-300" [ngClass]="doc.icon"></i>
-                                        <span class="text-surface-700 dark:text-surface-200 text-sm whitespace-nowrap">{{ doc.fileName }}</span>
+                                        <span class="text-surface-700 dark:text-surface-100 text-sm whitespace-nowrap">{{ doc.fileName }}</span>
                                     </div>
                                 </td>
                                 <td>

@@ -24,7 +24,7 @@ interface Country {
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-12 lg:col-span-2">
                     <div class="text-surface-900 dark:text-surface-0 font-medium text-xl mb-4">Profile</div>
-                    <p class="m-0 p-0 text-surface-600 dark:text-surface-200 leading-normal mr-4">Odio euismod lacinia at quis risus sed vulputate odio.</p>
+                    <p class="m-0 p-0 text-surface-600 dark:text-surface-100 leading-normal mr-4">Odio euismod lacinia at quis risus sed vulputate odio.</p>
                 </div>
                 <div class="col-span-12 lg:col-span-10">
                     <div class="grid grid-cols-12 gap-4">
@@ -40,7 +40,7 @@ interface Country {
                                 accept="image/*"
                                 [maxFileSize]="1000000"
                                 chooseLabel="Upload Image"
-                                styleClass="w-unset text-surface-600! dark:text-surface-200! hover:text-primary! bg-surface-200/20! hover:bg-surface-200/30! dark:bg-surface-700/20! hover:dark-bg-surface-700/30! border border-surface-300! dark:border-surface-500! p-2!"
+                                styleClass="w-unset text-surface-600! dark:text-surface-100! hover:text-primary! bg-surface-200/20! hover:bg-surface-200/30! dark:bg-surface-700/20! hover:dark-bg-surface-700/30! border border-surface-300! dark:border-surface-500! p-2!"
                             />
                         </div>
                         <div class="mb-6 col-span-12 space-y-2">

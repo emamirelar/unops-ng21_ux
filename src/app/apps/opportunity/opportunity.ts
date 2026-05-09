@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, DestroyRef, ElementRef, inject, model, OnInit, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, model, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -17,7 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskDrawer } from '../tasklist/task-drawer';
 import { DocumentsCard, DocumentItem } from '../documents';
-import { AiCardBgComponent } from '@unopsitg/ux';
+import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective } from '@unopsitg/ux';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
 
@@ -49,15 +49,6 @@ interface ActivityItem {
 }
 
 type Document = DocumentItem;
-
-interface AiInsight {
-    id: number;
-    title: string;
-    description: string;
-    actionLabel: string;
-    icon: string;
-    iconColor: string;
-}
 
 interface Deliverable {
     id: number;
@@ -142,12 +133,6 @@ interface TeamMember {
     image: string;
 }
 
-interface SectionNav {
-    id: string;
-    label: string;
-    icon: string;
-}
-
 @Component({
     selector: 'app-opportunity',
     host: { class: 'block w-full' },
@@ -169,15 +154,18 @@ interface SectionNav {
         ConfirmDialogModule,
         TaskDrawer,
         DocumentsCard,
-        AiCardBgComponent,
+        AiInsightsCardComponent,
+        DetailLayoutComponent,
+        DetailTabDirective,
         TooltipModule,
         ProgressBarModule
     ],
     providers: [ConfirmationService, MessageService],
     template: `
-        <div class="flex flex-col gap-6 animate-fade-in-up">
-            <!-- Page Header -->
-            <div class="flex flex-col gap-3">
+        <ux-detail-layout [tabs]="detailTabs" [(activeTab)]="activeTab">
+
+            <!-- ═══ HEADER ═══ -->
+            <div ux-detail-header class="flex flex-col gap-3 py-4">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                     <div class="flex flex-wrap items-center gap-2 sm:gap-4 flex-1 min-w-0">
                         <h1 class="text-deepsea-500 dark:text-surface-0 text-xl sm:text-2xl font-extrabold leading-8 m-0">Water Sanitization</h1>
@@ -187,49 +175,50 @@ interface SectionNav {
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-wrap items-center gap-4 text-sm text-surface-600 dark:text-surface-300">
-                    <span class="flex items-center gap-1"><i class="pi pi-hashtag text-xs"></i> OPP-2026-00142</span>
-                    <span class="flex items-center gap-1"><i class="pi pi-user text-xs"></i> Olivia Martinez</span>
-                    <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
-                    <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> Target signing: Apr 1, 2026</span>
+            </div>
+            <div ux-detail-header-meta class="flex flex-wrap items-center gap-4 text-sm text-primary-700 dark:text-primary-700 pb-3">
+                <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
+                <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> Target signing: Apr 1, 2026</span>
+                <span class="flex items-center gap-1"><i class="pi pi-hashtag text-xs"></i> OPP-2026-00142</span>
+            </div>
+
+            <!-- ═══ OVERVIEW TAB ═══ -->
+            <ng-template uxDetailTab="overview">
+
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- OVERVIEW SECTION -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <div id="section-overview">
+                            <div class="flex flex-col gap-5 p-2">
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-sm text-surface-700 dark:text-surface-100 leading-relaxed m-0">
+                                        This opportunity focuses on providing sustainable water sanitization solutions to underserved communities in East Africa and Southeast Asia. The programme will deploy modern filtration infrastructure, train local operators, and establish long-term maintenance frameworks to ensure clean water access for over 2.5 million beneficiaries across three implementation countries.
+                                    </p>
+                                </div>
+                                <div class="flex flex-wrap gap-4">
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Proposed Budget</span>
+                                        <span class="text-lg font-bold text-surface-900 dark:text-surface-0">$15,000,000</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Total Funded</span>
+                                        <span class="text-lg font-bold text-green-700 dark:text-green-300">$15,000,000</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Unfunded</span>
+                                        <span class="text-lg font-bold text-surface-900 dark:text-surface-0">$0</span>
+                                    </div>
+                                </div>
+                            </div>
                 </div>
-            </div>
-
-            <!-- Section Navigation -->
-            <div #sectionNav class="flex flex-wrap gap-2 -mt-2 sticky top-0 z-20 py-3 border-b border-transparent transition-colors backdrop-blur-xl nav-glass" [class.border-surface-200/50]="isNavStuck()" [class.dark:border-surface-700/50]="isNavStuck()">                @for (section of sections; track section.id) {
-                    <button
-                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border cursor-pointer"
-                        [class]="activeSection() === section.id
-                            ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-700'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-700'"
-                        (click)="scrollToSection(section.id)"
-                    >
-                        <i class="pi text-xs" [ngClass]="section.icon"></i>
-                        {{ section.label }}
-                    </button>
-                }
-            </div>
-
-            <div class="flex flex-col xl:flex-row gap-6 w-full">
-            <!-- MAIN CONTENT -->
-            <div class="w-full flex-1 flex flex-col gap-6 min-w-0 [&>.card]:mb-0">
 
                 <!-- ═══════════════════════════════════════════════ -->
                 <!-- ANALYSIS SECTION -->
                 <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-analysis">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isAnalysisExpanded()" (click)="isAnalysisExpanded.set(!isAnalysisExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-chart-bar text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Analysis</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isAnalysisExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isAnalysisExpanded()">
-                        <div class="expand-body__inner">
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-2">
+                <div id="section-analysis">
+                            <div class="flex flex-wrap gap-4 p-2">
                                 @for (stat of analysisStats; track stat.label) {
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl border border-surface-200/60 dark:border-surface-700/40">
+                                    <div class="flex flex-col items-center gap-1 p-3 rounded-xl border border-surface-200/60 dark:border-surface-700/40 min-w-[100px] flex-1">
                                         <div class="flex items-center gap-2">
                                             <i class="pi text-sm" [ngClass]="[stat.icon, stat.iconColor]"></i>
                                             <span class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{ stat.label }}</span>
@@ -238,77 +227,53 @@ interface SectionNav {
                                     </div>
                                 }
                             </div>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- OVERVIEW SECTION -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-overview">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isOverviewExpanded()" (click)="isOverviewExpanded.set(!isOverviewExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-file text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Overview</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isOverviewExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isOverviewExpanded()">
-                        <div class="expand-body__inner">
-                            <div class="flex flex-col gap-5 p-2">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Name</span>
-                                    <span class="text-base font-medium text-surface-900 dark:text-surface-0">Water Sanitization</span>
-                                </div>
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Description</span>
-                                    <p class="text-sm text-surface-700 dark:text-surface-200 leading-relaxed m-0">
-                                        This opportunity focuses on providing sustainable water sanitization solutions to underserved communities in East Africa and Southeast Asia. The programme will deploy modern filtration infrastructure, train local operators, and establish long-term maintenance frameworks to ensure clean water access for over 2.5 million beneficiaries across three implementation countries.
-                                    </p>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Proposed Budget</span>
-                                        <span class="text-lg font-bold text-surface-900 dark:text-surface-0">$15,000,000</span>
-                                    </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800">
-                                        <span class="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Total Funded</span>
-                                        <span class="text-lg font-bold text-green-700 dark:text-green-300">$15,000,000</span>
-                                    </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Unfunded</span>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-lg font-bold text-surface-900 dark:text-surface-0">$0</span>
-                                            <p-tag value="Fully Funded" severity="success" styleClass="text-xs" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </ng-template>
+
+            <!-- ═══ SCOPE TAB ═══ -->
+            <ng-template uxDetailTab="scope">
+
+                <!-- Sub-tab pills -->
+                <div class="flex gap-2 mb-4">
+                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
+                        [class]="activeScopeSub() === 'what'
+                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
+                        (click)="activeScopeSub.set('what')">
+                        What
+                    </button>
+                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
+                        [class]="activeScopeSub() === 'when'
+                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
+                        (click)="activeScopeSub.set('when')">
+                        When
+                    </button>
+                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
+                        [class]="activeScopeSub() === 'where'
+                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
+                        (click)="activeScopeSub.set('where')">
+                        Where
+                    </button>
+                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
+                        [class]="activeScopeSub() === 'impact'
+                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
+                        (click)="activeScopeSub.set('impact')">
+                        Why
+                    </button>
                 </div>
 
-                <!-- Section Group: Core Details -->
-                <div class="flex items-center gap-3 pt-2">
-                    <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
-                    <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">Core Details</span>
-                    <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
-                </div>
-
-                <!-- ═══════════════════════════════════════════════ -->
                 <!-- WHAT - PRODUCTS & SERVICES -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-what">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isWhatExpanded()" (click)="isWhatExpanded.set(!isWhatExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-briefcase text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">What — Products &amp; Services</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isWhatExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isWhatExpanded()">
-                        <div class="expand-body__inner">
+                @if (activeScopeSub() === 'what') {
+                <div id="section-what">
                             <div class="flex flex-col gap-5 p-2">
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Proposed Initiative Type</span>
+                                    <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Grant Support</span>
+                                </div>
                                 <div class="flex flex-col gap-1">
                                     <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Delivery Modality</span>
                                     <div class="flex items-center gap-2">
@@ -336,28 +301,124 @@ interface SectionNav {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </div>
+                }
 
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- WHY - IMPACT & ALIGNMENT -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-why">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isWhyExpanded()" (click)="isWhyExpanded.set(!isWhyExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-lightbulb text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Why — Impact &amp; Alignment</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isWhyExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isWhyExpanded()">
-                        <div class="expand-body__inner">
+                <!-- WHEN - TIMELINE -->
+                @if (activeScopeSub() === 'when') {
+                <div id="section-when">
+                            <div class="flex flex-col gap-5 p-2">
+                                <div class="flex flex-wrap gap-4">
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Submission Deadline</span>
+                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">Mar 15, 2026</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Duration</span>
+                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">24 months</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Target Delivery</span>
+                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">May 1, 2028</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Start</span>
+                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">May 1, 2026</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
+                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Target Signing</span>
+                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">Apr 1, 2026</span>
+                                        <p-tag value="Firm Deadline" severity="warn" styleClass="text-xs w-fit mt-1" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Signing Date Notes</span>
+                                    <p class="text-sm text-surface-700 dark:text-surface-100 m-0">Signing is contingent on completion of due diligence for all partners and final approval from the regional director.</p>
+                                </div>
+                                <!-- Timeline -->
+                                <div class="flex flex-col gap-3">
+                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Key Milestones</span>
+                                    <!-- Phase bar -->
+                                    <div class="flex rounded-lg overflow-hidden h-3">
+                                        <div class="bg-blue-400 dark:bg-blue-600" style="width: 15%;" pTooltip="Development: ~110 days" tooltipPosition="top"></div>
+                                        <div class="bg-green-400 dark:bg-green-600" style="width: 85%;" pTooltip="Implementation: ~730 days" tooltipPosition="top"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-surface-500 dark:text-surface-400">
+                                        <span>Development</span>
+                                        <span>Implementation</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-3 mt-2">
+                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Timeline</span>
+                                    <div class="relative pl-6 mt-2">
+                                        <div class="absolute left-[11px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
+                                        @for (event of timelineEvents; track event.id; let last = $last) {
+                                            <div class="flex gap-3 pb-4" [class.pb-0]="last">
+                                                <div class="flex items-start pt-1 -ml-6 w-6 justify-center">
+                                                    <div class="w-2.5 h-2.5 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[event.color, timelineRingClass(event.color)]"></div>
+                                                </div>
+                                                <div class="flex flex-col gap-0.5 flex-1">
+                                                    <div class="flex items-center gap-2">
+                                                        <i class="pi text-xs" [ngClass]="event.icon"></i>
+                                                        <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ event.label }}</span>
+                                                    </div>
+                                                    <span class="text-xs text-surface-500 dark:text-surface-400">{{ event.date }}</span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+                }
+
+                <!-- WHERE - GEOGRAPHY -->
+                @if (activeScopeSub() === 'where') {
+                <div id="section-where">
+                            <div class="flex flex-col gap-4 p-2">
+                                <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Countries</span>
+                                <div class="flex flex-wrap gap-3">
+                                    @for (country of countries; track country.id) {
+                                        <div class="p-4 rounded-xl border border-surface-100 dark:border-surface-700 flex flex-col gap-3 min-w-[220px] flex-1">
+                                            <div class="flex items-center gap-3">
+                                                <span class="flag rounded-sm" [ngClass]="'flag-' + country.isoCode.toLowerCase()"></span>
+                                                <div class="flex flex-col min-w-0">
+                                                    <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ country.name }}</span>
+                                                    <span class="text-xs text-surface-500 dark:text-surface-400">{{ country.continent }} · {{ country.region }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-wrap gap-1.5">
+                                                @for (tag of country.tags; track tag) {
+                                                    <p-tag [value]="tag" severity="secondary" styleClass="text-xs" />
+                                                }
+                                                @if (country.hasUNSDCF) {
+                                                    <p-tag value="Active UNSDCF" severity="success" styleClass="text-xs" />
+                                                }
+                                            </div>
+                                            <div class="pt-2 border-t border-surface-200 dark:border-surface-700">
+                                                <span class="text-xs text-surface-500 dark:text-surface-400">Org Unit: </span>
+                                                <span class="text-xs text-surface-700 dark:text-surface-100">{{ country.orgUnit }}</span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="flex flex-wrap gap-4 text-xs text-surface-500 dark:text-surface-400 pt-2 border-t border-surface-200 dark:border-surface-700">
+                                    <span><strong>HCA</strong> = Humanitarian, Conflict, and post-conflict Areas</span>
+                                    <span><strong>SIDS</strong> = Small Island Developing States</span>
+                                    <span><strong>UNSDCF</strong> = UN Sustainable Development Cooperation Framework</span>
+                                </div>
+                            </div>
+                </div>
+                }
+
+                <!-- IMPACT (WHY) -->
+                @if (activeScopeSub() === 'impact') {
+                <div id="section-why">
                             <div class="flex flex-col gap-6 p-2">
                                 <!-- Context & Challenges -->
                                 <div class="flex flex-col gap-1">
                                     <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Context &amp; Challenges</span>
-                                    <p class="text-sm text-surface-700 dark:text-surface-200 leading-relaxed m-0">
+                                    <p class="text-sm text-surface-700 dark:text-surface-100 leading-relaxed m-0">
                                         An estimated 2.2 billion people worldwide lack safely managed drinking water. In the targeted regions of Kenya, Bangladesh, and Cambodia, contaminated water sources are a leading cause of waterborne diseases, particularly among children under five. Existing infrastructure is aging and unable to meet the growing demand driven by urbanisation and climate change.
                                     </p>
                                 </div>
@@ -368,45 +429,23 @@ interface SectionNav {
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div class="flex flex-col gap-1 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
                                             <span class="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wide">Impact</span>
-                                            <p class="text-sm text-surface-700 dark:text-surface-200 m-0">Improved health outcomes and reduced waterborne disease mortality in targeted communities by 40% within 3 years of implementation.</p>
+                                            <p class="text-sm text-surface-700 dark:text-surface-100 m-0">Improved health outcomes and reduced waterborne disease mortality in targeted communities by 40% within 3 years of implementation.</p>
                                         </div>
                                         <div class="flex flex-col gap-1 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
                                             <span class="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wide">Outcomes</span>
-                                            <p class="text-sm text-surface-700 dark:text-surface-200 m-0">Sustainable access to clean water for 2.5M beneficiaries; 150 local operators trained; 45 filtration facilities operational.</p>
+                                            <p class="text-sm text-surface-700 dark:text-surface-100 m-0">Sustainable access to clean water for 2.5M beneficiaries; 150 local operators trained; 45 filtration facilities operational.</p>
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Beneficiaries -->
-                                <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Beneficiaries</span>
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                            <span class="text-xs text-surface-500 dark:text-surface-400">Direct</span>
-                                            <span class="text-lg font-bold text-surface-900 dark:text-surface-0">850,000</span>
-                                        </div>
-                                        <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                            <span class="text-xs text-surface-500 dark:text-surface-400">Indirect</span>
-                                            <span class="text-lg font-bold text-surface-900 dark:text-surface-0">1,650,000</span>
-                                        </div>
-                                        <div class="flex flex-col gap-1 p-3 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800">
-                                            <span class="text-xs text-primary-600 dark:text-primary-400">Total</span>
-                                            <span class="text-lg font-bold text-primary-700 dark:text-primary-300">2,500,000</span>
-                                        </div>
-                                    </div>
-                                    <p class="text-sm text-surface-700 dark:text-surface-200 m-0">
-                                        Beneficiaries include rural and peri-urban households in water-stressed districts, with a priority focus on women and children who bear the primary burden of water collection and waterborne illness.
-                                    </p>
                                 </div>
 
                                 <!-- Cross-cutting Concerns -->
                                 <div class="flex flex-col gap-3">
                                     <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Cross-cutting Concerns</span>
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                    <div class="flex flex-wrap gap-2">
                                         @for (concern of crossCuttingConcerns; track concern.label) {
-                                            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
+                                            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[150px] flex-1">
                                                 <i class="pi text-sm" [ngClass]="concern.value ? 'pi-check-circle text-green-500' : 'pi-times-circle text-surface-400'"></i>
-                                                <span class="text-sm text-surface-700 dark:text-surface-200">{{ concern.label }}</span>
+                                                <span class="text-sm text-surface-700 dark:text-surface-100">{{ concern.label }}</span>
                                             </div>
                                         }
                                     </div>
@@ -415,18 +454,20 @@ interface SectionNav {
                                 <!-- SDG Alignment -->
                                 <div class="flex flex-col gap-3">
                                     <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">SDG Alignment</span>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                                    <div class="flex flex-wrap gap-3">
                                         @for (sdg of sdgAlignments; track sdg.number) {
-                                            <div class="p-4 rounded-xl border border-surface-100 dark:border-surface-700" [class]="sdg.isPrimary ? 'bg-primary-50/50 dark:bg-primary-900/10' : 'bg-surface-50 dark:bg-surface-800'">
-                                                <div class="flex items-center gap-3 mb-2">
-                                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white" [style.background-color]="sdg.color">{{ sdg.number }}</div>
-                                                    <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ sdg.name }}</span>
+                                            <div class="relative p-4 rounded-xl border border-surface-100 dark:border-surface-700 min-w-[220px] flex-1" [class]="sdg.isPrimary ? 'bg-primary-50/50 dark:bg-primary-900/10' : 'bg-surface-50 dark:bg-surface-800'">
+                                                <div class="absolute top-3 right-3">
                                                     <p-tag [value]="sdg.isPrimary ? 'Primary' : 'Secondary'" [severity]="sdg.isPrimary ? 'info' : 'secondary'" styleClass="text-xs" />
                                                 </div>
+                                                <div class="flex items-start gap-3 mb-2 pr-20">
+                                                    <div class="size-8 shrink-0 rounded-lg flex items-center justify-center text-sm font-bold text-white" [style.background-color]="sdg.color">{{ sdg.number }}</div>
+                                                    <span class="text-sm font-semibold text-surface-900 dark:text-surface-0 pt-1">{{ sdg.name }}</span>
+                                                </div>
                                                 @if (sdg.targets.length > 0) {
-                                                    <div class="flex flex-wrap gap-1.5 ml-11">
+                                                    <div class="flex flex-wrap gap-2">
                                                         @for (target of sdg.targets; track target) {
-                                                            <span class="px-2 py-0.5 rounded-md bg-white dark:bg-surface-700 border border-surface-200 dark:border-surface-600 text-xs text-surface-600 dark:text-surface-300">{{ target }}</span>
+                                                            <span class="px-2 py-0.5 rounded-md bg-white dark:bg-surface-700 border border-surface-200 dark:border-surface-600 text-xs text-surface-600 dark:text-surface-0">{{ target }}</span>
                                                         }
                                                     </div>
                                                 }
@@ -435,34 +476,48 @@ interface SectionNav {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                </div>
+                }
+
+            </ng-template>
+
+            <!-- ═══ STAKEHOLDERS TAB ═══ -->
+            <ng-template uxDetailTab="stakeholders">
+
+                <!-- Sub-tab pills -->
+                <div class="flex gap-2 mb-4">
+                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
+                        [class]="activeStakeholderSub() === 'partners'
+                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
+                        (click)="activeStakeholderSub.set('partners')">
+                        Partners
+                    </button>
+                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
+                        [class]="activeStakeholderSub() === 'team'
+                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
+                        (click)="activeStakeholderSub.set('team')">
+                        Team
+                    </button>
+                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
+                        [class]="activeStakeholderSub() === 'beneficiaries'
+                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
+                        (click)="activeStakeholderSub.set('beneficiaries')">
+                        Beneficiaries
+                    </button>
                 </div>
 
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- WHO - PARTNERS -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-who">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isWhoExpanded()" (click)="isWhoExpanded.set(!isWhoExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-users text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Who — Partners</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isWhoExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isWhoExpanded()">
-                        <div class="expand-body__inner">
+                <!-- PARTNERS (WHO) -->
+                @if (activeStakeholderSub() === 'partners') {
+                <div id="section-who">
                             <div class="flex flex-col gap-5 p-2">
-                                <div class="flex items-center gap-2 p-3 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800">
-                                    <i class="pi pi-dollar text-green-600"></i>
-                                    <span class="text-sm font-semibold text-green-700 dark:text-green-300">Total Opportunity Budget: $15,000,000 USD</span>
-                                </div>
-
                                 <!-- Funding Partners -->
                                 <div class="flex flex-col gap-3">
                                     <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Funding Partners</span>
                                     @for (partner of fundingPartners; track partner.id) {
-                                        <div class="p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 border-l-4 border-l-primary-500 dark:border-l-primary-400">
+                                        <div class="p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-primary-500 dark:border-primary-400 border-l-4">
                                             <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                                                 <div class="flex items-center gap-3 flex-1 min-w-0">
                                                     <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
@@ -487,12 +542,12 @@ interface SectionNav {
                                                     <span class="text-xs text-surface-500 dark:text-surface-400">Due Diligence</span>
                                                     <div class="flex items-center gap-1">
                                                         <i class="pi pi-check-circle text-xs text-green-500"></i>
-                                                        <span class="text-sm text-surface-700 dark:text-surface-200">{{ partner.dueDiligenceStatus }}</span>
+                                                        <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceStatus }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col gap-0.5">
                                                     <span class="text-xs text-surface-500 dark:text-surface-400">DD Expiry</span>
-                                                    <span class="text-sm text-surface-700 dark:text-surface-200">{{ partner.dueDiligenceExpiry }}</span>
+                                                    <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceExpiry }}</span>
                                                 </div>
                                             </div>
                                             @if (partner.agreements.length > 0) {
@@ -531,296 +586,24 @@ interface SectionNav {
                                                     <span class="text-xs text-surface-500 dark:text-surface-400">Due Diligence</span>
                                                     <div class="flex items-center gap-1">
                                                         <i class="pi pi-check-circle text-xs text-green-500"></i>
-                                                        <span class="text-sm text-surface-700 dark:text-surface-200">{{ partner.dueDiligenceStatus }}</span>
+                                                        <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceStatus }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col gap-0.5">
                                                     <span class="text-xs text-surface-500 dark:text-surface-400">DD Expiry</span>
-                                                    <span class="text-sm text-surface-700 dark:text-surface-200">{{ partner.dueDiligenceExpiry }}</span>
+                                                    <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceExpiry }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     }
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </div>
+                }
 
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- WHERE - GEOGRAPHY -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-where">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isWhereExpanded()" (click)="isWhereExpanded.set(!isWhereExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-globe text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Where — Geography</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isWhereExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isWhereExpanded()">
-                        <div class="expand-body__inner">
-                            <div class="flex flex-col gap-4 p-2">
-                                <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Countries</span>
-                                <div class="flex flex-col gap-3">
-                                    @for (country of countries; track country.id) {
-                                        <div class="p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                                                <div class="flex items-center gap-3 flex-1 min-w-0">
-                                                    <span class="text-lg font-bold text-surface-400 dark:text-surface-500 w-8">{{ country.isoCode }}</span>
-                                                    <div class="flex flex-col min-w-0">
-                                                        <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ country.name }}</span>
-                                                        <span class="text-xs text-surface-500 dark:text-surface-400">{{ country.continent }} · {{ country.region }}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-center gap-2 flex-shrink-0 flex-wrap">
-                                                    @for (tag of country.tags; track tag) {
-                                                        <p-tag [value]="tag" severity="secondary" styleClass="text-xs" />
-                                                    }
-                                                    @if (country.hasUNSDCF) {
-                                                        <p-tag value="Active UNSDCF" severity="success" styleClass="text-xs" />
-                                                    }
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 pt-2 border-t border-surface-200 dark:border-surface-700">
-                                                <span class="text-xs text-surface-500 dark:text-surface-400">Org Unit: </span>
-                                                <span class="text-xs text-surface-700 dark:text-surface-200">{{ country.orgUnit }}</span>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                                <div class="flex flex-wrap gap-4 text-xs text-surface-500 dark:text-surface-400 pt-2 border-t border-surface-200 dark:border-surface-700">
-                                    <span><strong>HCA</strong> = Humanitarian, Conflict, and post-conflict Areas</span>
-                                    <span><strong>SIDS</strong> = Small Island Developing States</span>
-                                    <span><strong>UNSDCF</strong> = UN Sustainable Development Cooperation Framework</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- WHEN - TIMELINE -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-when">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isWhenExpanded()" (click)="isWhenExpanded.set(!isWhenExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-calendar text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">When — Timeline</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isWhenExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isWhenExpanded()">
-                        <div class="expand-body__inner">
-                            <div class="flex flex-col gap-5 p-2">
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Target Signing</span>
-                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">Apr 1, 2026</span>
-                                        <p-tag value="Firm Deadline" severity="warn" styleClass="text-xs w-fit mt-1" />
-                                    </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Start</span>
-                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">May 1, 2026</span>
-                                    </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Target Delivery</span>
-                                        <span class="text-base font-bold text-surface-900 dark:text-surface-0">May 1, 2028</span>
-                                    </div>
-                                </div>
-                                <div class="p-3 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800 flex items-center gap-3">
-                                    <i class="pi pi-clock text-primary-600"></i>
-                                    <span class="text-sm font-medium text-primary-700 dark:text-primary-300">Implementation Duration: 24 months</span>
-                                </div>
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Submission Deadline</span>
-                                    <span class="text-sm text-surface-700 dark:text-surface-200">Mar 15, 2026</span>
-                                </div>
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Signing Date Notes</span>
-                                    <p class="text-sm text-surface-700 dark:text-surface-200 m-0">Signing is contingent on completion of due diligence for all partners and final approval from the regional director.</p>
-                                </div>
-
-                                <!-- Timeline -->
-                                <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Key Milestones</span>
-                                    <!-- Phase bar -->
-                                    <div class="flex rounded-lg overflow-hidden h-3">
-                                        <div class="bg-blue-400 dark:bg-blue-600" style="width: 15%;" pTooltip="Development: ~110 days" tooltipPosition="top"></div>
-                                        <div class="bg-green-400 dark:bg-green-600" style="width: 85%;" pTooltip="Implementation: ~730 days" tooltipPosition="top"></div>
-                                    </div>
-                                    <div class="flex justify-between text-xs text-surface-500 dark:text-surface-400">
-                                        <span>Development</span>
-                                        <span>Implementation</span>
-                                    </div>
-                                    <div class="relative pl-6 mt-2">
-                                        <div class="absolute left-[11px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
-                                        @for (event of timelineEvents; track event.id; let last = $last) {
-                                            <div class="flex gap-3 pb-4" [class.pb-0]="last">
-                                                <div class="flex items-start pt-1 -ml-6 w-6 justify-center">
-                                                    <div class="w-2.5 h-2.5 rounded-full ring-2 ring-offset-2 ring-offset-surface-0 dark:ring-offset-surface-900 relative z-10" [ngClass]="[event.color, timelineRingClass(event.color)]"></div>
-                                                </div>
-                                                <div class="flex flex-col gap-0.5 flex-1">
-                                                    <div class="flex items-center gap-2">
-                                                        <i class="pi text-xs" [ngClass]="event.icon"></i>
-                                                        <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ event.label }}</span>
-                                                    </div>
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">{{ event.date }}</span>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section Group: Risk & Management -->
-                <div class="flex items-center gap-3 pt-2">
-                    <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
-                    <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">Risk &amp; Management</span>
-                    <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
-                </div>
-
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- RISKS -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-risks">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isRisksExpanded()" (click)="isRisksExpanded.set(!isRisksExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-chart-line text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Risks</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isRisksExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isRisksExpanded()">
-                        <div class="expand-body__inner">
-                            <div class="flex flex-col gap-3 p-2">
-                                @for (risk of risks; track risk.id) {
-                                    <div class="p-4 rounded-xl border-l-4"
-                                        [class]="riskCardClass(risk)">
-                                        <div class="flex flex-col gap-2">
-                                            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0 flex-1">{{ risk.title }}</span>
-                                                <div class="flex items-center gap-2 flex-shrink-0 flex-wrap">
-                                                    @if (risk.isOrgHighRisk) {
-                                                        <p-tag value="Org. High Risk" severity="danger" styleClass="text-xs" />
-                                                    }
-                                                    <p-tag [value]="risk.category" severity="secondary" styleClass="text-xs" />
-                                                    <p-tag [value]="risk.probability" [severity]="risk.probability === 'High' ? 'danger' : risk.probability === 'Medium' ? 'warn' : 'secondary'" styleClass="text-xs" />
-                                                </div>
-                                            </div>
-                                            <p class="text-sm text-surface-700 dark:text-surface-200 m-0">{{ risk.description }}</p>
-                                            <div class="flex flex-wrap gap-4 text-xs text-surface-500 dark:text-surface-400 pt-2 border-t border-surface-200 dark:border-surface-700">
-                                                <span><strong>Impact:</strong> {{ risk.impact }}</span>
-                                                <span><strong>Proximity:</strong> {{ risk.proximity }}</span>
-                                                <span><strong>Response:</strong> {{ risk.responseType }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- RELATED -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-related">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isRelatedExpanded()" (click)="isRelatedExpanded.set(!isRelatedExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-link text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Related</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isRelatedExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isRelatedExpanded()">
-                        <div class="expand-body__inner">
-                            <div class="flex flex-col gap-3 p-2">
-                                <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Source Interactions</span>
-                                <p-table
-                                    [value]="interactions"
-                                    styleClass="flex flex-col rounded-2xl overflow-hidden"
-                                    tableStyleClass="w-full"
-                                >
-                                    <ng-template #header>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Type</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </ng-template>
-                                    <ng-template #body let-item>
-                                        <tr class="cursor-pointer hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors">
-                                            <td>
-                                                <span class="text-sm text-primary-600 dark:text-primary-400 font-medium">{{ item.title }}</span>
-                                            </td>
-                                            <td><p-tag [value]="item.type" severity="secondary" styleClass="text-xs" /></td>
-                                            <td><span class="text-sm text-surface-600 dark:text-surface-300">{{ item.date }}</span></td>
-                                            <td><p-tag [value]="item.status" [severity]="item.status === 'Completed' ? 'success' : 'info'" styleClass="text-xs" /></td>
-                                        </tr>
-                                    </ng-template>
-                                </p-table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- COLLABORATION (Comments) -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-collaboration">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isCollaborationExpanded()" (click)="isCollaborationExpanded.set(!isCollaborationExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-comments text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Collaboration</h4>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold">3</span>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isCollaborationExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isCollaborationExpanded()">
-                        <div class="expand-body__inner">
-                            <div class="flex flex-col gap-4 p-2">
-                                @for (comment of comments; track comment.id) {
-                                    <div class="flex gap-3">
-                                        <p-avatar [image]="'demo/images/avatar/' + comment.avatar" shape="circle" styleClass="w-8 h-8 flex-shrink-0" />
-                                        <div class="flex flex-col gap-1 flex-1">
-                                            <div class="flex items-center gap-2">
-                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ comment.author }}</span>
-                                                <span class="text-xs text-surface-500 dark:text-surface-400">{{ comment.time }}</span>
-                                            </div>
-                                            <p class="text-sm text-surface-700 dark:text-surface-200 m-0">{{ comment.text }}</p>
-                                        </div>
-                                    </div>
-                                }
-                                <div class="flex gap-3 pt-3 border-t border-surface-200 dark:border-surface-700">
-                                    <p-avatar icon="pi pi-user" shape="circle" styleClass="w-8 h-8 flex-shrink-0 bg-surface-200 dark:bg-surface-700" />
-                                    <div class="flex-1 flex items-center gap-2">
-                                        <input pInputText placeholder="Write a comment..." class="w-full" />
-                                        <p-button icon="pi pi-send" [rounded]="true" size="small" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══════════════════════════════════════════════ -->
                 <!-- TEAM -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-team">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isTeamExpanded()" (click)="isTeamExpanded.set(!isTeamExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-building text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Team</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isTeamExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
-                    <div class="expand-body" [class.expand-body--open]="isTeamExpanded()">
-                        <div class="expand-body__inner">
+                @if (activeStakeholderSub() === 'team') {
+                <div id="section-team">
                             <div class="flex flex-col gap-6 p-2">
                                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                                     <!-- Left: Manager + Collaborators (2 cols) -->
@@ -832,8 +615,8 @@ interface SectionNav {
                                                 <div class="flex items-center gap-3">
                                                     <p-avatar image="demo/images/avatar/amyelsner.png" shape="circle" styleClass="w-10 h-10" />
                                                     <div class="flex flex-col">
-                                                        <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">Olivia Martinez</span>
-                                                        <span class="text-xs text-surface-500 dark:text-surface-400">Programme Manager, P4 · KEOC</span>
+                                                        <span class="text-sm font-semibold text-primary-700 dark:text-primary-300">Olivia Martinez</span>
+                                                        <span class="text-xs text-primary-600 dark:text-primary-400">Programme Manager, P4 · KEOC</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -842,35 +625,27 @@ interface SectionNav {
                                         <!-- Collaborators -->
                                         <div class="flex flex-col gap-3">
                                             <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Opportunity Collaborators</span>
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
                                                 @for (member of teamMembers; track member.id) {
-                                                    <div class="p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
+                                                    <div class="p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 flex flex-col gap-2">
                                                         <div class="flex items-center gap-3">
                                                             <p-avatar [image]="'demo/images/avatar/' + member.image" shape="circle" styleClass="w-9 h-9" />
-                                                            <div class="flex flex-col flex-1 min-w-0">
-                                                                <div class="flex items-center gap-2">
-                                                                    <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ member.name }}</span>
-                                                                    <p-tag [value]="member.role" severity="secondary" styleClass="text-xs" />
-                                                                </div>
-                                                                <span class="text-xs text-surface-500 dark:text-surface-400">{{ member.position }}</span>
+                                                            <div class="flex items-center gap-2 flex-1 min-w-0">
+                                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ member.name }}</span>
+                                                                <p-tag [value]="member.role" severity="secondary" styleClass="text-xs" />
                                                             </div>
                                                         </div>
+                                                        <span class="text-xs text-surface-500 dark:text-surface-400">{{ member.position }}</span>
                                                         @if (member.expertise.length > 0) {
-                                                            <div class="flex flex-wrap gap-1.5 mt-2 ml-12">
+                                                            <div class="flex flex-wrap gap-1.5">
                                                                 @for (skill of member.expertise; track skill) {
-                                                                    <span class="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">{{ skill }}</span>
+                                                                    <span class="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300 whitespace-nowrap">{{ skill }}</span>
                                                                 }
                                                             </div>
                                                         }
                                                     </div>
                                                 }
                                             </div>
-                                        </div>
-
-                                        <!-- Proposed Initiative Type -->
-                                        <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Proposed Initiative Type</span>
-                                            <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Grant Support</span>
                                         </div>
                                     </div>
 
@@ -902,31 +677,79 @@ interface SectionNav {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </div>
+                }
 
-                <!-- Section Group: Activity & Work -->
-                <div class="flex items-center gap-3 pt-2">
-                    <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
-                    <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">Activity &amp; Work</span>
-                    <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+                <!-- BENEFICIARIES -->
+                @if (activeStakeholderSub() === 'beneficiaries') {
+                <div id="section-beneficiaries">
+                            <div class="flex flex-col gap-5 p-2">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
+                                        <span class="text-xs text-surface-500 dark:text-surface-400">Direct</span>
+                                        <span class="text-lg font-bold text-surface-900 dark:text-surface-0">850,000</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
+                                        <span class="text-xs text-surface-500 dark:text-surface-400">Indirect</span>
+                                        <span class="text-lg font-bold text-surface-900 dark:text-surface-0">1,650,000</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800">
+                                        <span class="text-xs text-primary-600 dark:text-primary-400">Total</span>
+                                        <span class="text-lg font-bold text-primary-700 dark:text-primary-300">2,500,000</span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-surface-700 dark:text-surface-100 m-0">
+                                    Beneficiaries include rural and peri-urban households in water-stressed districts, with a priority focus on women and children who bear the primary burden of water collection and waterborne illness.
+                                </p>
+                            </div>
                 </div>
+                }
+
+            </ng-template>
+
+            <!-- ═══ RISK TAB ═══ -->
+            <ng-template uxDetailTab="risk">
 
                 <!-- ═══════════════════════════════════════════════ -->
-                <!-- ACTIVITY FEED (existing) -->
+                <!-- RISKS -->
                 <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-activity">
-                    <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isActivityExpanded()" (click)="isActivityExpanded.set(!isActivityExpanded())">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-history text-deepsea-500 dark:text-surface-0"></i>
-                            <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Activity</h4>
-                        </div>
-                        <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isActivityExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </div>
+                <div id="section-risks">
+                            <div class="flex flex-col gap-3 p-2">
+                                @for (risk of risks; track risk.id) {
+                                    <div class="p-4 rounded-xl border-l-4"
+                                        [class]="riskCardClass(risk)">
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0 flex-1">{{ risk.title }}</span>
+                                                <div class="flex items-center gap-2 flex-shrink-0 flex-wrap">
+                                                    @if (risk.isOrgHighRisk) {
+                                                        <p-tag value="Org. High Risk" severity="danger" styleClass="text-xs" />
+                                                    }
+                                                    <p-tag [value]="risk.category" severity="secondary" styleClass="text-xs" />
+                                                    <p-tag [value]="risk.probability" [severity]="risk.probability === 'High' ? 'danger' : risk.probability === 'Medium' ? 'warn' : 'secondary'" styleClass="text-xs" />
+                                                </div>
+                                            </div>
+                                            <p class="text-sm text-surface-700 dark:text-surface-100 m-0">{{ risk.description }}</p>
+                                            <div class="flex flex-wrap gap-4 text-xs text-surface-500 dark:text-surface-400 pt-2 border-t border-surface-200 dark:border-surface-700">
+                                                <span><strong>Impact:</strong> {{ risk.impact }}</span>
+                                                <span><strong>Proximity:</strong> {{ risk.proximity }}</span>
+                                                <span><strong>Response:</strong> {{ risk.responseType }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                </div>
 
-                    <div class="expand-body" [class.expand-body--open]="isActivityExpanded()">
-                        <div class="expand-body__inner">
+            </ng-template>
+
+            <!-- ═══ ACTIVITY TAB ═══ -->
+            <ng-template uxDetailTab="activity">
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- ACTIVITY FEED -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <div id="section-activity" class="card">
+                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide px-2 pt-2">Latest Activity</span>
                         <div class="pb-3 pt-3 px-2">
                             <div class="relative">
                                 <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
@@ -940,15 +763,15 @@ interface SectionNav {
                                                 <div class="flex flex-col gap-2">
                                                     <div class="flex flex-col gap-1">
                                                         <div class="flex items-center gap-1">
-                                                            <i class="pi text-sm text-surface-700 dark:text-surface-200" [ngClass]="activity.icon"></i>
+                                                            <i class="pi text-sm text-surface-700 dark:text-surface-100" [ngClass]="activity.icon"></i>
                                                             <span class="text-surface-950 dark:text-surface-0 text-base font-medium leading-normal">{{ activity.title }}</span>
                                                         </div>
-                                                        <p class="text-surface-700 dark:text-surface-200 text-sm leading-tight">{{ activity.description }}</p>
+                                                        <p class="text-surface-700 dark:text-surface-100 text-sm leading-tight">{{ activity.description }}</p>
                                                     </div>
                                                     <div class="flex items-center gap-2">
-                                                        <span class="text-surface-700 dark:text-surface-200 text-sm leading-tight">{{ activity.time }}</span>
+                                                        <span class="text-surface-700 dark:text-surface-100 text-sm leading-tight">{{ activity.time }}</span>
                                                         <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-700"></div>
-                                                        <span class="text-surface-700 dark:text-surface-200 text-sm leading-tight">{{ activity.author }}</span>
+                                                        <span class="text-surface-700 dark:text-surface-100 text-sm leading-tight">{{ activity.author }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -965,27 +788,81 @@ interface SectionNav {
                             (onPageChange)="activityPage.set($event.page ?? 0)"
                             styleClass="border-t border-surface-200 dark:border-surface-700"
                         />
-                        </div>
-                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- RELATED -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <div id="section-related" class="card">
+                            <div class="flex flex-col gap-3">
+                                <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Source Interactions</span>
+                                <p-table
+                                    [value]="interactions"
+                                    styleClass="flex flex-col rounded-2xl overflow-hidden"
+                                    tableStyleClass="w-full"
+                                >
+                                    <ng-template #header>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template #body let-item>
+                                        <tr class="cursor-pointer hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors">
+                                            <td>
+                                                <span class="text-sm text-primary-600 dark:text-primary-400 font-medium">{{ item.title }}</span>
+                                            </td>
+                                            <td><p-tag [value]="item.type" severity="secondary" styleClass="text-xs" /></td>
+                                            <td><span class="text-sm text-surface-600 dark:text-surface-300">{{ item.date }}</span></td>
+                                            <td><p-tag [value]="item.status" [severity]="item.status === 'Completed' ? 'success' : 'info'" styleClass="text-xs" /></td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- COLLABORATION (Comments) -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <div id="section-collaboration" class="card">
+                            <div class="flex flex-col gap-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">Comments</span>
+                                    <span class="text-xs px-2 py-0.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold">3</span>
+                                </div>
+                                @for (comment of comments; track comment.id) {
+                                    <div class="flex gap-3">
+                                        <p-avatar [image]="'demo/images/avatar/' + comment.avatar" shape="circle" styleClass="w-8 h-8 flex-shrink-0" />
+                                        <div class="flex flex-col gap-1 flex-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ comment.author }}</span>
+                                                <span class="text-xs text-surface-500 dark:text-surface-400">{{ comment.time }}</span>
+                                            </div>
+                                            <p class="text-sm text-surface-700 dark:text-surface-100 m-0">{{ comment.text }}</p>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="flex gap-3 pt-3 border-t border-surface-200 dark:border-surface-700">
+                                    <p-avatar icon="pi pi-user" shape="circle" styleClass="w-8 h-8 flex-shrink-0 bg-surface-200 dark:bg-surface-700" />
+                                    <div class="flex-1 flex items-center gap-2">
+                                        <input pInputText placeholder="Write a comment..." class="w-full" />
+                                        <p-button icon="pi pi-send" [rounded]="true" size="small" />
+                                    </div>
+                                </div>
+                            </div>
                 </div>
 
                 <!-- ═══════════════════════════════════════════════ -->
                 <!-- TASKS (existing) -->
                 <!-- ═══════════════════════════════════════════════ -->
-                <div class="card" id="section-tasks">
+                <div id="section-tasks" class="card">
                     <div class="flex flex-col gap-6">
-                        <div class="flex items-center justify-between px-2 cursor-pointer" (click)="isTasksExpanded.set(!isTasksExpanded())">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-check-square text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Tasks</h4>
-                                <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600 ml-12!" (onClick)="openNewTaskDrawer(); $event.stopPropagation()" />
-                            </div>
-                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [ngClass]="isTasksExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Tasks</span>
+                            <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer()" />
                         </div>
-
-                        <div class="expand-body" [class.expand-body--open]="isTasksExpanded()">
-                            <div class="expand-body__inner">
-                        <div class="flex flex-col gap-6">
                         <div class="flex flex-wrap gap-2" role="tablist" aria-label="Task filters">
                             @for (filter of taskFilterOptions; track filter.key) {
                                 <button
@@ -993,8 +870,8 @@ interface SectionNav {
                                     [attr.aria-selected]="activeTaskFilter() === filter.key"
                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer"
                                     [class]="activeTaskFilter() === filter.key
-                                        ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-700'
-                                        : 'bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-600 hover:bg-surface-200 dark:hover:bg-surface-600'"
+                                        ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
+                                        : filter.inactiveClass"
                                     (click)="activeTaskFilter.set(filter.key)"
                                 >
                                     <i class="pi text-xs" [ngClass]="filter.icon.replace('pi ', '')"></i>
@@ -1012,27 +889,9 @@ interface SectionNav {
                         </p-iconfield>
 
                         <p-accordion [value]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
-                            @if (pendingTasks().length > 0) {
-                                <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent!' } }">
-                                        <div class="flex items-center gap-3 px-2">
-                                            <i class="pi pi-inbox text-sm text-blue-500"></i>
-                                            <h5 class="title-h5 text-left!">Not Started</h5>
-                                        </div>
-                                    </p-accordionheader>
-                                    <p-accordioncontent [pt]="accordionContentPT">
-                                        <div class="flex flex-col">
-                                            @for (task of pendingTasks(); track task.id; let last = $last) {
-                                                <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
-                                            }
-                                        </div>
-                                    </p-accordioncontent>
-                                </p-accordionpanel>
-                            }
-
                             @if (inProgressTasks().length > 0) {
                                 <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent! hover:bg-yellow-50! dark:hover:bg-yellow-700/20! rounded-lg transition-colors' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-clock text-sm text-yellow-500"></i>
                                             <h5 class="title-h5 text-left!">In Progress</h5>
@@ -1048,9 +907,31 @@ interface SectionNav {
                                 </p-accordionpanel>
                             }
 
+                            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+
+                            @if (pendingTasks().length > 0) {
+                                <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent! hover:bg-blue-50! dark:hover:bg-blue-700/20! rounded-lg transition-colors' } }">
+                                        <div class="flex items-center gap-3 px-2">
+                                            <i class="pi pi-inbox text-sm text-blue-500"></i>
+                                            <h5 class="title-h5 text-left!">Not Started</h5>
+                                        </div>
+                                    </p-accordionheader>
+                                    <p-accordioncontent [pt]="accordionContentPT">
+                                        <div class="flex flex-col">
+                                            @for (task of pendingTasks(); track task.id; let last = $last) {
+                                                <ng-container *ngTemplateOutlet="taskItem; context: { task: task, isLast: last }"></ng-container>
+                                            }
+                                        </div>
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
+                            }
+
+                            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+
                             @if (completedTasks().length > 0) {
                                 <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent!' } }">
+                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent! hover:bg-green-50! dark:hover:bg-green-700/20! rounded-lg transition-colors' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-check-circle text-sm text-green-500"></i>
                                             <h5 class="title-h5 text-left!">Completed</h5>
@@ -1066,103 +947,36 @@ interface SectionNav {
                                 </p-accordionpanel>
                             }
                         </p-accordion>
-                        </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Footer: Audit Metadata -->
-                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 px-2 py-3 text-xs text-surface-500 dark:text-surface-400 border-t border-surface-200 dark:border-surface-700">
+            </ng-template>
+
+            <!-- ═══ FOOTER ═══ -->
+            <div ux-detail-footer>
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 px-2 py-3 text-sm text-surface-600 dark:text-surface-200 border-t border-surface-200 dark:border-surface-700">
                     <span><strong>Created by:</strong> Olivia Martinez</span>
                     <span><strong>Created:</strong> Apr 5, 2026</span>
                     <span><strong>Last modified by:</strong> James Anderson</span>
                     <span><strong>Last modified:</strong> Apr 30, 2026</span>
                 </div>
-
             </div>
 
-            <!-- ═══════════════════════════════════════════════ -->
-            <!-- RIGHT SIDEBAR -->
-            <!-- ═══════════════════════════════════════════════ -->
-            <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0 xl:sticky xl:top-16 xl:self-start">
-                <!-- AI Project Analysis Card -->
-                <ux-ai-card-bg
-                    class="border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm p-4 overflow-hidden transition-all duration-300 flex flex-col max-h-[calc(100dvh-12rem)]"
-                >
-                    <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1 min-h-0">
-                    <div class="flex items-center justify-between cursor-pointer shrink-0" (click)="isAiCardExpanded.set(!isAiCardExpanded())">
-                        <div class="flex items-center gap-3">
-                            <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
-                                <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
-                            </div>
-                            <div class="flex flex-col">
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">AI Project Analysis</h4>
-                                <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ aiInsights.length }} insights available for your review</span>
-                            </div>
-                        </div>
-                        <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-transparent border border-white dark:border-surface-300 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-white/10 transition-colors">
-                            <i class="pi text-xs text-darkblue-500 dark:text-surface-0" [ngClass]="isAiCardExpanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                        </button>
-                    </div>
+            <!-- ═══ SIDEBAR ═══ -->
+            <div ux-detail-sidebar class="flex flex-col gap-6">
+                <ux-ai-insights-card
+                    title="AI Project Analysis"
+                    [insights]="aiInsights"
+                    searchPlaceholder="Search AI insights, risks, or optimizations..."
+                />
 
-                    <div class="expand-body" [class.expand-body--open]="isAiCardExpanded()">
-                        <div class="expand-body__inner">
-                        <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0">
-                            <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5 shrink-0">
-                                <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
-                                <input
-                                    type="text"
-                                    [ngModel]="aiSearchQuery()"
-                                    (ngModelChange)="aiSearchQuery.set($event); aiInsightsPage.set(0)"
-                                    placeholder="Search AI insights, risks, or optimizations..."
-                                    class="bg-transparent border-none outline-none flex-1 text-sm font-medium text-deepsea-500 dark:text-surface-0 placeholder:text-surface-700 dark:placeholder:text-surface-300"
-                                />
-                            </div>
-
-                            <div class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-0.5">
-                                @for (insight of paginatedAiInsights(); track insight.id) {
-                                    <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start shrink-0">
-                                        <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>
-                                        <div class="flex flex-col gap-2 flex-1 min-w-0">
-                                            <div class="flex flex-col gap-1">
-                                                <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
-                                                <p class="text-[#2b638b] dark:text-surface-300 text-sm leading-normal">{{ insight.description }}</p>
-                                            </div>
-                                            <button class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-sm font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit">
-                                                {{ insight.actionLabel }}
-                                                <i class="pi pi-arrow-right text-xs"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-
-                            <div class="shrink-0 w-full border-t border-white/50 dark:border-surface-700/50 pt-2 mt-1 relative z-[1] bg-transparent">
-                                <p-paginator
-                                    [rows]="aiInsightsPerPage()"
-                                    [totalRecords]="filteredAiInsights().length"
-                                    [first]="aiInsightsFirst()"
-                                    (onPageChange)="aiInsightsPage.set($event.page ?? 0)"
-                                    [pageLinkSize]="3"
-                                    styleClass="w-full border-none! bg-transparent!"
-                                    [pt]="{ root: { class: 'bg-transparent! relative! w-full! justify-center!' } }"
-                                />
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                </ux-ai-card-bg>
-
-                <!-- Documents Section -->
                 <app-documents-card [documents]="documents()" />
             </div>
-        </div>
+
+        </ux-detail-layout>
 
         <p-confirmdialog header="Confirmation" />
         <app-task-drawer [(visible)]="isTaskDrawerVisible" [task]="selectedTask" [mode]="taskDrawerMode" (save)="handleTaskDrawerSave($event)" (cancel)="handleTaskDrawerCancel()" />
-        </div>
 
         <!-- Unified Task Item Template -->
         <ng-template #taskItem let-task="task" let-isLast="isLast">
@@ -1170,12 +984,12 @@ interface SectionNav {
                 <div class="px-2 pt-3 pb-1">
                     <div class="flex items-center gap-3">
                         <p-checkbox [(ngModel)]="task.completed" [binary]="true" [inputId]="'opp-task-' + task.id" [ariaLabel]="'Mark ' + task.title + ' as ' + (task.completed ? 'incomplete' : 'complete')" (onChange)="toggleTaskCompletion(task, task.completed)" />
-                        <div class="text-sm font-medium leading-normal transition-all duration-300 flex-1" [ngClass]="task.completed ? 'text-surface-700 dark:text-surface-200 line-through' : 'text-surface-900 dark:text-surface-0'">
+                        <div class="text-sm font-medium leading-normal transition-all duration-300 flex-1" [ngClass]="task.completed ? 'text-surface-700 dark:text-surface-100 line-through' : 'text-surface-900 dark:text-surface-0'">
                             {{ task.title }}
                         </div>
                     </div>
                     @if (task.description && !task.completed) {
-                        <div class="text-surface-700 dark:text-surface-200 text-xs leading-tight line-clamp-2 pl-8 pt-1">{{ task.description }}</div>
+                        <div class="text-surface-700 dark:text-surface-100 text-xs leading-tight line-clamp-2 pl-8 pt-1">{{ task.description }}</div>
                     }
                 </div>
                 <div class="pl-8 pr-2 pt-1 pb-3 flex items-center gap-2">
@@ -1239,70 +1053,24 @@ interface SectionNav {
             background: transparent;
         }
 
-        .nav-glass {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.2) 0%,
-                rgba(255, 255, 255, 0.08) 50%,
-                rgba(255, 255, 255, 0.03) 100%
-            );
-        }
-
-        :host-context(.app-dark) .nav-glass {
-            
-        background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.06) 0%,
-                rgba(255, 255, 255, 0.02) 50%,
-                rgba(255, 255, 255, 0.005) 100%
-            );
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 
-    0 8px 32px rgba(0, 39, 125, 0.1),
-    inset 0 rgba(0, 47, 142, 0.22),
-    inset 0 rgba(0, 31, 99, 0.1),
-    inset 0 rgba(255, 255, 255, 0.1);
-        
-        }
 
     `
 })
-export class Opportunity implements OnInit, AfterViewInit {
+export class Opportunity {
 
-    private sectionObserver: IntersectionObserver | null = null;
-    isNavStuck = signal(false);
-
-    // ─── Section Navigation ───
-    sections: SectionNav[] = [
-        { id: 'analysis', label: 'Analysis', icon: 'pi-chart-bar' },
-        { id: 'overview', label: 'Overview', icon: 'pi-file' },
-        { id: 'what', label: 'What', icon: 'pi-briefcase' },
-        { id: 'why', label: 'Why', icon: 'pi-lightbulb' },
-        { id: 'who', label: 'Who', icon: 'pi-users' },
-        { id: 'where', label: 'Where', icon: 'pi-globe' },
-        { id: 'when', label: 'When', icon: 'pi-calendar' },
-        { id: 'risks', label: 'Risks', icon: 'pi-chart-line' },
-        { id: 'related', label: 'Related', icon: 'pi-link' },
-        { id: 'collaboration', label: 'Comments', icon: 'pi-comments' },
-        { id: 'team', label: 'Team', icon: 'pi-building' },
-        { id: 'activity', label: 'Activity', icon: 'pi-history' },
-        { id: 'tasks', label: 'Tasks', icon: 'pi-check-square' }
+    // ─── Tab Navigation (powered by ux-detail-layout) ───
+    detailTabs = [
+        { value: 'overview', label: 'Overview', icon: 'pi pi-chart-bar' },
+        { value: 'scope', label: 'Scope', icon: 'pi pi-briefcase' },
+        { value: 'stakeholders', label: 'Stakeholders', icon: 'pi pi-users' },
+        { value: 'risk', label: 'Risk & Compliance', icon: 'pi pi-chart-line' },
+        { value: 'activity', label: 'Activity', icon: 'pi pi-history' }
     ];
-    activeSection = signal('analysis');
+    activeTab = signal('overview');
 
-    // ─── Section Expand States ───
-    isAnalysisExpanded = signal(true);
-    isOverviewExpanded = signal(true);
-    isWhatExpanded = signal(false);
-    isWhyExpanded = signal(false);
-    isWhoExpanded = signal(false);
-    isWhereExpanded = signal(false);
-    isWhenExpanded = signal(false);
-    isRisksExpanded = signal(false);
-    isRelatedExpanded = signal(false);
-    isCollaborationExpanded = signal(false);
-    isTeamExpanded = signal(false);
+    // ─── Sub-tab Navigation ───
+    activeScopeSub = signal('what');
+    activeStakeholderSub = signal('partners');
 
     // ─── Analysis Stats ───
     analysisStats = [
@@ -1419,13 +1187,7 @@ export class Opportunity implements OnInit, AfterViewInit {
     activityLast = computed(() => Math.min(this.activityFirst() + this.activityRowsPerPage, this.activityFeed.length));
     paginatedActivities = computed(() => this.activityFeed.slice(this.activityFirst(), this.activityLast()));
 
-    // ─── Activity & Tasks Expand ───
-    isActivityExpanded = signal(false);
-    isTasksExpanded = signal(false);
-
     // ─── AI Analysis ───
-    isAiCardExpanded = signal(false);
-    aiSearchQuery = signal('');
     aiInsights: AiInsight[] = [
         { id: 1, title: 'Schedule Risk Detected', description: 'Based on similar past projects with Japan, the target signing date (Apr 1) has an 82% probability of delay due to pending legal reviews.', actionLabel: 'Draft extension request', icon: 'pi-exclamation-triangle', iconColor: 'text-orange-500' },
         { id: 2, title: 'Budget Optimization', description: 'Reallocating $250k from Q3 to Q2 could accelerate deliverables 3 and 4 by three weeks without impacting final budget constraints.', actionLabel: 'View reallocation draft', icon: 'pi-chart-line', iconColor: 'text-green-500' },
@@ -1441,46 +1203,20 @@ export class Opportunity implements OnInit, AfterViewInit {
         { id: 12, title: 'Quality Assurance Trend', description: 'Initial water testing phase passed with 98% efficiency, exceeding the 95% baseline requirement.', actionLabel: 'Publish QA report', icon: 'pi-check-circle', iconColor: 'text-green-500' }
     ];
 
-    filteredAiInsights = computed(() => {
-        const query = this.aiSearchQuery().trim().toLowerCase();
-        if (!query) return this.aiInsights;
-        return this.aiInsights.filter(insight =>
-            insight.title.toLowerCase().includes(query) ||
-            insight.description.toLowerCase().includes(query)
-        );
-    });
-
-    private destroyRef = inject(DestroyRef);
-    aiInsightsPerPage = signal(this.calcInsightsPerPage());
-    aiInsightsPage = signal(0);
-    aiInsightsFirst = computed(() => this.aiInsightsPage() * this.aiInsightsPerPage());
-    paginatedAiInsights = computed(() => {
-        const insights = this.filteredAiInsights();
-        return insights.slice(this.aiInsightsFirst(), this.aiInsightsFirst() + this.aiInsightsPerPage());
-    });
-
-    private calcInsightsPerPage(): number {
-        const shellOffset = 12 * 16;
-        const cardChrome = 160 + 72;
-        const insightCardHeight = 150;
-        const available = (typeof window !== 'undefined' ? window.innerHeight : 900) - shellOffset - cardChrome;
-        return Math.max(1, Math.floor(available / insightCardHeight));
-    }
-
     // ─── Tasks ───
     activeTaskFilter = signal('All');
     taskSearchQuery = model('');
-    openTaskPanels: string[] = ['0', '1', '2'];
+    openTaskPanels: string[] = ['1'];
     accordionContentPT = { root: { class: 'overflow-hidden bg-transparent!' }, content: { class: 'bg-transparent!' } };
     isTaskDrawerVisible = false;
     selectedTask: Task | null = null;
     taskDrawerMode: 'create' | 'edit' = 'create';
 
     taskFilterOptions = [
-        { key: 'All', label: 'All', icon: 'pi pi-list', countKey: 'all' as const, badgeClass: 'bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-surface-100' },
-        { key: 'Pending', label: 'Not Started', icon: 'pi pi-inbox', countKey: 'pending' as const, badgeClass: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' },
-        { key: 'In Progress', label: 'In Progress', icon: 'pi pi-clock', countKey: 'inProgress' as const, badgeClass: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' },
-        { key: 'Completed', label: 'Completed', icon: 'pi pi-check-circle', countKey: 'completed' as const, badgeClass: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' }
+        { key: 'All', label: 'All', icon: 'pi pi-list', countKey: 'all' as const, badgeClass: 'bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-surface-100', inactiveClass: 'bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-600 hover:bg-surface-200 dark:hover:bg-surface-600' },
+        { key: 'Pending', label: 'Not Started', icon: 'pi pi-inbox', countKey: 'pending' as const, badgeClass: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300', inactiveClass: 'bg-blue-50 dark:bg-blue-700/10 text-blue-600 dark:text-blue-300 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700/20' },
+        { key: 'In Progress', label: 'In Progress', icon: 'pi pi-clock', countKey: 'inProgress' as const, badgeClass: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300', inactiveClass: 'bg-yellow-50 dark:bg-yellow-700/10 text-yellow-600 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-700/20' },
+        { key: 'Completed', label: 'Completed', icon: 'pi pi-check-circle', countKey: 'completed' as const, badgeClass: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300', inactiveClass: 'bg-green-50 dark:bg-green-700/10 text-green-600 dark:text-green-300 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-700/20' }
     ];
 
     taskData = signal<Task[]>([
@@ -1532,82 +1268,6 @@ export class Opportunity implements OnInit, AfterViewInit {
     private messageService = inject(MessageService);
 
     constructor(private confirmationService: ConfirmationService) {}
-
-    ngOnInit() {
-        const onResize = () => this.aiInsightsPerPage.set(this.calcInsightsPerPage());
-        window.addEventListener('resize', onResize);
-        this.destroyRef.onDestroy(() => window.removeEventListener('resize', onResize));
-    }
-
-    ngAfterViewInit() {
-        this.setupSectionObserver();
-        this.setupNavStuckObserver();
-        this.destroyRef.onDestroy(() => this.sectionObserver?.disconnect());
-    }
-
-    private setupSectionObserver() {
-        this.sectionObserver = new IntersectionObserver(
-            (entries) => {
-                for (const entry of entries) {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.id.replace('section-', '');
-                        this.activeSection.set(id);
-                    }
-                }
-            },
-            { rootMargin: '-120px 0px -60% 0px', threshold: 0 }
-        );
-        for (const section of this.sections) {
-            const el = document.getElementById('section-' + section.id);
-            if (el) this.sectionObserver.observe(el);
-        }
-    }
-
-    private setupNavStuckObserver() {
-        const navEl = document.querySelector('[class*="sticky top-0"]');
-        if (!navEl) return;
-        const sentinel = document.createElement('div');
-        sentinel.style.height = '1px';
-        sentinel.style.marginBottom = '-1px';
-        navEl.parentElement?.insertBefore(sentinel, navEl);
-        const observer = new IntersectionObserver(
-            ([entry]) => this.isNavStuck.set(!entry.isIntersecting),
-            { threshold: 1 }
-        );
-        observer.observe(sentinel);
-        this.destroyRef.onDestroy(() => observer.disconnect());
-    }
-
-    // ─── Section Navigation ───
-    scrollToSection(sectionId: string) {
-        const expandSignal = this.getExpandSignal(sectionId);
-        if (expandSignal && !expandSignal()) expandSignal.set(true);
-        this.activeSection.set(sectionId);
-        setTimeout(() => {
-            const el = document.getElementById('section-' + sectionId);
-            if (!el) return;
-            const scrollContainer = el.closest('.layout-content-wrapper') ?? window;
-            const navHeight = 72;
-            if (scrollContainer instanceof Window) {
-                const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
-                window.scrollTo({ top, behavior: 'smooth' });
-            } else {
-                const top = el.offsetTop - navHeight;
-                scrollContainer.scrollTo({ top, behavior: 'smooth' });
-            }
-        });
-    }
-
-    private getExpandSignal(sectionId: string) {
-        const map: Record<string, ReturnType<typeof signal<boolean>> | undefined> = {
-            analysis: this.isAnalysisExpanded, overview: this.isOverviewExpanded,
-            what: this.isWhatExpanded, why: this.isWhyExpanded, who: this.isWhoExpanded,
-            where: this.isWhereExpanded, when: this.isWhenExpanded, risks: this.isRisksExpanded,
-            related: this.isRelatedExpanded, collaboration: this.isCollaborationExpanded,
-            team: this.isTeamExpanded, activity: this.isActivityExpanded, tasks: this.isTasksExpanded
-        };
-        return map[sectionId];
-    }
 
     // ─── Task Methods ───
     toggleTaskCompletion(task: Task, completed: boolean) {

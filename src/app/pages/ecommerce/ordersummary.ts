@@ -269,7 +269,7 @@ interface ShippingAddress {
                             <div class="w-full border-t border-surface-200 dark:border-surface-600"></div>
 
                             <div class="space-y-3">
-                                <h4 class="text-surface-700 dark:text-surface-200 text-sm font-medium">Delivery Address</h4>
+                                <h4 class="text-surface-700 dark:text-surface-100 text-sm font-medium">Delivery Address</h4>
                                 <div class="text-surface-600 dark:text-surface-300 text-sm space-y-1">
                                     <p>{{ shippingAddress.street }} {{ shippingAddress.city }}, {{ shippingAddress.state }} {{ shippingAddress.zip }} {{ shippingAddress.country }}</p>
                                     <p class="text-surface-500 dark:text-surface-400 mt-2">{{ shippingAddress.name }} {{ shippingAddress.phone }}</p>
@@ -300,7 +300,7 @@ interface ShippingAddress {
                                 <div class="w-full border-t border-surface-200 dark:border-surface-600 my-3"></div>
 
                                 <div class="flex justify-between items-center">
-                                    <span class="text-surface-700 dark:text-surface-200 text-sm font-medium">Total</span>
+                                    <span class="text-surface-700 dark:text-surface-100 text-sm font-medium">Total</span>
                                     <span class="text-emerald-500 font-semibold text-lg">\${{ total.toFixed(2) }}</span>
                                 </div>
                             </div>
