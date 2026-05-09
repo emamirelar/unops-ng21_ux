@@ -90,7 +90,7 @@ export class DetailTabDirective {
 
         .ux-dl__header-meta {
             overflow: hidden;
-            max-height: 50px;
+            max-height: 80px;
             opacity: 1;
             transition: max-height 0.25s ease-out, opacity 0.2s ease-out;
         }

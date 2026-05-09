@@ -176,7 +176,7 @@ interface TeamMember {
                     </div>
                 </div>
             </div>
-            <div ux-detail-header-meta class="flex flex-wrap items-center gap-4 text-sm text-primary-700 dark:text-primary-700 pb-3">
+            <div ux-detail-header-meta class="flex flex-wrap items-center gap-4 text-sm text-primary-700 dark:text-primary-700 pt-2 pb-6">
                 <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
                 <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> Target signing: Apr 1, 2026</span>
                 <span class="flex items-center gap-1"><i class="pi pi-hashtag text-xs"></i> OPP-2026-00142</span>
