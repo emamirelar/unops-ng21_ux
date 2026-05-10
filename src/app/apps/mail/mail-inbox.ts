@@ -37,13 +37,13 @@ interface MenuItemData {
 
                 <div class="p-4 flex flex-col gap-6">
                     <div class="flex flex-col gap-4">
-                        <div class="text-sm font-medium text-surface-500 dark:text-surface-400 uppercase">Menu</div>
+                        <div class="text-sm font-medium text-surface-600 dark:text-surface-300 uppercase">Menu</div>
                         <div class="flex flex-col gap-1">
                             @for (item of menuItemsWithCounts(); track item.label) {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
+                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-600 dark:text-surface-300 hover:bg-emphasis'
                                     ]"
                                     (click)="selectMenuItem(item.label)"
                                 >
@@ -67,13 +67,13 @@ interface MenuItemData {
                     <div class="h-px bg-surface-200 dark:bg-surface-700"></div>
 
                     <div class="flex flex-col gap-4">
-                        <div class="text-sm font-medium text-surface-500 dark:text-surface-400 uppercase">Categories</div>
+                        <div class="text-sm font-medium text-surface-600 dark:text-surface-300 uppercase">Categories</div>
                         <div class="flex flex-col gap-1">
                             @for (item of categoryItemsWithCounts(); track item.label) {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
+                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-600 dark:text-surface-300 hover:bg-emphasis'
                                     ]"
                                     (click)="selectCategory(item.label)"
                                 >
@@ -162,12 +162,12 @@ interface MenuItemData {
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-sm text-surface-500 dark:text-surface-400" [ngClass]="email.read ? 'opacity-60' : ''">{{ email.time }}</span>
+                                    <span class="text-sm text-surface-600 dark:text-surface-300" [ngClass]="email.read ? 'opacity-60' : ''">{{ email.time }}</span>
                                 </td>
                                 <td>
                                     <div class="flex items-end gap-2 w-full max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[400px] xl:max-w-[500px] 2xl:max-w-[600px]" [ngClass]="email.read ? 'opacity-60' : ''">
                                         <span class="font-normal text-surface-900 dark:text-surface-0 text-sm whitespace-nowrap">{{ email.subject }}</span>
-                                        <span class="flex-1 text-surface-500 dark:text-surface-400 text-sm truncate">{{ email.preview }}</span>
+                                        <span class="flex-1 text-surface-600 dark:text-surface-300 text-sm truncate">{{ email.preview }}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -194,7 +194,7 @@ interface MenuItemData {
                     </p-table>
 
                     <div class="p-4 border-t border-surface-200 dark:border-surface-700 flex justify-between items-center">
-                        <span class="text-sm text-surface-500 dark:text-surface-400">Shows {{ Math.min(first() + rows(), filteredEmails().length) }} results of {{ filteredEmails().length }}</span>
+                        <span class="text-sm text-surface-600 dark:text-surface-300">Shows {{ Math.min(first() + rows(), filteredEmails().length) }} results of {{ filteredEmails().length }}</span>
                         <p-paginator [rows]="rows()" [totalRecords]="filteredEmails().length" [first]="first()" (onPageChange)="onPageChange($event)" [showFirstLastIcon]="true" [pt]="{ root: { class: 'border-0 bg-transparent' } }" />
                     </div>
                 </div>
@@ -207,13 +207,13 @@ interface MenuItemData {
             <p-drawer [(visible)]="showMenuDrawer" header="Mails" position="left" styleClass="w-[280px]" appendTo="body">
                 <div class="flex flex-col gap-6">
                     <div class="flex flex-col gap-4">
-                        <div class="text-sm font-medium text-surface-500 dark:text-surface-400 uppercase">Menu</div>
+                        <div class="text-sm font-medium text-surface-600 dark:text-surface-300 uppercase">Menu</div>
                         <div class="flex flex-col gap-1">
                             @for (item of menuItemsWithCounts(); track item.label) {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
+                                        selectedMenuItem() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-600 dark:text-surface-300 hover:bg-emphasis'
                                     ]"
                                     (click)="selectMenuItem(item.label); showMenuDrawer.set(false)"
                                 >
@@ -237,13 +237,13 @@ interface MenuItemData {
                     <div class="h-px bg-surface-200 dark:bg-surface-700"></div>
 
                     <div class="flex flex-col gap-4">
-                        <div class="text-sm font-medium text-surface-500 dark:text-surface-400 uppercase">Categories</div>
+                        <div class="text-sm font-medium text-surface-600 dark:text-surface-300 uppercase">Categories</div>
                         <div class="flex flex-col gap-1">
                             @for (item of categoryItemsWithCounts(); track item.label) {
                                 <div
                                     [ngClass]="[
                                         'flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors',
-                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'
+                                        selectedCategory() === item.label ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-600 dark:text-surface-300 hover:bg-emphasis'
                                     ]"
                                     (click)="selectCategory(item.label); showMenuDrawer.set(false)"
                                 >

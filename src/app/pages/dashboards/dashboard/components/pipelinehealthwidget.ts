@@ -2,10 +2,11 @@ import { GaugeChart } from '@/app/pages/dashboards/charts/gaugechart';
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { TagModule } from 'primeng/tag';
 
 @Component({
     selector: 'pipeline-health-widget',
-    imports: [DividerModule, ButtonModule, GaugeChart],
+    imports: [DividerModule, ButtonModule, GaugeChart, TagModule],
     template: `<div class="card xl:w-auto w-full mb-0! px-4! sm:px-6! pb-4! sm:pb-6! pt-4! rounded-3xl">
         <div class="mb-2 flex items-start gap-2">
             <span class="flex-1 label-medium">Pipeline Health</span>
@@ -24,7 +25,7 @@ import { DividerModule } from 'primeng/divider';
                 <p-divider class="m-0!" />
                 <div class="flex items-center justify-between gap-4">
                     <span class="body-xsmall">Conversion Rate</span>
-                    <span class="px-2 py-1 rounded-lg text-green-700 bg-green-50 dark:bg-green-900 dark:text-green-300 text-sm font-semibold">72%</span>
+                    <p-tag value="72%" severity="success" />
                 </div>
                 <p-divider class="m-0!" />
                 <div class="flex items-center justify-between gap-4">

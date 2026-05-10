@@ -58,14 +58,14 @@ interface ColorOption {
                 <div class="p-6 flex flex-col lg:flex-row justify-start items-start gap-4">
                     <div class="flex-1 flex flex-col justify-start items-start gap-2">
                         <div class="text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Product name</div>
-                        <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Code will be generated automatically</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Code will be generated automatically</div>
                     </div>
                     <div class="flex-1 flex flex-col justify-start items-start gap-3 w-full lg:w-auto">
                         <input type="text" pInputText [(ngModel)]="product.name" placeholder="Enter product name" class="w-full" />
                         <p-inputGroup>
                             <input type="text" pInputText [(ngModel)]="product.code" placeholder="158692" readonly />
                             <p-inputGroupAddon>
-                                <i class="pi pi-copy cursor-pointer text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 transition-colors"></i>
+                                <i class="pi pi-copy cursor-pointer text-surface-600 dark:text-surface-300 hover:text-surface-700 dark:hover:text-surface-200 transition-colors"></i>
                             </p-inputGroupAddon>
                         </p-inputGroup>
                     </div>
@@ -78,7 +78,7 @@ interface ColorOption {
                 <div class="p-6 flex flex-col lg:flex-row justify-start items-start gap-4">
                     <div class="flex-1 flex flex-col justify-start items-start gap-2">
                         <div class="text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Category & Brand</div>
-                        <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">It will help customer to find the product</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">It will help customer to find the product</div>
                     </div>
                     <div class="flex-1 flex flex-col justify-start items-start gap-3 w-full lg:w-auto">
                         <p-select [(ngModel)]="product.category" [options]="categories" optionLabel="label" optionValue="value" placeholder="Select category" styleClass="w-full" />
@@ -129,7 +129,7 @@ interface ColorOption {
                 <div class="p-6 flex flex-col lg:flex-row justify-start items-start gap-4">
                     <div class="flex-1 flex flex-col justify-start items-start gap-2">
                         <div class="text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Size</div>
-                        <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Pick available sizes</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Pick available sizes</div>
                     </div>
                     <div class="flex-1 flex justify-start lg:justify-end items-center gap-2 flex-wrap">
                         @for (size of sizes; track size.label) {
@@ -170,7 +170,7 @@ interface ColorOption {
                 <div class="p-6 flex flex-col lg:flex-row justify-start items-start gap-4">
                     <div class="w-full lg:w-96 flex flex-col justify-start items-start gap-2">
                         <div class="text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Color Variants</div>
-                        <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Upload pictures with your colors</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Upload pictures with your colors</div>
                     </div>
                     <div class="flex-1 flex justify-end items-center gap-2 flex-wrap">
                         @for (color of selectedColors(); track color) {
@@ -221,9 +221,9 @@ interface ColorOption {
                         >
                             <div class="flex flex-col justify-center items-center gap-4">
                                 <div class="w-12 h-12">
-                                    <i class="pi pi-cloud-upload text-surface-500 dark:text-surface-400 !text-4xl"></i>
+                                    <i class="pi pi-cloud-upload text-surface-600 dark:text-surface-300 !text-4xl"></i>
                                 </div>
-                                <div class="text-center text-surface-500 dark:text-surface-400 text-xl font-medium leading-7">Drop or select a cover image</div>
+                                <div class="text-center text-surface-600 dark:text-surface-300 text-xl font-medium leading-7">Drop or select a cover image</div>
                                 <div class="text-primary-600 dark:text-primary-400 text-lg font-medium underline leading-7">Upload</div>
                             </div>
                         </div>
@@ -238,14 +238,10 @@ interface ColorOption {
                             <div class="relative z-10 w-full p-4 bg-surface-0 dark:bg-surface-900 rounded-2xl shadow-xl flex flex-col justify-start items-start gap-2 overflow-hidden">
                                 <div class="w-full flex flex-col gap-2">
                                     <div class="w-full flex justify-between items-start gap-2">
-                                        <div class="flex-1 text-surface-500 dark:text-surface-400 text-base sm:text-lg font-medium leading-6 sm:leading-7 line-clamp-2 min-w-0">{{ product.name || 'Product Name' }}</div>
+                                        <div class="flex-1 text-surface-600 dark:text-surface-300 text-base sm:text-lg font-medium leading-6 sm:leading-7 line-clamp-2 min-w-0">{{ product.name || 'Product Name' }}</div>
                                         <div class="flex justify-start items-center gap-2 shrink-0">
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
-                                                <i class="pi pi-heart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
-                                            </div>
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
-                                                <i class="pi pi-shopping-cart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
-                                            </div>
+                                            <p-button icon="pi pi-heart" [outlined]="true" severity="secondary" size="small" />
+                                            <p-button icon="pi pi-shopping-cart" [outlined]="true" severity="secondary" size="small" />
                                         </div>
                                     </div>
 
@@ -274,7 +270,7 @@ interface ColorOption {
                                     </div>
                                 } @else {
                                     <div class="flex flex-col justify-center items-center gap-2">
-                                        <i class="pi pi-cloud-upload text-surface-500 dark:text-surface-400 !text-lg"></i>
+                                        <i class="pi pi-cloud-upload text-surface-600 dark:text-surface-300 !text-lg"></i>
                                         <div class="text-primary-600 dark:text-primary-400 text-sm font-medium underline leading-tight">Upload</div>
                                     </div>
                                 }

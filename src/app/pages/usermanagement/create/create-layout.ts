@@ -22,7 +22,7 @@ interface MenuItem {
                 </div>
 
                 <div class="p-6 flex flex-col gap-4">
-                    <span class="text-surface-500 dark:text-surface-400 text-sm font-medium leading-tight">Menu</span>
+                    <span class="text-surface-600 dark:text-surface-300 text-sm font-medium leading-tight">Menu</span>
 
                     @for (item of menuItems; track item.route) {
                         <button (click)="navigateTo(item.route)" [class]="getMenuButtonClass(item.route)">
@@ -117,7 +117,7 @@ export class CreateLayout {
         if (this.isActive(route)) {
             return `${baseClass} bg-primary text-surface-0 dark:text-surface-900 shadow-sm`;
         }
-        return `${baseClass} text-surface-500 dark:text-surface-400 hover:bg-emphasis`;
+        return `${baseClass} text-surface-600 dark:text-surface-300 hover:bg-emphasis`;
     }
 
     getMobileMenuButtonClass(route: string): string {
@@ -125,6 +125,6 @@ export class CreateLayout {
         if (this.isActive(route)) {
             return `${baseClass} bg-primary text-surface-0 dark:text-surface-900 shadow-sm`;
         }
-        return `${baseClass} bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 hover:bg-emphasis`;
+        return `${baseClass} bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-300 hover:bg-emphasis`;
     }
 }

@@ -18,14 +18,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-@media screen and (min-width: $breakpoint) {
-    :root:not(.app-dark) body {
-        background: linear-gradient(355deg, var(--p-primary-100) 5%, var(--p-surface-100) 50%, var(--p-surface-50) 80%);
-    }
+:root:not(.app-dark) body {
+    background: linear-gradient(355deg, var(--p-primary-100) 5%, var(--p-surface-100) 50%, var(--p-surface-50) 80%);
+}
 
-    .app-dark body {
-        background: linear-gradient(355deg, var(--p-primary-900) 5%, var(--p-surface-900) 60%, var(--p-surface-950) 86%);
-    }
+.app-dark body {
+    background: linear-gradient(355deg, var(--p-primary-900) 5%, var(--p-surface-900) 40%, var(--p-surface-950) 86%);
 }
 
 a {

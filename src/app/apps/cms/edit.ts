@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectModule } from 'primeng/select';
+import { DividerModule } from 'primeng/divider';
 
 interface Author {
     name: string;
@@ -24,7 +25,7 @@ interface StatusOption {
 
 @Component({
     selector: 'app-edit',
-    imports: [FormsModule, AccordionModule, ButtonModule, CheckboxModule, ChipModule, DatePickerModule, DrawerModule, EditorModule, InputTextModule, MultiSelectModule, RadioButtonModule, SelectModule],
+    imports: [FormsModule, AccordionModule, ButtonModule, CheckboxModule, ChipModule, DatePickerModule, DividerModule, DrawerModule, EditorModule, InputTextModule, MultiSelectModule, RadioButtonModule, SelectModule],
     template: `
         <div class="flex flex-col min-h-screen overflow-hidden card animate-fade-in-up">
             <div class="p-6 border-b border-surface-200 dark:border-surface-700 flex justify-between items-center gap-4">
@@ -53,7 +54,7 @@ interface StatusOption {
                                     </div>
                                     <div class="text-center">
                                         <div class="text-surface-900 dark:text-surface-0 text-base font-medium mb-1">Click to upload cover image</div>
-                                        <div class="text-surface-500 dark:text-surface-400 text-sm">PNG, JPG or WebP (max 5MB)</div>
+                                        <div class="text-surface-600 dark:text-surface-300 text-sm">PNG, JPG or WebP (max 5MB)</div>
                                     </div>
                                 </div>
                             }
@@ -79,7 +80,7 @@ interface StatusOption {
                             <p-button label="Publish" severity="primary" styleClass="w-full" class="flex-1" />
                         </div>
 
-                        <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                        <p-divider type="dashed" />
 
                         <div class="flex flex-col gap-4">
                             <div class="flex justify-start items-start gap-2">
@@ -154,7 +155,7 @@ interface StatusOption {
                             </p-multiselect>
                         </div>
 
-                        <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                        <p-divider type="dashed" />
 
                         <div class="flex flex-col gap-4">
                             <label class="text-surface-900 dark:text-surface-0 text-base font-medium">Category</label>
@@ -168,14 +169,14 @@ interface StatusOption {
                             </div>
                         </div>
 
-                        <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                        <p-divider type="dashed" />
 
                         <div class="flex flex-col gap-2">
                             <label class="text-surface-900 dark:text-surface-0 text-base font-medium">Tag</label>
                             <p-multiselect [(ngModel)]="selectedTags" [options]="tagOptions" placeholder="Select tags" display="chip" styleClass="!w-full" />
                         </div>
 
-                        <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                        <p-divider type="dashed" />
 
                         <p-button label="Move to trash" icon="pi pi-trash" severity="danger" [outlined]="true" class="flex-1" styleClass="w-full" />
                     </div>
@@ -193,7 +194,7 @@ interface StatusOption {
                         <p-button label="Publish" severity="primary" styleClass="w-full" class="flex-1" />
                     </div>
 
-                    <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                    <p-divider type="dashed" />
 
                     <div class="flex flex-col gap-4">
                         <div class="flex justify-start items-start gap-2">
@@ -266,7 +267,7 @@ interface StatusOption {
                         </p-multiselect>
                     </div>
 
-                    <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                    <p-divider type="dashed" />
 
                     <div class="flex flex-col gap-4">
                         <label class="text-surface-900 dark:text-surface-0 text-base font-medium">Category</label>
@@ -280,14 +281,14 @@ interface StatusOption {
                         </div>
                     </div>
 
-                    <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                    <p-divider type="dashed" />
 
                     <div class="flex flex-col gap-2">
                         <label class="text-surface-900 dark:text-surface-0 text-base font-medium">Tag</label>
                         <p-multiselect [(ngModel)]="selectedTags" [options]="tagOptions" placeholder="Select tags" display="chip" styleClass="!w-full" />
                     </div>
 
-                    <div class="w-full border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                    <p-divider type="dashed" />
 
                     <p-button label="Move to trash" icon="pi pi-trash" severity="danger" [outlined]="true" />
                 </div>

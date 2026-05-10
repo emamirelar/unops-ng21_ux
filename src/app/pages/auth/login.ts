@@ -48,7 +48,7 @@ import { InputTextModule } from 'primeng/inputtext';
                             <div class="mt-8 body-small text-center lg:text-left">Not registered? <a routerLink="/auth/register" class="text-primary-500 hover:underline">Create an Account</a></div>
                         </div>
                     </div>
-                    <div class="mt-8 text-center lg:text-start block relative text-surface-400 dark:text-surface-500 text-sm">©{{ currentYear }} PrimeTek</div>
+                    <div class="mt-8 text-center lg:text-start block relative text-surface-500 dark:text-surface-400 text-sm">©{{ currentYear }} PrimeTek</div>
                 </div>
                 <div class="hidden lg:flex h-full py-20">
                     <div class="h-full w-full lg:max-w-130 xl:max-w-242 mx-auto flex items-center justify-center shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)] rounded-3xl border border-surface overflow-hidden">

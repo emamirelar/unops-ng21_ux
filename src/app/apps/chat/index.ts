@@ -113,7 +113,7 @@ interface Contact {
                                 {{ activeChat()?.name }}
                             </h3>
                             @if (activeChat()?.type === 'group') {
-                                <p class="text-xs xl:text-sm text-surface-500 dark:text-surface-400 truncate">{{ formatParticipants(activeChat()?.participants || []) }}</p>
+                                <p class="text-xs xl:text-sm text-surface-600 dark:text-surface-300 truncate">{{ formatParticipants(activeChat()?.participants || []) }}</p>
                             }
                         </div>
                     </div>

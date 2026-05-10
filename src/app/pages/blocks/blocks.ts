@@ -10,17 +10,19 @@ import { Password } from 'primeng/password';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { FormsModule } from '@angular/forms';
+import { DividerModule } from 'primeng/divider';
+import { TagModule } from 'primeng/tag';
 
 @Component({
     selector: 'app-blocks',
     standalone: true,
-    imports: [CommonModule, BlockViewer, ButtonModule, Chip, InputText, Checkbox, Password, IconField, InputIcon, FormsModule],
+    imports: [CommonModule, BlockViewer, ButtonModule, Chip, InputText, Checkbox, Password, IconField, InputIcon, FormsModule, DividerModule, TagModule],
     template: `<div class="animate-fade-in-up">
         <!-- Page Hero Section -->
 
         <div class="bg-surface-0 dark:bg-surface-900 border border-surface rounded-xl p-8 bg-cover bg-no-repeat h-[440px] flex mb-8" [style.background-image]="heroBackground()">
             <div class="flex flex-col gap-4 items-center sm:items-start justify-center sm:max-w-144">
-                <span class="bg-surface-950 text-white px-2 py-1 font-bold rounded-md text-sm">TailwindCSS v4</span>
+                <p-tag value="TailwindCSS v4" severity="contrast" styleClass="font-bold text-sm" />
                 <div class="flex items-center gap-4">
                     <span class="font-bold text-4xl text-surface-950 dark:text-surface-0">PrimeBlocks</span>
                 </div>
@@ -74,7 +76,7 @@ import { FormsModule } from '@angular/forms';
                             <span class="text-surface-900 dark:text-surface-0">One Product, </span>
                             <span class="text-primary-500 dark:text-primary-400">Many Solutions</span>
                         </div>
-                        <div class="text-surface-500 dark:text-surface-400 leading-tight">Ac turpis egestas maecenas pharetra convallis posuere morbi leo urna.</div>
+                        <div class="text-surface-600 dark:text-surface-300 leading-tight">Ac turpis egestas maecenas pharetra convallis posuere morbi leo urna.</div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div class="w-full rounded-md p-4">
@@ -83,7 +85,7 @@ import { FormsModule } from '@angular/forms';
                             </span>
                             <div class="flex flex-col gap-1">
                                 <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Built for Developers</div>
-                                <p class="text-surface-500 dark:text-surface-400 leading-normal">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                                <p class="text-surface-600 dark:text-surface-300 leading-normal">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
                             </div>
                         </div>
                         <div class="w-full rounded-md p-4">
@@ -92,7 +94,7 @@ import { FormsModule } from '@angular/forms';
                             </span>
                             <div class="flex flex-col gap-1">
                                 <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">End-to-End Encryption</div>
-                                <p class="text-surface-500 dark:text-surface-400 leading-normal">Risus nec feugiat in fermentum posuere urna nec. Posuere sollicitudin aliquam ultrices sagittis.</p>
+                                <p class="text-surface-600 dark:text-surface-300 leading-normal">Risus nec feugiat in fermentum posuere urna nec. Posuere sollicitudin aliquam ultrices sagittis.</p>
                             </div>
                         </div>
                         <div class="w-full rounded-md p-4">
@@ -101,7 +103,7 @@ import { FormsModule } from '@angular/forms';
                             </span>
                             <div class="flex flex-col gap-1">
                                 <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Easy to Use</div>
-                                <p class="text-surface-500 dark:text-surface-400 leading-normal">Ornare suspendisse sed nisi lacus sed viverra tellus. Neque volutpat ac tincidunt vitae semper.</p>
+                                <p class="text-surface-600 dark:text-surface-300 leading-normal">Ornare suspendisse sed nisi lacus sed viverra tellus. Neque volutpat ac tincidunt vitae semper.</p>
                             </div>
                         </div>
                         <div class="w-full rounded-md p-4">
@@ -110,7 +112,7 @@ import { FormsModule } from '@angular/forms';
                             </span>
                             <div class="flex flex-col gap-1">
                                 <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Fast & Global Support</div>
-                                <p class="text-surface-500 dark:text-surface-400 leading-normal">Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus.</p>
+                                <p class="text-surface-600 dark:text-surface-300 leading-normal">Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus.</p>
                             </div>
                         </div>
                         <div class="w-full rounded-md p-4">
@@ -119,7 +121,7 @@ import { FormsModule } from '@angular/forms';
                             </span>
                             <div class="flex flex-col gap-1">
                                 <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Open Source</div>
-                                <p class="text-surface-500 dark:text-surface-400 leading-normal">Nec tincidunt praesent semper feugiat. Sed adipiscing diam donec adipiscing tristique risus nec feugiat.</p>
+                                <p class="text-surface-600 dark:text-surface-300 leading-normal">Nec tincidunt praesent semper feugiat. Sed adipiscing diam donec adipiscing tristique risus nec feugiat.</p>
                             </div>
                         </div>
                         <div class="w-full rounded-md p-4">
@@ -128,7 +130,7 @@ import { FormsModule } from '@angular/forms';
                             </span>
                             <div class="flex flex-col gap-1">
                                 <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Trusted Security</div>
-                                <p class="text-surface-500 dark:text-surface-400 leading-normal">Mattis rhoncus urna neque viverra justo nec ultrices. Id cursus metus aliquam eleifend.</p>
+                                <p class="text-surface-600 dark:text-surface-300 leading-normal">Mattis rhoncus urna neque viverra justo nec ultrices. Id cursus metus aliquam eleifend.</p>
                             </div>
                         </div>
                     </div>
@@ -183,20 +185,20 @@ import { FormsModule } from '@angular/forms';
             <div class="bg-surface-50 dark:bg-surface-950 px-6 py-20 md:px-12 lg:px-20">
                 <div class="flex flex-col gap-4 items-center justify-center mb-12">
                     <div class="text-surface-900 dark:text-surface-0 font-bold text-4xl lg:text-5xl text-center leading-tight">Pricing Plans</div>
-                    <div class="text-surface-500 dark:text-surface-400 text-lg text-center leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</div>
+                    <div class="text-surface-600 dark:text-surface-300 text-lg text-center leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</div>
                 </div>
 
                 <div class="flex lg:flex-row flex-col gap-8 max-w-7xl mx-auto">
                     <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-surface-0 dark:bg-surface-800 shadow-sm gap-6">
                         <div class="flex flex-col gap-2">
                             <h4 class="text-surface-900 dark:text-surface-0 font-medium text-xl leading-tight">Basic</h4>
-                            <p class="text-surface-500 dark:text-surface-400 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                            <p class="text-surface-600 dark:text-surface-300 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
                         </div>
 
                         <div class="w-full h-px bg-surface-200 dark:bg-surface-700"></div>
                         <div class="flex items-center gap-2">
                             <span class="font-bold text-3xl text-surface-900 dark:text-surface-0 leading-tight">$9</span>
-                            <span class="font-medium text-surface-500 dark:text-surface-400 leading-tight">per month</span>
+                            <span class="font-medium text-surface-600 dark:text-surface-300 leading-tight">per month</span>
                         </div>
                         <div class="w-full h-px bg-surface-200 dark:bg-surface-600"></div>
                         <ul class="list-none flex flex-col gap-4 flex-1">
@@ -218,13 +220,13 @@ import { FormsModule } from '@angular/forms';
                     <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-surface-0 dark:bg-surface-800 shadow-sm gap-6">
                         <div class="flex flex-col gap-2">
                             <h4 class="text-surface-900 dark:text-surface-0 font-medium text-xl leading-tight">Premium</h4>
-                            <p class="text-surface-500 dark:text-surface-400 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                            <p class="text-surface-600 dark:text-surface-300 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
                         </div>
 
                         <div class="w-full h-px bg-surface-200 dark:bg-surface-700"></div>
                         <div class="flex items-center gap-2">
                             <span class="font-bold text-3xl text-surface-900 dark:text-surface-0 leading-tight">$29</span>
-                            <span class="font-medium text-surface-500 dark:text-surface-400 leading-tight">per month</span>
+                            <span class="font-medium text-surface-600 dark:text-surface-300 leading-tight">per month</span>
                         </div>
                         <div class="w-full h-px bg-surface-200 dark:bg-surface-600"></div>
                         <ul class="list-none flex flex-col gap-4 flex-1">
@@ -250,13 +252,13 @@ import { FormsModule } from '@angular/forms';
                     <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-surface-0 dark:bg-surface-800 shadow-sm gap-6">
                         <div class="flex flex-col gap-2">
                             <h4 class="text-surface-900 dark:text-surface-0 font-medium text-xl leading-tight">Enterprise</h4>
-                            <p class="text-surface-500 dark:text-surface-400 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                            <p class="text-surface-600 dark:text-surface-300 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
                         </div>
 
                         <div class="w-full h-px bg-surface-200 dark:bg-surface-700"></div>
                         <div class="flex items-center gap-2">
                             <span class="font-bold text-3xl text-surface-900 dark:text-surface-0 leading-tight">$49</span>
-                            <span class="font-medium text-surface-500 dark:text-surface-400 leading-tight">per month</span>
+                            <span class="font-medium text-surface-600 dark:text-surface-300 leading-tight">per month</span>
                         </div>
                         <div class="w-full h-px bg-surface-200 dark:bg-surface-600"></div>
                         <ul class="list-none flex flex-col gap-4 flex-1">
@@ -477,7 +479,7 @@ import { FormsModule } from '@angular/forms';
                         <div class="text-surface-500 dark:text-surface-300 text-base leading-tight">Morbi tristique blandit turpis. In viverra ligula id nulla hendrerit rutrum.</div>
                     </div>
 
-                    <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                    <p-divider />
 
                     <div class="flex flex-col gap-4">
                         <div class="flex flex-col md:flex-row gap-4">
@@ -490,7 +492,7 @@ import { FormsModule } from '@angular/forms';
                             </div>
                         </div>
 
-                        <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                        <p-divider />
 
                         <div class="flex flex-col md:flex-row gap-4">
                             <div class="flex items-center gap-4 flex-1">
@@ -506,7 +508,7 @@ import { FormsModule } from '@angular/forms';
                             </div>
                         </div>
 
-                        <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                        <p-divider />
 
                         <div class="flex flex-col md:flex-row gap-4">
                             <div class="flex items-center gap-4 flex-1">
@@ -518,7 +520,7 @@ import { FormsModule } from '@angular/forms';
                             </div>
                         </div>
 
-                        <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                        <p-divider />
 
                         <div class="flex flex-col md:flex-row gap-4">
                             <div class="flex items-center gap-4 flex-1">
@@ -530,7 +532,7 @@ import { FormsModule } from '@angular/forms';
                             </div>
                         </div>
 
-                        <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                        <p-divider />
 
                         <div class="flex flex-col md:flex-row gap-4">
                             <div class="flex items-start gap-4 flex-1">
@@ -542,7 +544,7 @@ import { FormsModule } from '@angular/forms';
                             </div>
                         </div>
 
-                        <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                        <p-divider />
                     </div>
                 </div>
             </div>
@@ -613,7 +615,7 @@ export class Blocks {
                 <span class="text-surface-900 dark:text-surface-0">One Product, </span>
                 <span class="text-primary-500 dark:text-primary-400">Many Solutions</span>
             </div>
-            <div class="text-surface-500 dark:text-surface-400 leading-tight">Ac turpis egestas maecenas pharetra convallis posuere morbi leo urna.</div>
+            <div class="text-surface-600 dark:text-surface-300 leading-tight">Ac turpis egestas maecenas pharetra convallis posuere morbi leo urna.</div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div class="w-full rounded-md p-4">
@@ -622,7 +624,7 @@ export class Blocks {
                 </span>
                 <div class="flex flex-col gap-1">
                     <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Built for Developers</div>
-                    <p class="text-surface-500 dark:text-surface-400 leading-normal">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-normal">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
                 </div>
             </div>
             <div class="w-full rounded-md p-4">
@@ -631,7 +633,7 @@ export class Blocks {
                 </span>
                 <div class="flex flex-col gap-1">
                     <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">End-to-End Encryption</div>
-                    <p class="text-surface-500 dark:text-surface-400 leading-normal">Risus nec feugiat in fermentum posuere urna nec. Posuere sollicitudin aliquam ultrices sagittis.</p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-normal">Risus nec feugiat in fermentum posuere urna nec. Posuere sollicitudin aliquam ultrices sagittis.</p>
                 </div>
             </div>
             <div class="w-full rounded-md p-4">
@@ -640,7 +642,7 @@ export class Blocks {
                 </span>
                 <div class="flex flex-col gap-1">
                     <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Easy to Use</div>
-                    <p class="text-surface-500 dark:text-surface-400 leading-normal">Ornare suspendisse sed nisi lacus sed viverra tellus. Neque volutpat ac tincidunt vitae semper.</p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-normal">Ornare suspendisse sed nisi lacus sed viverra tellus. Neque volutpat ac tincidunt vitae semper.</p>
                 </div>
             </div>
             <div class="w-full rounded-md p-4">
@@ -649,7 +651,7 @@ export class Blocks {
                 </span>
                 <div class="flex flex-col gap-1">
                     <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Fast & Global Support</div>
-                    <p class="text-surface-500 dark:text-surface-400 leading-normal">Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus.</p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-normal">Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus.</p>
                 </div>
             </div>
             <div class="w-full rounded-md p-4">
@@ -658,7 +660,7 @@ export class Blocks {
                 </span>
                 <div class="flex flex-col gap-1">
                     <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Open Source</div>
-                    <p class="text-surface-500 dark:text-surface-400 leading-normal">Nec tincidunt praesent semper feugiat. Sed adipiscing diam donec adipiscing tristique risus nec feugiat.</p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-normal">Nec tincidunt praesent semper feugiat. Sed adipiscing diam donec adipiscing tristique risus nec feugiat.</p>
                 </div>
             </div>
             <div class="w-full rounded-md p-4">
@@ -667,7 +669,7 @@ export class Blocks {
                 </span>
                 <div class="flex flex-col gap-1">
                     <div class="text-surface-900 dark:text-surface-0 text-xl font-medium leading-tight">Trusted Security</div>
-                    <p class="text-surface-500 dark:text-surface-400 leading-normal">Mattis rhoncus urna neque viverra justo nec ultrices. Id cursus metus aliquam eleifend.</p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-normal">Mattis rhoncus urna neque viverra justo nec ultrices. Id cursus metus aliquam eleifend.</p>
                 </div>
             </div>
         </div>
@@ -716,20 +718,20 @@ export class Blocks {
     block4: string = `<div class="bg-surface-50 dark:bg-surface-950 px-6 py-20 md:px-12 lg:px-20">
     <div class="flex flex-col gap-4 items-center justify-center mb-12">
         <div class="text-surface-900 dark:text-surface-0 font-bold text-4xl lg:text-5xl text-center leading-tight">Pricing Plans</div>
-        <div class="text-surface-500 dark:text-surface-400 text-lg text-center leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</div>
+        <div class="text-surface-600 dark:text-surface-300 text-lg text-center leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</div>
     </div>
 
     <div class="flex lg:flex-row flex-col gap-8 max-w-7xl mx-auto">
         <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-surface-0 dark:bg-surface-800 shadow-sm gap-6">
             <div class="flex flex-col gap-2">
                 <h4 class="text-surface-900 dark:text-surface-0 font-medium text-xl leading-tight">Basic</h4>
-                <p class="text-surface-500 dark:text-surface-400 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                <p class="text-surface-600 dark:text-surface-300 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
             </div>
 
             <div class="w-full h-px bg-surface-200 dark:bg-surface-700"></div>
             <div class="flex items-center gap-2">
                 <span class="font-bold text-3xl text-surface-900 dark:text-surface-0 leading-tight">$9</span>
-                <span class="font-medium text-surface-500 dark:text-surface-400 leading-tight">per month</span>
+                <span class="font-medium text-surface-600 dark:text-surface-300 leading-tight">per month</span>
             </div>
             <div class="w-full h-px bg-surface-200 dark:bg-surface-600"></div>
             <ul class="list-none flex flex-col gap-4 flex-1">
@@ -751,13 +753,13 @@ export class Blocks {
         <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-surface-0 dark:bg-surface-800 shadow-sm gap-6">
             <div class="flex flex-col gap-2">
                 <h4 class="text-surface-900 dark:text-surface-0 font-medium text-xl leading-tight">Premium</h4>
-                <p class="text-surface-500 dark:text-surface-400 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                <p class="text-surface-600 dark:text-surface-300 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
             </div>
 
             <div class="w-full h-px bg-surface-200 dark:bg-surface-700"></div>
             <div class="flex items-center gap-2">
                 <span class="font-bold text-3xl text-surface-900 dark:text-surface-0 leading-tight">$29</span>
-                <span class="font-medium text-surface-500 dark:text-surface-400 leading-tight">per month</span>
+                <span class="font-medium text-surface-600 dark:text-surface-300 leading-tight">per month</span>
             </div>
             <div class="w-full h-px bg-surface-200 dark:bg-surface-600"></div>
             <ul class="list-none flex flex-col gap-4 flex-1">
@@ -783,13 +785,13 @@ export class Blocks {
         <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-surface-0 dark:bg-surface-800 shadow-sm gap-6">
             <div class="flex flex-col gap-2">
                 <h4 class="text-surface-900 dark:text-surface-0 font-medium text-xl leading-tight">Enterprise</h4>
-                <p class="text-surface-500 dark:text-surface-400 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                <p class="text-surface-600 dark:text-surface-300 leading-normal">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</p>
             </div>
 
             <div class="w-full h-px bg-surface-200 dark:bg-surface-700"></div>
             <div class="flex items-center gap-2">
                 <span class="font-bold text-3xl text-surface-900 dark:text-surface-0 leading-tight">$49</span>
-                <span class="font-medium text-surface-500 dark:text-surface-400 leading-tight">per month</span>
+                <span class="font-medium text-surface-600 dark:text-surface-300 leading-tight">per month</span>
             </div>
             <div class="w-full h-px bg-surface-200 dark:bg-surface-600"></div>
             <ul class="list-none flex flex-col gap-4 flex-1">
@@ -992,7 +994,7 @@ export class Blocks {
             <div class="text-surface-500 dark:text-surface-300 text-base leading-tight">Morbi tristique blandit turpis. In viverra ligula id nulla hendrerit rutrum.</div>
         </div>
 
-        <div class="border-t border-surface-200 dark:border-surface-700"></div>
+        <p-divider />
 
         <div class="flex flex-col gap-4">
             <div class="flex flex-col md:flex-row gap-4">
@@ -1005,7 +1007,7 @@ export class Blocks {
                 </div>
             </div>
 
-            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+            <p-divider />
 
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex items-center gap-4 flex-1">
@@ -1021,7 +1023,7 @@ export class Blocks {
                 </div>
             </div>
 
-            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+            <p-divider />
 
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex items-center gap-4 flex-1">
@@ -1033,7 +1035,7 @@ export class Blocks {
                 </div>
             </div>
 
-            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+            <p-divider />
 
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex items-center gap-4 flex-1">
@@ -1045,7 +1047,7 @@ export class Blocks {
                 </div>
             </div>
 
-            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+            <p-divider />
 
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex items-start gap-4 flex-1">
@@ -1057,7 +1059,7 @@ export class Blocks {
                 </div>
             </div>
 
-            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+            <p-divider />
         </div>
     </div>
 </div>`;

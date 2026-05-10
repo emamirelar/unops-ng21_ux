@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
+import { AvatarModule } from 'primeng/avatar';
 
 interface Comment {
     image: string;
@@ -11,7 +12,7 @@ interface Comment {
 
 @Component({
     selector: 'app-detail',
-    imports: [ButtonModule, DividerModule, TagModule],
+    imports: [ButtonModule, DividerModule, TagModule, AvatarModule],
     template: `
         <div class="p-6 card overflow-hidden animate-fade-in-up">
             <div class="h-110 relative bg-linear-to-b from-transparent to-black/30 rounded-3xl overflow-hidden mb-8">
@@ -109,14 +110,12 @@ interface Comment {
                         </div>
 
                         <div class="flex items-start gap-3">
-                            <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                <img src="demo/images/cms/avatars/avatar-dianne.jpg" alt="Dianne Russell" class="w-8 h-8 rounded-full" />
-                            </div>
+                            <p-avatar image="demo/images/cms/avatars/avatar-dianne.jpg" shape="circle" styleClass="w-10 h-10 border border-surface-200 dark:border-surface-700" />
                             <div class="flex-1 flex flex-col gap-3">
                                 <div class="flex justify-between items-center">
                                     <div class="flex flex-col">
                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Dianne Russell</div>
-                                        <div class="text-surface-500 dark:text-surface-400 text-sm">Industrial Economics • 6 min read</div>
+                                        <div class="text-surface-600 dark:text-surface-300 text-sm">Industrial Economics • 6 min read</div>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <p-button icon="pi pi-youtube" severity="secondary" [rounded]="true" />
@@ -138,19 +137,17 @@ interface Comment {
                                     <div class="flex flex-col md:flex-row gap-6 md:gap-8">
                                         <img src="demo/images/cms/cms-list-8.jpg" alt="Maritime Trade Finance" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl md:self-stretch" />
                                         <div class="flex-1 flex flex-col gap-3">
-                                            <div class="text-surface-500 dark:text-surface-400 text-base">Jan 15, 2025 • 4 min read</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base">Jan 15, 2025 • 4 min read</div>
                                             <div class="flex flex-col gap-4">
                                                 <h4 class="title-h4 text-left!">Maritime Trade Finance: Navigating Global Commerce</h4>
                                                 <p class="text-surface-500 dark:text-surface-300 text-base leading-normal">
                                                     Discover how shipping infrastructure investments drive international trade, create economic opportunities, and establish vital supply chain connections.
                                                 </p>
                                                 <div class="flex items-center gap-3">
-                                                    <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                                        <img src="demo/images/cms/avatars/avatar-sophia.jpg" alt="Sophia Bennett" class="w-8 h-8 rounded-full" />
-                                                    </div>
+                                                    <p-avatar image="demo/images/cms/avatars/avatar-sophia.jpg" shape="circle" styleClass="w-10 h-10 border border-surface-200 dark:border-surface-700" />
                                                     <div class="flex flex-col">
                                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Sophia Bennett</div>
-                                                        <div class="text-surface-500 dark:text-surface-400 text-sm">Trade Finance Specialist</div>
+                                                        <div class="text-surface-600 dark:text-surface-300 text-sm">Trade Finance Specialist</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -160,17 +157,15 @@ interface Comment {
                                     <div class="flex flex-col md:flex-row gap-6 md:gap-8">
                                         <img src="demo/images/cms/cms-list-3.jpg" alt="Transportation Infrastructure Investment" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl" />
                                         <div class="flex-1 flex flex-col gap-3">
-                                            <div class="text-surface-500 dark:text-surface-400 text-base">Jan 19, 2025 • 5 min read</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base">Jan 19, 2025 • 5 min read</div>
                                             <div class="flex flex-col gap-4">
                                                 <h4 class="title-h4 text-left!">Rail Infrastructure: The Backbone of Economic Growth</h4>
                                                 <p class="text-surface-500 dark:text-surface-300 text-base leading-normal">Strategic rail investments connect markets, reduce logistics costs, and unlock regional development opportunities.</p>
                                                 <div class="flex items-center gap-3">
-                                                    <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                                        <img src="demo/images/cms/avatars/avatar-ethan.jpg" alt="Ethan Clarke" class="w-8 h-8 rounded-full" />
-                                                    </div>
+                                                    <p-avatar image="demo/images/cms/avatars/avatar-ethan.jpg" shape="circle" styleClass="w-10 h-10 border border-surface-200 dark:border-surface-700" />
                                                     <div class="flex flex-col">
                                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Ethan Clarke</div>
-                                                        <div class="text-surface-500 dark:text-surface-400 text-sm">Infrastructure Investment Analyst</div>
+                                                        <div class="text-surface-600 dark:text-surface-300 text-sm">Infrastructure Investment Analyst</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,10 +211,10 @@ interface Comment {
                                 <div class="flex flex-col gap-6">
                                     @for (comment of comments.slice(0, 3); track comment.name) {
                                         <div class="flex items-center gap-4">
-                                            <img [src]="comment.image" [alt]="comment.name" class="w-12 h-12 rounded-full border border-surface-200 dark:border-surface-700" />
+                                            <p-avatar [image]="comment.image" shape="circle" styleClass="w-12 h-12 border border-surface-200 dark:border-surface-700" />
                                             <div class="flex-1">
                                                 <div class="text-surface-950 dark:text-surface-50 text-base font-medium">{{ comment.name }}</div>
-                                                <div class="text-surface-500 dark:text-surface-400 text-sm">{{ comment.title }}</div>
+                                                <div class="text-surface-600 dark:text-surface-300 text-sm">{{ comment.title }}</div>
                                             </div>
                                         </div>
                                     }

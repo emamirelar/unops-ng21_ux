@@ -1,0 +1,36 @@
+---
+description: Decision hierarchy for where to place styling changes — component first, brand theme second, inline overrides last
+alwaysApply: true
+---
+
+# Styling Change Priority
+
+When the user asks for a styling change, evaluate placement in this strict order. Use the **first** level that produces a clean solution.
+
+## 1. Component scope (prefer)
+
+Can the change be expressed inside the component's own `.scss` file or template using existing design tokens?
+
+- Scoped SCSS rules, `:host` selectors, PrimeNG `styleClass` / `[pt]` bindings
+- Tailwind utilities already in the template
+- If yes → apply here. Done.
+
+## 2. Brand theme (`brand-theme.ts`)
+
+Is the change a semantic or component-level token that should apply **globally** across the app (e.g. every Tag, every DataTable row, every Button)?
+
+- Add or adjust a key in `brandOverrides` (component overrides, semantic tokens, or primitive aliases)
+- Log the change in the Design-System Maintenance Ledger (`design-system-maintenance.mdc`)
+- If yes → apply here. Done.
+
+## 3. Inline overrides (last resort)
+
+Only when neither of the above is clean:
+
+- Use **Tailwind utilities** (`text-darkblue-500`, `bg-gray-50`, `p-4`, `rounded-md`, etc.)
+- Or **PrimeNG / design-system CSS variables** (`var(--color-darkblue-500)`, `var(--surface-card)`, `var(--p-primary-color)`, etc.)
+- **Never** hard-coded hex, px, or raw values (enforced by `styling-tokens.mdc`)
+
+## Rationale check
+
+Before writing code, briefly state which level you chose and why the levels above it were not suitable.

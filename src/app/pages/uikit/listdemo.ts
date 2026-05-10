@@ -51,7 +51,7 @@ import { TagModule } from 'primeng/tag';
                                 <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-12">
                                     <div class="flex flex-row md:flex-col justify-between items-start gap-2">
                                         <div>
-                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category }}</span>
+                                            <span class="font-medium text-surface-600 dark:text-surface-300 text-sm">{{ item.category }}</span>
                                             <div class="text-lg font-medium mt-2">
                                                 {{ item.name }}
                                             </div>
@@ -103,7 +103,7 @@ import { TagModule } from 'primeng/tag';
                                 <div class="pt-12">
                                     <div class="flex flex-row justify-between items-start gap-2">
                                         <div>
-                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category }}</span>
+                                            <span class="font-medium text-surface-600 dark:text-surface-300 text-sm">{{ item.category }}</span>
                                             <div class="text-lg font-medium mt-1">
                                                 {{ item.name }}
                                             </div>

@@ -23,7 +23,7 @@ enum BlockView {
                         <button
                             [ngClass]="[
                                 'min-w-28 flex items-center gap-1 justify-center px-4 py-2 rounded-2xl transition-all duration-200 font-medium cursor-pointer',
-                                blockView() === BlockView.CODE ? 'bg-primary text-primary-contrast' : 'text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-0'
+                                blockView() === BlockView.CODE ? 'bg-primary text-primary-contrast' : 'text-surface-600 dark:text-surface-300 hover:text-surface-900 dark:hover:text-surface-0'
                             ]"
                             (click)="activateView($event, BlockView.CODE)"
                         >
@@ -32,7 +32,7 @@ enum BlockView {
                         <button
                             [ngClass]="[
                                 'min-w-28 flex items-center gap-1 justify-center px-4 py-2 rounded-2xl transition-all duration-200 font-medium cursor-pointer',
-                                blockView() === BlockView.PREVIEW ? 'bg-primary text-primary-contrast' : 'text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-0'
+                                blockView() === BlockView.PREVIEW ? 'bg-primary text-primary-contrast' : 'text-surface-600 dark:text-surface-300 hover:text-surface-900 dark:hover:text-surface-0'
                             ]"
                             (click)="activateView($event, BlockView.PREVIEW)"
                         >

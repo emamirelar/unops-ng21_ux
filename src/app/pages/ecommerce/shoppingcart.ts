@@ -39,11 +39,11 @@ interface RecommendedProduct {
                             <div class="flex-1 w-full flex flex-col gap-3 sm:gap-4">
                                 <div class="flex flex-col gap-1">
                                     <div class="text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">{{ item.name }}</div>
-                                    <div class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ item.description }}</div>
+                                    <div class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ item.description }}</div>
                                 </div>
 
                                 <div class="flex flex-col">
-                                    <div class="text-surface-500 dark:text-surface-400 text-base line-through leading-7">\${{ item.originalPrice.toFixed(2) }}</div>
+                                    <div class="text-surface-600 dark:text-surface-300 text-base line-through leading-7">\${{ item.originalPrice.toFixed(2) }}</div>
                                     <div class="text-blue-600 dark:text-blue-400 text-2xl font-medium leading-loose">\${{ item.currentPrice.toFixed(2) }}</div>
                                 </div>
 
@@ -54,8 +54,8 @@ interface RecommendedProduct {
                                 </div>
 
                                 <div class="flex items-center gap-2">
-                                    <i class="pi pi-clock text-surface-500 dark:text-surface-400"></i>
-                                    <div class="text-surface-500 dark:text-surface-400 text-base">Estimated {{ item.deliveryDate }}</div>
+                                    <i class="pi pi-clock text-surface-600 dark:text-surface-300"></i>
+                                    <div class="text-surface-600 dark:text-surface-300 text-base">Estimated {{ item.deliveryDate }}</div>
                                 </div>
                             </div>
 
@@ -84,7 +84,7 @@ interface RecommendedProduct {
 
                         <div class="flex flex-col gap-3">
                             <div class="flex justify-between items-center">
-                                <div class="text-surface-500 dark:text-surface-400 text-base">Subtotal</div>
+                                <div class="text-surface-600 dark:text-surface-300 text-base">Subtotal</div>
                                 <div class="text-surface-950 dark:text-surface-0 text-base font-medium">\${{ subtotal().toFixed(2) }}</div>
                             </div>
 
@@ -94,7 +94,7 @@ interface RecommendedProduct {
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <div class="text-surface-500 dark:text-surface-400 text-base">Shipping</div>
+                                <div class="text-surface-600 dark:text-surface-300 text-base">Shipping</div>
                                 <div class="flex items-center gap-2">
                                     <div class="text-green-500 dark:text-green-400 text-base font-medium">Free</div>
                                     <div class="text-surface-950 dark:text-surface-0 text-base font-medium line-through">$18.00</div>
@@ -102,7 +102,7 @@ interface RecommendedProduct {
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <div class="text-surface-500 dark:text-surface-400 text-base">VAT</div>
+                                <div class="text-surface-600 dark:text-surface-300 text-base">VAT</div>
                                 <div class="text-surface-950 dark:text-surface-0 text-base font-medium">\${{ vat().toFixed(2) }}</div>
                             </div>
                         </div>
@@ -112,7 +112,7 @@ interface RecommendedProduct {
                         </div>
 
                         <div class="flex justify-between items-center">
-                            <div class="text-surface-500 dark:text-surface-400 text-base">Total</div>
+                            <div class="text-surface-600 dark:text-surface-300 text-base">Total</div>
                             <div class="text-surface-950 dark:text-surface-0 text-base font-medium">\${{ total().toFixed(2) }}</div>
                         </div>
 
@@ -164,7 +164,7 @@ interface RecommendedProduct {
                             <p-button label="Change" [link]="true" styleClass="px-3 py-2 rounded-full" icon="pi pi-chevron-right" iconPos="right" />
                         </div>
 
-                        <div class="text-surface-500 dark:text-surface-400 text-base">Estimated delivery of your selected products varies between Saturday, January 18 and Thursday, January 23.</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-base">Estimated delivery of your selected products varies between Saturday, January 18 and Thursday, January 23.</div>
                     </div>
                 </div>
             </div>
@@ -183,14 +183,10 @@ interface RecommendedProduct {
                             <div class="relative z-10 w-full p-4 bg-surface-0 dark:bg-surface-900 rounded-2xl shadow-xl flex flex-col justify-start items-start gap-2 overflow-hidden">
                                 <div class="w-full flex flex-col gap-2">
                                     <div class="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                                        <div class="flex-1 text-surface-500 dark:text-surface-400 text-base sm:text-lg font-medium leading-6 sm:leading-7">{{ product.name }}</div>
+                                        <div class="flex-1 text-surface-600 dark:text-surface-300 text-base sm:text-lg font-medium leading-6 sm:leading-7">{{ product.name }}</div>
                                         <div class="flex justify-start items-center gap-2 ml-auto">
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
-                                                <i class="pi pi-heart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
-                                            </div>
-                                            <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
-                                                <i class="pi pi-shopping-cart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
-                                            </div>
+                                            <p-button icon="pi pi-heart" [outlined]="true" severity="secondary" size="small" />
+                                            <p-button icon="pi pi-shopping-cart" [outlined]="true" severity="secondary" size="small" />
                                         </div>
                                     </div>
 

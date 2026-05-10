@@ -6,12 +6,13 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { DividerModule } from 'primeng/divider';
 import { FormStateService } from './form-state.service';
 
 @Component({
     selector: 'app-authorization',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, CheckboxModule, RadioButtonModule, ToggleSwitchModule],
+    imports: [CommonModule, FormsModule, ButtonModule, CheckboxModule, RadioButtonModule, ToggleSwitchModule, DividerModule],
     template: `
         <div class="flex-1 self-stretch xl:rounded-tr-3xl xl:rounded-br-3xl flex flex-col overflow-hidden">
             <div class="self-stretch px-4 sm:px-6 xl:pl-8 xl:pr-6 pt-6 pb-4 flex items-center gap-4">
@@ -19,14 +20,14 @@ import { FormStateService } from './form-state.service';
             </div>
 
             <div class="self-stretch px-4 sm:px-6 flex flex-col gap-2">
-                <div class="self-stretch h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                <p-divider type="dashed" />
             </div>
 
             <div class="self-stretch p-4 sm:p-6 xl:p-8 flex flex-col items-end gap-6">
                 <div class="self-stretch flex flex-col md:flex-row items-start gap-4 md:gap-8">
                     <div class="w-full md:w-[283px] flex flex-col gap-2">
                         <div class="self-stretch text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Authorization Level</div>
-                        <div class="self-stretch text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Select user's access permission level</div>
+                        <div class="self-stretch text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Select user's access permission level</div>
                     </div>
 
                     <div class="flex-1 w-full flex flex-col sm:flex-row items-start gap-4">
@@ -45,12 +46,12 @@ import { FormStateService } from './form-state.service';
                     </div>
                 </div>
 
-                <div class="self-stretch h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                <p-divider type="dashed" />
 
                 <div class="self-stretch flex flex-col md:flex-row items-start gap-4 md:gap-8">
                     <div class="w-full md:w-[283px] flex flex-col gap-2">
                         <div class="self-stretch text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Authorizations</div>
-                        <div class="self-stretch text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Select specific permissions and capabilities</div>
+                        <div class="self-stretch text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Select specific permissions and capabilities</div>
                     </div>
 
                     <div class="flex-1 w-full flex flex-col gap-4">
@@ -64,13 +65,13 @@ import { FormStateService } from './form-state.service';
                 </div>
 
                 <!-- Divider -->
-                <div class="self-stretch h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                <p-divider type="dashed" />
 
                 <!-- User Management -->
                 <div class="self-stretch flex flex-col md:flex-row items-start gap-4 md:gap-8">
                     <div class="w-full md:w-[283px] flex flex-col gap-2">
                         <div class="self-stretch text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">User Management</div>
-                        <div class="self-stretch text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Enable or disable user management access</div>
+                        <div class="self-stretch text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Enable or disable user management access</div>
                     </div>
 
                     <div class="flex-1 w-full">
@@ -79,13 +80,13 @@ import { FormStateService } from './form-state.service';
                 </div>
 
                 <!-- Divider -->
-                <div class="self-stretch h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                <p-divider type="dashed" />
 
                 <!-- Sales Management -->
                 <div class="self-stretch flex flex-col md:flex-row items-start gap-4 md:gap-8">
                     <div class="w-full md:w-[283px] flex flex-col gap-2">
                         <div class="self-stretch text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Sales Management</div>
-                        <div class="self-stretch text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Enable or disable sales management access</div>
+                        <div class="self-stretch text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Enable or disable sales management access</div>
                     </div>
 
                     <div class="flex-1 w-full">
@@ -94,13 +95,13 @@ import { FormStateService } from './form-state.service';
                 </div>
 
                 <!-- Divider -->
-                <div class="self-stretch h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                <p-divider type="dashed" />
 
                 <!-- Finance Display -->
                 <div class="self-stretch flex flex-col md:flex-row items-start gap-4 md:gap-8">
                     <div class="w-full md:w-[283px] flex flex-col gap-2">
                         <div class="self-stretch text-surface-950 dark:text-surface-0 text-lg font-medium leading-7">Finance Display</div>
-                        <div class="self-stretch text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Enable or disable finance information visibility</div>
+                        <div class="self-stretch text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Enable or disable finance information visibility</div>
                     </div>
 
                     <div class="flex-1 w-full">

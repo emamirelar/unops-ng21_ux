@@ -11,6 +11,8 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
+import { PanelModule } from 'primeng/panel';
+import { PillTabsComponent, PillTabItem } from '@unopsitg/ux';
 
 export interface DocumentItem {
     id: number;
@@ -24,7 +26,7 @@ export interface DocumentItem {
 
 @Component({
     selector: 'app-documents-card',
-    imports: [CommonModule, FormsModule, ButtonModule, FileUploadModule, IconFieldModule, InputIconModule, InputTextModule, MenuModule, TableModule, TagModule],
+    imports: [CommonModule, FormsModule, ButtonModule, FileUploadModule, IconFieldModule, InputIconModule, InputTextModule, MenuModule, TableModule, TagModule, PillTabsComponent, PanelModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         :host :deep .p-fileupload-header {
@@ -36,36 +38,18 @@ export interface DocumentItem {
     `,
     template: `
         <div class="card flex flex-col">
-            <div class="flex flex-col">
-                <div class="flex items-center justify-between cursor-pointer" (click)="expanded.set(!expanded())">
-                    <div class="flex items-center gap-3">
+            <p-panel [toggleable]="true" [collapsed]="!expanded()" (collapsedChange)="expanded.set(!$event)" toggler="header">
+                <ng-template #header>
+                    <div class="flex items-center gap-3 flex-1">
                         <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
                         <div class="flex flex-col">
                             <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Documents</h4>
                             <span class="text-surface-500 dark:text-surface-300 text-sm font-medium leading-tight">{{ summary() }}</span>
                         </div>
                     </div>
-                    <button class="w-[30px] h-[30px] rounded-full bg-surface-100 dark:bg-surface-700 border border-surface-200 dark:border-surface-600 flex items-center justify-center cursor-pointer hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors">
-                        <i class="pi text-xs text-deepsea-500 dark:text-surface-0" [ngClass]="expanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </button>
-                </div>
-
-                <div class="expand-body" [class.expand-body--open]="expanded()">
-                    <div class="expand-body__inner">
+                </ng-template>
                         <div class="flex flex-col gap-4 pt-4">
-                            <div class="flex flex-wrap gap-2" role="tablist" aria-label="Document type filters">
-                                @for (filter of filterOptions(); track filter) {
-                                    <button
-                                        role="tab"
-                                        [attr.aria-selected]="activeFilter() === filter"
-                                        class="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer"
-                                        [class]="activeFilter() === filter
-                                            ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-700'
-                                            : 'bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-600 hover:bg-surface-200 dark:hover:bg-surface-600'"
-                                        (click)="activeFilter.set(filter)"
-                                    >{{ filter }}</button>
-                                }
-                            </div>
+                            <ux-pill-tabs [items]="pillTabItems()" [(activeValue)]="activeFilter" />
 
                             <p-iconfield>
                                 <p-inputicon class="pi pi-search" />
@@ -113,7 +97,7 @@ export interface DocumentItem {
                             } @else {
                                 <div class="flex flex-col items-center gap-3 py-8 text-center">
                                     <i class="pi pi-folder-open text-3xl text-surface-300 dark:text-surface-500"></i>
-                                    <span class="text-surface-500 dark:text-surface-400 text-sm">No documents to show</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-sm">No documents to show</span>
                                 </div>
                             }
 
@@ -142,9 +126,7 @@ export interface DocumentItem {
                                 </ng-template>
                             </p-fileupload>
                         </div>
-                    </div>
-                </div>
-            </div>
+            </p-panel>
         </div>
     `
 })
@@ -163,6 +145,10 @@ export class DocumentsCard {
     });
 
     filterOptions = computed(() => ['All Files', ...this.fileTypes(), 'Other']);
+
+    pillTabItems = computed<PillTabItem[]>(() =>
+        this.filterOptions().map(f => ({ value: f, label: f }))
+    );
 
     summary = computed(() => {
         const docs = this.documents();

@@ -31,7 +31,7 @@ import { MailService, Email } from './mail.service';
                     <p-button icon="pi pi-arrow-left" [text]="true" (onClick)="goBack()" severity="secondary" />
                     <div class="flex flex-col min-w-0">
                         <h1 class="text-surface-900 dark:text-surface-0 text-lg font-medium truncate">{{ currentEmail()?.subject }}</h1>
-                        <span class="text-surface-500 dark:text-surface-400 text-sm">{{ currentEmail()?.thread?.length || 1 }} {{ (currentEmail()?.thread?.length || 1) === 1 ? 'message' : 'messages' }}</span>
+                        <span class="text-surface-600 dark:text-surface-300 text-sm">{{ currentEmail()?.thread?.length || 1 }} {{ (currentEmail()?.thread?.length || 1) === 1 ? 'message' : 'messages' }}</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 md:gap-3 shrink-0">
@@ -68,11 +68,11 @@ import { MailService, Email } from './mail.service';
                                             <div class="flex-1 min-w-0">
                                                 <div class="flex items-center justify-between">
                                                     <span class="text-surface-900 dark:text-surface-0 font-medium truncate">{{ message.sender }}</span>
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400 shrink-0 ml-2">{{ message.time }}</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300 shrink-0 ml-2">{{ message.time }}</span>
                                                 </div>
-                                                <div class="text-sm text-surface-500 dark:text-surface-400 truncate">&lt;{{ message.email }}&gt;</div>
+                                                <div class="text-sm text-surface-600 dark:text-surface-300 truncate">&lt;{{ message.email }}&gt;</div>
                                                 <div class="flex items-center justify-between mt-1">
-                                                    <div class="flex items-center gap-1 text-sm text-surface-500 dark:text-surface-400">
+                                                    <div class="flex items-center gap-1 text-sm text-surface-600 dark:text-surface-300">
                                                         <span>to {{ message.sender === 'Robert Fox' ? currentEmail()?.sender : 'Robert Fox' }}</span>
                                                         <p-button icon="pi pi-chevron-down" [text]="true" size="small" severity="secondary" styleClass="p-1 w-4 h-4" (onClick)="showRecipientDetails($event)" />
                                                     </div>
@@ -101,16 +101,16 @@ import { MailService, Email } from './mail.service';
                                                 <div class="flex flex-col gap-1">
                                                     <div class="flex items-center gap-2">
                                                         <span class="text-surface-900 dark:text-surface-0 font-medium">{{ message.sender }}</span>
-                                                        <span class="text-surface-500 dark:text-surface-400 text-sm">&lt;{{ message.email }}&gt;</span>
+                                                        <span class="text-surface-600 dark:text-surface-300 text-sm">&lt;{{ message.email }}&gt;</span>
                                                     </div>
-                                                    <div class="flex items-center gap-2 text-sm text-surface-500 dark:text-surface-400">
+                                                    <div class="flex items-center gap-2 text-sm text-surface-600 dark:text-surface-300">
                                                         <span>to {{ message.sender === 'Robert Fox' ? currentEmail()?.sender : 'Robert Fox' }}</span>
                                                         <p-button icon="pi pi-chevron-down" [text]="true" size="small" severity="secondary" styleClass="p-1 w-5 h-5" (onClick)="showRecipientDetails($event)" />
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-2">
-                                                <span class="text-sm text-surface-500 dark:text-surface-400">{{ message.time }}</span>
+                                                <span class="text-sm text-surface-600 dark:text-surface-300">{{ message.time }}</span>
                                                 <div class="flex items-center gap-1">
                                                     <p-button [text]="true" size="small" severity="secondary" (onClick)="toggleReply()" pTooltip="Reply">
                                                         <i class="pi pi-reply flip-icon-horizontal"></i>
@@ -153,7 +153,7 @@ import { MailService, Email } from './mail.service';
                                 <p-avatar image="demo/images/avatar/avatar-square-m-2.jpg" size="normal" styleClass="w-6 h-6 md:w-8 md:h-8 shrink-0" [pt]="{ image: 'rounded-lg' }" />
                                 <div class="min-w-0">
                                     <div class="text-surface-900 dark:text-surface-0 font-medium text-sm md:text-base">Robert Fox</div>
-                                    <div class="text-xs md:text-sm text-surface-500 dark:text-surface-400 truncate">to {{ currentEmail()?.sender }}</div>
+                                    <div class="text-xs md:text-sm text-surface-600 dark:text-surface-300 truncate">to {{ currentEmail()?.sender }}</div>
                                 </div>
                             </div>
                             <p-button icon="pi pi-times" [text]="true" severity="secondary" size="small" (onClick)="showReplyEditor = false" styleClass="shrink-0" />
@@ -196,7 +196,7 @@ import { MailService, Email } from './mail.service';
                     <p-avatar [label]="getAvatarInitials(currentEmail()?.sender || '')" size="normal" styleClass="w-10 h-10 bg-primary-100 text-primary-600" />
                     <div>
                         <div class="font-medium text-surface-900 dark:text-surface-0">{{ currentEmail()?.sender }}</div>
-                        <div class="text-sm text-surface-500 dark:text-surface-400">&lt;{{ currentEmail()?.email }}&gt;</div>
+                        <div class="text-sm text-surface-600 dark:text-surface-300">&lt;{{ currentEmail()?.email }}&gt;</div>
                     </div>
                 </div>
                 <div class="space-y-2 text-sm">

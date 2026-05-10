@@ -100,16 +100,16 @@ interface User {
                                 </div>
                             </td>
                             <td>
-                                <span class="text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">{{ user.role }}</span>
+                                <span class="text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">{{ user.role }}</span>
                             </td>
                             <td>
-                                <span class="text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">{{ user.department }}</span>
+                                <span class="text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">{{ user.department }}</span>
                             </td>
                             <td>
-                                <span class="text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">{{ user.joinDate }}</span>
+                                <span class="text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">{{ user.joinDate }}</span>
                             </td>
                             <td>
-                                <span class="text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">{{ user.authorizationLevel }}</span>
+                                <span class="text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">{{ user.authorizationLevel }}</span>
                             </td>
                             <td>
                                 <p-tag [value]="user.status" [severity]="getStatusSeverity(user.status)" class="px-2 py-1 rounded-[6px]" />

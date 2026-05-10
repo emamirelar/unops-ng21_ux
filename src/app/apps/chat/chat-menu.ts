@@ -74,7 +74,7 @@ interface OnlineUser {
                         <!-- Header -->
                         <div class="flex justify-between items-center">
                             <h3 class="text-base font-medium text-surface-900 dark:text-surface-0">Online</h3>
-                            <button class="text-base font-medium text-primary-600 dark:text-primary-400 cursor-pointer">See All</button>
+                            <p-button label="See All" [link]="true" />
                         </div>
 
                         <!-- Stories Avatars -->
@@ -106,23 +106,23 @@ interface OnlineUser {
                     <div class="flex">
                         <div class="flex-1 px-4 py-2 cursor-pointer transition-colors" [class.border-b-2]="activeTabIndex === 0" [class.border-primary-500]="activeTabIndex === 0" (click)="activeTabIndex = 0">
                             <div class="text-center">
-                                <span class="text-base font-medium" [ngClass]="activeTabIndex === 0 ? 'text-primary-500' : 'text-surface-500 dark:text-surface-400'">All</span>
+                                <span class="text-base font-medium" [ngClass]="activeTabIndex === 0 ? 'text-primary-500' : 'text-surface-600 dark:text-surface-300'">All</span>
                             </div>
                         </div>
                         <div class="flex-1 px-4 py-2 cursor-pointer transition-colors" [class.border-b-2]="activeTabIndex === 1" [class.border-primary-500]="activeTabIndex === 1" (click)="activeTabIndex = 1">
                             <div class="text-center">
-                                <span class="text-base font-medium" [ngClass]="activeTabIndex === 1 ? 'text-primary-500' : 'text-surface-500 dark:text-surface-400'">Group</span>
+                                <span class="text-base font-medium" [ngClass]="activeTabIndex === 1 ? 'text-primary-500' : 'text-surface-600 dark:text-surface-300'">Group</span>
                             </div>
                         </div>
                         <div class="flex-1 px-4 py-2 cursor-pointer transition-colors" [class.border-b-2]="activeTabIndex === 2" [class.border-primary-500]="activeTabIndex === 2" (click)="activeTabIndex = 2">
                             <div class="text-center">
-                                <span class="text-base font-medium" [ngClass]="activeTabIndex === 2 ? 'text-primary-500' : 'text-surface-500 dark:text-surface-400'">Unread</span>
+                                <span class="text-base font-medium" [ngClass]="activeTabIndex === 2 ? 'text-primary-500' : 'text-surface-600 dark:text-surface-300'">Unread</span>
                             </div>
                         </div>
                         @if (hasArchivedChats()) {
                             <div class="flex-1 px-4 py-2 cursor-pointer transition-colors" [class.border-b-2]="activeTabIndex === 3" [class.border-primary-500]="activeTabIndex === 3" (click)="activeTabIndex = 3">
                                 <div class="text-center">
-                                    <span class="text-base font-medium" [ngClass]="activeTabIndex === 3 ? 'text-primary-500' : 'text-surface-500 dark:text-surface-400'">Archived</span>
+                                    <span class="text-base font-medium" [ngClass]="activeTabIndex === 3 ? 'text-primary-500' : 'text-surface-600 dark:text-surface-300'">Archived</span>
                                 </div>
                             </div>
                         }
@@ -157,8 +157,8 @@ interface OnlineUser {
                                     </div>
                                 } @else if (searchQuery().trim()) {
                                     <div class="text-center py-8">
-                                        <i class="pi pi-search text-surface-400 dark:text-surface-500 text-2xl mb-2"></i>
-                                        <p class="text-surface-500 dark:text-surface-400 text-sm">No chats found for "{{ searchQuery() }}"</p>
+                                        <i class="pi pi-search text-surface-500 dark:text-surface-400 text-2xl mb-2"></i>
+                                        <p class="text-surface-600 dark:text-surface-300 text-sm">No chats found for "{{ searchQuery() }}"</p>
                                     </div>
                                 }
                             </div>
@@ -176,8 +176,8 @@ interface OnlineUser {
                                 </div>
                             } @else if (searchQuery().trim()) {
                                 <div class="text-center py-8">
-                                    <i class="pi pi-search text-surface-400 dark:text-surface-500 text-2xl mb-2"></i>
-                                    <p class="text-surface-500 dark:text-surface-400 text-sm">No group chats found for "{{ searchQuery() }}"</p>
+                                    <i class="pi pi-search text-surface-500 dark:text-surface-400 text-2xl mb-2"></i>
+                                    <p class="text-surface-600 dark:text-surface-300 text-sm">No group chats found for "{{ searchQuery() }}"</p>
                                 </div>
                             }
                         </div>
@@ -194,8 +194,8 @@ interface OnlineUser {
                                 </div>
                             } @else if (searchQuery().trim()) {
                                 <div class="text-center py-8">
-                                    <i class="pi pi-search text-surface-400 dark:text-surface-500 text-2xl mb-2"></i>
-                                    <p class="text-surface-500 dark:text-surface-400 text-sm">No unread chats found for "{{ searchQuery() }}"</p>
+                                    <i class="pi pi-search text-surface-500 dark:text-surface-400 text-2xl mb-2"></i>
+                                    <p class="text-surface-600 dark:text-surface-300 text-sm">No unread chats found for "{{ searchQuery() }}"</p>
                                 </div>
                             }
                         </div>
@@ -212,8 +212,8 @@ interface OnlineUser {
                                 </div>
                             } @else if (searchQuery().trim()) {
                                 <div class="text-center py-8">
-                                    <i class="pi pi-search text-surface-400 dark:text-surface-500 text-2xl mb-2"></i>
-                                    <p class="text-surface-500 dark:text-surface-400 text-sm">No archived chats found for "{{ searchQuery() }}"</p>
+                                    <i class="pi pi-search text-surface-500 dark:text-surface-400 text-2xl mb-2"></i>
+                                    <p class="text-surface-600 dark:text-surface-300 text-sm">No archived chats found for "{{ searchQuery() }}"</p>
                                 </div>
                             }
                         </div>
@@ -224,7 +224,7 @@ interface OnlineUser {
             <!-- New Chat Dialog -->
             <p-dialog [(visible)]="showNewChatDialog" [modal]="true" header="New Message" [style]="{ width: '25rem' }">
                 <div class="space-y-4">
-                    <div class="text-sm text-surface-500 dark:text-surface-400 mb-4">Select a contact to start a conversation</div>
+                    <div class="text-sm text-surface-600 dark:text-surface-300 mb-4">Select a contact to start a conversation</div>
 
                     <div class="space-y-2 max-h-96 overflow-y-auto">
                         @for (contact of availableContacts(); track contact.id) {
@@ -237,10 +237,10 @@ interface OnlineUser {
 
                                 <div class="flex-1">
                                     <div class="text-base font-medium text-surface-900 dark:text-surface-0">{{ contact.name }}</div>
-                                    <div class="text-sm text-surface-500 dark:text-surface-400">{{ contact.role }} at {{ contact.company }}</div>
+                                    <div class="text-sm text-surface-600 dark:text-surface-300">{{ contact.role }} at {{ contact.company }}</div>
                                 </div>
 
-                                <div class="text-xs text-surface-500 dark:text-surface-400 capitalize">{{ contact.status }}</div>
+                                <div class="text-sm text-surface-600 dark:text-surface-300 capitalize">{{ contact.status }}</div>
                             </div>
                         }
                     </div>
@@ -291,17 +291,17 @@ interface OnlineUser {
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between mb-1">
                         <span class="text-base font-medium text-surface-900 dark:text-surface-0 truncate">{{ chat.name }}</span>
-                        <span class="text-sm text-surface-500 dark:text-surface-400">{{ getLastMessageTime(chat) }}</span>
+                        <span class="text-sm text-surface-600 dark:text-surface-300">{{ getLastMessageTime(chat) }}</span>
                     </div>
                     <div class="flex items-center gap-1">
-                        <p class="text-sm text-surface-500 dark:text-surface-400 truncate flex-1">{{ chat.type === 'group' ? getLastMessageSender(chat) + ': ' : '' }}{{ getLastMessage(chat) }}</p>
+                        <p class="text-sm text-surface-600 dark:text-surface-300 truncate flex-1">{{ chat.type === 'group' ? getLastMessageSender(chat) + ': ' : '' }}{{ getLastMessage(chat) }}</p>
                         @if (chat.unreadCount && chat.unreadCount > 0) {
                             <div class="w-5 h-5 shrink-0 bg-primary-500 rounded-full flex items-center justify-center">
                                 <span class="text-xs font-bold text-white">{{ chat.unreadCount }}</span>
                             </div>
                         }
                         @if (chat.pinned) {
-                            <i class="pi pi-thumbtack text-surface-400 dark:text-surface-500 text-xs shrink-0"></i>
+                            <i class="pi pi-thumbtack text-surface-500 dark:text-surface-400 text-xs shrink-0"></i>
                         }
                     </div>
                 </div>
@@ -348,13 +348,13 @@ interface OnlineUser {
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between mb-1">
                         <span class="text-base font-medium text-surface-900 dark:text-surface-0 truncate">{{ chat.name }}</span>
-                        <span class="text-sm text-surface-500 dark:text-surface-400">{{ getLastMessageTime(chat) }}</span>
+                        <span class="text-sm text-surface-600 dark:text-surface-300">{{ getLastMessageTime(chat) }}</span>
                     </div>
                     <div class="flex items-center gap-1">
-                        <i class="pi pi-inbox text-surface-400 dark:text-surface-500 text-xs"></i>
-                        <p class="text-sm text-surface-500 dark:text-surface-400 truncate flex-1">{{ chat.type === 'group' ? getLastMessageSender(chat) + ': ' : '' }}{{ getLastMessage(chat) }}</p>
+                        <i class="pi pi-inbox text-surface-500 dark:text-surface-400 text-xs"></i>
+                        <p class="text-sm text-surface-600 dark:text-surface-300 truncate flex-1">{{ chat.type === 'group' ? getLastMessageSender(chat) + ': ' : '' }}{{ getLastMessage(chat) }}</p>
                         @if (chat.pinned) {
-                            <i class="pi pi-thumbtack text-surface-400 dark:text-surface-500 text-xs shrink-0"></i>
+                            <i class="pi pi-thumbtack text-surface-500 dark:text-surface-400 text-xs shrink-0"></i>
                         }
                     </div>
                 </div>

@@ -39,9 +39,9 @@
 
   --radius-circle: 50%;
 
-  --breakpoint-sm: 576px;
+  --breakpoint-sm: 780px;
   --breakpoint-md: 768px;
-  --breakpoint-lg: 992px;
+  --breakpoint-lg: 1024px;
   --breakpoint-xl: 1200px;
   --breakpoint-2xl: 1920px;
 
@@ -440,7 +440,7 @@
 
 @utility title-h4 {
   @apply font-semibold text-surface-900 dark:text-surface-0 leading-tight text-center;
-  font-size: var(--font-size-xl); 
+  font-size: var(--font-size-lg);
   font-family: "Noto Sans", sans-serif;
   font-feature-settings:
     "cv01" on,

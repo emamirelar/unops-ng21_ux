@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, Directive, input, model, QueryList, signal, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, ContentChildren, DestroyRef, Directive, inject, input, model, PLATFORM_ID, QueryList, signal, TemplateRef } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 
 export interface DetailTab {
@@ -38,6 +40,8 @@ export class DetailTabDirective {
  *   <ng-template uxDetailTab="scope">...tab 2...</ng-template>
  *
  *   <ng-container ux-detail-sidebar>
+ *     <!-- Use ng-container so children become direct children of the
+ *          library's flex container and inherit the gap spacing. -->
  *     ...right sidebar (AI card, documents, etc.)...
  *   </ng-container>
  *
@@ -50,12 +54,14 @@ export class DetailTabDirective {
 @Component({
     selector: 'ux-detail-layout',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, TabsModule],
-    host: { class: 'ux-detail-layout block' },
+    imports: [CommonModule, FormsModule, SelectModule, TabsModule],
+    host: { class: 'ux-detail-layout' },
     styles: `
         :host {
-            display: block;
-            min-height: calc(100vh - 4rem);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
             font-family: var(--p-font-family, 'Noto Sans', sans-serif);
             background: transparent;
             color: var(--p-text-color);
@@ -63,7 +69,6 @@ export class DetailTabDirective {
 
         .ux-dl__header {
             background: transparent;
-            border-bottom: 1px solid var(--p-content-border-color);
         }
 
         .ux-dl__scroll {
@@ -85,8 +90,7 @@ export class DetailTabDirective {
             background: color-mix(in srgb, var(--p-primary-color) 45%, transparent);
         }
 
-        .ux-dl__sidebar-inner,
-        .ux-dl__sidebar-inner > * { display: flex; flex-direction: column; gap: 1.5rem; }
+        .ux-dl__sidebar-inner { display: flex; flex-direction: column; gap: 1.5rem; }
 
         .ux-dl__header-meta {
             overflow: hidden;
@@ -104,16 +108,29 @@ export class DetailTabDirective {
             top: 0;
             z-index: 5;
             background: var(--p-content-background, var(--p-primary-400));
+            padding-inline: 1.5rem;
+        }
+        @media screen and (min-width: 1024px) {
+            :host :deep p-tablist {
+                padding-inline: 1rem;
+            }
         }
         :host :deep p-tablist .p-tablist-content { width: 100%; }
-        :host :deep p-tablist .p-tablist-tab-list { width: 100%; }
+        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0; }
         :host :deep p-tab { flex: 1; justify-content: center; }
+
+        .ux-dl__mobile-tabs {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
     `,
     template: `
-        <div class="flex flex-col overflow-hidden" [style.height]="'calc(100vh - 64px)'">
+        <div class="flex flex-col overflow-hidden flex-1 min-h-0">
 
             <!-- Sticky header (projected) -->
-            <div class="ux-dl__header flex-shrink-0 z-10">
+            <div class="ux-dl__header flex-shrink-0 z-10 px-6 lg:px-4">
                 <div>
                     <ng-content select="[ux-detail-header]" />
                 </div>
@@ -128,7 +145,23 @@ export class DetailTabDirective {
 
                 <!-- Full-width tab bar -->
                 <p-tabs [value]="activeTab()" (valueChange)="activeTab.set($event + '')">
-                    <p-tablist>
+
+                    <!-- Mobile: dropdown selector -->
+                    @if (isMobile()) {
+                        <div class="ux-dl__mobile-tabs px-6 lg:px-4">
+                            <p-select
+                                [options]="tabOptions()"
+                                [ngModel]="activeTab()"
+                                (ngModelChange)="activeTab.set($event)"
+                                optionLabel="label"
+                                optionValue="value"
+                                styleClass="w-full"
+                            />
+                        </div>
+                    }
+
+                    <!-- Desktop: horizontal tab bar -->
+                    <p-tablist [style.display]="isMobile() ? 'none' : null">
                         @for (tab of tabs(); track tab.value) {
                             <p-tab [value]="tab.value">
                                 @if (tab.icon) {
@@ -140,10 +173,10 @@ export class DetailTabDirective {
                     </p-tablist>
 
                     <!-- Content + Sidebar row below tab bar -->
-                    <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 sm:py-6">
+                    <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 lg:py-6 px-6 lg:px-4">
 
                         <!-- Main column: tab panels -->
-                        <div class="flex-1 min-w-0 flex flex-col gap-6">
+                        <div class="w-full flex-1 min-w-0 flex flex-col gap-6">
                             <p-tabpanels>
                                 @for (tab of tabs(); track tab.value) {
                                     <p-tabpanel [value]="tab.value">
@@ -155,19 +188,22 @@ export class DetailTabDirective {
                                     </p-tabpanel>
                                 }
                             </p-tabpanels>
-
-                            <!-- Footer below tab content -->
-                            <ng-content select="[ux-detail-footer]" />
                         </div>
 
                         <!-- Sidebar -->
-                        <aside class="w-full lg:w-[380px] shrink-0 flex flex-col lg:sticky lg:top-4 lg:self-start pb-8">
+                        <aside class="w-full lg:w-[380px] shrink-0 flex flex-col lg:sticky lg:top-4 lg:self-start lg:pb-8">
                             <div class="ux-dl__sidebar-inner w-full">
                                 <ng-content select="[ux-detail-sidebar]" />
                             </div>
                         </aside>
                     </div>
+
                 </p-tabs>
+            </div>
+
+            <!-- Footer pinned below the scroll area, always visible like the header -->
+            <div class="flex-shrink-0 w-full z-10">
+                <ng-content select="[ux-detail-footer]" />
             </div>
         </div>
     `
@@ -179,8 +215,24 @@ export class DetailLayoutComponent {
     /** Currently active tab value (two-way bindable). */
     readonly activeTab = model<string>('');
 
+    /** Options for the mobile tab dropdown. */
+    readonly tabOptions = computed(() => this.tabs().map(t => ({ label: t.label, value: t.value })));
+
+    /** True when viewport is below the sm breakpoint (780px). */
+    readonly isMobile = signal(false);
+
     /** True once the scrollable body has been scrolled past the threshold. */
     readonly scrolled = signal(false);
+
+    constructor() {
+        if (isPlatformBrowser(inject(PLATFORM_ID))) {
+            const mql = window.matchMedia('(max-width: 1023px)');
+            this.isMobile.set(mql.matches);
+            const handler = (e: MediaQueryListEvent) => this.isMobile.set(e.matches);
+            mql.addEventListener('change', handler);
+            inject(DestroyRef).onDestroy(() => mql.removeEventListener('change', handler));
+        }
+    }
 
     /** Tab content templates provided by the consumer. */
     @ContentChildren(DetailTabDirective) tabTemplates!: QueryList<DetailTabDirective>;

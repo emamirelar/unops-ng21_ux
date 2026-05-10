@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
     selector: '[app-search]',
     imports: [DialogModule, InputTextModule, AutoFocusModule],
-    template: ` <p-dialog [(visible)]="searchBarActive" [breakpoints]="{ '992px': '75vw', '576px': '90vw' }" modal dismissableMask styleClass="w-1/2 search-container">
+    template: ` <p-dialog [(visible)]="searchBarActive" [breakpoints]="{ '1024px': '75vw', '780px': '90vw' }" modal dismissableMask styleClass="w-1/2 search-container">
         <ng-template #headless>
             <div class="w-full">
                 <i class="pi pi-search"></i>

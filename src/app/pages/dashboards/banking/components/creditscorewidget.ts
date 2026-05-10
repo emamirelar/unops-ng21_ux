@@ -2,11 +2,12 @@ import { GaugeChart } from '@/app/pages/dashboards/charts/gaugechart';
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { TagModule } from 'primeng/tag';
 
 @Component({
     selector: 'credit-score-widget',
     standalone: true,
-    imports: [DividerModule, ButtonModule, GaugeChart],
+    imports: [DividerModule, ButtonModule, GaugeChart, TagModule],
     template: ` <div class="card xl:w-auto w-full mb-0! min-w-80 px-6! pb-6! pt-4! rounded-3xl border border-surface">
         <div class="mb-2 flex items-start gap-2">
             <span class="flex-1 label-medium">Credit Score</span>
@@ -26,7 +27,7 @@ import { DividerModule } from 'primeng/divider';
                 <p-divider class="m-0!" />
                 <div class="flex items-center justify-between gap-4">
                     <span class="body-xsmall">Interest Rate</span>
-                    <span class="px-2 py-1 rounded-lg text-green-700 bg-green-100 text-sm font-semibold">1.2%</span>
+                    <p-tag value="1.2%" severity="success" />
                 </div>
                 <p-divider class="m-0!" />
                 <div class="flex items-center justify-between gap-4">

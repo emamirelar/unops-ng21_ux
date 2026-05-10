@@ -8,6 +8,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AutoCompleteModule, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { AvatarModule } from 'primeng/avatar';
 import { DividerModule } from 'primeng/divider';
 
 interface Member {
@@ -45,7 +46,7 @@ interface StatusOption {
 @Component({
     selector: 'app-task-drawer',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, DrawerModule, InputTextModule, TextareaModule, SelectModule, DatePickerModule, AutoCompleteModule, DividerModule],
+    imports: [CommonModule, FormsModule, ButtonModule, DrawerModule, InputTextModule, TextareaModule, SelectModule, DatePickerModule, AutoCompleteModule, DividerModule, AvatarModule],
     template: `
         <p-drawer [(visible)]="visible" position="right" styleClass="w-full! md:w-[420px]!" (onHide)="onHide()" appendTo="body">
             <ng-template #header>
@@ -99,12 +100,12 @@ interface StatusOption {
                     >
                         <ng-template #selecteditem let-value>
                             <div class="flex items-center gap-2 bg-surface-50 dark:bg-surface-900 px-2 py-1 rounded">
-                                <img [src]="'demo/images/avatar/' + value.image" [alt]="value.name" class="w-5 h-5 rounded-full border border-surface-200 dark:border-surface-700" />
+                                <p-avatar [image]="'demo/images/avatar/' + value.image" shape="circle" styleClass="w-5 h-5 border border-surface-200 dark:border-surface-700" />
                             </div>
                         </ng-template>
                         <ng-template #item let-option>
                             <div class="flex items-center gap-3">
-                                <img [src]="'demo/images/avatar/' + option.image" [alt]="option.name" class="w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700" />
+                                <p-avatar [image]="'demo/images/avatar/' + option.image" shape="circle" styleClass="w-8 h-8 border border-surface-200 dark:border-surface-700" />
                                 <span class="text-surface-900 dark:text-surface-0 font-medium">{{ option.name }}</span>
                             </div>
                         </ng-template>

@@ -9,6 +9,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
+import { CardModule } from 'primeng/card';
 import { getOpportunityStageSeverity, OpportunityService } from './opportunity.service';
 
 interface FilterTag {
@@ -19,7 +20,7 @@ interface FilterTag {
 
 @Component({
     selector: 'app-opportunities',
-    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, TagModule, ButtonModule, RouterModule, InputTextModule, IconFieldModule, InputIconModule],
+    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, TagModule, ButtonModule, RouterModule, InputTextModule, IconFieldModule, InputIconModule, CardModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="flex flex-col gap-6">
@@ -127,8 +128,8 @@ interface FilterTag {
                         <div class="grid grid-cols-12 gap-4">
                             @for (item of items; track item.id; let i = $index) {
                                 <a [routerLink]="['/apps/opportunities', item.id]" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2 no-underline text-inherit">
-                                    <div
-                                        class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up"
+                                    <p-card
+                                        styleClass="cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up border border-surface-200 dark:border-surface-700"
                                         [style.animation-delay.ms]="i * 50"
                                     >
                                         <div class="flex items-start justify-between gap-2">
@@ -138,7 +139,7 @@ interface FilterTag {
                                                 </div>
                                                 <div class="flex flex-col gap-0.5 min-w-0">
                                                     <span class="text-surface-900 dark:text-surface-0 text-base font-semibold truncate">{{ item.name }}</span>
-                                                    <span class="text-surface-600 dark:text-surface-300 text-xs truncate">{{ item.partner }}</span>
+                                                    <span class="text-surface-600 dark:text-surface-300 text-sm truncate">{{ item.partner }}</span>
                                                 </div>
                                             </div>
                                             <p-tag [value]="item.stage" [severity]="stageSeverity(item.stage)" />
@@ -155,7 +156,7 @@ interface FilterTag {
                                         <div class="flex items-center justify-end pt-2 border-t border-surface-200 dark:border-surface-700">
                                             <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
                                         </div>
-                                    </div>
+                                    </p-card>
                                 </a>
                             }
                         </div>

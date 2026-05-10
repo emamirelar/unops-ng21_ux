@@ -1,4 +1,4 @@
-import { Partner, AiInsight, AiInsightsCardComponent } from '@unopsitg/ux';
+import { Partner, AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab } from '@unopsitg/ux';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -38,24 +38,24 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
 @Component({
     selector: 'app-partner-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiInsightsCardComponent, DocumentsCard],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiInsightsCardComponent, DocumentsCard, DetailLayoutComponent, DetailTabDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (partner(); as p) {
-            <div class="flex flex-col gap-6">
+            <ux-detail-layout [tabs]="detailTabs" [(activeTab)]="activeTab">
 
-                <!-- Header Card -->
-                <div class="card animate-fade-in border-0! p-0!">
-                    <div class="flex flex-col sm:flex-row sm:items-start gap-5">
-                        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 shrink-0 overflow-hidden">
+                <!-- Header -->
+                <div ux-detail-header class="flex flex-col gap-3 py-4">
+                    <div class="flex items-start gap-5">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 shrink-0 overflow-hidden max-sm:hidden">
                             <img [src]="flagUrl()" [alt]="p.address1Country || 'Global'" class="w-10 h-10 object-contain" />
                         </div>
 
                         <div class="flex flex-col gap-2 flex-1 min-w-0">
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                            <div class="flex flex-col sm:flex-row sm:items-start gap-3">
                                 <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">{{ p.name }}</h1>
                                 @if (p.shortName) {
-                                    <span class="text-surface-500 dark:text-surface-400 text-lg font-medium">({{ p.shortName }})</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-lg font-medium">({{ p.shortName }})</span>
                                 }
                                 @if (p.keyGlobalPartner) {
                                     <span class="flex items-center gap-1 text-amber-500 text-sm font-medium">
@@ -92,18 +92,16 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 shrink-0">
                             <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" (onClick)="openEditDrawer()" />
                             <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" />
                         </div>
                     </div>
                 </div>
+                <div ux-detail-header-meta></div>
 
-                <!-- Two-Column Content -->
-                <div class="flex flex-col xl:flex-row gap-6 w-full">
-
-                    <!-- Main Content -->
-                    <div class="flex-1 flex flex-col gap-6 min-w-0">
+                <!-- Overview Tab -->
+                <ng-template uxDetailTab="overview">
 
                         <!-- Partner Details -->
                         <div class="card flex flex-col gap-5 animate-fade-in-up stagger-1">
@@ -114,25 +112,25 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Partner ID</span>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Partner ID</span>
                                     <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.id }}</span>
                                 </div>
 
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Full Name</span>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Full Name</span>
                                     <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.name }}</span>
                                 </div>
 
                                 @if (p.shortName) {
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Short Name</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Short Name</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.shortName }}</span>
                                     </div>
                                 }
 
                                 @if (p.partnerDescription) {
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Description</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Description</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerDescription }}</span>
                                     </div>
                                 }
@@ -149,27 +147,27 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
                                 @if (p.partnerCategoryName) {
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Category</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryName }}</span>
                                     </div>
                                 }
 
                                 @if (p.partnerCategoryCode) {
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Category Code</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Category Code</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryCode }}</span>
                                     </div>
                                 }
 
                                 @if (p.partnerGroupName) {
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Group</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Group</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerGroupName }}</span>
                                     </div>
                                 }
 
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Status</span>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Status</span>
                                     <div>
                                         @if (p.status) {
                                             <p-tag [value]="p.status" [styleClass]="getStatusClass(p.status)" />
@@ -178,7 +176,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                 </div>
 
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Approval Status</span>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Approval Status</span>
                                     <div>
                                         @if (p.partnerApprovalStatus) {
                                             <p-tag [value]="getApprovalLabel(p.partnerApprovalStatus)" [styleClass]="getApprovalClass(p.partnerApprovalStatus)" />
@@ -187,7 +185,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                 </div>
 
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Key Global Partner</span>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Key Global Partner</span>
                                     <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
                                         @if (p.keyGlobalPartner) {
                                             <i class="pi pi-check-circle text-green-500 mr-1"></i> Yes
@@ -215,7 +213,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                         <div class="flex flex-col gap-0.5">
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.address1Country }}</span>
                                             @if (p.address1City) {
-                                                <span class="text-surface-500 dark:text-surface-400 text-xs">{{ p.address1City }}</span>
+                                                <span class="text-surface-600 dark:text-surface-300 text-sm">{{ p.address1City }}</span>
                                             }
                                         </div>
                                     </div>
@@ -228,16 +226,16 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                         </div>
                                         <div class="flex flex-col gap-0.5">
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.liaisonOfficeName }}</span>
-                                            <span class="text-surface-500 dark:text-surface-400 text-xs">Liaison Office</span>
+                                            <span class="text-surface-600 dark:text-surface-300 text-sm">Liaison Office</span>
                                         </div>
                                     </div>
                                 }
                             </div>
                         </div>
-                    </div>
+                </ng-template>
 
-                    <!-- Right Sidebar -->
-                    <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0">
+                    <!-- Sidebar -->
+                    <ng-container ux-detail-sidebar>
 
                         <!-- AI Partner Analysis -->
                         <ux-ai-insights-card
@@ -260,11 +258,11 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                     </div>
                                     <div class="flex flex-col gap-0.5">
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.partnerFocalPointName }}</span>
-                                        <span class="text-surface-500 dark:text-surface-400 text-xs">Partner Focal Point</span>
+                                        <span class="text-surface-600 dark:text-surface-300 text-sm">Partner Focal Point</span>
                                     </div>
                                 </div>
                             } @else {
-                                <span class="text-surface-500 dark:text-surface-400 text-sm italic">No focal point assigned</span>
+                                <span class="text-surface-600 dark:text-surface-300 text-sm italic">No focal point assigned</span>
                             }
                         </div>
 
@@ -281,23 +279,22 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             <div class="flex flex-col gap-3">
                                 @if (p.createdDate) {
                                     <div class="flex items-center justify-between">
-                                        <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">Created</span>
+                                        <span class="text-surface-600 dark:text-surface-300 text-xs font-semibold uppercase tracking-wider">Created</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm">{{ p.createdDate | date:'mediumDate' }}</span>
                                     </div>
                                 }
                                 @if (p.lastModifiedDate) {
                                     <div class="flex items-center justify-between">
-                                        <span class="text-surface-500 dark:text-surface-400 text-xs font-semibold uppercase tracking-wider">Last Modified</span>
+                                        <span class="text-surface-600 dark:text-surface-300 text-xs font-semibold uppercase tracking-wider">Last Modified</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm">{{ p.lastModifiedDate | date:'mediumDate' }}</span>
                                     </div>
                                 }
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </ng-container>
 
-                <!-- Back Bar -->
-                <div class="flex items-center animate-fade-in">
+                <!-- Footer -->
+                <div ux-detail-footer class="flex items-center py-3">
                     <p-button
                         icon="pi pi-chevron-left"
                         label="Back to list"
@@ -306,7 +303,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         routerLink="/apps/partners"
                     />
                 </div>
-            </div>
+            </ux-detail-layout>
 
             <!-- Edit Partner Drawer -->
             <p-drawer [(visible)]="showEditDrawer" position="right" styleClass="w-full! max-w-[480px]!" appendTo="body">
@@ -333,7 +330,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
                         <p-divider styleClass="my-0!" />
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-2">
                                 <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Category</label>
                                 <p-select [(ngModel)]="editForm.partnerCategoryName" [options]="categoryOptions" placeholder="Select category" styleClass="w-full" />
@@ -345,7 +342,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-2">
                                 <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Status</label>
                                 <p-select [(ngModel)]="editForm.status" [options]="statusOptions" placeholder="Select status" styleClass="w-full" />
@@ -374,7 +371,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             <input pInputText [(ngModel)]="editForm.liaisonOfficeName" class="w-full" />
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-2">
                                 <label class="text-surface-950 dark:text-surface-0 text-sm font-medium">Country</label>
                                 <input pInputText [(ngModel)]="editForm.address1Country" class="w-full" />
@@ -414,6 +411,10 @@ export class PartnerDetail implements OnInit {
     });
 
     partnerId = signal<string | null>(null);
+    activeTab = 'overview';
+    detailTabs: DetailTab[] = [
+        { value: 'overview', label: 'Overview', icon: 'pi pi-home' }
+    ];
 
     showEditDrawer = false;
     editForm: Partial<Partner> & { keyGlobalPartner: boolean } = {

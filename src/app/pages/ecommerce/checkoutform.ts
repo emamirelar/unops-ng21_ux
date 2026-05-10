@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { DividerModule } from 'primeng/divider';
 
 interface CartItem {
     id: number;
@@ -22,7 +23,7 @@ interface Country {
 
 @Component({
     selector: 'app-checkout-form',
-    imports: [ButtonModule, SelectModule, InputTextModule, InputMaskModule, FormsModule],
+    imports: [ButtonModule, SelectModule, InputTextModule, InputMaskModule, FormsModule, DividerModule],
     template: `
         <div class="bg-surface-0 dark:bg-surface-900 relative card">
             <div class="bg-surface-50 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-700">
@@ -35,7 +36,7 @@ interface Country {
                     <div class="flex flex-col gap-2">
                         <div class="text-surface-950 dark:text-surface-0 text-5xl font-semibold">\${{ subtotal.toFixed(2) }}</div>
                         <div class="flex items-center gap-2">
-                            <span class="text-surface-500 dark:text-surface-400 text-lg">Profit from discounts</span>
+                            <span class="text-surface-600 dark:text-surface-300 text-lg">Profit from discounts</span>
                             <span class="text-green-600 dark:text-green-400 text-lg font-medium">\${{ totalSavings.toFixed(2) }}</span>
                         </div>
                     </div>
@@ -56,12 +57,12 @@ interface Country {
                                             <div class="text-surface-950 dark:text-surface-0 text-base font-medium">\${{ item.price.toFixed(2) }}</div>
                                         </div>
 
-                                        <div class="w-full border-b border-dashed border-surface-200 dark:border-surface-600"></div>
+                                        <p-divider type="dashed" />
 
                                         <div class="flex items-center gap-2 text-sm">
                                             <span class="text-green-600 dark:text-green-400">You saved \${{ item.savings.toFixed(2) }}</span>
-                                            <span class="text-surface-500 dark:text-surface-400">-</span>
-                                            <span class="text-surface-500 dark:text-surface-400">with {{ item.discount }}% discount</span>
+                                            <span class="text-surface-600 dark:text-surface-300">-</span>
+                                            <span class="text-surface-600 dark:text-surface-300">with {{ item.discount }}% discount</span>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +71,7 @@ interface Country {
 
                         <div class="bg-surface-50 dark:bg-surface-800 rounded-xl p-6 space-y-3">
                             <div class="flex justify-between items-center">
-                                <span class="text-surface-500 dark:text-surface-400">Shipping</span>
+                                <span class="text-surface-600 dark:text-surface-300">Shipping</span>
                                 <div class="flex items-center gap-2">
                                     <span class="text-green-500 dark:text-green-400 font-medium">Free</span>
                                     <span class="text-surface-950 dark:text-surface-0 line-through">\${{ shippingOriginal.toFixed(2) }}</span>
@@ -78,21 +79,19 @@ interface Country {
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <span class="text-surface-500 dark:text-surface-400">Discount</span>
+                                <span class="text-surface-600 dark:text-surface-300">Discount</span>
                                 <span class="text-surface-950 dark:text-surface-0 font-medium">\${{ totalSavings.toFixed(2) }}</span>
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <span class="text-surface-500 dark:text-surface-400">VAT</span>
+                                <span class="text-surface-600 dark:text-surface-300">VAT</span>
                                 <span class="text-surface-950 dark:text-surface-0 font-medium">\${{ vat.toFixed(2) }}</span>
                             </div>
 
-                            <div class="w-full py-2">
-                                <div class="w-full border-b border-dashed border-surface-200 dark:border-surface-600"></div>
-                            </div>
+                            <p-divider type="dashed" styleClass="my-2" />
 
                             <div class="flex justify-between items-center">
-                                <span class="text-surface-500 dark:text-surface-400">Total</span>
+                                <span class="text-surface-600 dark:text-surface-300">Total</span>
                                 <span class="text-surface-950 dark:text-surface-0 font-medium text-lg">\${{ total.toFixed(2) }}</span>
                             </div>
                         </div>

@@ -1,0 +1,14 @@
+// PrimeUIX tabs have no border-radius token. Apply pill shape to match sidebar
+// menu items (border-radius: 1rem in _sidebar_vertical.scss).
+.p-tab {
+  border-radius: 1.5rem;
+  font-size: var(--font-size-sm);
+}
+
+// Use the same active/hover background as sidebar menu items.
+.p-tab-active {
+  background: var(--d-menuitem-active-bg) !important;
+}
+.p-tab:not(.p-tab-active):not(.p-disabled):hover {
+  background: var(--d-menuitem-hover-bg) !important;
+}

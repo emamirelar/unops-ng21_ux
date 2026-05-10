@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
+import { CardModule } from 'primeng/card';
 import { Partner } from '@unopsitg/ux';
 
 const STATUS_CLASSES: Record<string, string> = {
@@ -68,7 +69,7 @@ interface FilterTag {
     imports: [
         CommonModule, FormsModule, ButtonModule, RouterModule,
         DataViewModule, TagModule, IconFieldModule, InputIconModule,
-        InputTextModule, SelectButtonModule, SkeletonModule
+        InputTextModule, SelectButtonModule, SkeletonModule, CardModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
@@ -110,7 +111,7 @@ interface FilterTag {
       @if (hasActiveFilters()) {
         <button
           type="button"
-          class="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border border-surface-200 dark:border-surface-700 text-surface-500 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
+          class="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-300 hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
           (click)="clearFilters()">
           <i class="pi pi-times text-xs mr-1"></i>Clear Filters
         </button>
@@ -164,7 +165,7 @@ interface FilterTag {
                   <div class="flex items-center gap-2">
                     <span class="text-surface-900 dark:text-surface-0 text-base font-semibold">{{ item.name }}</span>
                     @if (item.shortName) {
-                      <span class="text-surface-500 dark:text-surface-400 text-sm">({{ item.shortName }})</span>
+                      <span class="text-surface-600 dark:text-surface-300 text-sm">({{ item.shortName }})</span>
                     }
                     @if (item.keyGlobalPartner) {
                       <i class="pi pi-star-fill text-amber-500 text-xs" title="Key Global Partner"></i>
@@ -211,7 +212,7 @@ interface FilterTag {
         <div class="grid grid-cols-12 gap-4">
           @for (item of items; track item.id; let i = $index) {
             <a [routerLink]="['/apps/partners', item.id]" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2 no-underline text-inherit">
-              <div class="p-5 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-xl flex flex-col gap-4 cursor-pointer hover:bg-emphasis transition-colors">
+              <p-card styleClass="cursor-pointer hover:bg-emphasis transition-colors border border-surface-200 dark:border-surface-700">
                 <div class="flex items-start justify-between">
                   <div class="flex items-center gap-3">
                     <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 shrink-0 overflow-hidden">
@@ -220,7 +221,7 @@ interface FilterTag {
                     <div class="flex flex-col gap-0.5 min-w-0">
                       <span class="text-surface-900 dark:text-surface-0 text-base font-semibold truncate">{{ item.shortName || item.name }}</span>
                       @if (item.shortName) {
-                        <span class="text-surface-600 dark:text-surface-300 text-xs truncate">{{ item.name }}</span>
+                        <span class="text-surface-600 dark:text-surface-300 text-sm truncate">{{ item.name }}</span>
                       }
                     </div>
                   </div>
@@ -252,7 +253,7 @@ interface FilterTag {
                   </div>
                   <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
                 </div>
-              </div>
+              </p-card>
             </a>
           }
           @empty {

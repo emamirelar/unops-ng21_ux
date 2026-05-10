@@ -1,11 +1,85 @@
+// ── Card base ──
+
 .card {
+    background: var(--surface-card);
+    padding: 1rem;
+    border: 1px solid var(--p-surface-400);
+    border-radius: 1rem;
     margin-bottom: 0;
 }
 
-.layout-card-filled .card{
+:root[class*='app-dark'] .card {
+    border-color: var(--surface-border);
+}
+
+// ── Layout fill variants ──
+
+.layout-card-filled .card {
     background: var(--surface-card);
 }
 
-.layout-card-transparent .card{
+.layout-card-transparent .card {
     background: transparent;
+}
+
+// ── Severity variants (mirrors PrimeNG Tag severity naming) ──
+
+.card-primary {
+    background: var(--p-primary-50);
+    border-color: var(--p-primary-500);
+}
+
+.card-info {
+    background: var(--color-blue-50);
+    border-color: var(--color-blue-500);
+}
+
+.card-success {
+    background: var(--color-green-50);
+    border-color: var(--color-green-500);
+}
+
+.card-warn {
+    background: var(--color-orange-50);
+    border-color: var(--color-orange-500);
+}
+
+.card-danger {
+    background: var(--color-red-50);
+    border-color: var(--color-red-500);
+}
+
+.card-accent {
+    border-left-color: var(--color-teal-500);
+}
+
+:root[class*='app-dark'] {
+    .card-primary {
+        background: color-mix(in srgb, var(--p-primary-900) 20%, transparent);
+        border-color: var(--p-primary-800);
+    }
+
+    .card-info {
+        background: color-mix(in srgb, var(--color-blue-900) 20%, transparent);
+        border-color: var(--color-blue-800);
+    }
+
+    .card-success {
+        background: color-mix(in srgb, var(--color-green-900) 20%, transparent);
+        border-color: var(--color-green-800);
+    }
+
+    .card-warn {
+        background: color-mix(in srgb, var(--color-orange-900) 10%, transparent);
+        border-color: var(--color-orange-800);
+    }
+
+    .card-danger {
+        background: color-mix(in srgb, var(--color-red-900) 10%, transparent);
+        border-color: var(--color-red-800);
+    }
+
+    .card-accent {
+        border-left-color: var(--color-teal-400);
+    }
 }

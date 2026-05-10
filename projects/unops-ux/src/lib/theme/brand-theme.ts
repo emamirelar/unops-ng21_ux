@@ -130,7 +130,8 @@ const brandOverrides = {
         },
         tabs: {
             tablist: {
-                background: 'transparent'
+                background: 'transparent',
+                borderWidth: '0 0 1px 0'
             },
             tab: {
                 background: 'transparent',
@@ -139,8 +140,10 @@ const brandOverrides = {
                 activeBackground: '{primary.100}',
                 activeColor: '{primary.900}',
                 borderColor: 'transparent',
-                activeBorderColor: '{primary.200}',
-                padding: '0.5rem 1rem'
+                activeBorderColor: 'transparent',
+                borderWidth: '0',
+                padding: '0.5rem 1rem',
+                margin: '0 0 0.5rem 0'
             },
             tabpanel: {
                 background: 'transparent',
@@ -151,7 +154,7 @@ const brandOverrides = {
                     tab: {
                         hoverBackground: '{primary.900}',
                         hoverColor: '{primary.200}',
-                        activeBackground: '{surface.800}',
+                        activeBackground: '{surface.800}', 
                         activeColor: '{primary.200}',
                         activeBorderColor: '{primary.400}'
                     }
@@ -166,6 +169,60 @@ const brandOverrides = {
         fileupload: {
             root: {
                 background: 'transparent'
+            }
+        },
+
+        panel: {
+            root: {
+                background: 'transparent',
+                borderColor: 'transparent',
+                borderRadius: '0'
+            },
+            header: {
+                background: 'transparent',
+                padding: '0',
+                borderWidth: '0'
+            },
+            toggleableHeader: {
+                padding: '0'
+            },
+            title: {
+                fontWeight: '700'
+            },
+            content: {
+                padding: '0'
+            }
+        },
+
+        card: {
+            root: {
+                shadow: 'none',
+                borderRadius: '{border.radius.xl}'
+            },
+            body: {
+                padding: '1.25rem',
+                gap: '1rem'
+            }
+        },
+
+        avatar: {
+            root: {
+                borderRadius: '9999px',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+            }
+        },
+
+        divider: {
+            horizontal: {
+                margin: '0',
+                padding: '0',
+                content: { padding: '0 0.5rem' }
+            },
+            vertical: {
+                margin: '0',
+                padding: '0',
+                content: { padding: '0.5rem 0' }
             }
         },
 
@@ -194,6 +251,38 @@ const brandOverrides = {
                     warn: { color: '{orange.100}' },
                     error: { color: '{red.100}' }
                 }
+            }
+        },
+
+        toolbar: {
+            root: {
+                background: 'transparent',
+                borderColor: 'transparent',
+                borderRadius: '0',
+                padding: '0',
+                gap: '0.5rem'
+            }
+        },
+
+        progressbar: {
+            root: {
+                borderRadius: '{border.radius.lg}',
+                height: '0.75rem'
+            }
+        },
+
+        message: {
+            root: {
+                borderRadius: '{border.radius.lg}',
+                borderWidth: '0 0 0 4px'
+            },
+            content: {
+                padding: '0.75rem 1rem',
+                gap: '0.5rem'
+            },
+            text: {
+                fontSize: '0.875rem',
+                fontWeight: '500'
             }
         }
     }

@@ -41,15 +41,35 @@
     
 }
 .layout-content {
-    padding: 2rem;
+    padding: 2rem 1.5rem 0;
     flex: 1 1 auto;
     position: relative;
 
-    @media screen and (min-width: 576px) {
-        padding: 1.5rem;
+    @media screen and (min-width: 780px) {
+        padding: 2rem 1rem 0;
+    }
+}
+
+.layout-content-wrapper:has(ux-detail-layout) {
+    overflow: hidden;
+
+    > .layout-content-wrapper-inside {
+        height: 100%;
+        min-height: 0;
     }
 
-    @media screen and (min-width: 992px) {
-        padding: 1.5rem;
+    .layout-content {
+        flex: 1 1 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .layout-content > router-outlet + * {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
     }
 }

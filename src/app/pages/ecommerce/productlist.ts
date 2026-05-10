@@ -5,6 +5,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
 
 interface Product {
     id: number;
@@ -24,7 +25,7 @@ interface SelectOption {
 
 @Component({
     selector: 'app-product-list',
-    imports: [FormsModule, IconFieldModule, InputIconModule, InputTextModule, SelectModule, TagModule],
+    imports: [FormsModule, IconFieldModule, InputIconModule, InputTextModule, SelectModule, TagModule, ButtonModule],
     template: `
         <div class="p-6 card animate-fade-in-up">
             <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-7 mb-7">
@@ -61,17 +62,13 @@ interface SelectOption {
                             <div class="w-full flex justify-between items-center gap-2">
                                 <p-tag [value]="getCategoryLabel(product.category)" severity="secondary" styleClass="text-xs font-medium" />
                                 <div class="flex justify-start items-center gap-2">
-                                    <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
-                                        <i class="pi pi-heart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
-                                    </div>
-                                    <div class="p-2 rounded-lg border border-surface-200 dark:border-surface-700 flex justify-center items-center cursor-pointer hover:bg-emphasis transition-colors">
-                                        <i class="pi pi-shopping-cart text-surface-500 dark:text-surface-400 text-sm sm:text-base"></i>
-                                    </div>
+                                    <p-button icon="pi pi-heart" [outlined]="true" severity="secondary" size="small" />
+                                    <p-button icon="pi pi-shopping-cart" [outlined]="true" severity="secondary" size="small" />
                                 </div>
                             </div>
 
                             <div class="w-full flex flex-col gap-2">
-                                <div class="w-full text-surface-500 dark:text-surface-400 text-base sm:text-lg font-medium leading-6 sm:leading-7">{{ product.name }}</div>
+                                <div class="w-full text-surface-600 dark:text-surface-300 text-base sm:text-lg font-medium leading-6 sm:leading-7">{{ product.name }}</div>
 
                                 <div class="w-full flex justify-between items-center">
                                     <div class="text-surface-950 dark:text-surface-0 text-xl sm:text-2xl font-medium leading-8 sm:leading-loose">{{ product.price }}</div>
@@ -88,8 +85,8 @@ interface SelectOption {
 
             @if (filteredAndSortedProducts.length === 0) {
                 <div class="w-full text-center py-12">
-                    <div class="text-surface-500 dark:text-surface-400 text-lg font-medium mb-2">No products found</div>
-                    <div class="text-surface-400 dark:text-surface-500 text-base">Try adjusting your filters or search terms</div>
+                    <div class="text-surface-600 dark:text-surface-300 text-lg font-medium mb-2">No products found</div>
+                    <div class="text-surface-500 dark:text-surface-400 text-base">Try adjusting your filters or search terms</div>
                 </div>
             }
         </div>

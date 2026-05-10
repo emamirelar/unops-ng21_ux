@@ -5,7 +5,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { TagModule } from 'primeng/tag';
-import { AiInsight, AiInsightsCardComponent } from '@unopsitg/ux';
+import { PanelModule } from 'primeng/panel';
+import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab } from '@unopsitg/ux';
 import { Contact, ContactService, getContactStatusClass } from './contact.service';
 import { DocumentsCard } from '../documents';
 
@@ -27,90 +28,79 @@ const INTERACTION_COLORS: Record<string, string> = {
 
 @Component({
     selector: 'app-contact-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiInsightsCardComponent, DocumentsCard],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiInsightsCardComponent, DocumentsCard, PanelModule, DetailLayoutComponent, DetailTabDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (contact(); as c) {
-            <div class="flex flex-col gap-6 animate-fade-in-up">
-
-                <!-- Back + Actions Bar -->
-                <div class="flex items-center justify-between">
-                    <p-button
-                        icon="pi pi-arrow-left"
-                        label="Contacts"
-                        [text]="true"
-                        severity="secondary"
-                        routerLink="/apps/contacts"
-                    />
-                    <div class="flex items-center gap-2">
-                        <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" size="small" />
-                        <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" size="small" />
-                    </div>
-                </div>
+            <ux-detail-layout [tabs]="detailTabs" [(activeTab)]="activeTab">
 
                 <!-- Header -->
-                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <div class="flex flex-wrap items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                        <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 shrink-0">
-                            <span class="text-primary text-base font-bold">{{ getInitials(c) }}</span>
+                <div ux-detail-header class="flex flex-col gap-3 py-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                        <div class="flex flex-wrap items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 shrink-0">
+                                <span class="text-primary text-base font-bold">{{ getInitials(c) }}</span>
+                            </div>
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <h1 class="text-deepsea-500 dark:text-surface-0 text-xl sm:text-2xl font-extrabold leading-8 m-0">
+                                    {{ c.salutation ? c.salutation + ' ' : '' }}{{ c.firstName }} {{ c.lastName }}
+                                </h1>
+                                <div class="flex items-center flex-wrap gap-2">
+                                    @if (c.type) {
+                                        <p-tag [value]="c.type" severity="info" />
+                                    }
+                                    @if (c.status) {
+                                        <p-tag [value]="c.status" [styleClass]="getStatusClass(c.status)" />
+                                    }
+                                </div>
+                                <div class="flex items-center flex-wrap gap-x-3 gap-y-1 text-sm text-surface-600 dark:text-surface-300">
+                                    @if (c.title) {
+                                        <span class="flex items-center gap-1.5">
+                                            <i class="pi pi-briefcase text-xs text-surface-500 dark:text-surface-400"></i>
+                                            {{ c.title }}
+                                        </span>
+                                    }
+                                    @if (c.organization) {
+                                        <span class="text-surface-300 dark:text-surface-600">&middot;</span>
+                                        <span class="flex items-center gap-1.5">
+                                            <i class="pi pi-building text-xs text-surface-500 dark:text-surface-400"></i>
+                                            {{ c.organization }}
+                                        </span>
+                                    }
+                                    @if (c.country) {
+                                        <span class="text-surface-300 dark:text-surface-600">&middot;</span>
+                                        <span class="flex items-center gap-1.5">
+                                            <i class="pi pi-map-marker text-xs text-surface-500 dark:text-surface-400"></i>
+                                            {{ c.city ? c.city + ', ' : '' }}{{ c.country }}
+                                        </span>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex flex-col gap-1 min-w-0">
-                            <h1 class="text-deepsea-500 dark:text-surface-0 text-xl sm:text-2xl font-extrabold leading-8 m-0">
-                                {{ c.salutation ? c.salutation + ' ' : '' }}{{ c.firstName }} {{ c.lastName }}
-                            </h1>
-                            <div class="flex items-center flex-wrap gap-2">
-                                @if (c.type) {
-                                    <p-tag [value]="c.type" severity="info" />
-                                }
-                                @if (c.status) {
-                                    <p-tag [value]="c.status" [styleClass]="getStatusClass(c.status)" />
-                                }
-                            </div>
-                            <div class="flex items-center flex-wrap gap-x-3 gap-y-1 text-sm text-surface-600 dark:text-surface-300">
-                                @if (c.title) {
-                                    <span class="flex items-center gap-1.5">
-                                        <i class="pi pi-briefcase text-xs text-surface-400"></i>
-                                        {{ c.title }}
-                                    </span>
-                                }
-                                @if (c.organization) {
-                                    <span class="text-surface-300 dark:text-surface-600">&middot;</span>
-                                    <span class="flex items-center gap-1.5">
-                                        <i class="pi pi-building text-xs text-surface-400"></i>
-                                        {{ c.organization }}
-                                    </span>
-                                }
-                                @if (c.country) {
-                                    <span class="text-surface-300 dark:text-surface-600">&middot;</span>
-                                    <span class="flex items-center gap-1.5">
-                                        <i class="pi pi-map-marker text-xs text-surface-400"></i>
-                                        {{ c.city ? c.city + ', ' : '' }}{{ c.country }}
-                                    </span>
-                                }
-                            </div>
+                        <div class="flex items-center gap-2">
+                            <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" size="small" />
+                            <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" size="small" />
                         </div>
                     </div>
                 </div>
+                <div ux-detail-header-meta></div>
 
-                <div class="flex flex-col xl:flex-row gap-6 w-full">
-                <!-- LEFT COLUMN: Main content -->
-                <div class="w-full flex-1 flex flex-col gap-6 min-w-0 [&>.card]:mb-0">
+                <!-- Overview Tab -->
+                <ng-template uxDetailTab="overview">
 
                     <!-- Contact Information -->
                     <div class="card">
-                        <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isContactInfoExpanded()" (click)="isContactInfoExpanded.set(!isContactInfoExpanded())">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Contact Information</h4>
-                            </div>
-                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isContactInfoExpanded()" [class.pi-chevron-down]="!isContactInfoExpanded()"></i>
-                        </div>
-                        <div class="expand-body" [class.expand-body--open]="isContactInfoExpanded()">
-                            <div class="expand-body__inner">
+                        <p-panel [toggleable]="true" [collapsed]="!isContactInfoExpanded()" (collapsedChange)="isContactInfoExpanded.set(!$event)" toggler="header">
+                            <ng-template #header>
+                                <div class="flex items-center gap-2 flex-1">
+                                    <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
+                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Contact Information</h4>
+                                </div>
+                            </ng-template>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 px-2 pb-4">
                                     @if (c.email) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Email</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Email</span>
                                             <a [href]="'mailto:' + c.email" class="text-primary text-sm font-medium hover:underline flex items-center gap-1.5">
                                                 <i class="pi pi-envelope text-xs"></i> {{ c.email }}
                                             </a>
@@ -118,7 +108,7 @@ const INTERACTION_COLORS: Record<string, string> = {
                                     }
                                     @if (c.phone) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Phone</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Phone</span>
                                             <a [href]="'tel:' + c.phone" class="text-primary text-sm font-medium hover:underline flex items-center gap-1.5">
                                                 <i class="pi pi-phone text-xs"></i> {{ c.phone }}
                                             </a>
@@ -126,7 +116,7 @@ const INTERACTION_COLORS: Record<string, string> = {
                                     }
                                     @if (c.mobilePhone) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Mobile</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Mobile</span>
                                             <a [href]="'tel:' + c.mobilePhone" class="text-primary text-sm font-medium hover:underline flex items-center gap-1.5">
                                                 <i class="pi pi-mobile text-xs"></i> {{ c.mobilePhone }}
                                             </a>
@@ -134,7 +124,7 @@ const INTERACTION_COLORS: Record<string, string> = {
                                     }
                                     @if (c.linkedIn) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">LinkedIn</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">LinkedIn</span>
                                             <a [href]="c.linkedIn" target="_blank" rel="noopener" class="text-primary text-sm font-medium hover:underline flex items-center gap-1.5">
                                                 <i class="pi pi-linkedin text-xs"></i> View Profile
                                             </a>
@@ -142,72 +132,66 @@ const INTERACTION_COLORS: Record<string, string> = {
                                     }
                                     @if (c.preferredLanguage) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Preferred Language</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Preferred Language</span>
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.preferredLanguage }}</span>
                                         </div>
                                     }
                                 </div>
-                            </div>
-                        </div>
+                        </p-panel>
                     </div>
 
                     <!-- Organization & Location -->
                     <div class="card">
-                        <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isOrgExpanded()" (click)="isOrgExpanded.set(!isOrgExpanded())">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-building text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Organization & Location</h4>
-                            </div>
-                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isOrgExpanded()" [class.pi-chevron-down]="!isOrgExpanded()"></i>
-                        </div>
-                        <div class="expand-body" [class.expand-body--open]="isOrgExpanded()">
-                            <div class="expand-body__inner">
+                        <p-panel [toggleable]="true" [collapsed]="!isOrgExpanded()" (collapsedChange)="isOrgExpanded.set(!$event)" toggler="header">
+                            <ng-template #header>
+                                <div class="flex items-center gap-2 flex-1">
+                                    <i class="pi pi-building text-deepsea-500 dark:text-surface-0"></i>
+                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Organization & Location</h4>
+                                </div>
+                            </ng-template>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 px-2 pb-4">
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Organization</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Organization</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.organization }}</span>
                                     </div>
                                     @if (c.department) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Department</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Department</span>
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.department }}</span>
                                         </div>
                                     }
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Type</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Type</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.type }}</span>
                                     </div>
                                     @if (c.address) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Address</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Address</span>
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.address }}</span>
                                         </div>
                                     }
                                     @if (c.city || c.country) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">City / Country</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">City / Country</span>
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.city ? c.city + ', ' : '' }}{{ c.country }}</span>
                                         </div>
                                     }
                                 </div>
-                            </div>
-                        </div>
+                        </p-panel>
                     </div>
 
                     <!-- Interactions -->
                     <div class="card">
-                        <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isInteractionsExpanded()" (click)="isInteractionsExpanded.set(!isInteractionsExpanded())">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-comments text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Interactions</h4>
-                                @if (c.interactions && c.interactions.length > 0) {
-                                    <p-tag [value]="'' + c.interactions.length" severity="secondary" styleClass="ml-1" />
-                                }
-                            </div>
-                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isInteractionsExpanded()" [class.pi-chevron-down]="!isInteractionsExpanded()"></i>
-                        </div>
-                        <div class="expand-body" [class.expand-body--open]="isInteractionsExpanded()">
-                            <div class="expand-body__inner">
+                        <p-panel [toggleable]="true" [collapsed]="!isInteractionsExpanded()" (collapsedChange)="isInteractionsExpanded.set(!$event)" toggler="header">
+                            <ng-template #header>
+                                <div class="flex items-center gap-2 flex-1">
+                                    <i class="pi pi-comments text-deepsea-500 dark:text-surface-0"></i>
+                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Interactions</h4>
+                                    @if (c.interactions && c.interactions.length > 0) {
+                                        <p-tag [value]="'' + c.interactions.length" severity="secondary" styleClass="ml-1" />
+                                    }
+                                </div>
+                            </ng-template>
                                 @if (c.interactions && c.interactions.length > 0) {
                                     <div class="flex flex-col px-2 pb-2">
                                         @for (interaction of c.interactions; track interaction.id; let last = $last) {
@@ -219,16 +203,16 @@ const INTERACTION_COLORS: Record<string, string> = {
                                                 <div class="flex flex-col gap-1 flex-1 min-w-0">
                                                     <div class="flex items-center justify-between gap-2">
                                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ interaction.subject }}</span>
-                                                        <span class="text-surface-500 dark:text-surface-400 text-xs shrink-0">{{ interaction.date }}</span>
+                                                        <span class="text-surface-600 dark:text-surface-300 text-sm shrink-0">{{ interaction.date }}</span>
                                                     </div>
-                                                    <div class="flex items-center gap-2 text-xs text-surface-500 dark:text-surface-400">
+                                                    <div class="flex items-center gap-2 text-sm text-surface-600 dark:text-surface-300">
                                                         <p-tag [value]="interaction.type" severity="secondary" styleClass="text-xs!" />
                                                     </div>
                                                     @if (interaction.notes) {
                                                         <p class="text-surface-600 dark:text-surface-300 text-sm m-0 mt-1">{{ interaction.notes }}</p>
                                                     }
                                                     @if (interaction.participants && interaction.participants.length > 0) {
-                                                        <div class="flex items-center gap-1.5 mt-1 text-xs text-surface-500 dark:text-surface-400">
+                                                        <div class="flex items-center gap-1.5 mt-1 text-sm text-surface-600 dark:text-surface-300">
                                                             <i class="pi pi-users text-xs"></i>
                                                             <span>{{ interaction.participants!.join(', ') }}</span>
                                                         </div>
@@ -243,14 +227,13 @@ const INTERACTION_COLORS: Record<string, string> = {
                                         <span class="text-sm">No interactions recorded for this contact yet.</span>
                                     </div>
                                 }
-                            </div>
-                        </div>
+                        </p-panel>
                     </div>
 
-                </div>
+                </ng-template>
 
-                <!-- RIGHT COLUMN: Sidebar -->
-                <div class="w-full xl:w-[380px] flex flex-col gap-6 shrink-0 [&>.card]:mb-0">
+                    <!-- Sidebar -->
+                    <ng-container ux-detail-sidebar>
 
                     <!-- AI Contact Analysis -->
                     <ux-ai-insights-card
@@ -261,15 +244,13 @@ const INTERACTION_COLORS: Record<string, string> = {
 
                     <!-- Partner -->
                     <div class="card">
-                        <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isPartnerExpanded()" (click)="isPartnerExpanded.set(!isPartnerExpanded())">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-globe text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Partner</h4>
-                            </div>
-                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isPartnerExpanded()" [class.pi-chevron-down]="!isPartnerExpanded()"></i>
-                        </div>
-                        <div class="expand-body" [class.expand-body--open]="isPartnerExpanded()">
-                            <div class="expand-body__inner">
+                        <p-panel [toggleable]="true" [collapsed]="!isPartnerExpanded()" (collapsedChange)="isPartnerExpanded.set(!$event)" toggler="header">
+                            <ng-template #header>
+                                <div class="flex items-center gap-2 flex-1">
+                                    <i class="pi pi-globe text-deepsea-500 dark:text-surface-0"></i>
+                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Partner</h4>
+                                </div>
+                            </ng-template>
                                 @if (c.partnerId) {
                                     <div class="flex flex-col gap-5 px-2 pb-4">
                                         <div class="flex items-center gap-4 p-3 rounded-xl border border-surface-200 dark:border-surface-700 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
@@ -279,23 +260,23 @@ const INTERACTION_COLORS: Record<string, string> = {
                                             </div>
                                             <div class="flex flex-col gap-0.5 flex-1 min-w-0">
                                                 <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ c.organization }}</span>
-                                                <span class="text-surface-500 dark:text-surface-400 text-xs">Partner ID: {{ c.partnerId }}</span>
+                                                <span class="text-surface-600 dark:text-surface-300 text-sm">Partner ID: {{ c.partnerId }}</span>
                                             </div>
                                             <i class="pi pi-chevron-right text-surface-400 text-sm"></i>
                                         </div>
 
                                         <div class="flex flex-col gap-4">
                                             <div class="flex flex-col gap-1">
-                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Organization Type</span>
+                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Organization Type</span>
                                                 <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.type }}</span>
                                             </div>
                                             <div class="flex flex-col gap-1">
-                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Role at Organization</span>
+                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Role at Organization</span>
                                                 <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.title }}</span>
                                             </div>
                                             @if (c.department) {
                                                 <div class="flex flex-col gap-1">
-                                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Department</span>
+                                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Department</span>
                                                     <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.department }}</span>
                                                 </div>
                                             }
@@ -307,27 +288,23 @@ const INTERACTION_COLORS: Record<string, string> = {
                                         <span class="text-sm">No partner linked to this contact.</span>
                                     </div>
                                 }
-                            </div>
-                        </div>
+                        </p-panel>
                     </div>
 
                     <!-- Notes -->
                     @if (c.notes) {
                         <div class="card">
-                            <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isNotesExpanded()" (click)="isNotesExpanded.set(!isNotesExpanded())">
-                                <div class="flex items-center gap-2">
-                                    <i class="pi pi-file-edit text-deepsea-500 dark:text-surface-0"></i>
-                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Notes</h4>
-                                </div>
-                                <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isNotesExpanded()" [class.pi-chevron-down]="!isNotesExpanded()"></i>
-                            </div>
-                            <div class="expand-body" [class.expand-body--open]="isNotesExpanded()">
-                                <div class="expand-body__inner">
+                            <p-panel [toggleable]="true" [collapsed]="!isNotesExpanded()" (collapsedChange)="isNotesExpanded.set(!$event)" toggler="header">
+                                <ng-template #header>
+                                    <div class="flex items-center gap-2 flex-1">
+                                        <i class="pi pi-file-edit text-deepsea-500 dark:text-surface-0"></i>
+                                        <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Notes</h4>
+                                    </div>
+                                </ng-template>
                                     <p class="text-surface-700 dark:text-surface-300 text-sm leading-relaxed m-0 px-2 pb-4">
                                         {{ c.notes }}
                                     </p>
-                                </div>
-                            </div>
+                            </p-panel>
                         </div>
                     }
 
@@ -336,47 +313,53 @@ const INTERACTION_COLORS: Record<string, string> = {
 
                     <!-- Record Information -->
                     <div class="card">
-                        <div class="flex items-center justify-between px-2 cursor-pointer" [class.pb-4]="isRecordInfoExpanded()" (click)="isRecordInfoExpanded.set(!isRecordInfoExpanded())">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-info-circle text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Record Information</h4>
-                            </div>
-                            <i class="pi text-sm text-surface-600 dark:text-surface-300" [class.pi-chevron-up]="isRecordInfoExpanded()" [class.pi-chevron-down]="!isRecordInfoExpanded()"></i>
-                        </div>
-                        <div class="expand-body" [class.expand-body--open]="isRecordInfoExpanded()">
-                            <div class="expand-body__inner">
+                        <p-panel [toggleable]="true" [collapsed]="!isRecordInfoExpanded()" (collapsedChange)="isRecordInfoExpanded.set(!$event)" toggler="header">
+                            <ng-template #header>
+                                <div class="flex items-center gap-2 flex-1">
+                                    <i class="pi pi-info-circle text-deepsea-500 dark:text-surface-0"></i>
+                                    <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Record Information</h4>
+                                </div>
+                            </ng-template>
                                 <div class="flex flex-col gap-4 px-2 pb-4">
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Contact ID</span>
+                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Contact ID</span>
                                         <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.id }}</span>
                                     </div>
                                     @if (c.createdDate) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Created</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Created</span>
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.createdDate }}</span>
                                         </div>
                                     }
                                     @if (c.lastModifiedDate) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Last Modified</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Last Modified</span>
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.lastModifiedDate }}</span>
                                         </div>
                                     }
                                     @if (c.lastInteraction) {
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-500 dark:text-surface-400">Last Interaction</span>
+                                            <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Last Interaction</span>
                                             <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ c.lastInteraction }}</span>
                                         </div>
                                     }
                                 </div>
-                            </div>
-                        </div>
+                        </p-panel>
                     </div>
 
-                </div>
-                </div>
+                </ng-container>
 
-            </div>
+                <!-- Footer -->
+                <div ux-detail-footer class="flex items-center py-3">
+                    <p-button
+                        icon="pi pi-arrow-left"
+                        label="Contacts"
+                        [text]="true"
+                        severity="secondary"
+                        routerLink="/apps/contacts"
+                    />
+                </div>
+            </ux-detail-layout>
         } @else {
             <div class="flex flex-col items-center justify-center gap-4 py-20">
                 <i class="pi pi-info-circle text-4xl text-surface-400"></i>
@@ -391,6 +374,10 @@ export class ContactDetail implements OnInit {
     private contactService = inject(ContactService);
 
     contactId = signal<string | null>(null);
+    activeTab = 'overview';
+    detailTabs: DetailTab[] = [
+        { value: 'overview', label: 'Overview', icon: 'pi pi-home' }
+    ];
 
     contact = computed(() => {
         const id = this.contactId();

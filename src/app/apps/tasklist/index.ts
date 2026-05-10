@@ -50,7 +50,7 @@ interface Task {
                         <button
                             (click)="activeFilter.set(filter.key)"
                             class="px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer shrink-0"
-                            [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'"
+                            [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-600 dark:text-surface-300 hover:bg-emphasis'"
                         >
                             <i [class]="filter.icon + ' text-sm'"></i>
                             <span class="text-sm font-medium">{{ filter.label }}</span>
@@ -72,13 +72,13 @@ interface Task {
                     <p-divider styleClass="my-1!" />
 
                     <div class="flex flex-col gap-3">
-                        <div class="text-surface-500 dark:text-surface-400 text-sm font-medium">Task</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-sm font-medium">Task</div>
 
                         @for (filter of filterOptions; track filter.key) {
                             <button
                                 (click)="activeFilter.set(filter.key)"
                                 class="w-full px-4 py-2 rounded-lg flex items-center gap-3 transition-colors cursor-pointer"
-                                [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-500 dark:text-surface-400 hover:bg-emphasis'"
+                                [ngClass]="activeFilter() === filter.key ? 'bg-primary text-surface-0 dark:text-surface-900 shadow-sm' : 'text-surface-600 dark:text-surface-300 hover:bg-emphasis'"
                             >
                                 <i [class]="filter.icon + ' text-base'"></i>
                                 <span class="flex-1 text-left text-base font-medium">{{ filter.fullLabel }}</span>
@@ -180,8 +180,8 @@ interface Task {
 
                     <!-- Add New Task Button -->
                     <div class="px-4 lg:px-14 py-3 flex items-center gap-3 cursor-pointer hover:bg-emphasis transition-colors" (click)="openNewTaskDrawer()">
-                        <i class="pi pi-plus text-xs text-surface-500 dark:text-surface-400"></i>
-                        <span class="text-surface-500 dark:text-surface-400 text-base font-medium">Add New Task</span>
+                        <i class="pi pi-plus text-xs text-surface-600 dark:text-surface-300"></i>
+                        <span class="text-surface-600 dark:text-surface-300 text-base font-medium">Add New Task</span>
                     </div>
                 </div>
             </div>
@@ -197,7 +197,7 @@ interface Task {
                 <div class="px-4 lg:px-8 pt-4 pb-2">
                     <div class="flex items-center gap-3">
                         <p-checkbox [(ngModel)]="task.completed" [binary]="true" [inputId]="'task-' + task.id" (onChange)="toggleTaskCompletion(task, task.completed)" />
-                        <div class="text-base font-medium leading-normal transition-all duration-300 flex-1" [ngClass]="task.completed ? 'text-surface-500 dark:text-surface-400 line-through' : 'text-surface-900 dark:text-surface-0'">
+                        <div class="text-base font-medium leading-normal transition-all duration-300 flex-1" [ngClass]="task.completed ? 'text-surface-600 dark:text-surface-300 line-through' : 'text-surface-900 dark:text-surface-0'">
                             {{ task.title }}
                         </div>
                     </div>
@@ -214,7 +214,7 @@ interface Task {
                         @if (task.startDate || task.endDate) {
                             @if (task.startDate) {
                                 <div class="flex items-center gap-2">
-                                    <span class="text-surface-500 dark:text-surface-400 text-base">Start</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base">Start</span>
                                     <p-tag [value]="task.startDate" severity="secondary" />
                                 </div>
                             }
@@ -225,7 +225,7 @@ interface Task {
 
                             @if (task.endDate) {
                                 <div class="flex items-center gap-2">
-                                    <span class="text-surface-500 dark:text-surface-400 text-base">End</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base">End</span>
                                     <p-tag [value]="task.endDate" severity="secondary" />
                                 </div>
                             }
@@ -254,13 +254,13 @@ interface Task {
                         <div class="flex items-center gap-2 flex-wrap">
                             @if (task.startDate) {
                                 <div class="flex items-center gap-1">
-                                    <i class="pi pi-calendar text-xs text-surface-500 dark:text-surface-400"></i>
+                                    <i class="pi pi-calendar text-xs text-surface-600 dark:text-surface-300"></i>
                                     <p-tag [value]="task.startDate" severity="secondary" size="small" />
                                 </div>
                             }
 
                             @if (task.startDate && task.endDate) {
-                                <div class="text-surface-500 dark:text-surface-400 text-sm">-</div>
+                                <div class="text-surface-600 dark:text-surface-300 text-sm">-</div>
                             }
 
                             @if (task.endDate) {
@@ -294,7 +294,7 @@ interface Task {
 
                 @if (!isLast) {
                     <div class="px-4 lg:px-14 py-2">
-                        <div class="border-t border-dashed border-surface-200 dark:border-surface-600"></div>
+                        <p-divider type="dashed" />
                     </div>
                 }
             </div>
@@ -306,7 +306,7 @@ interface Task {
                 <div class="px-4 lg:px-8 pt-4 pb-2">
                     <div class="flex items-center gap-3">
                         <p-checkbox [(ngModel)]="task.completed" [binary]="true" [inputId]="'task-' + task.id" (onChange)="toggleTaskCompletion(task, task.completed)" />
-                        <div class="text-surface-500 dark:text-surface-400 text-base font-medium leading-normal line-through flex-1">
+                        <div class="text-surface-600 dark:text-surface-300 text-base font-medium leading-normal line-through flex-1">
                             {{ task.title }}
                         </div>
                     </div>
@@ -323,7 +323,7 @@ interface Task {
                         @if (task.startDate || task.endDate) {
                             @if (task.startDate) {
                                 <div class="flex items-center gap-2">
-                                    <span class="text-surface-500 dark:text-surface-400 text-base">Start</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base">Start</span>
                                     <p-tag [value]="task.startDate" severity="secondary" />
                                 </div>
                             }
@@ -334,7 +334,7 @@ interface Task {
 
                             @if (task.endDate) {
                                 <div class="flex items-center gap-2">
-                                    <span class="text-surface-500 dark:text-surface-400 text-base">End</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-base">End</span>
                                     <p-tag [value]="task.endDate" severity="secondary" />
                                 </div>
                             }
@@ -363,13 +363,13 @@ interface Task {
                         <div class="flex items-center gap-2 flex-wrap">
                             @if (task.startDate) {
                                 <div class="flex items-center gap-1">
-                                    <i class="pi pi-calendar text-xs text-surface-500 dark:text-surface-400"></i>
+                                    <i class="pi pi-calendar text-xs text-surface-600 dark:text-surface-300"></i>
                                     <p-tag [value]="task.startDate" severity="secondary" size="small" />
                                 </div>
                             }
 
                             @if (task.startDate && task.endDate) {
-                                <div class="text-surface-500 dark:text-surface-400 text-sm">-</div>
+                                <div class="text-surface-600 dark:text-surface-300 text-sm">-</div>
                             }
 
                             @if (task.endDate) {
@@ -403,7 +403,7 @@ interface Task {
 
                 @if (!isLast) {
                     <div class="px-4 lg:px-14 py-2">
-                        <div class="border-t border-dashed border-surface-200 dark:border-surface-600"></div>
+                        <p-divider type="dashed" />
                     </div>
                 }
             </div>

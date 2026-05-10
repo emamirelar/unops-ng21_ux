@@ -52,11 +52,11 @@ interface Size {
 
                             <div class="w-full flex flex-col justify-start items-start">
                                 <h1 class="text-surface-950 dark:text-surface-0 text-xl font-medium leading-7 mb-1">AeroShield™ Storm Jacket</h1>
-                                <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Storm-FIT Windproof & Water-Resistant Jacket</p>
+                                <p class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Storm-FIT Windproof & Water-Resistant Jacket</p>
                             </div>
 
                             <div class="text-primary-600 dark:text-primary-400 text-2xl font-medium leading-loose">$279.99</div>
-                            <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">More than 7,000 views in the last 30 days</div>
+                            <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">More than 7,000 views in the last 30 days</div>
                         </div>
 
                         <div class="p-6 border-b border-surface-200 dark:border-surface-700 flex flex-col justify-start items-start gap-4">
@@ -102,7 +102,7 @@ interface Size {
                                                 class="text-sm leading-px! font-medium"
                                                 [ngClass]="{
                                                     'text-white': selectedSize() === size.label && !size.disabled,
-                                                    'text-surface-500 dark:text-surface-400': size.disabled,
+                                                    'text-surface-600 dark:text-surface-300': size.disabled,
                                                     'text-surface-950 dark:text-surface-0': !size.disabled && selectedSize() !== size.label
                                                 }"
                                             >
@@ -152,12 +152,12 @@ interface Size {
                                             </clipPath>
                                         </defs>
                                     </svg>
-                                    <div class="text-surface-500 dark:text-surface-400 text-base font-semibold leading-none tracking-tight">BriteMank</div>
+                                    <div class="text-surface-600 dark:text-surface-300 text-base font-semibold leading-none tracking-tight">BriteMank</div>
                                 </div>
                             </div>
                             <div class="flex justify-start items-center gap-2">
-                                <i class="pi pi-calendar text-surface-500 dark:text-surface-400"></i>
-                                <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Estimated Saturday, January 18th</div>
+                                <i class="pi pi-calendar text-surface-600 dark:text-surface-300"></i>
+                                <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Estimated Saturday, January 18th</div>
                             </div>
                         </div>
                         <div class="px-6 py-4">
@@ -180,27 +180,27 @@ interface Size {
                             </div>
                             <p-button label="Explore" [link]="true" styleClass="p-2 text-primary-600 dark:text-primary-400" iconPos="right" icon="pi pi-arrow-right" />
                         </div>
-                        <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Buy Now with your Ready to Spend Limit, 6 after 60 Days Pay in installments</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Buy Now with your Ready to Spend Limit, 6 after 60 Days Pay in installments</div>
                     </div>
                 </div>
             </div>
 
             <div class="w-full p-6 bg-surface-0 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-3xl grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
                 <div class="flex justify-center items-center gap-2">
-                    <i class="pi pi-truck text-surface-500 dark:text-surface-400 text-xl"></i>
-                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Free shipping on all orders</div>
+                    <i class="pi pi-truck text-surface-600 dark:text-surface-300 text-xl"></i>
+                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Free shipping on all orders</div>
                 </div>
                 <div class="flex justify-center items-center gap-2">
-                    <i class="pi pi-shield text-surface-500 dark:text-surface-400 text-xl"></i>
-                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Safe Shopping</div>
+                    <i class="pi pi-shield text-surface-600 dark:text-surface-300 text-xl"></i>
+                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Safe Shopping</div>
                 </div>
                 <div class="flex justify-center items-center gap-2">
-                    <i class="pi pi-refresh text-surface-500 dark:text-surface-400 text-xl"></i>
-                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Free returns up to 60 days</div>
+                    <i class="pi pi-refresh text-surface-600 dark:text-surface-300 text-xl"></i>
+                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Free returns up to 60 days</div>
                 </div>
                 <div class="flex justify-center items-center gap-2">
-                    <i class="pi pi-star-fill text-surface-500 dark:text-surface-400 text-xl"></i>
-                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">High Quality</div>
+                    <i class="pi pi-star-fill text-surface-600 dark:text-surface-300 text-xl"></i>
+                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">High Quality</div>
                 </div>
             </div>
 
@@ -212,7 +212,7 @@ interface Size {
                                 class="text-base font-medium"
                                 [ngClass]="{
                                     'text-primary-600 dark:text-primary-400': activeTab() === 'description',
-                                    'text-surface-500 dark:text-surface-400': activeTab() !== 'description'
+                                    'text-surface-600 dark:text-surface-300': activeTab() !== 'description'
                                 }"
                             >
                                 Product Description
@@ -223,7 +223,7 @@ interface Size {
                                 class="text-base font-normal"
                                 [ngClass]="{
                                     'text-primary-600 dark:text-primary-400': activeTab() === 'evaluations',
-                                    'text-surface-500 dark:text-surface-400': activeTab() !== 'evaluations'
+                                    'text-surface-600 dark:text-surface-300': activeTab() !== 'evaluations'
                                 }"
                             >
                                 Evaluations
@@ -234,7 +234,7 @@ interface Size {
                                 class="text-base font-normal"
                                 [ngClass]="{
                                     'text-primary-600 dark:text-primary-400': activeTab() === 'qa',
-                                    'text-surface-500 dark:text-surface-400': activeTab() !== 'qa'
+                                    'text-surface-600 dark:text-surface-300': activeTab() !== 'qa'
                                 }"
                             >
                                 Question and Answer
@@ -251,13 +251,13 @@ interface Size {
                                     </div>
                                     <div class="flex-1 flex flex-col justify-start items-start gap-1">
                                         <h4 class="title-h4 text-left!">AeroShield™ Storm Jacket</h4>
-                                        <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">Storm-FIT Windproof & Water-Resistant Jacket</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">Storm-FIT Windproof & Water-Resistant Jacket</p>
                                     </div>
                                 </div>
 
                                 <div class="w-full flex flex-col justify-start items-start gap-4">
                                     <h2 class="text-surface-950 dark:text-surface-0 text-2xl font-medium leading-loose">AeroShield™ Storm Jacket</h2>
-                                    <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7">
+                                    <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7">
                                         Premium Performance for Every Adventure<br /><br />
                                         The AeroShield™ Storm Jacket is engineered with high-performance materials to keep you warm, dry, and comfortable in extreme weather conditions. Designed for outdoor enthusiasts and city commuters alike.
                                     </p>
@@ -266,21 +266,21 @@ interface Size {
                                 <div class="w-full flex flex-col justify-start items-start gap-4">
                                     <h4 class="title-h4 text-left!">Key Features:</h4>
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>StormGuard™ Fabric</strong> – Advanced water-resistant coating to repel rain and snow.</p>
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>FeatherLight Insulation</strong> – Provides warmth without bulk, ensuring all-day comfort.</p>
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>Adjustable Fit & Hood</strong> – Customize your fit with an elastic drawcord and detachable hood.</p>
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>Breathable & Moisture-Wicking Lining</strong> – Regulates body temperature and prevents overheating.</p>
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>Ergonomic Slim-Fit Design</strong> – Tailored for a modern and stylish look without compromising flexibility.</p>
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7"><strong>Zippered Security Pockets</strong> – Keep your essentials safe and dry, even in harsh weather.</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7"><strong>StormGuard™ Fabric</strong> – Advanced water-resistant coating to repel rain and snow.</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7"><strong>FeatherLight Insulation</strong> – Provides warmth without bulk, ensuring all-day comfort.</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7"><strong>Adjustable Fit & Hood</strong> – Customize your fit with an elastic drawcord and detachable hood.</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7"><strong>Breathable & Moisture-Wicking Lining</strong> – Regulates body temperature and prevents overheating.</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7"><strong>Ergonomic Slim-Fit Design</strong> – Tailored for a modern and stylish look without compromising flexibility.</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7"><strong>Zippered Security Pockets</strong> – Keep your essentials safe and dry, even in harsh weather.</p>
                                     </div>
                                 </div>
 
                                 <div class="w-full flex flex-col justify-start items-start gap-4">
                                     <h4 class="title-h4 text-left!">Designed for Versatility</h4>
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7">Perfect for hiking, traveling, and daily wear</p>
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7">Durable, lightweight, and packable for easy storage</p>
-                                        <p class="text-surface-500 dark:text-surface-400 text-lg font-normal leading-7">Available in multiple colors and sizes</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7">Perfect for hiking, traveling, and daily wear</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7">Durable, lightweight, and packable for easy storage</p>
+                                        <p class="text-surface-600 dark:text-surface-300 text-lg font-normal leading-7">Available in multiple colors and sizes</p>
                                     </div>
                                 </div>
                             </div>
@@ -329,7 +329,7 @@ interface Size {
                                             <div class="flex-1 flex flex-col justify-between gap-4">
                                                 <div class="flex items-center gap-2">
                                                     <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
-                                                    <span class="w-3 text-center text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">5</span>
+                                                    <span class="w-3 text-center text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">5</span>
                                                     <div class="flex-1 h-1 bg-surface-200 dark:bg-surface-700 rounded-full relative">
                                                         <div class="w-4/5 h-full bg-yellow-500 rounded-full"></div>
                                                     </div>
@@ -337,7 +337,7 @@ interface Size {
 
                                                 <div class="flex items-center gap-2">
                                                     <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
-                                                    <span class="w-3 text-center text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">4</span>
+                                                    <span class="w-3 text-center text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">4</span>
                                                     <div class="flex-1 h-1 bg-surface-200 dark:bg-surface-700 rounded-full relative">
                                                         <div class="w-3/5 h-full bg-yellow-500 rounded-full"></div>
                                                     </div>
@@ -345,7 +345,7 @@ interface Size {
 
                                                 <div class="flex items-center gap-2">
                                                     <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
-                                                    <span class="w-3 text-center text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">3</span>
+                                                    <span class="w-3 text-center text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">3</span>
                                                     <div class="flex-1 h-1 bg-surface-200 dark:bg-surface-700 rounded-full relative">
                                                         <div class="w-2/5 h-full bg-yellow-500 rounded-full"></div>
                                                     </div>
@@ -353,7 +353,7 @@ interface Size {
 
                                                 <div class="flex items-center gap-2">
                                                     <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
-                                                    <span class="w-3 text-center text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">2</span>
+                                                    <span class="w-3 text-center text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">2</span>
                                                     <div class="flex-1 h-1 bg-surface-200 dark:bg-surface-700 rounded-full relative">
                                                         <div class="w-1/5 h-full bg-yellow-500 rounded-full"></div>
                                                     </div>
@@ -361,7 +361,7 @@ interface Size {
 
                                                 <div class="flex items-center gap-2">
                                                     <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
-                                                    <span class="w-3 text-center text-surface-500 dark:text-surface-400 text-sm font-normal leading-tight">1</span>
+                                                    <span class="w-3 text-center text-surface-600 dark:text-surface-300 text-sm font-normal leading-tight">1</span>
                                                     <div class="flex-1 h-1 bg-surface-200 dark:bg-surface-700 rounded-full relative">
                                                         <div class="w-1/12 h-full bg-yellow-500 rounded-full"></div>
                                                     </div>
@@ -458,13 +458,13 @@ interface Size {
                                                         <div class="flex-1 flex flex-col md:flex-row md:items-center gap-2 min-w-0">
                                                             <div class="flex items-center gap-2 flex-wrap">
                                                                 <div class="text-surface-900 dark:text-surface-0 text-base font-medium leading-normal">{{ review.name }}</div>
-                                                                <div class="text-surface-500 dark:text-surface-400 text-sm md:text-base font-normal leading-normal">({{ review.email }})</div>
+                                                                <div class="text-surface-600 dark:text-surface-300 text-sm md:text-base font-normal leading-normal">({{ review.email }})</div>
                                                             </div>
                                                             <div class="flex items-center gap-2 md:gap-3 md:ml-auto shrink-0">
                                                                 <div class="flex items-center gap-2">
-                                                                    <div class="text-surface-500 dark:text-surface-400 text-sm md:text-base font-normal leading-normal whitespace-nowrap">{{ getDatePart(review.date) }}</div>
+                                                                    <div class="text-surface-600 dark:text-surface-300 text-sm md:text-base font-normal leading-normal whitespace-nowrap">{{ getDatePart(review.date) }}</div>
                                                                     <div class="hidden sm:block w-px h-2 bg-surface-200 dark:bg-surface-700"></div>
-                                                                    <div class="text-surface-500 dark:text-surface-400 text-sm md:text-base font-normal leading-normal whitespace-nowrap">{{ getTimePart(review.date) }}</div>
+                                                                    <div class="text-surface-600 dark:text-surface-300 text-sm md:text-base font-normal leading-normal whitespace-nowrap">{{ getTimePart(review.date) }}</div>
                                                                 </div>
                                                                 <div class="hidden md:block w-px h-2 bg-surface-200 dark:bg-surface-700"></div>
                                                                 <div class="flex items-center gap-2">
@@ -478,7 +478,7 @@ interface Size {
                                                             <p-menu #reviewMenu [model]="reviewMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
                                                         </div>
                                                     </div>
-                                                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">"{{ review.comment }}"</div>
+                                                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">"{{ review.comment }}"</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -486,7 +486,7 @@ interface Size {
 
                                     @if (filteredReviews().length === 0) {
                                         <div class="px-6 py-12 text-center">
-                                            <div class="text-surface-500 dark:text-surface-400 text-base font-normal">No reviews found for {{ selectedRating() }} star rating.</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base font-normal">No reviews found for {{ selectedRating() }} star rating.</div>
                                         </div>
                                     }
                                 </div>
@@ -499,20 +499,20 @@ interface Size {
                                     <div class="flex flex-col gap-2">
                                         <div class="h-5 px-4 flex justify-between items-center gap-2">
                                             <div class="flex-1 text-surface-900 dark:text-surface-0 text-base font-medium leading-normal">Question</div>
-                                            <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">{{ qa.questionDate }}</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">{{ qa.questionDate }}</div>
                                         </div>
                                         <div class="p-4 bg-surface-50 dark:bg-surface-900 rounded-2xl border border-surface-100 dark:border-surface-700">
-                                            <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">{{ qa.question }}</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">{{ qa.question }}</div>
                                         </div>
                                     </div>
 
                                     <div class="pl-16 flex flex-col gap-2">
                                         <div class="h-5 px-4 flex justify-between items-center gap-2">
                                             <div class="flex-1 text-surface-900 dark:text-surface-0 text-base font-medium leading-normal">Answer</div>
-                                            <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">{{ qa.answerDate }}</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">{{ qa.answerDate }}</div>
                                         </div>
                                         <div class="p-4 bg-surface-0 dark:bg-surface-800 rounded-2xl border border-surface-200 dark:border-surface-700">
-                                            <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">{{ qa.answer }}</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">{{ qa.answer }}</div>
                                         </div>
                                     </div>
                                 }

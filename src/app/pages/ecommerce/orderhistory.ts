@@ -6,6 +6,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
+import { PillTabsComponent, PillTabItem } from '@unopsitg/ux';
 
 interface DeliveryAddress {
     title: string;
@@ -40,71 +41,15 @@ interface Order {
 
 @Component({
     selector: 'app-order-history',
-    imports: [NgClass, FormsModule, ButtonModule, IconFieldModule, InputIconModule, InputTextModule, TagModule],
+    imports: [NgClass, FormsModule, ButtonModule, IconFieldModule, InputIconModule, InputTextModule, TagModule, PillTabsComponent],
     template: `
         <div class="p-6 card">
             <div class="flex flex-col xl:flex-row justify-between items-start gap-6 mb-6">
-                <div class="flex flex-wrap gap-3">
-                    <button
-                        (click)="activeFilter.set('all')"
-                        class="px-4.5 py-2.5 rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                        [ngClass]="
-                            activeFilter() === 'all'
-                                ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
-                        "
-                    >
-                        All
-                    </button>
-                    <button
-                        (click)="activeFilter.set('ongoing')"
-                        class="px-4.5 py-2.5 rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                        [ngClass]="
-                            activeFilter() === 'ongoing'
-                                ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
-                        "
-                    >
-                        Ongoing Orders
-                    </button>
-                    <button
-                        (click)="activeFilter.set('returns')"
-                        class="px-4.5 py-2.5 rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                        [ngClass]="
-                            activeFilter() === 'returns'
-                                ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
-                        "
-                    >
-                        Returns
-                    </button>
-                    <button
-                        (click)="activeFilter.set('cancelled')"
-                        class="px-4.5 py-2.5 rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                        [ngClass]="
-                            activeFilter() === 'cancelled'
-                                ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
-                        "
-                    >
-                        Cancellations
-                    </button>
-                    <button
-                        (click)="activeFilter.set('completed')"
-                        class="px-4.5 py-2.5 rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                        [ngClass]="
-                            activeFilter() === 'completed'
-                                ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm'
-                                : 'border-surface-200 dark:border-surface-700 text-surface-950 dark:text-surface-0 hover:bg-emphasis'
-                        "
-                    >
-                        Completed
-                    </button>
-                </div>
+                <ux-pill-tabs [items]="orderFilterItems" [(activeValue)]="activeFilter" />
 
                 <div class="w-full xl:w-56">
                     <p-iconfield iconPosition="left">
-                        <p-inputicon class="pi pi-search text-surface-500 dark:text-surface-400" />
+                        <p-inputicon class="pi pi-search text-surface-600 dark:text-surface-300" />
                         <input type="text" pInputText [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search" class="w-full" />
                     </p-iconfield>
                 </div>
@@ -119,7 +64,7 @@ interface Order {
                                     <img class="w-12 h-12 rounded-lg shrink-0" [src]="order.image" [alt]="order.product" />
                                     <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 xl:flex-none">
                                         <div class="flex items-center gap-1">
-                                            <span class="text-surface-500 dark:text-surface-400 text-base xl:text-lg font-medium">Order No: </span>
+                                            <span class="text-surface-600 dark:text-surface-300 text-base xl:text-lg font-medium">Order No: </span>
                                             <span class="text-surface-950 dark:text-surface-0 text-base xl:text-lg font-medium">{{ order.orderNumber }}</span>
                                         </div>
                                         <div class="block sm:hidden">
@@ -134,14 +79,14 @@ interface Order {
                                     </div>
 
                                     <div class="flex justify-between items-center gap-4 w-full sm:w-auto">
-                                        <div class="text-surface-500 dark:text-surface-400 text-base xl:text-lg font-medium xl:w-44">{{ order.date }}</div>
+                                        <div class="text-surface-600 dark:text-surface-300 text-base xl:text-lg font-medium xl:w-44">{{ order.date }}</div>
                                         <div class="text-green-600 dark:text-green-400 text-base xl:text-lg font-medium xl:w-32">{{ order.total }}</div>
                                     </div>
                                 </div>
                             </div>
 
                             <i
-                                class="pi pi-chevron-down text-surface-500 transition-transform duration-200 dark:text-surface-400 text-lg xl:text-xl absolute right-6 xl:right-8 top-1/2 -translate-y-1/2 pointer-events-none"
+                                class="pi pi-chevron-down text-surface-500 transition-transform duration-200 dark:text-surface-300 text-lg xl:text-xl absolute right-6 xl:right-8 top-1/2 -translate-y-1/2 pointer-events-none"
                                 [ngClass]="{ 'rotate-180': expandedOrders[order.id], 'rotate-0': !expandedOrders[order.id] }"
                             ></i>
                         </div>
@@ -155,7 +100,7 @@ interface Order {
                                                 <img class="w-29 h-29 rounded-xl" [src]="order.image" [alt]="order.product" />
                                                 <div class="flex flex-col gap-3">
                                                     <div class="flex items-center gap-3">
-                                                        <span class="text-surface-500 dark:text-surface-400 text-sm font-medium">Seller</span>
+                                                        <span class="text-surface-600 dark:text-surface-300 text-sm font-medium">Seller</span>
                                                         <div class="flex items-center gap-1">
                                                             <i class="pi pi-verified text-surface-950 dark:text-surface-0 text-base"></i>
                                                             <span class="text-surface-950 dark:text-surface-0 text-xs font-semibold">{{ order.seller }}</span>
@@ -163,10 +108,10 @@ interface Order {
                                                     </div>
                                                     <div class="flex flex-col gap-1">
                                                         <div class="text-surface-950 dark:text-surface-0 text-lg font-medium">{{ order.product }}</div>
-                                                        <div class="text-surface-500 dark:text-surface-400 text-sm">{{ order.variant }}</div>
+                                                        <div class="text-surface-600 dark:text-surface-300 text-sm">{{ order.variant }}</div>
                                                     </div>
                                                     <div>
-                                                        <span class="text-surface-500 dark:text-surface-400 text-sm">Select Number/Size: </span>
+                                                        <span class="text-surface-600 dark:text-surface-300 text-sm">Select Number/Size: </span>
                                                         <span class="text-surface-950 dark:text-surface-0 text-sm font-medium">{{ order.size }}</span>
                                                     </div>
                                                 </div>
@@ -353,7 +298,7 @@ interface Order {
                                                     <div class="flex flex-col gap-2">
                                                         <div class="text-green-600 dark:text-green-400 text-2xl font-medium">{{ order.total }}</div>
                                                         <div class="text-surface-900 dark:text-surface-0 text-base font-medium">{{ order.cardNumber }}</div>
-                                                        <div class="text-surface-500 dark:text-surface-400 text-base">Mastercard</div>
+                                                        <div class="text-surface-600 dark:text-surface-300 text-base">Mastercard</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -396,22 +341,22 @@ interface Order {
                                                 </div>
 
                                                 <div class="flex justify-between text-sm font-medium mb-2">
-                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 1 ? 'text-surface-950 dark:text-surface-0' : 'text-surface-500 dark:text-surface-400'">Received</span>
-                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 2 ? 'text-surface-900 dark:text-surface-100' : 'text-surface-500 dark:text-surface-400'">Processing</span>
-                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 3 ? 'text-surface-900 dark:text-surface-100' : 'text-surface-500 dark:text-surface-400'">Shipping</span>
-                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 4 ? 'text-surface-900 dark:text-surface-100' : 'text-surface-500 dark:text-surface-400'">Delivered</span>
+                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 1 ? 'text-surface-950 dark:text-surface-0' : 'text-surface-600 dark:text-surface-300'">Received</span>
+                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 2 ? 'text-surface-900 dark:text-surface-100' : 'text-surface-600 dark:text-surface-300'">Processing</span>
+                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 3 ? 'text-surface-900 dark:text-surface-100' : 'text-surface-600 dark:text-surface-300'">Shipping</span>
+                                                    <span [class]="getDeliveryProgress(order.deliveryStatus) >= 4 ? 'text-surface-900 dark:text-surface-100' : 'text-surface-600 dark:text-surface-300'">Delivered</span>
                                                 </div>
 
                                                 <div class="flex flex-col gap-2">
                                                     <div class="flex items-center justify-between">
                                                         <div>
-                                                            <span class="text-surface-500 dark:text-surface-400 text-sm">Estimated delivery date: </span>
+                                                            <span class="text-surface-600 dark:text-surface-300 text-sm">Estimated delivery date: </span>
                                                             <span class="text-surface-900 dark:text-surface-100 text-sm">{{ order.estimatedDelivery }}</span>
                                                         </div>
                                                         <p-button label="Cargo tracking" icon="pi pi-map-marker" [link]="true" styleClass="p-0" />
                                                     </div>
                                                     <div>
-                                                        <span class="text-surface-500 dark:text-surface-400 text-sm">Person to receive: </span>
+                                                        <span class="text-surface-600 dark:text-surface-300 text-sm">Person to receive: </span>
                                                         <span class="text-surface-900 dark:text-surface-100 text-sm">{{ order.recipient }}</span>
                                                     </div>
                                                 </div>
@@ -420,10 +365,10 @@ interface Order {
                                             <div class="flex flex-col gap-6">
                                                 <div class="text-surface-900 dark:text-surface-0 text-base font-medium">Delivery Address</div>
                                                 <div class="flex flex-col gap-2">
-                                                    <div class="text-surface-500 dark:text-surface-400 text-sm font-medium">{{ order.deliveryAddress.title }}</div>
-                                                    <div class="text-surface-500 dark:text-surface-400 text-sm">{{ order.deliveryAddress.address }}</div>
-                                                    <div class="text-surface-500 dark:text-surface-400 text-sm">{{ order.deliveryAddress.city }}</div>
-                                                    <div class="text-surface-500 dark:text-surface-400 text-sm">{{ order.deliveryAddress.name }} {{ order.deliveryAddress.phone }}</div>
+                                                    <div class="text-surface-600 dark:text-surface-300 text-sm font-medium">{{ order.deliveryAddress.title }}</div>
+                                                    <div class="text-surface-600 dark:text-surface-300 text-sm">{{ order.deliveryAddress.address }}</div>
+                                                    <div class="text-surface-600 dark:text-surface-300 text-sm">{{ order.deliveryAddress.city }}</div>
+                                                    <div class="text-surface-600 dark:text-surface-300 text-sm">{{ order.deliveryAddress.name }} {{ order.deliveryAddress.phone }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -436,8 +381,8 @@ interface Order {
 
                 @if (filteredOrders().length === 0) {
                     <div class="text-center py-12">
-                        <div class="text-surface-500 dark:text-surface-400 text-lg mb-2">No orders found</div>
-                        <div class="text-surface-400 dark:text-surface-500 text-base">Try adjusting your search or filter criteria</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-lg mb-2">No orders found</div>
+                        <div class="text-surface-600 dark:text-surface-300 text-base">Try adjusting your search or filter criteria</div>
                     </div>
                 }
             </div>
@@ -447,6 +392,14 @@ interface Order {
 export class OrderHistory {
     searchQuery = model('');
     activeFilter = signal<'all' | 'ongoing' | 'returns' | 'cancelled' | 'completed'>('all');
+
+    orderFilterItems: PillTabItem[] = [
+        { value: 'all', label: 'All' },
+        { value: 'ongoing', label: 'Ongoing Orders' },
+        { value: 'returns', label: 'Returns' },
+        { value: 'cancelled', label: 'Cancellations' },
+        { value: 'completed', label: 'Completed' }
+    ];
     expandedOrders: { [key: number]: boolean } = {};
 
     orders: Order[] = [

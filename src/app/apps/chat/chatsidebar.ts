@@ -89,7 +89,7 @@ interface SelectedUser {
                                         }
                                         <div class="flex-1">
                                             <p class="text-base font-medium text-surface-900 dark:text-surface-0">{{ participant.name }}</p>
-                                            <p class="text-sm text-surface-500 dark:text-surface-400 capitalize">{{ participant.status }}</p>
+                                            <p class="text-sm text-surface-600 dark:text-surface-300 capitalize">{{ participant.status }}</p>
                                         </div>
                                     </div>
                                 }
@@ -140,64 +140,64 @@ interface SelectedUser {
                         <div class="flex-1 overflow-y-auto">
                             <!-- Company -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-building text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">Company</span>
+                                <i class="pi pi-building text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">Company</span>
                                 <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ selectedUser.company }}</span>
                             </div>
                             <div class="mx-4 h-px bg-surface-200 dark:bg-surface-700"></div>
 
                             <!-- Role -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-user text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">Role</span>
+                                <i class="pi pi-user text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">Role</span>
                                 <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ selectedUser.role }}</span>
                             </div>
                             <div class="mx-4 h-px bg-surface-200 dark:bg-surface-700"></div>
 
                             <!-- Phone -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-phone text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">Phone</span>
+                                <i class="pi pi-phone text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">Phone</span>
                                 <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ selectedUser.phone }}</span>
                             </div>
                             <div class="mx-4 h-px bg-surface-200 dark:bg-surface-700"></div>
 
                             <!-- Email -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-envelope text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">Email</span>
+                                <i class="pi pi-envelope text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">Email</span>
                                 <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ selectedUser.email }}</span>
                             </div>
                             <div class="mx-4 h-px bg-surface-200 dark:bg-surface-700"></div>
 
                             <!-- First Contact -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-calendar text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">First contact</span>
+                                <i class="pi pi-calendar text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">First contact</span>
                                 <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ selectedUser.firstContact }}</span>
                             </div>
                             <div class="mx-4 h-px bg-surface-200 dark:bg-surface-700"></div>
 
                             <!-- Created By -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-user-plus text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">Created by</span>
+                                <i class="pi pi-user-plus text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">Created by</span>
                                 <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ selectedUser.createdBy }}</span>
                             </div>
                             <div class="mx-4 h-px bg-surface-200 dark:bg-surface-700"></div>
 
                             <!-- Status -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-circle text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">Status</span>
+                                <i class="pi pi-circle text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">Status</span>
                                 <p-tag [value]="selectedUser.statusTag || ''" [severity]="selectedUser.statusTag === 'Active' ? 'success' : 'secondary'" />
                             </div>
                             <div class="mx-4 h-px bg-surface-200 dark:bg-surface-700"></div>
 
                             <!-- Access -->
                             <div class="px-4 py-4 flex items-center gap-2">
-                                <i class="pi pi-lock text-surface-500 dark:text-surface-400 text-xs"></i>
-                                <span class="flex-1 text-sm text-surface-500 dark:text-surface-400">Access</span>
+                                <i class="pi pi-lock text-surface-600 dark:text-surface-300 text-xs"></i>
+                                <span class="flex-1 text-sm text-surface-600 dark:text-surface-300">Access</span>
                                 <p-tag [value]="selectedUser.access || ''" severity="secondary" />
                             </div>
 
@@ -209,8 +209,8 @@ interface SelectedUser {
                             <!-- Linked Threads Items -->
                             @for (thread of selectedUser.linkedThreads; track thread) {
                                 <div class="px-4 py-2 flex items-center gap-2">
-                                    <i class="pi pi-link text-surface-500 dark:text-surface-400 text-xs"></i>
-                                    <span class="text-sm text-surface-500 dark:text-surface-400">{{ thread }}</span>
+                                    <i class="pi pi-link text-surface-600 dark:text-surface-300 text-xs"></i>
+                                    <span class="text-sm text-surface-600 dark:text-surface-300">{{ thread }}</span>
                                 </div>
                             }
                         </div>

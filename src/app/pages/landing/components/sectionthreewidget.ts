@@ -108,7 +108,7 @@ import { Component, computed, inject } from '@angular/core';
 
                     <div class="flex-1">
                         <span class="title-h7">{{ data.title }}</span>
-                        <p class="body-small mt-2 text-left text-surface-700 dark:text-surface-400">{{ data.description }}</p>
+                        <p class="body-small mt-2 text-left text-surface-700 dark:text-surface-300">{{ data.description }}</p>
                     </div>
                 </div>
             </div>

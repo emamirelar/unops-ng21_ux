@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MenuItem } from 'primeng/api';
+import { PillTabsComponent, PillTabItem } from '@unopsitg/ux';
 
 interface ActivityFeed {
     id: number;
@@ -62,7 +63,7 @@ interface Document {
 @Component({
     selector: 'app-files',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, TagModule, TextareaModule, ConfirmDialogModule],
+    imports: [CommonModule, FormsModule, ButtonModule, TableModule, DrawerModule, InputTextModule, MenuModule, TagModule, TextareaModule, ConfirmDialogModule, PillTabsComponent],
     providers: [ConfirmationService],
     template: `
         <div class="flex flex-col gap-6 card animate-fade-in-up">
@@ -112,9 +113,9 @@ interface Document {
                                                             <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
                                                         </div>
                                                         <div class="flex items-center gap-2">
-                                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.time }}</span>
+                                                            <span class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.time }}</span>
                                                             <div class="w-0 h-[6px] border-l border-surface-200 dark:border-surface-500"></div>
-                                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ activity.author }}</span>
+                                                            <span class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.author }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -132,7 +133,7 @@ interface Document {
                                 <h4 class="title-h4 text-left!">Storage</h4>
                                 <div class="flex items-center gap-1">
                                     <span class="text-surface-950 dark:text-surface-0 text-xl font-semibold leading-tight">{{ totalFiles().toLocaleString() }}</span>
-                                    <span class="text-surface-500 dark:text-surface-400 text-sm leading-none">Total Files</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-sm leading-none">Total Files</span>
                                 </div>
                             </div>
 
@@ -144,7 +145,7 @@ interface Document {
                                             <span class="text-surface-900 dark:text-surface-0 text-sm md:text-base xl:text-lg font-medium leading-tight md:leading-normal xl:leading-7">{{ storage.count.toLocaleString() }}</span>
                                             <div class="flex items-center gap-1">
                                                 <div class="w-2 h-2 rounded-sm" [ngClass]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                                <span class="text-surface-600 dark:text-surface-300 text-xs md:text-sm leading-tight">{{ storage.type }}</span>
+                                                <span class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ storage.type }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -156,7 +157,7 @@ interface Document {
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-3">
                                             <div class="w-3 h-3 rounded-sm" [ngClass]="storage.color" [style.box-shadow]="'0px 5px 10px 0px ' + storage.shadowColor"></div>
-                                            <span class="text-surface-500 dark:text-surface-400 text-sm leading-tight">{{ storage.type }}</span>
+                                            <span class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ storage.type }}</span>
                                         </div>
                                         <span class="text-surface-900 dark:text-surface-0 text-lg font-medium leading-7">{{ storage.count.toLocaleString() }}</span>
                                     </div>
@@ -180,9 +181,9 @@ interface Document {
                                         <div class="flex flex-col gap-1">
                                             <span class="text-surface-900 dark:text-surface-0 text-base font-medium">{{ pinned.name }}</span>
                                             <div class="flex xl:items-center gap-1 xl:flex-row flex-col">
-                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.type }}</span>
+                                                <span class="text-surface-600 dark:text-surface-300 text-sm">{{ pinned.type }}</span>
                                                 <div class="w-1 h-1 bg-surface-300 dark:bg-surface-500 rounded-full hidden xl:block"></div>
-                                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ pinned.size }}</span>
+                                                <span class="text-surface-600 dark:text-surface-300 text-sm">{{ pinned.size }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -195,20 +196,7 @@ interface Document {
                 <div class="flex flex-col gap-6">
                     <h2 class="text-surface-950 dark:text-surface-0 text-2xl font-medium leading-loose">Documents</h2>
 
-                    <div class="flex flex-wrap gap-4">
-                        @for (filter of filterOptions; track filter) {
-                            <button
-                                (click)="activeFilter.set(filter)"
-                                class="px-[18px] py-[9px] rounded-xl text-base font-medium border transition-colors whitespace-nowrap cursor-pointer"
-                                [ngClass]="{
-                                    'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100 shadow-sm': activeFilter() === filter,
-                                    'border-surface-200 dark:border-surface-600 text-surface-950 dark:text-surface-0 hover:bg-emphasis': activeFilter() !== filter
-                                }"
-                            >
-                                {{ filter }}
-                            </button>
-                        }
-                    </div>
+                    <ux-pill-tabs [items]="pillTabItems" [(activeValue)]="activeFilter" />
 
                     <p-table
                         [value]="filteredDocuments()"
@@ -288,7 +276,7 @@ interface Document {
                                     <div class="text-surface-900 dark:text-surface-0 text-base font-medium mb-1">
                                         {{ editForm.fileName || 'Click to upload file' }}
                                     </div>
-                                    <div class="text-surface-500 dark:text-surface-400 text-sm">
+                                    <div class="text-surface-600 dark:text-surface-300 text-sm">
                                         {{ editForm.type ? editForm.type + ' - ' + (editForm.fileSize || '') : 'Select a file to upload' }}
                                     </div>
                                 </div>
@@ -312,9 +300,9 @@ interface Document {
 
                             @if (!isAddMode || editForm.fileName) {
                                 <div class="bg-surface-50 dark:bg-surface-800 rounded-xl p-4 border border-surface-200 dark:border-surface-600">
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Type</label>
+                                            <label class="text-surface-600 dark:text-surface-300 text-xs font-medium uppercase tracking-wide">Type</label>
                                             @if (editForm.type) {
                                                 <p-tag [value]="editForm.type" [severity]="getTagSeverity(editForm.type)" styleClass="px-2 py-1 text-xs w-fit" />
                                             } @else {
@@ -323,23 +311,23 @@ interface Document {
                                         </div>
 
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">File Size</label>
+                                            <label class="text-surface-600 dark:text-surface-300 text-xs font-medium uppercase tracking-wide">File Size</label>
                                             <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.fileSize || '&nbsp;' }}</span>
                                         </div>
 
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Dimensions</label>
+                                            <label class="text-surface-600 dark:text-surface-300 text-xs font-medium uppercase tracking-wide">Dimensions</label>
                                             <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.size || '&nbsp;' }}</span>
                                         </div>
 
                                         <div class="flex flex-col gap-1 min-h-[44px]">
-                                            <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Uploaded</label>
+                                            <label class="text-surface-600 dark:text-surface-300 text-xs font-medium uppercase tracking-wide">Uploaded</label>
                                             <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.uploadDate || '&nbsp;' }}</span>
                                         </div>
                                     </div>
 
                                     <div class="flex flex-col gap-1 mt-3 pt-3 border-t border-surface-200 dark:border-surface-600 min-h-[44px]">
-                                        <label class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase tracking-wide">Last Modified</label>
+                                        <label class="text-surface-600 dark:text-surface-300 text-xs font-medium uppercase tracking-wide">Last Modified</label>
                                         <span class="text-surface-700 dark:text-surface-300 text-sm font-medium">{{ editForm.editDate || '&nbsp;' }}</span>
                                     </div>
                                 </div>
@@ -358,7 +346,7 @@ interface Document {
                                                 <p-menu #commentMenu [model]="createCommentMenuItems(comment.id)" [popup]="true" styleClass="w-48!" />
                                             </div>
                                             <p class="text-surface-600 dark:text-surface-300 text-sm mb-2">{{ comment.content }}</p>
-                                            <span class="text-surface-500 dark:text-surface-400 text-sm">{{ comment.time }}</span>
+                                            <span class="text-surface-600 dark:text-surface-300 text-sm">{{ comment.time }}</span>
                                         </div>
                                     }
                                 </div>
@@ -406,6 +394,8 @@ export class Files {
     activeFilter = signal<string>('All Files');
 
     filterOptions = ['All Files', 'Recently Uploaded', 'Large Files', 'Uploaded by Me'];
+
+    pillTabItems: PillTabItem[] = this.filterOptions.map(f => ({ value: f, label: f }));
 
     showEditDrawer = false;
     editingItem: Document | null = null;

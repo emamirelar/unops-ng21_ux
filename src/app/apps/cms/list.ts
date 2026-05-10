@@ -1,4 +1,6 @@
 import { NgClass } from '@angular/common';
+import { DividerModule } from 'primeng/divider';
+import { AvatarModule } from 'primeng/avatar';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 
 interface Author {
@@ -28,7 +30,7 @@ interface BlogPost {
 
 @Component({
     selector: 'app-list',
-    imports: [NgClass],
+    imports: [NgClass, DividerModule, AvatarModule],
     template: `
         <div class="p-4 md:p-6 card animate-fade-in-up">
             <div class="relative w-full h-80 md:h-96 lg:h-[525px] rounded-2xl md:rounded-3xl overflow-hidden" (mouseenter)="stopAutoSlide()" (mouseleave)="startAutoSlide()">
@@ -52,9 +54,7 @@ interface BlogPost {
                     </div>
 
                     <div class="flex items-center gap-2 md:gap-3">
-                        <div class="h-10 w-10 rounded-full border border-white/70 flex items-center justify-center overflow-hidden">
-                            <img [src]="slides[currentSlide()].author.avatar" [alt]="slides[currentSlide()].author.name" class="w-8 h-8 rounded-full object-cover" />
-                        </div>
+                        <p-avatar [image]="slides[currentSlide()].author.avatar" shape="circle" styleClass="w-10 h-10 border border-white/70" />
                         <div class="flex flex-col pr-12">
                             <div class="text-surface-0 dark:text-surface-0 text-lg font-medium leading-relaxed">
                                 {{ slides[currentSlide()].author.name }}
@@ -85,7 +85,7 @@ interface BlogPost {
                         @for (post of blogPosts[0]; track post.id; let index = $index; let last = $last) {
                             <div class="flex flex-col gap-4">
                                 <div class="flex flex-col gap-2">
-                                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
+                                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">
                                         <span class="uppercase">{{ post.category }}</span> -
                                         <span class="uppercase">{{ post.date }}</span>
                                     </div>
@@ -98,7 +98,7 @@ interface BlogPost {
                                         {{ post.title }}
                                     </h4>
                                 </div>
-                                <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
+                                <p class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">
                                     {{ post.description }}
                                 </p>
                                 <div class="flex items-center gap-2">
@@ -110,7 +110,7 @@ interface BlogPost {
                             </div>
 
                             @if (!last) {
-                                <div class="w-full h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                                <p-divider type="dashed" />
                             }
                         }
                     </div>
@@ -121,7 +121,7 @@ interface BlogPost {
                         @for (post of blogPosts[1]; track post.id; let index = $index; let last = $last) {
                             <div class="flex flex-col gap-6">
                                 <div class="flex flex-col gap-2">
-                                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
+                                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">
                                         <span class="uppercase">{{ post.category }}</span> -
                                         <span class="uppercase">{{ post.date }}</span>
                                     </div>
@@ -134,7 +134,7 @@ interface BlogPost {
                                         <img [src]="post.image" [alt]="post.title" class="w-full h-full object-cover" />
                                     </div>
                                 }
-                                <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
+                                <p class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">
                                     {{ post.description }}
                                 </p>
                                 <div class="flex items-center gap-2">
@@ -146,7 +146,7 @@ interface BlogPost {
                             </div>
 
                             @if (!last) {
-                                <div class="w-full h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                                <p-divider type="dashed" />
                             }
                         }
                     </div>
@@ -157,7 +157,7 @@ interface BlogPost {
                         @for (post of blogPosts[2]; track post.id; let index = $index; let last = $last) {
                             <div class="flex flex-col gap-4">
                                 <div class="flex flex-col gap-2">
-                                    <div class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
+                                    <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">
                                         <span class="uppercase">{{ post.category }}</span> -
                                         <span class="uppercase">{{ post.date }}</span>
                                     </div>
@@ -170,7 +170,7 @@ interface BlogPost {
                                         {{ post.title }}
                                     </h4>
                                 </div>
-                                <p class="text-surface-500 dark:text-surface-400 text-base font-normal leading-normal">
+                                <p class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">
                                     {{ post.description }}
                                 </p>
                                 <div class="flex items-center gap-2">
@@ -182,7 +182,7 @@ interface BlogPost {
                             </div>
 
                             @if (!last) {
-                                <div class="w-full h-0 border-t border-dashed border-surface-200 dark:border-surface-700"></div>
+                                <p-divider type="dashed" />
                             }
                         }
                     </div>

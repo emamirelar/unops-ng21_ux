@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
 
 interface OrderItem {
     id: number;
@@ -29,7 +30,7 @@ interface ShippingAddress {
 
 @Component({
     selector: 'app-order-summary',
-    imports: [ButtonModule],
+    imports: [ButtonModule, DividerModule],
     template: `
         <div class="bg-surface-0 dark:bg-surface-900 relative card">
             <div class="bg-emerald-50 dark:bg-emerald-900/20 border-b border-surface-200 dark:border-surface-700">
@@ -63,12 +64,12 @@ interface ShippingAddress {
                                     <div class="flex-1 flex flex-col justify-between">
                                         <div>
                                             <h4 class="title-h4 text-left! mb-1">{{ item.name }}</h4>
-                                            <p class="text-surface-500 dark:text-surface-400 text-sm">{{ item.description }}</p>
+                                            <p class="text-surface-600 dark:text-surface-300 text-sm">{{ item.description }}</p>
                                         </div>
 
                                         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2">
                                             <div class="text-primary-600 dark:text-primary-400 text-xl sm:text-2xl font-medium">\${{ item.price.toFixed(2) }}</div>
-                                            <div class="flex items-center gap-2 text-surface-500 dark:text-surface-400 text-xs sm:text-sm">
+                                            <div class="flex items-center gap-2 text-surface-600 dark:text-surface-300 text-sm">
                                                 <i class="pi pi-calendar text-sm"></i>
                                                 <span>Estimated {{ item.estimatedDelivery }}</span>
                                             </div>
@@ -261,43 +262,43 @@ interface ShippingAddress {
 
                                     <div class="flex-1 flex flex-col gap-0.5">
                                         <div class="text-surface-900 dark:text-surface-100 text-base font-medium">{{ paymentMethod.cardNumber }}</div>
-                                        <div class="text-surface-500 dark:text-surface-400 text-base">Mastercard</div>
+                                        <div class="text-surface-600 dark:text-surface-300 text-base">Mastercard</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="w-full border-t border-surface-200 dark:border-surface-600"></div>
+                            <p-divider />
 
                             <div class="space-y-3">
                                 <h4 class="text-surface-700 dark:text-surface-100 text-sm font-medium">Delivery Address</h4>
                                 <div class="text-surface-600 dark:text-surface-300 text-sm space-y-1">
                                     <p>{{ shippingAddress.street }} {{ shippingAddress.city }}, {{ shippingAddress.state }} {{ shippingAddress.zip }} {{ shippingAddress.country }}</p>
-                                    <p class="text-surface-500 dark:text-surface-400 mt-2">{{ shippingAddress.name }} {{ shippingAddress.phone }}</p>
+                                    <p class="text-surface-600 dark:text-surface-300 mt-2">{{ shippingAddress.name }} {{ shippingAddress.phone }}</p>
                                 </div>
                             </div>
 
-                            <div class="w-full border-t border-surface-200 dark:border-surface-600"></div>
+                            <p-divider />
 
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-surface-500 dark:text-surface-400 text-sm">Shipping</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-sm">Shipping</span>
                                     <div class="flex items-center gap-2">
                                         <span class="text-emerald-500 font-medium text-sm">Free</span>
-                                        <span class="text-surface-500 dark:text-surface-400 text-sm line-through">\${{ shipping.toFixed(2) }}</span>
+                                        <span class="text-surface-600 dark:text-surface-300 text-sm line-through">\${{ shipping.toFixed(2) }}</span>
                                     </div>
                                 </div>
 
                                 <div class="flex justify-between items-center">
-                                    <span class="text-surface-500 dark:text-surface-400 text-sm">Discount</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-sm">Discount</span>
                                     <span class="text-surface-900 dark:text-surface-100 text-sm font-medium">\${{ discount.toFixed(2) }}</span>
                                 </div>
 
                                 <div class="flex justify-between items-center">
-                                    <span class="text-surface-500 dark:text-surface-400 text-sm">VAT</span>
+                                    <span class="text-surface-600 dark:text-surface-300 text-sm">VAT</span>
                                     <span class="text-surface-900 dark:text-surface-100 text-sm font-medium">\${{ vat.toFixed(2) }}</span>
                                 </div>
 
-                                <div class="w-full border-t border-surface-200 dark:border-surface-600 my-3"></div>
+                                <p-divider styleClass="my-3" />
 
                                 <div class="flex justify-between items-center">
                                     <span class="text-surface-700 dark:text-surface-100 text-sm font-medium">Total</span>

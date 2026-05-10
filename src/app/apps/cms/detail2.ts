@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
+import { AvatarModule } from 'primeng/avatar';
 
 interface Section {
     id: string;
@@ -10,7 +11,7 @@ interface Section {
 
 @Component({
     selector: 'app-detail2',
-    imports: [NgClass, ButtonModule, TagModule],
+    imports: [NgClass, ButtonModule, TagModule, AvatarModule],
     template: `
         <div class="p-6 card h-[calc(100vh-9rem)] flex flex-col overflow-hidden animate-fade-in-up">
             <div #scrollContainer class="grid grid-cols-12 gap-6 xl:gap-11 overflow-y-auto flex-1">
@@ -19,19 +20,19 @@ interface Section {
                         <div class="flex flex-col gap-2">
                             <div class="flex items-center gap-2">
                                 <p-tag value="INDUSTRIAL ECONOMICS" severity="secondary" styleClass="!font-normal !leading-normal" />
-                                <div class="text-surface-500 dark:text-surface-400 text-base">Newest Blog • 6 Min</div>
+                                <div class="text-surface-600 dark:text-surface-300 text-base">Newest Blog • 6 Min</div>
                             </div>
                             <h1 id="manufacturing-giants" class="text-surface-900 dark:text-surface-0 text-4xl font-medium leading-tight break-words">How Manufacturing Giants Drive Economic Growth</h1>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="flex items-center gap-2">
-                                <img src="demo/images/cms/avatars/avatar-dianne.jpg" alt="Dianne Russell" class="w-6 h-6 rounded-full border border-surface-200 dark:border-surface-700" />
-                                <div class="text-surface-500 dark:text-surface-400 text-base">Dianne Russell</div>
+                                <p-avatar image="demo/images/cms/avatars/avatar-dianne.jpg" shape="circle" styleClass="w-6 h-6 border border-surface-200 dark:border-surface-700" />
+                                <div class="text-surface-600 dark:text-surface-300 text-base">Dianne Russell</div>
                             </div>
                             <div class="w-px h-3 bg-surface-200 dark:bg-surface-700"></div>
-                            <div class="text-surface-500 dark:text-surface-400 text-base">15.09.2025</div>
+                            <div class="text-surface-600 dark:text-surface-300 text-base">15.09.2025</div>
                             <div class="w-px h-3 bg-surface-200 dark:bg-surface-700"></div>
-                            <div class="text-surface-500 dark:text-surface-400 text-base">6 minute read</div>
+                            <div class="text-surface-600 dark:text-surface-300 text-base">6 minute read</div>
                         </div>
                         <div class="h-96 relative rounded-3xl overflow-hidden">
                             <img src="demo/images/cms/cms-hero-1.jpg" alt="How Manufacturing Giants Drive Economic Growth" class="w-full h-full object-cover" />
@@ -161,14 +162,12 @@ interface Section {
                         </div>
 
                         <div class="flex items-start gap-3">
-                            <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                <img src="demo/images/cms/avatars/avatar-dianne.jpg" alt="Dianne Russell" class="w-8 h-8 rounded-full" />
-                            </div>
+                            <p-avatar image="demo/images/cms/avatars/avatar-dianne.jpg" shape="circle" styleClass="w-10 h-10 border border-surface-200 dark:border-surface-700" />
                             <div class="flex-1 flex flex-col gap-3">
                                 <div class="flex justify-between items-center">
                                     <div class="flex flex-col">
                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Dianne Russell</div>
-                                        <div class="text-surface-500 dark:text-surface-400 text-sm">Industrial Economics • 6 min read</div>
+                                        <div class="text-surface-600 dark:text-surface-300 text-sm">Industrial Economics • 6 min read</div>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <p-button icon="pi pi-youtube" severity="secondary" [rounded]="true" />
@@ -190,19 +189,17 @@ interface Section {
                                     <div class="flex flex-col md:flex-row gap-6 md:gap-8">
                                         <img src="demo/images/cms/cms-list-8.jpg" alt="Maritime Trade Finance" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl md:self-stretch" />
                                         <div class="flex-1 flex flex-col gap-3">
-                                            <div class="text-surface-500 dark:text-surface-400 text-base">Jan 15, 2025 • 4 min read</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base">Jan 15, 2025 • 4 min read</div>
                                             <div class="flex flex-col gap-4">
                                                 <h4 class="title-h4 text-left!">Maritime Trade Finance: Navigating Global Commerce</h4>
                                                 <p class="text-surface-500 dark:text-surface-300 text-base leading-normal">
                                                     Discover how shipping infrastructure investments drive international trade, create economic opportunities, and establish vital supply chain connections.
                                                 </p>
                                                 <div class="flex items-center gap-3">
-                                                    <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                                        <img src="demo/images/cms/avatars/avatar-sophia.jpg" alt="Sophia Bennett" class="w-8 h-8 rounded-full" />
-                                                    </div>
+                                                    <p-avatar image="demo/images/cms/avatars/avatar-sophia.jpg" shape="circle" styleClass="w-10 h-10 border border-surface-200 dark:border-surface-700" />
                                                     <div class="flex flex-col">
                                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Sophia Bennett</div>
-                                                        <div class="text-surface-500 dark:text-surface-400 text-sm">Trade Finance Specialist</div>
+                                                        <div class="text-surface-600 dark:text-surface-300 text-sm">Trade Finance Specialist</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -212,17 +209,15 @@ interface Section {
                                     <div class="flex flex-col md:flex-row gap-6 md:gap-8">
                                         <img src="demo/images/cms/cms-list-3.jpg" alt="Transportation Infrastructure Investment" class="w-full max-w-full md:w-72 h-48 md:h-full object-cover rounded-2xl" />
                                         <div class="flex-1 flex flex-col gap-3">
-                                            <div class="text-surface-500 dark:text-surface-400 text-base">Jan 19, 2025 • 5 min read</div>
+                                            <div class="text-surface-600 dark:text-surface-300 text-base">Jan 19, 2025 • 5 min read</div>
                                             <div class="flex flex-col gap-4">
                                                 <h4 class="title-h4 text-left!">Rail Infrastructure: The Backbone of Economic Growth</h4>
                                                 <p class="text-surface-500 dark:text-surface-300 text-base leading-normal">Strategic rail investments connect markets, reduce logistics costs, and unlock regional development opportunities.</p>
                                                 <div class="flex items-center gap-3">
-                                                    <div class="p-1 rounded-full border border-surface-200 dark:border-surface-700">
-                                                        <img src="demo/images/cms/avatars/avatar-ethan.jpg" alt="Ethan Clarke" class="w-8 h-8 rounded-full" />
-                                                    </div>
+                                                    <p-avatar image="demo/images/cms/avatars/avatar-ethan.jpg" shape="circle" styleClass="w-10 h-10 border border-surface-200 dark:border-surface-700" />
                                                     <div class="flex flex-col">
                                                         <div class="text-surface-900 dark:text-surface-0 text-lg font-medium">Ethan Clarke</div>
-                                                        <div class="text-surface-500 dark:text-surface-400 text-sm">Infrastructure Investment Analyst</div>
+                                                        <div class="text-surface-600 dark:text-surface-300 text-sm">Infrastructure Investment Analyst</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -240,7 +235,7 @@ interface Section {
                                 <div class="flex items-center justify-center w-8 h-8 rounded-full border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-900 relative z-10 shrink-0">
                                     <i class="pi pi-list text-surface-900 dark:text-surface-0 text-xs"></i>
                                 </div>
-                                <div class="text-surface-500 dark:text-surface-400 text-base">On this page</div>
+                                <div class="text-surface-600 dark:text-surface-300 text-base">On this page</div>
                             </div>
 
                             <div class="space-y-0 relative">
@@ -257,7 +252,7 @@ interface Section {
                                     <div
                                         (click)="scrollToSection(section.id)"
                                         class="flex items-center gap-5 h-11 cursor-pointer hover:text-surface-900 dark:hover:text-surface-0 transition-colors relative"
-                                        [ngClass]="activeSection() === section.id ? 'text-surface-900 dark:text-surface-0' : 'text-surface-500 dark:text-surface-400'"
+                                        [ngClass]="activeSection() === section.id ? 'text-surface-900 dark:text-surface-0' : 'text-surface-600 dark:text-surface-300'"
                                     >
                                         <div class="w-8 flex justify-center items-center"></div>
                                         <div class="flex-1 text-base truncate">{{ section.title }}</div>

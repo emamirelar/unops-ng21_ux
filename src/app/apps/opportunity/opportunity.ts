@@ -17,7 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskDrawer } from '../tasklist/task-drawer';
 import { DocumentsCard, DocumentItem } from '../documents';
-import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective } from '@unopsitg/ux';
+import { AiInsight, AiInsightsCardComponent, DetailFooterComponent, DetailLayoutComponent, DetailTabDirective, PillTabsComponent } from '@unopsitg/ux';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
 
@@ -155,8 +155,10 @@ interface TeamMember {
         TaskDrawer,
         DocumentsCard,
         AiInsightsCardComponent,
+        DetailFooterComponent,
         DetailLayoutComponent,
         DetailTabDirective,
+        PillTabsComponent,
         TooltipModule,
         ProgressBarModule
     ],
@@ -173,14 +175,11 @@ interface TeamMember {
                             <p-tag value="ID &amp; Profile" severity="info" styleClass="!bg-blue-50 dark:!bg-blue-900/30" />
                             <p-tag value="Active" severity="success" />
                         </div>
+                        <span class="text-sm text-surface-600 dark:text-surface-300">OPP-2026-00142</span>
                     </div>
                 </div>
             </div>
-            <div ux-detail-header-meta class="flex flex-wrap items-center gap-4 text-sm text-primary-700 dark:text-primary-700 pt-2 pb-6">
-                <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
-                <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> Target signing: Apr 1, 2026</span>
-                <span class="flex items-center gap-1"><i class="pi pi-hashtag text-xs"></i> OPP-2026-00142</span>
-            </div>
+            <div ux-detail-header-meta></div>
 
             <!-- ═══ OVERVIEW TAB ═══ -->
             <ng-template uxDetailTab="overview">
@@ -189,43 +188,45 @@ interface TeamMember {
                 <!-- OVERVIEW SECTION -->
                 <!-- ═══════════════════════════════════════════════ -->
                 <div id="section-overview">
-                            <div class="flex flex-col gap-5 p-2">
+                            <div class="flex flex-col gap-5">
                                 <div class="flex flex-col gap-1">
                                     <p class="text-sm text-surface-700 dark:text-surface-100 leading-relaxed m-0">
                                         This opportunity focuses on providing sustainable water sanitization solutions to underserved communities in East Africa and Southeast Asia. The programme will deploy modern filtration infrastructure, train local operators, and establish long-term maintenance frameworks to ensure clean water access for over 2.5 million beneficiaries across three implementation countries.
                                     </p>
                                 </div>
-                                <div class="flex flex-wrap gap-4">
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Proposed Budget</span>
-                                        <span class="text-lg font-bold text-surface-900 dark:text-surface-0">$15,000,000</span>
+                                <div class="grid grid-cols-2 xl:grid-cols-3 gap-3">
+                                    <div class="card flex flex-col gap-0.5 text-xs sm:hidden">
+                                        <span class="font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Created</span>
+                                        <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Apr 5, 2026</span>
+                                        <span class="text-surface-600 dark:text-surface-300">by Olivia Martinez</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 min-w-[140px] flex-1">
+                                    <div class="card flex flex-col gap-0.5 text-xs sm:hidden">
+                                        <span class="font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Last modified</span>
+                                        <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Apr 30, 2026</span>
+                                        <span class="text-surface-600 dark:text-surface-300">by James Anderson</span>
+                                    </div>
+                                    <div class="card flex flex-col gap-1 min-w-0">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Proposed Budget</span>
+                                        <span class="text-base sm:text-lg font-bold text-surface-900 dark:text-surface-0 truncate">$15,000,000</span>
+                                    </div>
+                                    <div class="card card-success flex flex-col gap-1 min-w-0">
                                         <span class="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Total Funded</span>
-                                        <span class="text-lg font-bold text-green-700 dark:text-green-300">$15,000,000</span>
+                                        <span class="text-base sm:text-lg font-bold text-green-700 dark:text-green-300 truncate">$15,000,000</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Unfunded</span>
-                                        <span class="text-lg font-bold text-surface-900 dark:text-surface-0">$0</span>
+                                    <div class="card flex flex-col gap-1 min-w-0">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Unfunded</span>
+                                        <span class="text-base sm:text-lg font-bold text-surface-900 dark:text-surface-0 truncate">$0</span>
                                     </div>
-                                </div>
-                            </div>
-                </div>
-
-                <!-- ═══════════════════════════════════════════════ -->
-                <!-- ANALYSIS SECTION -->
-                <!-- ═══════════════════════════════════════════════ -->
-                <div id="section-analysis">
-                            <div class="flex flex-wrap gap-4 p-2">
-                                @for (stat of analysisStats; track stat.label) {
-                                    <div class="flex flex-col items-center gap-1 p-3 rounded-xl border border-surface-200/60 dark:border-surface-700/40 min-w-[100px] flex-1">
-                                        <div class="flex items-center gap-2">
-                                            <i class="pi text-sm" [ngClass]="[stat.icon, stat.iconColor]"></i>
-                                            <span class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{ stat.label }}</span>
+                                    @for (stat of analysisStats; track stat.label) {
+                                        <div class="card flex flex-col gap-1 min-w-0">
+                                            <div class="flex items-center gap-2">
+                                                <i class="pi text-sm" [ngClass]="[stat.icon, stat.iconColor]"></i>
+                                                <span class="text-xs font-medium text-surface-600 dark:text-surface-300 uppercase tracking-wide">{{ stat.label }}</span>
+                                            </div>
+                                            <span class="text-lg sm:text-xl font-bold text-surface-900 dark:text-surface-0">{{ stat.value }}</span>
                                         </div>
-                                        <span class="text-xl font-bold text-surface-900 dark:text-surface-0">{{ stat.value }}</span>
-                                    </div>
-                                }
+                                    }
+                                </div>
                             </div>
                 </div>
 
@@ -234,67 +235,39 @@ interface TeamMember {
             <!-- ═══ SCOPE TAB ═══ -->
             <ng-template uxDetailTab="scope">
 
-                <!-- Sub-tab pills -->
-                <div class="flex gap-2 mb-4">
-                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
-                        [class]="activeScopeSub() === 'what'
-                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
-                        (click)="activeScopeSub.set('what')">
-                        What
-                    </button>
-                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
-                        [class]="activeScopeSub() === 'when'
-                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
-                        (click)="activeScopeSub.set('when')">
-                        When
-                    </button>
-                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
-                        [class]="activeScopeSub() === 'where'
-                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
-                        (click)="activeScopeSub.set('where')">
-                        Where
-                    </button>
-                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
-                        [class]="activeScopeSub() === 'impact'
-                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
-                        (click)="activeScopeSub.set('impact')">
-                        Why
-                    </button>
-                </div>
+                <ux-pill-tabs [items]="scopeSubTabs" [(activeValue)]="activeScopeSub" />
 
                 <!-- WHAT - PRODUCTS & SERVICES -->
                 @if (activeScopeSub() === 'what') {
                 <div id="section-what">
                             <div class="flex flex-col gap-5 p-2">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Proposed Initiative Type</span>
-                                    <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Grant Support</span>
-                                </div>
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Delivery Modality</span>
-                                    <div class="flex items-center gap-2">
-                                        <p-tag value="Mixed (Direct + Grant Support)" severity="info" />
+                                <div class="flex flex-col lg:flex-row lg:gap-10 gap-5">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Proposed Initiative Type</span>
+                                        <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Grant Support</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Delivery Modality</span>
+                                        <div class="flex items-center gap-2">
+                                            <p-tag value="Mixed (Direct + Grant Support)" severity="info" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Deliverables</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Deliverables</span>
                                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                                         @for (deliverable of deliverables; track deliverable.id) {
-                                            <div class="flex flex-col gap-2 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
+                                            <div class="card flex flex-col gap-2">
                                                 <div class="flex-1 min-w-0">
                                                     <div class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ deliverable.name }}</div>
-                                                    <div class="text-xs text-surface-500 dark:text-surface-400 mt-0.5">{{ deliverable.hierarchy }}</div>
+                                                    <div class="text-sm text-surface-600 dark:text-surface-300 mt-0.5">{{ deliverable.hierarchy }}</div>
                                                 </div>
                                                 <div class="flex items-center gap-2 flex-wrap">
                                                     <p-tag [value]="deliverable.serviceLine" severity="secondary" styleClass="text-xs" />
                                                     @if (deliverable.requiresProcurement) {
                                                         <p-tag value="Procurement" severity="warn" styleClass="text-xs" />
                                                     }
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400 ml-auto">Qty: {{ deliverable.quantity }}</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300 ml-auto">Qty: {{ deliverable.quantity }}</span>
                                                 </div>
                                             </div>
                                         }
@@ -308,48 +281,48 @@ interface TeamMember {
                 @if (activeScopeSub() === 'when') {
                 <div id="section-when">
                             <div class="flex flex-col gap-5 p-2">
-                                <div class="flex flex-wrap gap-4">
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Submission Deadline</span>
+                                <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">
+                                    <div class="card flex flex-col gap-1 sm:min-w-[140px] sm:flex-1">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Submission Deadline</span>
                                         <span class="text-base font-bold text-surface-900 dark:text-surface-0">Mar 15, 2026</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Duration</span>
+                                    <div class="card flex flex-col gap-1 sm:min-w-[140px] sm:flex-1">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Implementation Duration</span>
                                         <span class="text-base font-bold text-surface-900 dark:text-surface-0">24 months</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Target Delivery</span>
+                                    <div class="card flex flex-col gap-1 sm:min-w-[140px] sm:flex-1">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Target Delivery</span>
                                         <span class="text-base font-bold text-surface-900 dark:text-surface-0">May 1, 2028</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Start</span>
+                                    <div class="card flex flex-col gap-1 sm:min-w-[140px] sm:flex-1">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Implementation Start</span>
                                         <span class="text-base font-bold text-surface-900 dark:text-surface-0">May 1, 2026</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[140px] flex-1">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Target Signing</span>
+                                    <div class="card flex flex-col gap-1 sm:min-w-[140px] sm:flex-1">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Target Signing</span>
                                         <span class="text-base font-bold text-surface-900 dark:text-surface-0">Apr 1, 2026</span>
                                         <p-tag value="Firm Deadline" severity="warn" styleClass="text-xs w-fit mt-1" />
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Signing Date Notes</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Signing Date Notes</span>
                                     <p class="text-sm text-surface-700 dark:text-surface-100 m-0">Signing is contingent on completion of due diligence for all partners and final approval from the regional director.</p>
                                 </div>
                                 <!-- Timeline -->
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Key Milestones</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Key Milestones</span>
                                     <!-- Phase bar -->
                                     <div class="flex rounded-lg overflow-hidden h-3">
                                         <div class="bg-blue-400 dark:bg-blue-600" style="width: 15%;" pTooltip="Development: ~110 days" tooltipPosition="top"></div>
                                         <div class="bg-green-400 dark:bg-green-600" style="width: 85%;" pTooltip="Implementation: ~730 days" tooltipPosition="top"></div>
                                     </div>
-                                    <div class="flex justify-between text-xs text-surface-500 dark:text-surface-400">
+                                    <div class="flex justify-between text-sm text-surface-600 dark:text-surface-300">
                                         <span>Development</span>
                                         <span>Implementation</span>
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-3 mt-2">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Timeline</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Timeline</span>
                                     <div class="relative pl-6 mt-2">
                                         <div class="absolute left-[11px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
                                         @for (event of timelineEvents; track event.id; let last = $last) {
@@ -362,7 +335,7 @@ interface TeamMember {
                                                         <i class="pi text-xs" [ngClass]="event.icon"></i>
                                                         <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ event.label }}</span>
                                                     </div>
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">{{ event.date }}</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300">{{ event.date }}</span>
                                                 </div>
                                             </div>
                                         }
@@ -376,15 +349,15 @@ interface TeamMember {
                 @if (activeScopeSub() === 'where') {
                 <div id="section-where">
                             <div class="flex flex-col gap-4 p-2">
-                                <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Implementation Countries</span>
-                                <div class="flex flex-wrap gap-3">
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Implementation Countries</span>
+                                <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3">
                                     @for (country of countries; track country.id) {
-                                        <div class="p-4 rounded-xl border border-surface-100 dark:border-surface-700 flex flex-col gap-3 min-w-[220px] flex-1">
+                                        <div class="card flex flex-col gap-3 sm:min-w-[220px] sm:flex-1">
                                             <div class="flex items-center gap-3">
                                                 <span class="flag rounded-sm" [ngClass]="'flag-' + country.isoCode.toLowerCase()"></span>
                                                 <div class="flex flex-col min-w-0">
                                                     <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ country.name }}</span>
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">{{ country.continent }} · {{ country.region }}</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300">{{ country.continent }} · {{ country.region }}</span>
                                                 </div>
                                             </div>
                                             <div class="flex flex-wrap gap-1.5">
@@ -396,13 +369,13 @@ interface TeamMember {
                                                 }
                                             </div>
                                             <div class="pt-2 border-t border-surface-200 dark:border-surface-700">
-                                                <span class="text-xs text-surface-500 dark:text-surface-400">Org Unit: </span>
+                                                <span class="text-sm text-surface-600 dark:text-surface-300">Org Unit: </span>
                                                 <span class="text-xs text-surface-700 dark:text-surface-100">{{ country.orgUnit }}</span>
                                             </div>
                                         </div>
                                     }
                                 </div>
-                                <div class="flex flex-wrap gap-4 text-xs text-surface-500 dark:text-surface-400 pt-2 border-t border-surface-200 dark:border-surface-700">
+                                <div class="flex flex-wrap gap-4 text-sm text-surface-600 dark:text-surface-300 pt-2 border-t border-surface-200 dark:border-surface-700">
                                     <span><strong>HCA</strong> = Humanitarian, Conflict, and post-conflict Areas</span>
                                     <span><strong>SIDS</strong> = Small Island Developing States</span>
                                     <span><strong>UNSDCF</strong> = UN Sustainable Development Cooperation Framework</span>
@@ -417,7 +390,7 @@ interface TeamMember {
                             <div class="flex flex-col gap-6 p-2">
                                 <!-- Context & Challenges -->
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Context &amp; Challenges</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Context &amp; Challenges</span>
                                     <p class="text-sm text-surface-700 dark:text-surface-100 leading-relaxed m-0">
                                         An estimated 2.2 billion people worldwide lack safely managed drinking water. In the targeted regions of Kenya, Bangladesh, and Cambodia, contaminated water sources are a leading cause of waterborne diseases, particularly among children under five. Existing infrastructure is aging and unable to meet the growing demand driven by urbanisation and climate change.
                                     </p>
@@ -425,13 +398,13 @@ interface TeamMember {
 
                                 <!-- Objectives -->
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Partner Objectives &amp; Results</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Partner Objectives &amp; Results</span>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="flex flex-col gap-1 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
+                                        <div class="card card-info flex flex-col gap-1">
                                             <span class="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wide">Impact</span>
                                             <p class="text-sm text-surface-700 dark:text-surface-100 m-0">Improved health outcomes and reduced waterborne disease mortality in targeted communities by 40% within 3 years of implementation.</p>
                                         </div>
-                                        <div class="flex flex-col gap-1 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
+                                        <div class="card card-info flex flex-col gap-1">
                                             <span class="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wide">Outcomes</span>
                                             <p class="text-sm text-surface-700 dark:text-surface-100 m-0">Sustainable access to clean water for 2.5M beneficiaries; 150 local operators trained; 45 filtration facilities operational.</p>
                                         </div>
@@ -440,10 +413,10 @@ interface TeamMember {
 
                                 <!-- Cross-cutting Concerns -->
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Cross-cutting Concerns</span>
-                                    <div class="flex flex-wrap gap-2">
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Cross-cutting Concerns</span>
+                                    <div class="flex flex-col sm:flex-row sm:flex-wrap gap-2">
                                         @for (concern of crossCuttingConcerns; track concern.label) {
-                                            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 min-w-[150px] flex-1">
+                                            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-400 dark:border-surface-700 sm:min-w-[150px] sm:flex-1">
                                                 <i class="pi text-sm" [ngClass]="concern.value ? 'pi-check-circle text-green-500' : 'pi-times-circle text-surface-400'"></i>
                                                 <span class="text-sm text-surface-700 dark:text-surface-100">{{ concern.label }}</span>
                                             </div>
@@ -453,10 +426,10 @@ interface TeamMember {
 
                                 <!-- SDG Alignment -->
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">SDG Alignment</span>
-                                    <div class="flex flex-wrap gap-3">
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">SDG Alignment</span>
+                                    <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3">
                                         @for (sdg of sdgAlignments; track sdg.number) {
-                                            <div class="relative p-4 rounded-xl border border-surface-100 dark:border-surface-700 min-w-[220px] flex-1" [class]="sdg.isPrimary ? 'bg-primary-50/50 dark:bg-primary-900/10' : 'bg-surface-50 dark:bg-surface-800'">
+                                            <div class="relative p-4 rounded-xl border border-surface-400 dark:border-surface-700 sm:min-w-[220px] sm:flex-1" [class]="sdg.isPrimary ? 'bg-primary-50/50 dark:bg-primary-900/10' : 'bg-surface-50 dark:bg-surface-800'">
                                                 <div class="absolute top-3 right-3">
                                                     <p-tag [value]="sdg.isPrimary ? 'Primary' : 'Secondary'" [severity]="sdg.isPrimary ? 'info' : 'secondary'" styleClass="text-xs" />
                                                 </div>
@@ -467,7 +440,7 @@ interface TeamMember {
                                                 @if (sdg.targets.length > 0) {
                                                     <div class="flex flex-wrap gap-2">
                                                         @for (target of sdg.targets; track target) {
-                                                            <span class="px-2 py-0.5 rounded-md bg-white dark:bg-surface-700 border border-surface-200 dark:border-surface-600 text-xs text-surface-600 dark:text-surface-0">{{ target }}</span>
+                                                            <p-tag [value]="target" severity="primary" styleClass="text-xs" />
                                                         }
                                                     </div>
                                                 }
@@ -484,30 +457,7 @@ interface TeamMember {
             <!-- ═══ STAKEHOLDERS TAB ═══ -->
             <ng-template uxDetailTab="stakeholders">
 
-                <!-- Sub-tab pills -->
-                <div class="flex gap-2 mb-4">
-                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
-                        [class]="activeStakeholderSub() === 'partners'
-                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
-                        (click)="activeStakeholderSub.set('partners')">
-                        Partners
-                    </button>
-                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
-                        [class]="activeStakeholderSub() === 'team'
-                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
-                        (click)="activeStakeholderSub.set('team')">
-                        Team
-                    </button>
-                    <button class="px-3.5 py-1.5 rounded-full text-sm font-semibold border cursor-pointer transition-all"
-                        [class]="activeStakeholderSub() === 'beneficiaries'
-                            ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                            : 'bg-surface-0 dark:bg-surface-800 text-surface-500 dark:text-surface-300 border-surface-200 dark:border-surface-700'"
-                        (click)="activeStakeholderSub.set('beneficiaries')">
-                        Beneficiaries
-                    </button>
-                </div>
+                <ux-pill-tabs [items]="stakeholderSubTabs" [(activeValue)]="activeStakeholderSub" />
 
                 <!-- PARTNERS (WHO) -->
                 @if (activeStakeholderSub() === 'partners') {
@@ -515,9 +465,9 @@ interface TeamMember {
                             <div class="flex flex-col gap-5 p-2">
                                 <!-- Funding Partners -->
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Funding Partners</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Funding Partners</span>
                                     @for (partner of fundingPartners; track partner.id) {
-                                        <div class="p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-primary-500 dark:border-primary-400 border-l-4">
+                                        <div class="card">
                                             <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                                                 <div class="flex items-center gap-3 flex-1 min-w-0">
                                                     <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
@@ -525,7 +475,7 @@ interface TeamMember {
                                                     </div>
                                                     <div class="flex flex-col min-w-0">
                                                         <span class="text-sm font-semibold text-primary-600 dark:text-primary-400 cursor-pointer hover:underline">{{ partner.name }}</span>
-                                                        <span class="text-xs text-surface-500 dark:text-surface-400">Funding Partner</span>
+                                                        <span class="text-sm text-surface-600 dark:text-surface-300">Funding Partner</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-center gap-2 flex-shrink-0">
@@ -535,24 +485,24 @@ interface TeamMember {
                                             </div>
                                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3 pt-3 border-t border-surface-200 dark:border-surface-700">
                                                 <div class="flex flex-col gap-0.5">
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">Contribution</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300">Contribution</span>
                                                     <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">\${{ partner.contributionUSD.toLocaleString() }}</span>
                                                 </div>
                                                 <div class="flex flex-col gap-0.5">
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">Due Diligence</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300">Due Diligence</span>
                                                     <div class="flex items-center gap-1">
                                                         <i class="pi pi-check-circle text-xs text-green-500"></i>
                                                         <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceStatus }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col gap-0.5">
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">DD Expiry</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300">DD Expiry</span>
                                                     <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceExpiry }}</span>
                                                 </div>
                                             </div>
                                             @if (partner.agreements.length > 0) {
                                                 <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-surface-200 dark:border-surface-700">
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400 mr-1">Agreements:</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300 mr-1">Agreements:</span>
                                                     @for (agreement of partner.agreements; track agreement) {
                                                         <p-tag [value]="agreement" severity="secondary" styleClass="text-xs" />
                                                     }
@@ -564,17 +514,18 @@ interface TeamMember {
 
                                 <!-- Client Partners -->
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Client Partners</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Client Partners</span>
+                                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
                                     @for (partner of clientPartners; track partner.id) {
-                                        <div class="p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 border-l-4 border-l-teal-500 dark:border-l-teal-400">
+                                        <div class="card card-accent">
                                             <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                                                 <div class="flex items-center gap-3 flex-1 min-w-0">
-                                                    <div class="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                                                    <div class="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center shrink-0">
                                                         <i class="pi pi-building text-teal-600 dark:text-teal-400"></i>
                                                     </div>
                                                     <div class="flex flex-col min-w-0">
-                                                        <span class="text-sm font-semibold text-teal-600 dark:text-teal-400 cursor-pointer hover:underline">{{ partner.name }}</span>
-                                                        <span class="text-xs text-surface-500 dark:text-surface-400">Client Partner</span>
+                                                        <span class="text-sm font-semibold text-teal-600 dark:text-teal-400 cursor-pointer hover:underline truncate">{{ partner.name }}</span>
+                                                        <span class="text-sm text-surface-600 dark:text-surface-300">Client Partner</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-center gap-2 flex-shrink-0">
@@ -583,19 +534,20 @@ interface TeamMember {
                                             </div>
                                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-3 border-t border-surface-200 dark:border-surface-700">
                                                 <div class="flex flex-col gap-0.5">
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">Due Diligence</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300">Due Diligence</span>
                                                     <div class="flex items-center gap-1">
                                                         <i class="pi pi-check-circle text-xs text-green-500"></i>
                                                         <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceStatus }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col gap-0.5">
-                                                    <span class="text-xs text-surface-500 dark:text-surface-400">DD Expiry</span>
+                                                    <span class="text-sm text-surface-600 dark:text-surface-300">DD Expiry</span>
                                                     <span class="text-sm text-surface-700 dark:text-surface-100">{{ partner.dueDiligenceExpiry }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     }
+                                    </div>
                                 </div>
                             </div>
                 </div>
@@ -610,8 +562,8 @@ interface TeamMember {
                                     <div class="xl:col-span-2 flex flex-col gap-6">
                                         <!-- Opportunity Manager -->
                                         <div class="flex flex-col gap-3">
-                                            <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Opportunity Manager</span>
-                                            <div class="p-4 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800">
+                                            <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Opportunity Manager</span>
+                                            <div class="card card-primary">
                                                 <div class="flex items-center gap-3">
                                                     <p-avatar image="demo/images/avatar/amyelsner.png" shape="circle" styleClass="w-10 h-10" />
                                                     <div class="flex flex-col">
@@ -624,10 +576,10 @@ interface TeamMember {
 
                                         <!-- Collaborators -->
                                         <div class="flex flex-col gap-3">
-                                            <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Opportunity Collaborators</span>
+                                            <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Opportunity Collaborators</span>
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
                                                 @for (member of teamMembers; track member.id) {
-                                                    <div class="p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700 flex flex-col gap-2">
+                                                    <div class="card flex flex-col gap-2">
                                                         <div class="flex items-center gap-3">
                                                             <p-avatar [image]="'demo/images/avatar/' + member.image" shape="circle" styleClass="w-9 h-9" />
                                                             <div class="flex items-center gap-2 flex-1 min-w-0">
@@ -635,11 +587,11 @@ interface TeamMember {
                                                                 <p-tag [value]="member.role" severity="secondary" styleClass="text-xs" />
                                                             </div>
                                                         </div>
-                                                        <span class="text-xs text-surface-500 dark:text-surface-400">{{ member.position }}</span>
+                                                        <span class="text-sm text-surface-600 dark:text-surface-300">{{ member.position }}</span>
                                                         @if (member.expertise.length > 0) {
                                                             <div class="flex flex-wrap gap-1.5">
                                                                 @for (skill of member.expertise; track skill) {
-                                                                    <span class="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300 whitespace-nowrap">{{ skill }}</span>
+                                                                    <p-tag [value]="skill" severity="info" styleClass="text-xs whitespace-nowrap" />
                                                                 }
                                                             </div>
                                                         }
@@ -651,8 +603,8 @@ interface TeamMember {
 
                                     <!-- Right: Decision-Making Pathway (1 col) -->
                                     <div class="flex flex-col gap-3">
-                                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Decision-Making Pathway</span>
-                                        <div class="p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
+                                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Decision-Making Pathway</span>
+                                        <div class="card">
                                             <div class="flex flex-col gap-2">
                                                 @for (step of decisionPathway; track step.step; let last = $last) {
                                                     <div class="flex items-start gap-3">
@@ -668,7 +620,7 @@ interface TeamMember {
                                                         </div>
                                                         <div class="flex flex-col flex-1 pb-3" [class.border-b]="!last" [class.border-surface-200]="!last" [class.dark:border-surface-700]="!last">
                                                             <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ step.label }}</span>
-                                                            <span class="text-xs text-surface-500 dark:text-surface-400">{{ step.approver }}</span>
+                                                            <span class="text-sm text-surface-600 dark:text-surface-300">{{ step.approver }}</span>
                                                         </div>
                                                     </div>
                                                 }
@@ -684,16 +636,16 @@ interface TeamMember {
                 @if (activeStakeholderSub() === 'beneficiaries') {
                 <div id="section-beneficiaries">
                             <div class="flex flex-col gap-5 p-2">
-                                <div class="grid grid-cols-3 gap-4">
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                        <span class="text-xs text-surface-500 dark:text-surface-400">Direct</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="card flex flex-col gap-1">
+                                        <span class="text-sm text-surface-600 dark:text-surface-300">Direct</span>
                                         <span class="text-lg font-bold text-surface-900 dark:text-surface-0">850,000</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-100 dark:border-surface-700">
-                                        <span class="text-xs text-surface-500 dark:text-surface-400">Indirect</span>
+                                    <div class="card flex flex-col gap-1">
+                                        <span class="text-sm text-surface-600 dark:text-surface-300">Indirect</span>
                                         <span class="text-lg font-bold text-surface-900 dark:text-surface-0">1,650,000</span>
                                     </div>
-                                    <div class="flex flex-col gap-1 p-3 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800">
+                                    <div class="card card-primary flex flex-col gap-1">
                                         <span class="text-xs text-primary-600 dark:text-primary-400">Total</span>
                                         <span class="text-lg font-bold text-primary-700 dark:text-primary-300">2,500,000</span>
                                     </div>
@@ -714,23 +666,20 @@ interface TeamMember {
                 <!-- RISKS -->
                 <!-- ═══════════════════════════════════════════════ -->
                 <div id="section-risks">
-                            <div class="flex flex-col gap-3 p-2">
+                            <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6">
                                 @for (risk of risks; track risk.id) {
-                                    <div class="p-4 rounded-xl border-l-4"
-                                        [class]="riskCardClass(risk)">
+                                    <div [class]="riskCardClass(risk)">
                                         <div class="flex flex-col gap-2">
-                                            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0 flex-1">{{ risk.title }}</span>
-                                                <div class="flex items-center gap-2 flex-shrink-0 flex-wrap">
-                                                    @if (risk.isOrgHighRisk) {
-                                                        <p-tag value="Org. High Risk" severity="danger" styleClass="text-xs" />
-                                                    }
-                                                    <p-tag [value]="risk.category" severity="secondary" styleClass="text-xs" />
-                                                    <p-tag [value]="risk.probability" [severity]="risk.probability === 'High' ? 'danger' : risk.probability === 'Medium' ? 'warn' : 'secondary'" styleClass="text-xs" />
-                                                </div>
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ risk.title }}</span>
+                                                @if (risk.isOrgHighRisk) {
+                                                    <p-tag value="Org. High Risk" severity="danger" styleClass="text-xs" />
+                                                }
+                                                <p-tag [value]="risk.category" severity="secondary" styleClass="text-xs" />
+                                                <p-tag [value]="risk.probability" [severity]="risk.probability === 'High' ? 'danger' : risk.probability === 'Medium' ? 'warn' : 'secondary'" styleClass="text-xs" />
                                             </div>
                                             <p class="text-sm text-surface-700 dark:text-surface-100 m-0">{{ risk.description }}</p>
-                                            <div class="flex flex-wrap gap-4 text-xs text-surface-500 dark:text-surface-400 pt-2 border-t border-surface-200 dark:border-surface-700">
+                                            <div class="flex flex-wrap gap-4 text-sm text-surface-600 dark:text-surface-300 pt-2 border-t border-surface-200 dark:border-surface-700">
                                                 <span><strong>Impact:</strong> {{ risk.impact }}</span>
                                                 <span><strong>Proximity:</strong> {{ risk.proximity }}</span>
                                                 <span><strong>Response:</strong> {{ risk.responseType }}</span>
@@ -749,7 +698,7 @@ interface TeamMember {
                 <!-- ACTIVITY FEED -->
                 <!-- ═══════════════════════════════════════════════ -->
                 <div id="section-activity" class="card">
-                        <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide px-2 pt-2">Latest Activity</span>
+                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide px-2 pt-2">Latest Activity</span>
                         <div class="pb-3 pt-3 px-2">
                             <div class="relative">
                                 <div class="absolute left-[10px] top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
@@ -795,7 +744,7 @@ interface TeamMember {
                 <!-- ═══════════════════════════════════════════════ -->
                 <div id="section-related" class="card">
                             <div class="flex flex-col gap-3">
-                                <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Source Interactions</span>
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Source Interactions</span>
                                 <p-table
                                     [value]="interactions"
                                     styleClass="flex flex-col rounded-2xl overflow-hidden"
@@ -830,7 +779,7 @@ interface TeamMember {
                             <div class="flex flex-col gap-4">
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">Comments</span>
-                                    <span class="text-xs px-2 py-0.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold">3</span>
+                                    <p-tag [value]="'' + comments.length" styleClass="text-xs font-semibold" />
                                 </div>
                                 @for (comment of comments; track comment.id) {
                                     <div class="flex gap-3">
@@ -838,7 +787,7 @@ interface TeamMember {
                                         <div class="flex flex-col gap-1 flex-1">
                                             <div class="flex items-center gap-2">
                                                 <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ comment.author }}</span>
-                                                <span class="text-xs text-surface-500 dark:text-surface-400">{{ comment.time }}</span>
+                                                <span class="text-sm text-surface-600 dark:text-surface-300">{{ comment.time }}</span>
                                             </div>
                                             <p class="text-sm text-surface-700 dark:text-surface-100 m-0">{{ comment.text }}</p>
                                         </div>
@@ -860,7 +809,7 @@ interface TeamMember {
                 <div id="section-tasks" class="card">
                     <div class="flex flex-col gap-6">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">Tasks</span>
+                            <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Tasks</span>
                             <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600" (onClick)="openNewTaskDrawer()" />
                         </div>
                         <div class="flex flex-wrap gap-2" role="tablist" aria-label="Task filters">
@@ -869,10 +818,8 @@ interface TeamMember {
                                     role="tab"
                                     [attr.aria-selected]="activeTaskFilter() === filter.key"
                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer"
-                                    [class]="activeTaskFilter() === filter.key
-                                        ? 'bg-primary-500 dark:bg-primary-400 text-white dark:text-surface-900 border-primary-500 dark:border-primary-400'
-                                        : filter.inactiveClass"
-                                    (click)="activeTaskFilter.set(filter.key)"
+                                    [ngClass]="activeTaskFilter() === filter.key ? filter.activeClass : filter.inactiveClass"
+                                    (click)="selectTaskFilter(filter.key)"
                                 >
                                     <i class="pi text-xs" [ngClass]="filter.icon.replace('pi ', '')"></i>
                                     {{ filter.label }}
@@ -888,7 +835,7 @@ interface TeamMember {
                             <input pInputText [(ngModel)]="taskSearchQuery" placeholder="Search tasks" class="w-full" />
                         </p-iconfield>
 
-                        <p-accordion [value]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
+                        <p-accordion [(value)]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
                             @if (inProgressTasks().length > 0) {
                                 <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
                                     <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent! hover:bg-yellow-50! dark:hover:bg-yellow-700/20! rounded-lg transition-colors' } }">
@@ -907,7 +854,7 @@ interface TeamMember {
                                 </p-accordionpanel>
                             }
 
-                            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                            <p-divider />
 
                             @if (pendingTasks().length > 0) {
                                 <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
@@ -927,7 +874,7 @@ interface TeamMember {
                                 </p-accordionpanel>
                             }
 
-                            <div class="border-t border-surface-200 dark:border-surface-700"></div>
+                            <p-divider />
 
                             @if (completedTasks().length > 0) {
                                 <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
@@ -952,18 +899,10 @@ interface TeamMember {
 
             </ng-template>
 
-            <!-- ═══ FOOTER ═══ -->
-            <div ux-detail-footer>
-                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 px-2 py-3 text-sm text-surface-600 dark:text-surface-200 border-t border-surface-200 dark:border-surface-700">
-                    <span><strong>Created by:</strong> Olivia Martinez</span>
-                    <span><strong>Created:</strong> Apr 5, 2026</span>
-                    <span><strong>Last modified by:</strong> James Anderson</span>
-                    <span><strong>Last modified:</strong> Apr 30, 2026</span>
-                </div>
-            </div>
+            <div ux-detail-footer></div>
 
             <!-- ═══ SIDEBAR ═══ -->
-            <div ux-detail-sidebar class="flex flex-col gap-6">
+            <ng-container ux-detail-sidebar>
                 <ux-ai-insights-card
                     title="AI Project Analysis"
                     [insights]="aiInsights"
@@ -971,7 +910,23 @@ interface TeamMember {
                 />
 
                 <app-documents-card [documents]="documents()" />
-            </div>
+            </ng-container>
+
+            <ux-detail-footer ux-detail-footer>
+                <!-- Desktop: single row with all metadata -->
+                <div class="hidden lg:flex flex-nowrap items-center gap-x-6 whitespace-nowrap">
+                    <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
+                    <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> <strong>Target signing:</strong> Apr 1, 2026</span>
+                    <span class="flex items-center gap-x-3"><span><strong>Created:</strong> Apr 5, 2026</span><span><strong>by:</strong> Olivia Martinez</span></span>
+                    <span class="flex items-center gap-x-3"><span><strong>Last modified:</strong> Apr 30, 2026</span><span><strong>by:</strong> James Anderson</span></span>
+                </div>
+
+                <!-- Mobile: only office + target signing -->
+                <div class="flex lg:hidden items-center gap-x-4 gap-y-1 flex-wrap">
+                    <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
+                    <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> <strong>Target signing:</strong> Apr 1, 2026</span>
+                </div>
+            </ux-detail-footer>
 
         </ux-detail-layout>
 
@@ -997,7 +952,7 @@ interface TeamMember {
                         <p-tag [value]="task.startDate" severity="secondary" size="small" />
                     }
                     @if (task.startDate && task.endDate) {
-                        <span class="text-surface-600 dark:text-surface-300 text-xs">-</span>
+                        <span class="text-surface-600 dark:text-surface-300 text-sm">-</span>
                     }
                     @if (task.endDate) {
                         <p-tag [value]="task.endDate" severity="secondary" size="small" />
@@ -1020,9 +975,7 @@ interface TeamMember {
                     </div>
                 </div>
                 @if (!isLast) {
-                    <div class="px-2 py-1">
-                        <div class="border-t border-dashed border-surface-200 dark:border-surface-700"></div>
-                    </div>
+                    <p-divider type="dashed" styleClass="mx-2 my-1" />
                 }
             </div>
         </ng-template>
@@ -1072,9 +1025,21 @@ export class Opportunity {
     activeScopeSub = signal('what');
     activeStakeholderSub = signal('partners');
 
+    scopeSubTabs = [
+        { value: 'what', label: 'What' },
+        { value: 'when', label: 'When' },
+        { value: 'where', label: 'Where' },
+        { value: 'impact', label: 'Why' }
+    ];
+
+    stakeholderSubTabs = [
+        { value: 'partners', label: 'Partners' },
+        { value: 'team', label: 'Team' },
+        { value: 'beneficiaries', label: 'Beneficiaries' }
+    ];
+
     // ─── Analysis Stats ───
     analysisStats = [
-        { label: 'Total Budget', value: '$15M', icon: 'pi-dollar', iconColor: 'text-green-500' },
         { label: 'Countries', value: '3', icon: 'pi-globe', iconColor: 'text-blue-500' },
         { label: 'Partners', value: '2', icon: 'pi-users', iconColor: 'text-teal-500' },
         { label: 'SDGs', value: '2', icon: 'pi-flag', iconColor: 'text-cherry-500' },
@@ -1206,17 +1171,57 @@ export class Opportunity {
     // ─── Tasks ───
     activeTaskFilter = signal('All');
     taskSearchQuery = model('');
-    openTaskPanels: string[] = ['1'];
+    /** Default matches `activeTaskFilter` "All": expand every section that has tasks. */
+    openTaskPanels = model<string[]>(['1', '0', '2']);
     accordionContentPT = { root: { class: 'overflow-hidden bg-transparent!' }, content: { class: 'bg-transparent!' } };
     isTaskDrawerVisible = false;
     selectedTask: Task | null = null;
     taskDrawerMode: 'create' | 'edit' = 'create';
 
     taskFilterOptions = [
-        { key: 'All', label: 'All', icon: 'pi pi-list', countKey: 'all' as const, badgeClass: 'bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-surface-100', inactiveClass: 'bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-600 hover:bg-surface-200 dark:hover:bg-surface-600' },
-        { key: 'Pending', label: 'Not Started', icon: 'pi pi-inbox', countKey: 'pending' as const, badgeClass: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300', inactiveClass: 'bg-blue-50 dark:bg-blue-700/10 text-blue-600 dark:text-blue-300 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700/20' },
-        { key: 'In Progress', label: 'In Progress', icon: 'pi pi-clock', countKey: 'inProgress' as const, badgeClass: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300', inactiveClass: 'bg-yellow-50 dark:bg-yellow-700/10 text-yellow-600 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-700/20' },
-        { key: 'Completed', label: 'Completed', icon: 'pi pi-check-circle', countKey: 'completed' as const, badgeClass: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300', inactiveClass: 'bg-green-50 dark:bg-green-700/10 text-green-600 dark:text-green-300 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-700/20' }
+        {
+            key: 'All',
+            label: 'All',
+            icon: 'pi pi-list',
+            countKey: 'all' as const,
+            badgeClass: 'bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-surface-100',
+            inactiveClass:
+                'bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300 border-surface-200 dark:border-surface-600 hover:bg-surface-200 dark:hover:bg-surface-600',
+            activeClass:
+                'bg-primary-300 border-primary-300 text-primary-950 dark:bg-primary-300 dark:border-primary-300 dark:text-primary-950'
+        },
+        {
+            key: 'Pending',
+            label: 'Not Started',
+            icon: 'pi pi-inbox',
+            countKey: 'pending' as const,
+            badgeClass: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
+            inactiveClass:
+                'bg-blue-50 dark:bg-blue-700/10 text-blue-600 dark:text-blue-300 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700/20',
+            activeClass: 'bg-blue-300 border-blue-300 text-primary-950 dark:bg-blue-300 dark:border-blue-300 dark:text-primary-950'
+        },
+        {
+            key: 'In Progress',
+            label: 'In Progress',
+            icon: 'pi pi-clock',
+            countKey: 'inProgress' as const,
+            badgeClass: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300',
+            inactiveClass:
+                'bg-yellow-50 dark:bg-yellow-700/10 text-yellow-600 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-700/20',
+            activeClass:
+                'bg-yellow-300 border-yellow-300 text-primary-950 dark:bg-yellow-300 dark:border-yellow-300 dark:text-primary-950'
+        },
+        {
+            key: 'Completed',
+            label: 'Completed',
+            icon: 'pi pi-check-circle',
+            countKey: 'completed' as const,
+            badgeClass: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
+            inactiveClass:
+                'bg-green-50 dark:bg-green-700/10 text-green-600 dark:text-green-300 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-700/20',
+            activeClass:
+                'bg-green-300 border-green-300 text-primary-950 dark:bg-green-300 dark:border-green-300 dark:text-primary-950'
+        }
     ];
 
     taskData = signal<Task[]>([
@@ -1270,6 +1275,42 @@ export class Opportunity {
     constructor(private confirmationService: ConfirmationService) {}
 
     // ─── Task Methods ───
+    selectTaskFilter(key: string): void {
+        this.activeTaskFilter.set(key);
+        this.openTaskPanels.set(this.taskAccordionValuesForFilter(key));
+    }
+
+    /** Panel values match p-accordionpanel: In Progress = "1", Not Started = "0", Completed = "2". */
+    private taskAccordionValuesForFilter(filterKey: string): string[] {
+        const tasks = this.taskData();
+        const hasInProgress = tasks.some((t) => t.status === 'in-progress');
+        const hasPending = tasks.some((t) => t.status === 'pending');
+        const hasCompleted = tasks.some((t) => t.status === 'completed');
+
+        switch (filterKey) {
+            case 'Pending':
+                return hasPending ? ['0'] : [];
+            case 'In Progress':
+                return hasInProgress ? ['1'] : [];
+            case 'Completed':
+                return hasCompleted ? ['2'] : [];
+            case 'All':
+            default: {
+                const open: string[] = [];
+                if (hasInProgress) {
+                    open.push('1');
+                }
+                if (hasPending) {
+                    open.push('0');
+                }
+                if (hasCompleted) {
+                    open.push('2');
+                }
+                return open;
+            }
+        }
+    }
+
     toggleTaskCompletion(task: Task, completed: boolean) {
         setTimeout(() => {
             const tasks = this.taskData();
@@ -1337,13 +1378,9 @@ export class Opportunity {
     }
 
     riskCardClass(risk: Risk): string {
-        if (risk.probability === 'High' || risk.isOrgHighRisk) {
-            return 'bg-red-50 dark:bg-red-900/10 border-red-400 dark:border-red-600 border border-red-100 dark:border-red-800';
-        }
-        if (risk.probability === 'Medium') {
-            return 'bg-orange-50 dark:bg-orange-900/10 border-orange-400 dark:border-orange-600 border border-orange-100 dark:border-orange-800';
-        }
-        return 'bg-surface-50 dark:bg-surface-800 border-surface-300 dark:border-surface-600 border border-surface-100 dark:border-surface-700';
+        if (risk.probability === 'High' || risk.isOrgHighRisk) return 'card card-danger';
+        if (risk.probability === 'Medium') return 'card card-warn';
+        return 'card';
     }
 
     timelineRingClass(color: string): string {

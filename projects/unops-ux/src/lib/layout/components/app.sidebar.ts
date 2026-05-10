@@ -12,13 +12,22 @@ const BREAKPOINT = 992;
     selector: '[app-sidebar]',
     imports: [CommonModule, AppMenu, RouterModule, AppTopbar],
     template: `<nav class="layout-sidebar" aria-label="Main navigation" (mouseleave)="onMouseLeave()">
-        <div #menuContainer class="layout-menu-container" (scroll)="onMenuScroll()">
+        <div #menuContainer class="layout-menu-container min-h-0 grow" (scroll)="onMenuScroll()">
             <div app-menu></div>
         </div>
+        @if (!isHorizontal()) {
+            <div
+                class="layout-sidebar-footer shrink-0 pl-8 pr-3 py-2 text-left text-base text-surface-500 dark:text-surface-400"
+                role="contentinfo">
+                &#169; UNOPS {{ copyrightYear }}
+            </div>
+        }
         <div app-topbar *ngIf="isHorizontal()"></div>
     </nav>`
 })
 export class AppSidebar implements OnInit, OnDestroy {
+    readonly copyrightYear = new Date().getFullYear();
+
     layoutService = inject(LayoutService);
 
     router = inject(Router);
