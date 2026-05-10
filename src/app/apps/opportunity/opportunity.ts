@@ -440,7 +440,7 @@ interface TeamMember {
                                                 @if (sdg.targets.length > 0) {
                                                     <div class="flex flex-wrap gap-2">
                                                         @for (target of sdg.targets; track target) {
-                                                            <p-tag [value]="target" severity="primary" styleClass="text-xs" />
+                                                            <p-tag [value]="target" severity="info" styleClass="text-xs" />
                                                         }
                                                     </div>
                                                 }
