@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
     selector: 'app-features-hero-widget',
     standalone: true,
     imports: [HorizontalGridWidget, LazyImageWidget, RouterLink, CustomersLogoWidget],
+    host: { class: 'block' },
     template: `
         <section class="animate-fadein animate-duration-300 animate-ease-in relative lg:pb-14 lg:pt-52 pt-36 pb-10">
             <app-horizontal-grid-widget class="top-104 lg:top-120" />

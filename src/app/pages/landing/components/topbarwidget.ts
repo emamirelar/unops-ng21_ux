@@ -8,6 +8,7 @@ import { filter } from 'rxjs';
     selector: 'app-topbar-widget',
     standalone: true,
     imports: [CommonModule, RouterModule, LogoWidget],
+    host: { class: 'block' },
     template: `
         <section [class]="class">
             <svg class="absolute top-0 w-full -z-10 min-h-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 257" fill="none" aria-hidden="true">

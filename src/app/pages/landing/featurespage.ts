@@ -11,6 +11,7 @@ import { Component, inject } from '@angular/core';
 @Component({
     selector: 'app-features-page',
     standalone: true,
+    host: { class: 'block' },
     imports: [CtaWidget, FaqWidget, TestimonialWidget, FeaturesHeroWidget, FeaturesSectionOneWidget, FeaturesSectionTwoWidget, AppConfigurator],
     template: `
         <app-features-hero-widget />

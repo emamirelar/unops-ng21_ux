@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-pricing-hero-widget',
     standalone: true,
     imports: [CommonModule],
+    host: { class: 'block' },
     template: `
         <section class="animate-fadein animate-duration-300 animate-ease-in landing-container mx-auto relative lg:pb-14 lg:pt-52 pt-36 pb-10">
             <h1 class="title-h4 lg:title-h1">

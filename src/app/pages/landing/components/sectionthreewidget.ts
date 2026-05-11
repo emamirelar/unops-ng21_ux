@@ -7,6 +7,7 @@ import { Component, computed, inject } from '@angular/core';
     selector: 'app-section-three-widget',
     standalone: true,
     imports: [CommonModule, LazyImageWidget],
+    host: { class: 'block' },
     template: `
         <section class="relative py-12 lg:py-24">
             <div class="landing-container mx-auto w-full flex flex-col items-center">

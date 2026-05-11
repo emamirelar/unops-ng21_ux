@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
     selector: 'app-contact-adress-widget',
     standalone: true,
     imports: [CommonModule, LazyImageWidget],
+    host: { class: 'block' },
     template: `
         <section class="landing-container mx-auto py-10 lg:py-20">
             <div class="max-w-xl lg:max-w-6xl mx-auto flex lg:flex-row flex-col gap-7">

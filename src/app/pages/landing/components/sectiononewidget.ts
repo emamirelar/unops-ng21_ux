@@ -8,10 +8,11 @@ import { RouterLink } from '@angular/router';
     selector: 'app-section-one-widget',
     standalone: true,
     imports: [CommonModule, LazyImageWidget, RouterLink],
+    host: { class: 'block' },
     template: `
         <section class="max-w-308 landing-container mx-auto relative py-12 lg:py-24">
             <div class="flex lg:flex-row flex-col items-center gap-14 lg:gap-4 xl:gap-9">
-                <div class="relative lg:flex-1 h-[26.2rem] lg:h-168 w-full max-w-100 lg:max-w-2xl">
+                <div class="relative lg:flex-1 h-[26.2rem] lg:h-168 w-full max-w-100 lg:max-w-2xl overflow-hidden">
                     <app-lazy-image-widget
                         className="lg:block hidden rounded-xl absolute h-full w-auto top-0 left-0"
                         [src]="'demo/images/landing/' + (isDarkTheme() ? 'landing-section-pattern-dark.png' : 'landing-section-pattern.png')"

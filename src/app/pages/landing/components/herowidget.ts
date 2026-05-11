@@ -8,6 +8,7 @@ import { HorizontalGridWidget } from './horizontalgridwidget';
     selector: 'app-hero-widget',
     standalone: true,
     imports: [CommonModule, HorizontalGridWidget, CustomersLogoWidget, RouterLink],
+    host: { class: 'block' },
     template: `
         <section class="animate-fadein animate-duration-300 animate-ease-in relative lg:pb-14 lg:pt-52 pt-36 pb-10">
             <app-horizontal-grid-widget class="top-108 lg:top-104"></app-horizontal-grid-widget>

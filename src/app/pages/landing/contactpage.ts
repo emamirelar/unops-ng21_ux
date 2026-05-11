@@ -9,6 +9,7 @@ import { Component, inject } from '@angular/core';
 @Component({
     selector: 'app-contact-page',
     standalone: true,
+    host: { class: 'block' },
     imports: [ContactHeroWidget, ContactAdressWidget, TestimonialWidget, FaqWidget, AppConfigurator],
     template: `
         <app-contact-hero-widget />

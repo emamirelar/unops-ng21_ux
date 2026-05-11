@@ -11,6 +11,7 @@ import { TextareaModule } from 'primeng/textarea';
     selector: 'app-contact-hero-widget',
     standalone: true,
     imports: [CommonModule, HorizontalGridWidget, FormsModule, CustomersLogoWidget, InputTextModule, RadioButtonModule, TextareaModule],
+    host: { class: 'block' },
     template: `
         <section class="animate-fadein animate-duration-300 animate-ease-in relative lg:pb-14 lg:pt-52 pt-36 pb-10">
             <app-horizontal-grid-widget class="top-96 lg:top-104"></app-horizontal-grid-widget>

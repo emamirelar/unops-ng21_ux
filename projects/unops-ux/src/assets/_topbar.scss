@@ -1,5 +1,4 @@
 .layout-topbar {
-    padding: 0.75rem 0.5rem;
     border-bottom: 1px solid var(--surface-border);
     position: static;
     width: 100%;
@@ -8,13 +7,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0.75rem 0;
     color: var(--text-color);
     background: transparent;
 
-    @media screen and (min-width: 1024px) {
-        padding: 0.75rem 3rem 0.75rem 1rem;
-        padding-right: max(3rem, calc((100vw - 16rem - 1540px) / 2 + 3rem));
-    }
 
     .topbar-left {
         display: flex;
@@ -109,17 +105,22 @@
         display: flex;
         align-items: center;
         flex: 1;
-        min-width: 0;
+        max-width: 1540px;
+        margin-inline: auto;
         justify-content: space-between;
+        padding-left: 3rem;
 
         .layout-breadcrumb {
             display: flex;
 
-            @media screen and (min-width: 1024px) {
-                padding-left: 0.25rem;
-                padding-left: max(0.25rem, calc((100vw - 16rem - 1540px) / 2 + 0.25rem));
-            }
+    
         }
+        
+    flex: 1 1 auto;
+    @media screen and (min-width: 780px) {
+        padding: 0 3rem;
+    }
+
     }
 
     .menu-button {

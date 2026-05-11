@@ -9,6 +9,7 @@ import { Component, inject } from '@angular/core';
 @Component({
     selector: 'app-pricing-page',
     standalone: true,
+    host: { class: 'block' },
     imports: [PricingHeroWidget, PricingCompareWidget, CtaWidget, TestimonialWidget, AppConfigurator],
     template: `
         <app-pricing-hero-widget />

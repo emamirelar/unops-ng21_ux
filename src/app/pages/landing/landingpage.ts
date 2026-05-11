@@ -12,6 +12,7 @@ import { AppConfigurator } from '@unopsitg/ux';
 @Component({
     selector: 'app-landing-page',
     standalone: true,
+    host: { class: 'block' },
     imports: [HeroWidget, SectionOneWidget, SectionTwoWidget, SectionThreeWidget, CtaWidget, TestimonialWidget, FaqWidget, AppConfigurator],
     template: `<app-hero-widget />
         <app-section-one-widget />

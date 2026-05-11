@@ -5,6 +5,7 @@ import { AccordionModule } from 'primeng/accordion';
     selector: 'app-faq-widget',
     standalone: true,
     imports: [CommonModule, AccordionModule],
+    host: { class: 'block' },
     template: `
         <section class="py-10 lg:py-28 landing-container mx-auto">
             <div class="w-full">

@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
     selector: 'app-testimonial-widget',
     standalone: true,
     imports: [CommonModule, TestimonialCardWidget],
+    host: { class: 'block' },
     template: `<section class="relative landing-container mx-auto py-10 lg:py-28">
         <div class="badge">Testimonial</div>
         <h2 class="title-h5 lg:title-h2 mt-4">Customer Reviews</h2>

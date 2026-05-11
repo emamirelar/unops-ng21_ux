@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-pricing-compare-widget',
     standalone: true,
     imports: [CommonModule],
+    host: { class: 'block' },
     template: `
         <section class="landing-container mx-auto py-10 lg:py-20">
             <div class="max-w-lg md:max-w-4xl xl:max-w-full mx-auto p-7 border border-surface-200 dark:border-surface-800 rounded-3xl animate-fade-in-up">

@@ -5,6 +5,7 @@ import { Component, Input } from '@angular/core';
     selector: 'app-footer-widget',
     standalone: true,
     imports: [CommonModule],
+    host: { class: 'block' },
     template: `
         <section [ngClass]="class" class="relative border-t border-surface-200 dark:border-surface-800">
             <div class="absolute bottom-0 w-full max-h-52 min-h-14">

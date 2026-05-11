@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-landing-layout',
+    host: { class: 'block w-full overflow-x-hidden' },
     imports: [CommonModule, TopbarWidget, RouterModule, FooterWidget],
     template: ` <app-topbar-widget />
         <main>

@@ -56,7 +56,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                 <div class="flex flex-col sm:flex-row sm:items-start gap-3 flex-1 min-w-0">
                                     <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">{{ p.name }}</h1>
                                     @if (p.shortName || p.keyGlobalPartner) {
-                                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 self-end">
+                                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 sm:self-end">
                                             @if (p.shortName) {
                                                 <span class="text-surface-600 dark:text-surface-300 text-lg font-medium">({{ p.shortName }})</span>
                                             }
