@@ -74,6 +74,16 @@
             display: none;
         }
 
+        .topbar-main {
+            flex: 1;
+            min-width: 0;
+            justify-content: flex-end;
+        }
+
+        .topbar-main .layout-breadcrumb {
+            display: none;
+        }
+
         .topbar-right {
             display: flex;
             align-items: center;

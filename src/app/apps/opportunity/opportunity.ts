@@ -194,7 +194,7 @@ interface TeamMember {
                                         This opportunity focuses on providing sustainable water sanitization solutions to underserved communities in East Africa and Southeast Asia. The programme will deploy modern filtration infrastructure, train local operators, and establish long-term maintenance frameworks to ensure clean water access for over 2.5 million beneficiaries across three implementation countries.
                                     </p>
                                 </div>
-                                <div class="grid grid-cols-2 xl:grid-cols-3 gap-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                                     <div class="card flex flex-col gap-0.5 text-xs sm:hidden">
                                         <span class="font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Created</span>
                                         <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Apr 5, 2026</span>
@@ -429,13 +429,11 @@ interface TeamMember {
                                     <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">SDG Alignment</span>
                                     <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3">
                                         @for (sdg of sdgAlignments; track sdg.number) {
-                                            <div class="relative p-4 rounded-xl border border-surface-400 dark:border-surface-700 sm:min-w-[220px] sm:flex-1" [class]="sdg.isPrimary ? 'bg-primary-50/50 dark:bg-primary-900/10' : 'bg-surface-50 dark:bg-surface-800'">
-                                                <div class="absolute top-3 right-3">
-                                                    <p-tag [value]="sdg.isPrimary ? 'Primary' : 'Secondary'" [severity]="sdg.isPrimary ? 'info' : 'secondary'" styleClass="text-xs" />
-                                                </div>
-                                                <div class="flex items-start gap-3 mb-2 pr-20">
+                                            <div class="p-4 rounded-xl border border-surface-400 dark:border-surface-700 sm:min-w-[220px] sm:flex-1" [class]="sdg.isPrimary ? 'bg-primary-50/50 dark:bg-primary-900/10' : 'bg-surface-50 dark:bg-surface-800'">
+                                                <div class="flex items-start gap-3 mb-2">
                                                     <div class="size-8 shrink-0 rounded-lg flex items-center justify-center text-sm font-bold text-white" [style.background-color]="sdg.color">{{ sdg.number }}</div>
-                                                    <span class="text-sm font-semibold text-surface-900 dark:text-surface-0 pt-1">{{ sdg.name }}</span>
+                                                    <span class="text-sm font-semibold text-surface-900 dark:text-surface-0 pt-1 flex-1 min-w-0">{{ sdg.name }}</span>
+                                                    <p-tag [value]="sdg.isPrimary ? 'Primary' : 'Secondary'" [severity]="sdg.isPrimary ? 'info' : 'secondary'" styleClass="text-xs shrink-0" />
                                                 </div>
                                                 @if (sdg.targets.length > 0) {
                                                     <div class="flex flex-wrap gap-2">
@@ -754,8 +752,8 @@ interface TeamMember {
                                         <tr>
                                             <th>Title</th>
                                             <th>Type</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
+                                            <th class="hidden sm:table-cell">Date</th>
+                                            <th class="hidden sm:table-cell">Status</th>
                                         </tr>
                                     </ng-template>
                                     <ng-template #body let-item>
@@ -764,8 +762,8 @@ interface TeamMember {
                                                 <span class="text-sm text-primary-600 dark:text-primary-400 font-medium">{{ item.title }}</span>
                                             </td>
                                             <td><p-tag [value]="item.type" severity="secondary" styleClass="text-xs" /></td>
-                                            <td><span class="text-sm text-surface-600 dark:text-surface-300">{{ item.date }}</span></td>
-                                            <td><p-tag [value]="item.status" [severity]="item.status === 'Completed' ? 'success' : 'info'" styleClass="text-xs" /></td>
+                                            <td class="hidden sm:table-cell"><span class="text-sm text-surface-600 dark:text-surface-300">{{ item.date }}</span></td>
+                                            <td class="hidden sm:table-cell"><p-tag [value]="item.status" [severity]="item.status === 'Completed' ? 'success' : 'info'" styleClass="text-xs" /></td>
                                         </tr>
                                     </ng-template>
                                 </p-table>
@@ -914,7 +912,7 @@ interface TeamMember {
 
             <ux-detail-footer ux-detail-footer>
                 <!-- Desktop: single row with all metadata -->
-                <div class="hidden lg:flex flex-nowrap items-center gap-x-6 whitespace-nowrap">
+                <div class="hidden lg:flex flex-wrap items-center gap-x-6 gap-y-1">
                     <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
                     <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> <strong>Target signing:</strong> Apr 1, 2026</span>
                     <span class="flex items-center gap-x-3"><span><strong>Created:</strong> Apr 5, 2026</span><span><strong>by:</strong> Olivia Martinez</span></span>

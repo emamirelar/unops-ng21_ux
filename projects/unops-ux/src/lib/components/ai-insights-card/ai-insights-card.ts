@@ -28,11 +28,19 @@ export interface AiInsight {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AiCardBgComponent, FormsModule, NgClass, PaginatorModule],
     host: {
-        class: 'ux-ai-insights-card block border border-[#e0e7ff] dark:border-[#2d3a5c] rounded-2xl shadow-sm overflow-hidden transition-all duration-300 flex flex-col max-h-[calc(100dvh-12rem)]',
-        '[class.h-[calc(100dvh-12rem)]]': 'expanded()'
+        class: 'ux-ai-insights-card block border border-blue-100 dark:border-midnight-400 rounded-2xl shadow-sm overflow-hidden transition-all duration-300 flex flex-col',
+        '[class.ux-ai-expanded]': 'expanded()'
     },
     styles: `
         :host { display: flex; }
+        @media screen and (min-width: 1024px) {
+            :host {
+                max-height: calc(100dvh - 12rem);
+            }
+            :host(.ux-ai-expanded) {
+                height: calc(100dvh - 12rem);
+            }
+        }
     `,
     template: `
         <ux-ai-card-bg class="flex flex-col flex-1 min-h-0 p-4">

@@ -108,11 +108,16 @@ export class DetailTabDirective {
             top: 0;
             z-index: 5;
             background: var(--p-content-background, var(--p-primary-400));
-            padding-inline: 1.5rem;
+            padding-inline: 0.75rem;
+        }
+        @media screen and (min-width: 640px) {
+            :host :deep p-tablist {
+                padding-inline: 1rem;
+            }
         }
         @media screen and (min-width: 1024px) {
             :host :deep p-tablist {
-                padding-inline: 1rem;
+                padding-inline: 1.5rem;
             }
         }
         :host :deep p-tablist .p-tablist-content { width: 100%; }
@@ -130,7 +135,7 @@ export class DetailTabDirective {
         <div class="flex flex-col overflow-hidden flex-1 min-h-0">
 
             <!-- Sticky header (projected) -->
-            <div class="ux-dl__header flex-shrink-0 z-10 px-6 lg:px-4">
+            <div class="ux-dl__header flex-shrink-0 z-10 px-3 sm:px-4 lg:px-6">
                 <div>
                     <ng-content select="[ux-detail-header]" />
                 </div>
@@ -149,7 +154,7 @@ export class DetailTabDirective {
                     @if (!singleTab()) {
                         <!-- Mobile: dropdown selector -->
                         @if (isMobile()) {
-                            <div class="ux-dl__mobile-tabs px-6 lg:px-4">
+                            <div class="ux-dl__mobile-tabs px-3 sm:px-4 lg:px-6">
                                 <p-select
                                     [options]="tabOptions()"
                                     [ngModel]="activeTab()"
@@ -175,7 +180,7 @@ export class DetailTabDirective {
                     }
 
                     <!-- Content + Sidebar row below tab bar -->
-                    <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 lg:py-6 px-6 lg:px-4">
+                    <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 lg:py-6 px-3 sm:px-4 lg:px-6">
 
                         <!-- Main column: tab panels -->
                         <div class="w-full flex-1 min-w-0 flex flex-col gap-6">
@@ -223,7 +228,7 @@ export class DetailLayoutComponent {
     /** True when there is only a single tab, making the tab bar redundant. */
     readonly singleTab = computed(() => this.tabs().length <= 1);
 
-    /** True when viewport is below the sm breakpoint (780px). */
+    /** True when viewport is below the lg breakpoint (1024px). */
     readonly isMobile = signal(false);
 
     /** True once the scrollable body has been scrolled past the threshold. */

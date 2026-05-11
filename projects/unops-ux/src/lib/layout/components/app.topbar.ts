@@ -1,7 +1,7 @@
 import { LayoutService } from '../layout.service';
 import { TOPBAR_MOBILE_LOGO } from '../tokens';
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
@@ -28,19 +28,24 @@ interface NotificationsBars {
             <i class="pi pi-bars"></i>
         </button>
         <div class="topbar-left">
-            <button
-                type="button"
-                class="topbar-menu-toggle"
-                [class.active]="isSidebarPinned()"
-                [attr.aria-label]="isSidebarPinned() ? 'Collapse sidebar' : 'Expand sidebar'"
-                (click)="toggleSidebarPin()"
-            >
-                <i class="pi pi-bars"></i>
-            </button>
-            <a class="topbar-logo" [routerLink]="['/']">
-                <img [src]="desktopLogo()" [attr.alt]="mobileLogoConfig.alt" />
-            </a>
-            <span class="topbar-logo-separator"></span>
+            <div class="topbar-sidebar-section">
+                <button
+                    type="button"
+                    class="topbar-menu-toggle"
+                    [class.active]="isSidebarPinned()"
+                    [attr.aria-label]="isSidebarPinned() ? 'Collapse sidebar' : 'Expand sidebar'"
+                    (click)="toggleSidebarPin()"
+                >
+                    <i class="pi pi-bars"></i>
+                </button>
+                <a class="topbar-logo" [routerLink]="['/']">
+                    <img [src]="desktopLogo()" [attr.alt]="mobileLogoConfig.alt" />
+                </a>
+                <span class="topbar-logo-separator"></span>
+            </div>
+        </div>
+
+        <div class="topbar-main">
             <div app-breadcrumb></div>
             @if (searchActive()) {
                 <div class="flex items-center gap-2 ml-auto">
@@ -53,14 +58,8 @@ interface NotificationsBars {
                     </button>
                 </div>
             }
-        </div>
-
-        <a class="mobile-logo" [routerLink]="['/landing']">
-            <img [src]="mobileLogo()" [attr.alt]="mobileLogoConfig.alt" />
-        </a>
-
-        <div class="topbar-right">
-            <ul class="topbar-menu">
+            <div class="topbar-right">
+                <ul class="topbar-menu">
                 <li class="right-sidebar-item" [class.hidden]="searchActive()">
                     <a class="right-sidebar-button" aria-label="Open search" (click)="openSearch()">
                         <i class="pi pi-search"></i>
@@ -238,11 +237,16 @@ interface NotificationsBars {
                         </ul>
                     </div>
                 </li>
-            </ul>
+                </ul>
+            </div>
         </div>
+
+        <a class="mobile-logo" [routerLink]="['/']">
+            <img [src]="mobileLogo()" [attr.alt]="mobileLogoConfig.alt" />
+        </a>
     </div>`
 })
-export class AppTopbar implements AfterViewChecked {
+export class AppTopbar implements AfterViewChecked, AfterViewInit {
     layoutService = inject(LayoutService);
 
     readonly mobileLogoConfig = inject(TOPBAR_MOBILE_LOGO);
@@ -414,6 +418,51 @@ export class AppTopbar implements AfterViewChecked {
     closeSearch() {
         this.searchActive.set(false);
     }
+
+    // #region agent log
+    ngAfterViewInit() {
+        setTimeout(() => {
+            const topbar = document.querySelector('.layout-topbar') as HTMLElement;
+            const topbarRight = document.querySelector('.topbar-right') as HTMLElement;
+            const content = document.querySelector('.layout-content') as HTMLElement;
+            const contentInside = document.querySelector('.layout-content-wrapper-inside') as HTMLElement;
+            const wrapper = document.querySelector('.layout-wrapper') as HTMLElement;
+
+            const topbarStyles = topbar ? getComputedStyle(topbar) : null;
+            const contentStyles = content ? getComputedStyle(content) : null;
+            const wrapperStyles = wrapper ? getComputedStyle(wrapper) : null;
+
+            const data = {
+                viewport: { width: window.innerWidth, height: window.innerHeight },
+                docScrollWidth: document.documentElement.scrollWidth,
+                hasHorizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
+                topbar: topbar ? {
+                    boxSizing: topbarStyles!.boxSizing,
+                    padding: topbarStyles!.padding,
+                    paddingRight: topbarStyles!.paddingRight,
+                    paddingLeft: topbarStyles!.paddingLeft,
+                    width: topbarStyles!.width,
+                    rect: topbar.getBoundingClientRect()
+                } : null,
+                topbarRight: topbarRight ? { rect: topbarRight.getBoundingClientRect() } : null,
+                content: content ? {
+                    padding: contentStyles!.padding,
+                    paddingRight: contentStyles!.paddingRight,
+                    rect: content.getBoundingClientRect()
+                } : null,
+                contentInside: contentInside ? { rect: contentInside.getBoundingClientRect() } : null,
+                wrapper: wrapper ? {
+                    flexWrap: wrapperStyles!.flexWrap,
+                    flexDirection: wrapperStyles!.flexDirection,
+                    width: wrapperStyles!.width,
+                    overflowX: wrapperStyles!.overflowX
+                } : null
+            };
+
+            fetch('http://127.0.0.1:7278/ingest/09818c15-01b3-40a5-8a07-65bd2be63fb7',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'7b7a04'},body:JSON.stringify({sessionId:'7b7a04',location:'app.topbar.ts:ngAfterViewInit',message:'Layout measurement',data,timestamp:Date.now(),hypothesisId:'H1-H5'})}).catch(()=>{});
+        }, 1500);
+    }
+    // #endregion
 
     ngAfterViewChecked() {
         if (this.shouldFocusSearch && this.searchInput) {

@@ -1,12 +1,10 @@
-import { LogoWidget } from '@/app/pages/landing/components/logowidget';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-footer-widget',
     standalone: true,
-    imports: [CommonModule, RouterModule, LogoWidget],
+    imports: [CommonModule],
     template: `
         <section [ngClass]="class" class="relative border-t border-surface-200 dark:border-surface-800">
             <div class="absolute bottom-0 w-full max-h-52 min-h-14">
@@ -21,33 +19,6 @@ import { RouterModule } from '@angular/router';
                 </svg>
             </div>
             <div class="relative z-20 landing-container mx-auto md:pt-20 md:pb-14 py-8">
-                <footer class="flex items-center justify-between md:flex-row flex-col gap-8 md:gap-0">
-                    <div class="flex items-center md:flex-row flex-col gap-8 md:gap-0">
-                        <a routerLink="/">
-                            <logo-widget></logo-widget>
-                        </a>
-                        <div class="h-4 w-px bg-surface-200 dark:bg-surface-800 mx-4 md:block hidden"></div>
-                        <ul class="flex items-center gap-4">
-                            <li *ngFor="let nav of navs">
-                                <a [routerLink]="nav.to" class="body-small hover:underline">
-                                    {{ nav.label }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <ul class="flex items-center gap-2">
-                        <li *ngFor="let data of socials">
-                            <a
-                                [href]="data.to"
-                                target="_blank"
-                                class="px-4 py-2 rounded-full border border-surface-200 dark:border-surface-800 text-surface-950 dark:text-surface-0 flex items-center justify-center hover:bg-emphasis transition-all"
-                            >
-                                <i [ngClass]="data.icon" class="text-md leading-none"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </footer>
-                <div class="w-full h-px bg-surface-200 dark:bg-surface-800 my-7 md:my-4"></div>
                 <div class="text-center body-small">© {{ currentYear }} PrimeTek</div>
             </div>
         </section>
@@ -58,16 +29,4 @@ export class FooterWidget {
 
     currentYear: number = new Date().getFullYear();
 
-    navs = [
-        { to: '/landing/', label: 'Product' },
-        { to: '/landing/contact', label: 'Contact' },
-        { to: '/auth/login', label: 'Login' },
-        { to: '/auth/register', label: 'Register' }
-    ];
-
-    socials = [
-        { to: '#', icon: 'pi pi-youtube' },
-        { to: '#', icon: 'pi pi-twitter' },
-        { to: '#', icon: 'pi pi-discord' }
-    ];
 }

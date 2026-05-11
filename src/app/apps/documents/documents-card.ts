@@ -81,9 +81,9 @@ export interface DocumentItem {
                                     <ng-template #body let-doc>
                                         <tr>
                                             <td>
-                                                <div class="flex items-center gap-3 py-1">
-                                                    <i class="pi text-xl text-surface-600 dark:text-surface-300" [ngClass]="doc.icon"></i>
-                                                    <span class="text-surface-700 dark:text-surface-100 text-sm whitespace-nowrap">{{ doc.fileName }}</span>
+                                                <div class="flex items-center gap-3 py-1 min-w-0">
+                                                    <i class="pi text-xl text-surface-600 dark:text-surface-300 shrink-0" [ngClass]="doc.icon"></i>
+                                                    <span class="text-surface-700 dark:text-surface-100 text-sm truncate">{{ doc.fileName }}</span>
                                                 </div>
                                             </td>
                                             <td>
