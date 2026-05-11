@@ -668,8 +668,8 @@ interface TeamMember {
                 <div id="section-risks">
                             <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6">
                                 @for (risk of risks; track risk.id) {
-                                    <div [class]="riskCardClass(risk)">
-                                        <div class="flex flex-col gap-2">
+                                    <div [class]="riskCardClass(risk) + ' flex flex-col h-full'">
+                                        <div class="flex flex-col gap-2 flex-1">
                                             <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ risk.title }}</span>
                                             <div class="flex flex-wrap items-center gap-2">
                                                 @if (risk.isOrgHighRisk) {
@@ -679,7 +679,7 @@ interface TeamMember {
                                                 <p-tag [value]="risk.probability" [severity]="risk.probability === 'High' ? 'danger' : risk.probability === 'Medium' ? 'warn' : 'secondary'" styleClass="text-xs" />
                                             </div>
                                             <p class="text-sm text-surface-700 dark:text-surface-100 m-0">{{ risk.description }}</p>
-                                            <div class="flex flex-wrap gap-4 text-sm text-surface-600 dark:text-surface-300 pt-2 border-t border-surface-200 dark:border-surface-700">
+                                            <div class="flex flex-wrap gap-4 text-sm text-surface-600 dark:text-surface-300 pt-2 border-t border-surface-200 dark:border-surface-700 mt-auto">
                                                 <span><strong>Impact:</strong> {{ risk.impact }}</span>
                                                 <span><strong>Proximity:</strong> {{ risk.proximity }}</span>
                                                 <span><strong>Response:</strong> {{ risk.responseType }}</span>

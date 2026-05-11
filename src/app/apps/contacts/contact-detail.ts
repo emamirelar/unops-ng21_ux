@@ -79,7 +79,6 @@ const INTERACTION_COLORS: Record<string, string> = {
                         </div>
                         <div class="flex items-center gap-2">
                             <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" size="small" />
-                            <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" size="small" />
                         </div>
                     </div>
                 </div>

@@ -52,16 +52,25 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         </div>
 
                         <div class="flex flex-col gap-2 flex-1 min-w-0">
-                            <div class="flex flex-col sm:flex-row sm:items-start gap-3">
-                                <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">{{ p.name }}</h1>
-                                @if (p.shortName) {
-                                    <span class="text-surface-600 dark:text-surface-300 text-lg font-medium">({{ p.shortName }})</span>
-                                }
-                                @if (p.keyGlobalPartner) {
-                                    <span class="flex items-center gap-1 text-amber-500 text-sm font-medium">
-                                        <i class="pi pi-star-fill text-xs"></i> Key Global Partner
-                                    </span>
-                                }
+                            <div class="flex items-end gap-3">
+                                <div class="flex flex-col sm:flex-row sm:items-start gap-3 flex-1 min-w-0">
+                                    <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">{{ p.name }}</h1>
+                                    @if (p.shortName || p.keyGlobalPartner) {
+                                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 self-end">
+                                            @if (p.shortName) {
+                                                <span class="text-surface-600 dark:text-surface-300 text-lg font-medium">({{ p.shortName }})</span>
+                                            }
+                                            @if (p.keyGlobalPartner) {
+                                                <span class="flex items-center gap-1 text-amber-500 text-sm font-medium whitespace-nowrap">
+                                                    <i class="pi pi-star-fill text-xs"></i> Key Global Partner
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" (onClick)="openEditDrawer()" />
+                                </div>
                             </div>
 
                             <div class="flex items-center flex-wrap gap-x-4 gap-y-2 text-sm text-surface-600 dark:text-surface-300">
@@ -90,11 +99,6 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                                     <p-tag [value]="getApprovalLabel(p.partnerApprovalStatus)" [styleClass]="getApprovalClass(p.partnerApprovalStatus)" />
                                 }
                             </div>
-                        </div>
-
-                        <div class="flex items-center gap-2 shrink-0">
-                            <p-button icon="pi pi-pencil" label="Edit" [outlined]="true" severity="secondary" (onClick)="openEditDrawer()" />
-                            <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" severity="secondary" />
                         </div>
                     </div>
                 </div>

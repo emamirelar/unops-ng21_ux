@@ -116,7 +116,7 @@ export class DetailTabDirective {
             }
         }
         :host :deep p-tablist .p-tablist-content { width: 100%; }
-        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0; }
+        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0 0 0 2rem; }
         :host :deep p-tab { flex: 1; justify-content: center; }
 
         .ux-dl__mobile-tabs {

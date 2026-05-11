@@ -6,6 +6,10 @@
     border: 1px solid var(--p-surface-400);
     border-radius: 1rem;
     margin-bottom: 0;
+
+    &:has(.p-panel-collapsed) {
+        cursor: pointer;
+    }
 }
 
 :root[class*='app-dark'] .card {
