@@ -146,31 +146,33 @@ export class DetailTabDirective {
                 <!-- Full-width tab bar -->
                 <p-tabs [value]="activeTab()" (valueChange)="activeTab.set($event + '')">
 
-                    <!-- Mobile: dropdown selector -->
-                    @if (isMobile()) {
-                        <div class="ux-dl__mobile-tabs px-6 lg:px-4">
-                            <p-select
-                                [options]="tabOptions()"
-                                [ngModel]="activeTab()"
-                                (ngModelChange)="activeTab.set($event)"
-                                optionLabel="label"
-                                optionValue="value"
-                                styleClass="w-full"
-                            />
-                        </div>
-                    }
-
-                    <!-- Desktop: horizontal tab bar -->
-                    <p-tablist [style.display]="isMobile() ? 'none' : null">
-                        @for (tab of tabs(); track tab.value) {
-                            <p-tab [value]="tab.value">
-                                @if (tab.icon) {
-                                    <i [class]="tab.icon" class="mr-2 text-sm"></i>
-                                }
-                                {{ tab.label }}
-                            </p-tab>
+                    @if (!singleTab()) {
+                        <!-- Mobile: dropdown selector -->
+                        @if (isMobile()) {
+                            <div class="ux-dl__mobile-tabs px-6 lg:px-4">
+                                <p-select
+                                    [options]="tabOptions()"
+                                    [ngModel]="activeTab()"
+                                    (ngModelChange)="activeTab.set($event)"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    styleClass="w-full ux-dl__mobile-select"
+                                />
+                            </div>
                         }
-                    </p-tablist>
+
+                        <!-- Desktop: horizontal tab bar -->
+                        <p-tablist [style.display]="isMobile() ? 'none' : null">
+                            @for (tab of tabs(); track tab.value) {
+                                <p-tab [value]="tab.value">
+                                    @if (tab.icon) {
+                                        <i [class]="tab.icon" class="mr-2 text-sm"></i>
+                                    }
+                                    {{ tab.label }}
+                                </p-tab>
+                            }
+                        </p-tablist>
+                    }
 
                     <!-- Content + Sidebar row below tab bar -->
                     <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 lg:py-6 px-6 lg:px-4">
@@ -217,6 +219,9 @@ export class DetailLayoutComponent {
 
     /** Options for the mobile tab dropdown. */
     readonly tabOptions = computed(() => this.tabs().map(t => ({ label: t.label, value: t.value })));
+
+    /** True when there is only a single tab, making the tab bar redundant. */
+    readonly singleTab = computed(() => this.tabs().length <= 1);
 
     /** True when viewport is below the sm breakpoint (780px). */
     readonly isMobile = signal(false);

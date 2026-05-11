@@ -91,9 +91,14 @@ const INTERACTION_COLORS: Record<string, string> = {
                     <!-- Contact Information -->
                     <div class="card">
                         <p-panel [toggleable]="true" [collapsed]="!isContactInfoExpanded()" (collapsedChange)="isContactInfoExpanded.set(!$event)" toggler="header">
+                            <ng-template #headericons let-collapsed>
+                                <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+                            </ng-template>
                             <ng-template #header>
-                                <div class="flex items-center gap-2 flex-1">
-                                    <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
+                                <div class="flex items-center gap-3 flex-1">
+                                    <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                        <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
+                                    </div>
                                     <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Contact Information</h4>
                                 </div>
                             </ng-template>
@@ -143,9 +148,14 @@ const INTERACTION_COLORS: Record<string, string> = {
                     <!-- Organization & Location -->
                     <div class="card">
                         <p-panel [toggleable]="true" [collapsed]="!isOrgExpanded()" (collapsedChange)="isOrgExpanded.set(!$event)" toggler="header">
+                            <ng-template #headericons let-collapsed>
+                                <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+                            </ng-template>
                             <ng-template #header>
-                                <div class="flex items-center gap-2 flex-1">
-                                    <i class="pi pi-building text-deepsea-500 dark:text-surface-0"></i>
+                                <div class="flex items-center gap-3 flex-1">
+                                    <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                        <i class="pi pi-building text-deepsea-500 dark:text-surface-0"></i>
+                                    </div>
                                     <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Organization & Location</h4>
                                 </div>
                             </ng-template>
@@ -183,9 +193,14 @@ const INTERACTION_COLORS: Record<string, string> = {
                     <!-- Interactions -->
                     <div class="card">
                         <p-panel [toggleable]="true" [collapsed]="!isInteractionsExpanded()" (collapsedChange)="isInteractionsExpanded.set(!$event)" toggler="header">
+                            <ng-template #headericons let-collapsed>
+                                <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+                            </ng-template>
                             <ng-template #header>
-                                <div class="flex items-center gap-2 flex-1">
-                                    <i class="pi pi-comments text-deepsea-500 dark:text-surface-0"></i>
+                                <div class="flex items-center gap-3 flex-1">
+                                    <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                        <i class="pi pi-comments text-deepsea-500 dark:text-surface-0"></i>
+                                    </div>
                                     <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Interactions</h4>
                                     @if (c.interactions && c.interactions.length > 0) {
                                         <p-tag [value]="'' + c.interactions.length" severity="secondary" styleClass="ml-1" />
@@ -245,9 +260,14 @@ const INTERACTION_COLORS: Record<string, string> = {
                     <!-- Partner -->
                     <div class="card">
                         <p-panel [toggleable]="true" [collapsed]="!isPartnerExpanded()" (collapsedChange)="isPartnerExpanded.set(!$event)" toggler="header">
+                            <ng-template #headericons let-collapsed>
+                                <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+                            </ng-template>
                             <ng-template #header>
-                                <div class="flex items-center gap-2 flex-1">
-                                    <i class="pi pi-globe text-deepsea-500 dark:text-surface-0"></i>
+                                <div class="flex items-center gap-3 flex-1">
+                                    <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                        <i class="pi pi-globe text-deepsea-500 dark:text-surface-0"></i>
+                                    </div>
                                     <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Partner</h4>
                                 </div>
                             </ng-template>
@@ -295,9 +315,14 @@ const INTERACTION_COLORS: Record<string, string> = {
                     @if (c.notes) {
                         <div class="card">
                             <p-panel [toggleable]="true" [collapsed]="!isNotesExpanded()" (collapsedChange)="isNotesExpanded.set(!$event)" toggler="header">
+                                <ng-template #headericons let-collapsed>
+                                    <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+                                </ng-template>
                                 <ng-template #header>
-                                    <div class="flex items-center gap-2 flex-1">
-                                        <i class="pi pi-file-edit text-deepsea-500 dark:text-surface-0"></i>
+                                    <div class="flex items-center gap-3 flex-1">
+                                        <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                            <i class="pi pi-file-edit text-deepsea-500 dark:text-surface-0"></i>
+                                        </div>
                                         <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Notes</h4>
                                     </div>
                                 </ng-template>
@@ -314,9 +339,14 @@ const INTERACTION_COLORS: Record<string, string> = {
                     <!-- Record Information -->
                     <div class="card">
                         <p-panel [toggleable]="true" [collapsed]="!isRecordInfoExpanded()" (collapsedChange)="isRecordInfoExpanded.set(!$event)" toggler="header">
+                            <ng-template #headericons let-collapsed>
+                                <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+                            </ng-template>
                             <ng-template #header>
-                                <div class="flex items-center gap-2 flex-1">
-                                    <i class="pi pi-info-circle text-deepsea-500 dark:text-surface-0"></i>
+                                <div class="flex items-center gap-3 flex-1">
+                                    <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                                        <i class="pi pi-info-circle text-deepsea-500 dark:text-surface-0"></i>
+                                    </div>
                                     <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Record Information</h4>
                                 </div>
                             </ng-template>

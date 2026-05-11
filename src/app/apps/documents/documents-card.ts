@@ -39,9 +39,14 @@ export interface DocumentItem {
     template: `
         <div class="card flex flex-col">
             <p-panel [toggleable]="true" [collapsed]="!expanded()" (collapsedChange)="expanded.set(!$event)" toggler="header">
+                <ng-template #headericons let-collapsed>
+                    <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+                </ng-template>
                 <ng-template #header>
                     <div class="flex items-center gap-3 flex-1">
-                        <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
+                        <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
+                            <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
+                        </div>
                         <div class="flex flex-col">
                             <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Documents</h4>
                             <span class="text-surface-500 dark:text-surface-300 text-sm font-medium leading-tight">{{ summary() }}</span>

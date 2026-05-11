@@ -12,3 +12,33 @@
 .p-tab:not(.p-tab-active):not(.p-disabled):hover {
   background: var(--d-menuitem-hover-bg) !important;
 }
+
+// Mobile tab dropdown — visually match the desktop pill-tab style.
+.ux-dl__mobile-select.p-select {
+  background: var(--p-primary-100);
+  border-color: transparent;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+
+  .p-select-label {
+    color: var(--p-primary-900);
+    font-weight: 600;
+    padding: 0;
+  }
+
+  .p-select-dropdown {
+    color: var(--p-primary-900);
+  }
+}
+
+:root[class*='app-dark'] .ux-dl__mobile-select.p-select {
+  background: var(--p-primary-900);
+
+  .p-select-label {
+    color: var(--p-primary-200);
+  }
+
+  .p-select-dropdown {
+    color: var(--p-primary-200);
+  }
+}

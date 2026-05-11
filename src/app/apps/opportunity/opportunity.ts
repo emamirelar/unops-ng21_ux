@@ -670,8 +670,8 @@ interface TeamMember {
                                 @for (risk of risks; track risk.id) {
                                     <div [class]="riskCardClass(risk)">
                                         <div class="flex flex-col gap-2">
+                                            <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ risk.title }}</span>
                                             <div class="flex flex-wrap items-center gap-2">
-                                                <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ risk.title }}</span>
                                                 @if (risk.isOrgHighRisk) {
                                                     <p-tag value="Org. High Risk" severity="danger" styleClass="text-xs" />
                                                 }

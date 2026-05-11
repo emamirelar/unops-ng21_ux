@@ -140,6 +140,31 @@ interface Agreement {
                     </div>
                 </div>
 
+                <div class="card flex flex-col gap-4 overflow-hidden">
+                    <div class="flex justify-between items-center">
+                        <h4 class="title-h4 text-left!">Agreement Types</h4>
+                        <div class="flex items-center gap-1">
+                            <span class="text-surface-950 dark:text-surface-0 text-lg font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
+                            <span class="text-surface-600 dark:text-surface-300 text-sm leading-none">Total</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-end gap-1 w-full">
+                        @for (storage of storageData; track storage.id) {
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="h-3 rounded-md" [style.background-color]="storage.color" [style.box-shadow]="'0px 3px 6px 0px ' + storage.shadowColor"></div>
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium leading-tight">{{ storage.count }}</span>
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-1.5 h-1.5 rounded-sm" [style.background-color]="storage.color"></div>
+                                        <span class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ storage.type }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
                 <div class="bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col">
                     <div class="px-6 pt-4 pb-4">
                         <h4 class="title-h4 text-left!">Activity Feed</h4>
@@ -227,30 +252,6 @@ interface Agreement {
                     </div>
                 </div>
 
-                <div class="p-4 bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 flex flex-col gap-4 overflow-hidden">
-                    <div class="flex justify-between items-center">
-                        <h4 class="title-h4 text-left!">Agreement Types</h4>
-                        <div class="flex items-center gap-1">
-                            <span class="text-surface-950 dark:text-surface-0 text-lg font-semibold leading-tight">{{ totalAgreements().toLocaleString() }}</span>
-                            <span class="text-surface-600 dark:text-surface-300 text-sm leading-none">Total</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-end gap-1 w-full">
-                        @for (storage of storageData; track storage.id) {
-                            <div class="flex-1 flex flex-col gap-1.5">
-                                <div class="h-3 rounded-md" [style.background-color]="storage.color" [style.box-shadow]="'0px 3px 6px 0px ' + storage.shadowColor"></div>
-                                <div class="flex flex-col gap-0.5">
-                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium leading-tight">{{ storage.count }}</span>
-                                    <div class="flex items-center gap-1">
-                                        <div class="w-1.5 h-1.5 rounded-sm" [style.background-color]="storage.color"></div>
-                                        <span class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ storage.type }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
             </div>
             </div>
         </div>

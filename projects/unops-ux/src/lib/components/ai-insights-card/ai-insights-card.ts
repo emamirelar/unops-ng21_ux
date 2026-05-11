@@ -37,7 +37,7 @@ export interface AiInsight {
     template: `
         <ux-ai-card-bg class="flex flex-col flex-1 min-h-0 p-4">
             <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1 min-h-0">
-                <div class="flex items-center justify-between cursor-pointer shrink-0" (click)="expanded.set(!expanded())">
+                <div class="flex items-center justify-between cursor-pointer shrink-0 pr-2" (click)="expanded.set(!expanded())">
                     <div class="flex items-center gap-3">
                         <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
                             <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
@@ -47,9 +47,7 @@ export interface AiInsight {
                             <span class="text-midnight-700 dark:text-surface-100 text-sm font-medium leading-tight">{{ insights().length }} insights available for your review</span>
                         </div>
                     </div>
-                    <button class="w-[30px] h-[30px] rounded-full bg-white/85 dark:bg-transparent border border-white dark:border-surface-300 shadow-sm flex items-center justify-center cursor-pointer hover:bg-white dark:hover:bg-white/10 transition-colors">
-                        <i class="pi text-xs text-darkblue-500 dark:text-surface-0" [ngClass]="expanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                    </button>
+                    <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="expanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
                 </div>
 
                 <div class="expand-body" [class.expand-body--open]="expanded()">
