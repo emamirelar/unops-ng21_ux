@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { TagModule } from 'primeng/tag';
 import { PanelModule } from 'primeng/panel';
-import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab } from '@unopsitg/ux';
+import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab, FooterService } from '@unopsitg/ux';
 import { Contact, ContactService, getContactStatusClass } from './contact.service';
 import { DocumentsCard } from '../documents';
 
@@ -378,8 +378,10 @@ const INTERACTION_COLORS: Record<string, string> = {
 
                 </ng-container>
 
-                <!-- Footer -->
-                <div ux-detail-footer class="flex items-center py-3">
+            </ux-detail-layout>
+
+            <ng-template #footerContent>
+                <div class="flex items-center">
                     <p-button
                         icon="pi pi-arrow-left"
                         label="Contacts"
@@ -388,7 +390,7 @@ const INTERACTION_COLORS: Record<string, string> = {
                         routerLink="/apps/contacts"
                     />
                 </div>
-            </ux-detail-layout>
+            </ng-template>
         } @else {
             <div class="flex flex-col items-center justify-center gap-4 py-20">
                 <i class="pi pi-info-circle text-4xl text-surface-400"></i>
@@ -401,6 +403,8 @@ const INTERACTION_COLORS: Record<string, string> = {
 export class ContactDetail implements OnInit {
     private route = inject(ActivatedRoute);
     private contactService = inject(ContactService);
+    private footerService = inject(FooterService);
+    @ViewChild('footerContent', { static: true }) footerTpl!: TemplateRef<unknown>;
 
     contactId = signal<string | null>(null);
     activeTab = 'overview';
@@ -433,7 +437,12 @@ export class ContactDetail implements OnInit {
         { id: 8, title: 'Sentiment Analysis', description: 'Recent email exchanges show a positive sentiment trend. The tone has shifted from neutral to highly engaged.', actionLabel: 'View sentiment details', icon: 'pi-heart', iconColor: 'text-cherry-500' },
     ];
 
+    constructor() {
+        inject(DestroyRef).onDestroy(() => this.footerService.content.set(null));
+    }
+
     ngOnInit() {
+        this.footerService.content.set(this.footerTpl);
         this.contactService.getContacts();
         this.contactId.set(this.route.snapshot.paramMap.get('id'));
     }

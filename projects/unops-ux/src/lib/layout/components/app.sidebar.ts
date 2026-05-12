@@ -3,6 +3,7 @@ import { Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, Vie
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subject, takeUntil } from 'rxjs';
 import { LayoutService } from '../layout.service';
+import { FooterMainComponent } from '../../components/footer-main/footer-main';
 import { AppMenu } from './app.menu';
 import { AppTopbar } from './app.topbar';
 
@@ -10,24 +11,18 @@ const BREAKPOINT = 992;
 
 @Component({
     selector: '[app-sidebar]',
-    imports: [CommonModule, AppMenu, RouterModule, AppTopbar],
+    imports: [CommonModule, AppMenu, RouterModule, AppTopbar, FooterMainComponent],
     template: `<nav class="layout-sidebar" aria-label="Main navigation" (mouseleave)="onMouseLeave()">
         <div #menuContainer class="layout-menu-container min-h-0 grow" (scroll)="onMenuScroll()">
             <div app-menu></div>
         </div>
         @if (!isHorizontal()) {
-            <div
-                class="layout-sidebar-footer shrink-0 pl-8 pr-3 py-2 text-left text-base text-surface-500 dark:text-surface-400"
-                role="contentinfo">
-                &#169; UNOPS {{ copyrightYear }}
-            </div>
+            <ux-footer-main [copyrightOnly]="true" role="contentinfo" />
         }
         <div app-topbar *ngIf="isHorizontal()"></div>
     </nav>`
 })
 export class AppSidebar implements OnInit, OnDestroy {
-    readonly copyrightYear = new Date().getFullYear();
-
     layoutService = inject(LayoutService);
 
     router = inject(Router);

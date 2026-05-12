@@ -2,99 +2,181 @@ body {
 	margin: 0;
 }
 
+:root {
+	--preload-bg-from: #cce5ff;
+	--preload-bg-to: #ffecfe;
+	--preload-fg-from: #bcd6ff;
+	--preload-fg-to: #f6d8ff;
+	--preload-icon: #0d1e2f;
+}
+
+:root.app-dark {
+	--preload-bg-from: #0d1e2f;
+	--preload-bg-to: #001c83;
+	--preload-fg-from: #00153d;
+	--preload-fg-to: #003b7f;
+	--preload-icon: white;
+}
+
 .loader-container {
 	display: flex;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 	min-height: 100vh;
-	background: #343a40;
+	position: relative;
+	isolation: isolate;
+	animation: preload-bg-move 3s ease-in-out infinite;
+	will-change: background-color;
+}
+
+.loader-container svg {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	height: 100%;
+	width: 100%;
+	pointer-events: none;
+}
+
+.preload-fg {
+	will-change: fill;
+	animation: preload-fg-move 6s ease-in-out infinite;
+}
+
+.preload-fg--1 {
+	animation-delay: 0s;
+}
+
+.preload-fg--2 {
+	animation-delay: 2s;
+}
+
+.preload-fg--3 {
+	animation-delay: 4s;
+}
+
+@keyframes preload-bg-move {
+	0%,
+	100% {
+		background-color: var(--preload-bg-from);
+	}
+	50% {
+		background-color: var(--preload-bg-to);
+	}
+}
+
+@keyframes preload-fg-move {
+	0%,
+	100% {
+		fill: var(--preload-fg-from);
+	}
+	50% {
+		fill: var(--preload-fg-to);
+	}
 }
 
 .loader {
+	width: 70px;
+	height: 30px;
+	overflow: hidden;
 	position: relative;
 	margin: auto;
+	z-index: 1;
 }
 
-.middle {
-	top: 0;
-	left: 0;
-	width: 40px;
-	height: 2px;
-	background: white;
+.loader:before {
+	content: "";
 	position: absolute;
-	animation: middleAnimation 2s infinite linear;
-	animation-delay: -100ms;
-}
-
-.bottom {
-	top: 0;
-	left: 0;
-	position: absolute;
-	height: 30px;
-	width: 2px;
-	background: white;
-	border-radius: 2px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	inset: 0;
+	margin: auto;
+	background: var(--preload-icon);
 	transform-origin: bottom;
-	transform: rotate(45deg);
-	animation: bottomAnimation 4s infinite;
+	animation: l10-1 3s infinite;
 }
 
-.bottom:nth-child(1) {
-	animation-delay: -1000ms;
-}
-
-.bottom:nth-child(2) {
-	animation-delay: -2000ms;
-}
-
-.bottom:nth-child(3) {
-	animation-delay: -3000ms;
-}
-
-.bottom-section {
+.loader:after {
+	content: "";
 	position: absolute;
-	transform: translateY(-16px);
+	width: 8px;
+	height: 14px;
+	bottom: calc(50% - 4px);
+	background: var(--preload-icon);
+	animation: l10-2 3s infinite;
 }
 
-.top-section {
-	position: absolute;
-	transform: translateY(16px);
-	transform: scaleY(-1);
-}
-
-@keyframes bottomAnimation {
-	0% {
-		transform: rotate(45deg) scaleY(1);
+@keyframes l10-1 {
+	0%,
+	10% {
+		transform: translate(0) scale(1);
+		box-shadow: 60px 0, 60px 0;
 	}
-	25% {
-		transform: rotate(0) scaleY(0.7);
+	20%,
+	40% {
+		transform: translate(20px) scale(1);
+		box-shadow: 60px 0, 60px 0;
+	}
+	48% {
+		transform: translate(20px) scale(1);
+		box-shadow: 8px 0, 60px 0;
 	}
 	50% {
-		transform: rotate(-45deg) scaleY(1);
+		transform: translate(20px) scale(1.5);
+		box-shadow: 0 0, 60px 0;
 	}
-	75% {
-		transform: rotate(0) scaleY(0.7);
+	58% {
+		transform: translate(20px) scale(1.5);
+		box-shadow: 0 0, 8px 0;
+	}
+	60%,
+	70% {
+		transform: translate(20px) scale(2);
+		box-shadow: 0 0, 0 0;
+	}
+	85% {
+		transform: translate(-50px) scale(2);
+		box-shadow: 0 0, 0 0;
+	}
+	87% {
+		transform: translate(-50px) scale(1);
+		box-shadow: 0 0, 0 0;
 	}
 	100% {
-		transform: rotate(45deg) scaleY(1);
+		transform: translate(0) scale(1);
+		box-shadow: 0 0, 0 0;
 	}
 }
 
-@keyframes middleAnimation {
-	0% {
-		transform: translate(-19px, -9px) scaleX(1);
+@keyframes l10-2 {
+	20%,
+	70% {
+		left: 50%;
 	}
-	25% {
-		transform: translate(-19px, -9px) scaleX(0.6);
-	}
-	50% {
-		transform: translate(-19px, -9px) scaleX(1);
-	}
-	75% {
-		transform: translate(-19px, -9px) scaleX(0.7);
-	}
+	0%,
+	10%,
+	85%,
 	100% {
-		transform: translate(-19px, -9px) scaleX(1);
+		left: -25px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.loader-container {
+		animation: none;
+		background-color: var(--preload-bg-from);
+	}
+
+	.preload-fg {
+		animation: none;
+		fill: var(--preload-fg-from);
+	}
+
+	.loader,
+	.loader:before,
+	.loader:after {
+		animation: none;
 	}
 }

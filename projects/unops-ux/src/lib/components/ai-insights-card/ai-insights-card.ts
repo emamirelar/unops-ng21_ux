@@ -33,18 +33,10 @@ export interface AiInsight {
     },
     styles: `
         :host { display: flex; }
-        @media screen and (min-width: 1024px) {
-            :host {
-                max-height: calc(100dvh - 12rem);
-            }
-            :host(.ux-ai-expanded) {
-                height: calc(100dvh - 12rem);
-            }
-        }
     `,
     template: `
-        <ux-ai-card-bg class="flex flex-col flex-1 min-h-0 p-4">
-            <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1 min-h-0">
+        <ux-ai-card-bg class="flex flex-col flex-1 p-4">
+            <div class="motion-safe:animate-enter-liquid [animation-delay:80ms] flex flex-col flex-1">
                 <div class="flex items-center justify-between cursor-pointer shrink-0 pr-2" (click)="expanded.set(!expanded())">
                     <div class="flex items-center gap-3">
                         <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
@@ -60,7 +52,7 @@ export interface AiInsight {
 
                 <div class="expand-body" [class.expand-body--open]="expanded()">
                     <div class="expand-body__inner">
-                        <div class="flex flex-col gap-4 mt-4 flex-1 min-h-0">
+                        <div class="flex flex-col gap-4 mt-4">
                             <div class="bg-white/60 dark:bg-surface-800/60 border border-white dark:border-surface-700 rounded-[14px] shadow-sm flex items-center gap-4 px-4 py-2.5 shrink-0">
                                 <i class="pi pi-search text-surface-500 dark:text-surface-300 text-sm"></i>
                                 <input
@@ -72,7 +64,7 @@ export interface AiInsight {
                                 />
                             </div>
 
-                            <div class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto overscroll-y-contain pr-0.5">
+                            <div class="flex flex-col gap-3">
                                 @for (insight of paginatedInsights(); track insight.id) {
                                     <div class="bg-white/70 dark:bg-surface-800/70 border border-white/50 dark:border-surface-700/50 rounded-[14px] shadow-sm p-4 flex gap-3 items-start shrink-0">
                                         <i class="pi mt-0.5" [ngClass]="[insight.icon, insight.iconColor]"></i>

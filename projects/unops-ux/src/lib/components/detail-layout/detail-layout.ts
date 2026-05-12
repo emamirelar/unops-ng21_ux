@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, ContentChildren, DestroyRef, Directive, inject, input, model, PLATFORM_ID, QueryList, signal, TemplateRef } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, ContentChildren, DestroyRef, Directive, ElementRef, inject, input, model, PLATFORM_ID, QueryList, signal, TemplateRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
@@ -45,9 +45,6 @@ export class DetailTabDirective {
  *     ...right sidebar (AI card, documents, etc.)...
  *   </ng-container>
  *
- *   <ng-container ux-detail-footer>
- *     ...audit metadata row...
- *   </ng-container>
  * </ux-detail-layout>
  * ```
  */
@@ -104,9 +101,9 @@ export class DetailTabDirective {
         }
 
         :host :deep p-tablist {
-            position: sticky;
+            position: fixed;
             top: 0;
-            z-index: 5;
+            z-index: 1000;
             background: var(--p-content-background, var(--p-primary-400));
             padding-inline: 0.75rem;
         }
@@ -121,7 +118,7 @@ export class DetailTabDirective {
             }
         }
         :host :deep p-tablist .p-tablist-content { width: 100%; }
-        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0 0 0 2rem; }
+        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0 0 0 2rem; position: fixed; }
         :host :deep p-tab { flex: 1; justify-content: center; }
 
         .ux-dl__mobile-tabs {
@@ -132,10 +129,10 @@ export class DetailTabDirective {
 
     `,
     template: `
-        <div class="flex flex-col overflow-hidden flex-1 min-h-0">
+        <div class="flex flex-col flex-1 min-h-0">
 
             <!-- Sticky header (projected) -->
-            <div class="ux-dl__header flex-shrink-0 z-10 px-3 sm:px-4 lg:px-6">
+            <div class="ux-dl__header flex-shrink-0 z-10">
                 <div>
                     <ng-content select="[ux-detail-header]" />
                 </div>
@@ -154,7 +151,7 @@ export class DetailTabDirective {
                     @if (!singleTab()) {
                         <!-- Mobile: dropdown selector -->
                         @if (isMobile()) {
-                            <div class="ux-dl__mobile-tabs px-3 sm:px-4 lg:px-6">
+                            <div class="ux-dl__mobile-tabs">
                                 <p-select
                                     [options]="tabOptions()"
                                     [ngModel]="activeTab()"
@@ -180,7 +177,7 @@ export class DetailTabDirective {
                     }
 
                     <!-- Content + Sidebar row below tab bar -->
-                    <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 lg:py-6 px-3 sm:px-4 lg:px-6">
+                    <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 lg:py-6">
 
                         <!-- Main column: tab panels -->
                         <div class="w-full flex-1 min-w-0 flex flex-col gap-6">
@@ -208,10 +205,6 @@ export class DetailTabDirective {
                 </p-tabs>
             </div>
 
-            <!-- Footer pinned below the scroll area, always visible like the header -->
-            <div class="flex-shrink-0 w-full z-10">
-                <ng-content select="[ux-detail-footer]" />
-            </div>
         </div>
     `
 })
@@ -234,6 +227,8 @@ export class DetailLayoutComponent {
     /** True once the scrollable body has been scrolled past the threshold. */
     readonly scrolled = signal(false);
 
+    private elRef = inject(ElementRef);
+
     constructor() {
         if (isPlatformBrowser(inject(PLATFORM_ID))) {
             const mql = window.matchMedia('(max-width: 1023px)');
@@ -242,6 +237,32 @@ export class DetailLayoutComponent {
             mql.addEventListener('change', handler);
             inject(DestroyRef).onDestroy(() => mql.removeEventListener('change', handler));
         }
+
+        // #region agent log
+        afterNextRender(() => {
+            const host = this.elRef.nativeElement as HTMLElement;
+            const layoutContent = host.closest('.layout-content');
+            const layoutContentWrapper = host.closest('.layout-content-wrapper');
+            const wrapperInside = host.closest('.layout-content-wrapper-inside');
+            const footerWrapper = host.querySelector('[class*="z-100"]') || host.lastElementChild?.lastElementChild;
+            const sidebar = host.querySelector('aside');
+            const scrollArea = host.querySelector('.ux-dl__scroll');
+            const appFooterEl = layoutContentWrapper?.querySelector('[app-footer]');
+            const cs = (el: Element | null | undefined) => el ? getComputedStyle(el) : null;
+            const data = {
+                layoutContent: layoutContent ? { paddingBottom: cs(layoutContent)!.paddingBottom, paddingTop: cs(layoutContent)!.paddingTop, height: layoutContent.getBoundingClientRect().height, bottom: layoutContent.getBoundingClientRect().bottom } : null,
+                wrapperInside: wrapperInside ? { paddingBottom: cs(wrapperInside)!.paddingBottom, height: wrapperInside.getBoundingClientRect().height, bottom: wrapperInside.getBoundingClientRect().bottom } : null,
+                host: { paddingBottom: cs(host)!.paddingBottom, height: host.getBoundingClientRect().height, bottom: host.getBoundingClientRect().bottom },
+                footerWrapper: footerWrapper ? { paddingBottom: cs(footerWrapper)!.paddingBottom, marginBottom: cs(footerWrapper)!.marginBottom, height: footerWrapper.getBoundingClientRect().height, bottom: footerWrapper.getBoundingClientRect().bottom, classes: footerWrapper.className } : null,
+                sidebar: sidebar ? { paddingBottom: cs(sidebar)!.paddingBottom, height: sidebar.getBoundingClientRect().height } : null,
+                scrollArea: scrollArea ? { paddingBottom: cs(scrollArea)!.paddingBottom, height: scrollArea.getBoundingClientRect().height, bottom: scrollArea.getBoundingClientRect().bottom } : null,
+                appFooter: appFooterEl ? { height: appFooterEl.getBoundingClientRect().height, display: cs(appFooterEl)!.display } : 'not found',
+                viewportHeight: window.innerHeight,
+            };
+            console.log('[DEBUG-694fea] Footer layout computed styles', JSON.stringify(data, null, 2));
+            fetch('http://127.0.0.1:7278/ingest/09818c15-01b3-40a5-8a07-65bd2be63fb7',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'694fea'},body:JSON.stringify({sessionId:'694fea',location:'detail-layout.ts:afterNextRender',message:'Footer layout computed styles',data,timestamp:Date.now(),hypothesisId:'H1-H2-H3-H4'})}).catch(()=>{});
+        });
+        // #endregion
     }
 
     /** Tab content templates provided by the consumer. */

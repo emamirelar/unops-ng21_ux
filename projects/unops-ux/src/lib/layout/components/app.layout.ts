@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, computed, effect, ElementRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { filter } from 'rxjs';
 import { LayoutService } from '../layout.service';
 import { AppBreadcrumb } from './app.breadcrumb';
 import { AppConfigurator } from './app.configurator';
-import { AppFooter } from './app.footer';
 import { AppRightMenu } from './app.rightmenu';
 import { AppSearch } from './app.search';
 import { AppSidebar } from './app.sidebar';
 import { AppTopbar } from './app.topbar';
+import { FooterMainComponent } from '../../components/footer-main/footer-main';
 
 @Component({
     selector: 'app-layout',
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppConfigurator, AppBreadcrumb, AppFooter, AppSearch, AppRightMenu],
+    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppConfigurator, AppBreadcrumb, FooterMainComponent, AppSearch, AppRightMenu],
     template: `<div class="layout-wrapper" [ngClass]="containerClass()">
         <div app-topbar></div>
         <div class="layout-body">
@@ -23,7 +25,7 @@ import { AppTopbar } from './app.topbar';
                         <div app-breadcrumb></div>
                         <router-outlet></router-outlet>
                     </main>
-                    <div app-footer></div>
+                    <ux-footer-main class="footer-sticky" />
                 </div>
             </div>
         </div>
@@ -35,6 +37,7 @@ import { AppTopbar } from './app.topbar';
 })
 export class AppLayout {
     layoutService = inject(LayoutService);
+    private elRef = inject(ElementRef);
 
     constructor() {
         effect(() => {
@@ -44,6 +47,14 @@ export class AppLayout {
             } else {
                 document.body.classList.remove('blocked-scroll');
             }
+        });
+
+        inject(Router).events.pipe(
+            filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+            takeUntilDestroyed()
+        ).subscribe(() => {
+            const wrapper: HTMLElement | null = this.elRef.nativeElement.querySelector('.layout-content-wrapper');
+            if (wrapper) wrapper.scrollTop = 0;
         });
     }
 

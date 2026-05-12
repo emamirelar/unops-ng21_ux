@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Preloading Preview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="public/layout/styles/preloading/preloading.css" />
+</head>
+<body>
+    <div class="loader-container">
+        <svg viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+                <filter id="preloadBlur" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="80" />
+                </filter>
+            </defs>
+            <ellipse class="preload-fg preload-fg--1" cx="300" cy="200" rx="400" ry="300" opacity="0.35" filter="url(#preloadBlur)" />
+            <ellipse class="preload-fg preload-fg--2" cx="1500" cy="300" rx="350" ry="250" opacity="0.3" filter="url(#preloadBlur)" />
+            <ellipse class="preload-fg preload-fg--3" cx="900" cy="800" rx="500" ry="300" opacity="0.25" filter="url(#preloadBlur)" />
+        </svg>
+        <div class="loader"></div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 export * from './tokens';
 export * from './layout.service';
+export * from './footer.service';
 export * from './components/app.layout';
 export * from './components/app.sidebar';
 export * from './components/app.topbar';

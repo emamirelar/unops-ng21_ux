@@ -1,6 +1,6 @@
-import { Partner, AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab } from '@unopsitg/ux';
+import { Partner, AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab, FooterService } from '@unopsitg/ux';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -297,8 +297,10 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         </div>
                     </ng-container>
 
-                <!-- Footer -->
-                <div ux-detail-footer class="flex items-center py-3">
+            </ux-detail-layout>
+
+            <ng-template #footerContent>
+                <div class="flex items-center">
                     <p-button
                         icon="pi pi-chevron-left"
                         label="Back to list"
@@ -307,7 +309,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         routerLink="/apps/partners"
                     />
                 </div>
-            </ux-detail-layout>
+            </ng-template>
 
             <!-- Edit Partner Drawer -->
             <p-drawer [(visible)]="showEditDrawer" position="right" styleClass="w-full! max-w-[480px]!" appendTo="body">
@@ -407,6 +409,8 @@ export class PartnerDetail implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private partnerService = inject(PartnerService);
+    private footerService = inject(FooterService);
+    @ViewChild('footerContent', { static: true }) footerTpl!: TemplateRef<unknown>;
 
     partner = computed(() => {
         const id = this.partnerId();
@@ -461,7 +465,12 @@ export class PartnerDetail implements OnInit {
         { id: 10, title: 'Agreement Renewal Window', description: '1 framework agreement with this partner expires in 90 days. Early renewal discussions are recommended.', actionLabel: 'Draft renewal proposal', icon: 'pi-clock', iconColor: 'text-teal-500' },
     ];
 
+    constructor() {
+        inject(DestroyRef).onDestroy(() => this.footerService.content.set(null));
+    }
+
     ngOnInit() {
+        this.footerService.content.set(this.footerTpl);
         this.partnerService.getPartners();
         this.partnerId.set(this.route.snapshot.paramMap.get('id'));
     }

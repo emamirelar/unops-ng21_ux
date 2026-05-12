@@ -7,22 +7,30 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     styles: `
         :host {
             display: block;
-            background: color-mix(in srgb, var(--p-primary-50) 20%, transparent);
+            position: fixed;
+            bottom: 0;
+            left: -2rem;
+            right: -2rem;
+            z-index: 100;
+            background: var(--p-primary-50);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 3rem;
             font-size: var(--font-size-xs, 0.75rem);
+            line-height: 1.5;
             color: var(--p-text-color);
-        }
-
-        @media screen and (min-width: 1024px) {
-            :host {
-                padding: 0.75rem 1rem;
-            }
+            height: 2.5rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-start;
         }
 
         :host-context(:root[class*='app-dark']) {
-            background: color-mix(in srgb, var(--p-primary-900) 50%, transparent);
+            background: var(--p-primary-950);
             color: var(--p-surface-100);
         }
     `,

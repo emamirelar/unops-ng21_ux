@@ -1,4 +1,4 @@
-import { Component, computed, inject, model, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, model, signal, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -17,7 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskDrawer } from '../tasklist/task-drawer';
 import { DocumentsCard, DocumentItem } from '../documents';
-import { AiInsight, AiInsightsCardComponent, DetailFooterComponent, DetailLayoutComponent, DetailTabDirective, PillTabsComponent } from '@unopsitg/ux';
+import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, FooterService, PillTabsComponent } from '@unopsitg/ux';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
 
@@ -155,7 +155,6 @@ interface TeamMember {
         TaskDrawer,
         DocumentsCard,
         AiInsightsCardComponent,
-        DetailFooterComponent,
         DetailLayoutComponent,
         DetailTabDirective,
         PillTabsComponent,
@@ -897,7 +896,7 @@ interface TeamMember {
 
             </ng-template>
 
-            <div ux-detail-footer></div>
+           
 
             <!-- ═══ SIDEBAR ═══ -->
             <ng-container ux-detail-sidebar>
@@ -910,23 +909,21 @@ interface TeamMember {
                 <app-documents-card [documents]="documents()" />
             </ng-container>
 
-            <ux-detail-footer ux-detail-footer>
-                <!-- Desktop: single row with all metadata -->
-                <div class="hidden lg:flex flex-wrap items-center gap-x-6 gap-y-1">
-                    <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
-                    <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> <strong>Target signing:</strong> Apr 1, 2026</span>
-                    <span class="flex items-center gap-x-3"><span><strong>Created:</strong> Apr 5, 2026</span><span><strong>by:</strong> Olivia Martinez</span></span>
-                    <span class="flex items-center gap-x-3"><span><strong>Last modified:</strong> Apr 30, 2026</span><span><strong>by:</strong> James Anderson</span></span>
-                </div>
-
-                <!-- Mobile: only office + target signing -->
-                <div class="flex lg:hidden items-center gap-x-4 gap-y-1 flex-wrap">
-                    <span class="flex items-center gap-1"><i class="pi pi-building text-xs"></i> KEOC - Kenya Operations Centre</span>
-                    <span class="flex items-center gap-1"><i class="pi pi-calendar text-xs"></i> <strong>Target signing:</strong> Apr 1, 2026</span>
-                </div>
-            </ux-detail-footer>
-
         </ux-detail-layout>
+
+        <ng-template #footerContent>
+            <div class="footer-desktop">
+                <span class="footer-item"><i class="pi pi-building text-xs"></i><span class="footer-item-content">KEOC - Kenya Operations Centre</span></span>
+                <span class="footer-item"><i class="pi pi-calendar text-xs"></i><span class="footer-item-content"><strong>Target signing:</strong> <span>Apr 1, 2026</span></span></span>
+                <span class="footer-item-wide"><span><strong>Created:</strong> Apr 5, 2026</span><span><strong>by:</strong> Olivia Martinez</span></span>
+                <span class="footer-item-wide"><span><strong>Last modified:</strong> Apr 30, 2026</span><span><strong>by:</strong> James Anderson</span></span>
+            </div>
+
+            <div class="footer-mobile">
+                <span class="footer-item"><i class="pi pi-building text-xs"></i><span class="footer-item-content">KEOC - Kenya Operations Centre</span></span>
+                <span class="footer-item"><i class="pi pi-calendar text-xs"></i><span class="footer-item-content"><strong>Target signing:</strong> <span>Apr 1, 2026</span></span></span>
+            </div>
+        </ng-template>
 
         <p-confirmdialog header="Confirmation" />
         <app-task-drawer [(visible)]="isTaskDrawerVisible" [task]="selectedTask" [mode]="taskDrawerMode" (save)="handleTaskDrawerSave($event)" (cancel)="handleTaskDrawerCancel()" />
@@ -1008,6 +1005,14 @@ interface TeamMember {
     `
 })
 export class Opportunity {
+
+    // ─── Footer ───
+    private footerService = inject(FooterService);
+    @ViewChild('footerContent', { static: true }) footerTpl!: TemplateRef<unknown>;
+
+    ngOnInit() {
+        this.footerService.content.set(this.footerTpl);
+    }
 
     // ─── Tab Navigation (powered by ux-detail-layout) ───
     detailTabs = [
@@ -1270,7 +1275,9 @@ export class Opportunity {
 
     private messageService = inject(MessageService);
 
-    constructor(private confirmationService: ConfirmationService) {}
+    constructor(private confirmationService: ConfirmationService) {
+        inject(DestroyRef).onDestroy(() => this.footerService.content.set(null));
+    }
 
     // ─── Task Methods ───
     selectTaskFilter(key: string): void {
