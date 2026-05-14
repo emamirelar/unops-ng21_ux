@@ -41,13 +41,12 @@
     
 }
 .layout-content {
-    padding: 2rem 2rem 0 2rem;
-    margin-bottom: none;
+    padding: 2rem 1rem 3.5rem;
     flex: 1 1 auto;
     position: relative;
 
     @media screen and (min-width: 780px) {
-        padding: 2rem 3rem;
+        padding: 2rem 3rem 3.5rem;
     }
 }
 
@@ -64,7 +63,11 @@
         min-height: 0;
         display: flex;
         flex-direction: column;
-        padding: 1rem 2rem 0;
+        padding: 1rem 1rem 3.5rem;
+
+        @media screen and (min-width: 780px) {
+            padding-inline: 2rem;
+        }
     }
 
     .layout-content > router-outlet + * {

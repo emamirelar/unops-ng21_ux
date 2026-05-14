@@ -1,13 +1,13 @@
 .layout-footer {
     height: 4rem;
-    padding: 2rem;
+    padding: 2rem 1rem;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     text-align: right;
 
-    @media screen and (min-width: 1024px) {
-        padding: 2rem;
+    @media screen and (min-width: 780px) {
+        padding: 2rem 3rem;
     }
 
     .footer-copyright {
