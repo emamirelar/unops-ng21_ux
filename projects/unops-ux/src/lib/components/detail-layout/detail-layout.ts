@@ -101,10 +101,9 @@ export class DetailTabDirective {
         }
 
         :host :deep p-tablist {
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            background: var(--p-content-background, var(--p-primary-400));
+            display: flex;
+            overflow: hidden;
+            background: var(--p-surface-950);
             padding-inline: 0.75rem;
         }
         @media screen and (min-width: 640px) {
@@ -118,7 +117,7 @@ export class DetailTabDirective {
             }
         }
         :host :deep p-tablist .p-tablist-content { width: 100%; }
-        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0 0 0 2rem; position: fixed; }
+        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0 0 0 2rem; }
         :host :deep p-tab { flex: 1; justify-content: center; }
 
         .ux-dl__mobile-tabs {
@@ -141,42 +140,42 @@ export class DetailTabDirective {
                 </div>
             </div>
 
-            <!-- Scrollable body -->
-            <div class="flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden ux-dl__scroll"
-                 (scroll)="onScroll($event)">
+            <!-- p-tabs wraps tablist + scrollable panels for state binding -->
+            <p-tabs class="flex flex-col flex-1 min-h-0" [value]="activeTab()" (valueChange)="activeTab.set($event + '')">
 
-                <!-- Full-width tab bar -->
-                <p-tabs [value]="activeTab()" (valueChange)="activeTab.set($event + '')">
-
-                    @if (!singleTab()) {
-                        <!-- Mobile: dropdown selector -->
-                        @if (isMobile()) {
-                            <div class="ux-dl__mobile-tabs">
-                                <p-select
-                                    [options]="tabOptions()"
-                                    [ngModel]="activeTab()"
-                                    (ngModelChange)="activeTab.set($event)"
-                                    optionLabel="label"
-                                    optionValue="value"
-                                    styleClass="w-full ux-dl__mobile-select"
-                                />
-                            </div>
-                        }
-
-                        <!-- Desktop: horizontal tab bar -->
-                        <p-tablist [style.display]="isMobile() ? 'none' : null">
-                            @for (tab of tabs(); track tab.value) {
-                                <p-tab [value]="tab.value">
-                                    @if (tab.icon) {
-                                        <i [class]="tab.icon" class="mr-2 text-sm"></i>
-                                    }
-                                    {{ tab.label }}
-                                </p-tab>
-                            }
-                        </p-tablist>
+                @if (!singleTab()) {
+                    <!-- Mobile: dropdown selector -->
+                    @if (isMobile()) {
+                        <div class="ux-dl__mobile-tabs">
+                            <p-select
+                                [options]="tabOptions()"
+                                [ngModel]="activeTab()"
+                                (ngModelChange)="activeTab.set($event)"
+                                optionLabel="label"
+                                optionValue="value"
+                                styleClass="w-full ux-dl__mobile-select"
+                            />
+                        </div>
                     }
 
-                    <!-- Content + Sidebar row below tab bar -->
+                    <!-- Desktop: horizontal tab bar (outside scroll → stays fixed below header) -->
+                    <p-tablist class="flex-shrink-0" [style.display]="isMobile() ? 'none' : null">
+                        @for (tab of tabs(); track tab.value) {
+                            <p-tab [value]="tab.value">
+                                @if (tab.icon) {
+                                    <i [class]="tab.icon" class="mr-2 text-sm"></i>
+                                }
+                                {{ tab.label }}
+                            </p-tab>
+                        }
+                    </p-tablist>
+                }
+
+                <!-- Scrollable body (only content scrolls, tabs stay above) -->
+                <div class="flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden ux-dl__scroll"
+                     (scroll)="onScroll($event)">
+
+                    <!-- Content + Sidebar row -->
                     <div class="flex flex-col lg:flex-row items-start gap-6 w-full py-4 lg:py-6">
 
                         <!-- Main column: tab panels -->
@@ -202,8 +201,9 @@ export class DetailTabDirective {
                         </aside>
                     </div>
 
-                </p-tabs>
-            </div>
+                </div>
+
+            </p-tabs>
 
         </div>
     `

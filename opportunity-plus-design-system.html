@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>OpportunityPlus Design System | Case Study | Ema Rogobete</title>
+	<meta name="description" content="UI and UX design case study for the OpportunityPlus Design System - an Angular 21 component library, brand theming engine, and application shell for UNOPS digital products">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Caudex&family=Square+Peg&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/subpage.css">
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-N5MPFS5509"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-N5MPFS5509');
+	</script>
+	<script src="../js/topbar.js"></script>
+</head>
+
+<body class="subpage">
+	<main class="subpage-main">
+		<header class="subpage-header">
+			<nav class="breadcrumbs" aria-label="Breadcrumb">
+				<a href="../case-studies.html" class="back-arrow back-arrow--design">&larr;</a>
+				<a href="../index.html" class="breadcrumbs__item">ema rogobete</a>
+				<span class="breadcrumbs__separator">/</span>
+				<a href="../case-studies.html" class="breadcrumbs__item">Case Studies</a>
+				<span class="breadcrumbs__separator">/</span>
+				<span class="breadcrumbs__item breadcrumbs__item--current">OpportunityPlus Design System</span>
+			</nav>
+		</header>
+
+		<section class="case-study-title">
+			<div class="subpage-header__title-section">
+				<span class="meta-label">Project Name</span>
+				<h1 class="subpage-title">OpportunityPlus Design System</h1>
+				<div class="case-study-tags">
+					<span class="tag tag--skills" data-tooltip="Architecting scalable component libraries with brand theming, design tokens, and reusable layout patterns across applications">Design System Architecture</span>
+					<span class="tag tag--skills" data-tooltip="Engineering multi-preset theme systems with PrimeNG and PrimeUIX, supporting brand variants and dark mode">Theme Engineering</span>
+					<span class="tag tag--skills" data-tooltip="Bridging design and development by building the library developers adopt, writing adoption guides, and maintaining Storybook documentation">Developer Experience</span>
+					<span class="tag tag--skills" data-tooltip="Designing component APIs, layout shells, and shared patterns that scale across UNOPS Angular applications">Component Design</span>
+				</div>
+			</div>
+			<div class="case-study-meta">
+				<div class="meta-item">
+					<span class="meta-label">Organization</span>
+					<span class="meta-value">UNOPS</span>
+				</div>
+				<div class="meta-item">
+					<span class="meta-label">Year</span>
+					<span class="meta-value">2024–2026</span>
+				</div>
+				<div class="meta-item">
+					<span class="meta-label">Role</span>
+					<span class="meta-value">UX Designer &amp; Design System Lead</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="case-study-content">
+			<div class="case-study-body">
+
+				<section class="case-study-section">
+				<h2 class="section-title">Context & Challenge</h2>
+				<p class="intro-text">
+					OpportunityPlus is UNOPS' internal platform for managing partnership opportunities, 
+					project pipelines, and organizational workflows. As the application grew in scope and 
+					complexity, the frontend accumulated inconsistent styling, duplicated component patterns, 
+					and a legacy Material-style PrimeNG preset that made visual updates fragile and 
+					time-consuming.
+				</p>
+				<p class="intro-text">
+					The challenge was to design and ship a unified design system—published as 
+					<code>@unopsitg/ux</code>—that would replace the fragmented approach with a single 
+					source of truth for brand theming, layout structure, and shared UI components. The system 
+					needed to serve OpportunityPlus immediately while being flexible enough for adoption by 
+					other UNOPS Angular applications.
+				</p>
+				</section>
+
+				<section class="case-study-section">
+				<h2 class="section-title">Design System Architecture</h2>
+				<p class="intro-text">
+					I designed the system around three distinct layers, each addressing a different concern 
+					and allowing teams to adopt incrementally rather than all at once.
+				</p>
+				<p class="intro-text">
+					<strong>Brand Theme Layer</strong> — Three preset variants (Soft, Crisp, and Contrast) 
+					built on PrimeUIX's <code>definePreset</code> API, each extending a different base 
+					(Aura, Lara, Nora) while sharing a common set of UNOPS brand primitives. This lets teams 
+					choose visual tone without losing brand consistency. Semantic tokens for primary, surface, 
+					and component-level overrides (buttons, data tables, tabs, tags, cards) ensure every 
+					PrimeNG component renders on-brand without per-component CSS hacks.
+				</p>
+				<p class="intro-text">
+					<strong>Layout Shell Layer</strong> — A configurable application shell providing sidebar 
+					navigation, top bar, breadcrumbs, search, and a sticky footer. Host applications supply 
+					their menu model and optional logo overrides through injection tokens—no forking or 
+					copy-pasting layout code. The shell supports multiple menu modes (static, overlay, slim, 
+					horizontal) and adapts responsively across breakpoints.
+				</p>
+				<p class="intro-text">
+					<strong>Shared Components Layer</strong> — Purpose-built components like 
+					<code>ux-detail-layout</code> (a detail page shell with sticky headers, tabbed content, 
+					and a sidebar slot), <code>ux-footer-main</code> (a copyright bar with injectable 
+					template content), and pill-style tab navigation. Each component references design tokens 
+					exclusively—no hard-coded colors or spacing—so they respond automatically to theme 
+					changes and dark mode.
+				</p>
+				</section>
+
+				<section class="case-study-section">
+				<h2 class="section-title">Brand Theming & Token Strategy</h2>
+				<p class="intro-text">
+					The UNOPS brand palette needed to map cleanly onto PrimeNG's token structure while 
+					remaining accessible across light and dark surfaces. I defined a set of brand primitives 
+					(darkblue, teal, gold, gray ramps) and wired them through semantic aliases so that 
+					changing a single primitive cascades correctly to every component that references it.
+				</p>
+				<p class="intro-text">
+					Tailwind 4 was integrated alongside PrimeNG theming, sharing the same palette through a 
+					unified <code>@theme</code> block. This eliminated the common problem of design-system 
+					drift where utility classes and component tokens point to different color values. 
+					Developers use standard Tailwind utilities (<code>text-darkblue-500</code>, 
+					<code>bg-gray-50</code>) and PrimeNG surfaces interchangeably, all drawing from the 
+					same source.
+				</p>
+				<p class="intro-text">
+					Dark mode is handled through a CSS class toggle (<code>.app-dark</code>) with the preset 
+					providing appropriate surface and text inversions. I designed the dark palette to preserve 
+					contrast ratios and visual hierarchy rather than simply inverting lightness values, paying 
+					particular attention to data-dense views like tables and dashboards.
+				</p>
+				</section>
+
+				<section class="case-study-section">
+				<h2 class="section-title">Developer Experience & Adoption</h2>
+				<p class="intro-text">
+					A design system only succeeds if developers want to use it. I wrote a comprehensive 
+					adoption guide that walks teams through migration from the legacy preset to 
+					<code>BrandSoft</code>—covering <code>angular.json</code> configuration, 
+					<code>app.config.ts</code> wiring, menu model injection, and a phased rollout strategy 
+					so teams aren't forced into a big-bang rewrite.
+				</p>
+				<p class="intro-text">
+					The library ships with a full Storybook instance documenting every component, layout 
+					variant, and theme preset in interactive isolation. Developers can explore components, 
+					inspect token usage, and verify visual behavior before writing application code. This 
+					reduced the back-and-forth between design handoff and implementation significantly.
+				</p>
+				<p class="intro-text">
+					I also maintained a living design-system ledger—tracking which files are canonical, 
+					noting compatibility concerns around PrimeNG upgrades, and documenting boundary rules 
+					that protect the system from ad-hoc style overrides. This guardrail documentation became 
+					as important as the code itself in maintaining consistency at scale.
+				</p>
+				</section>
+
+				<section class="case-study-section">
+				<h2 class="section-title">Layout Shell: Balancing Flexibility & Consistency</h2>
+				<p class="intro-text">
+					The application shell needed to feel unified across UNOPS products while allowing each 
+					team to customize navigation, branding, and page structure. I designed the shell around 
+					Angular injection tokens (<code>MENU_MODEL</code>, <code>SIDEBAR_LOGO</code>, 
+					<code>TOPBAR_MOBILE_LOGO</code>) so that host applications configure behavior 
+					declaratively—no subclassing, no template overrides.
+				</p>
+				<p class="intro-text">
+					The sidebar supports compact and expanded modes with smooth transitions, a footer slot 
+					for contextual actions, and horizontal menu mode for information-dense dashboards. The 
+					top bar adapts for mobile with a dedicated logo token, ensuring brand visibility on small 
+					screens without cramming the desktop layout into a responsive breakpoint.
+				</p>
+				<p class="intro-text">
+					Detail pages use <code>ux-detail-layout</code>, which provides a sticky header, tabbed 
+					content via a structural directive (<code>uxDetailTab</code>), and a right sidebar slot 
+					used for contextual features like AI-powered insights. This pattern replaced dozens of 
+					bespoke detail page layouts across the application with a single, well-tested component.
+				</p>
+				</section>
+
+				<section class="case-study-section">
+				<h2 class="section-title">Key Deliverables</h2>
+				<ul class="feature-list">
+					<li>Published npm package (<code>@unopsitg/ux</code>) with brand theme presets, layout shell, and shared components for Angular 21</li>
+					<li>Three brand preset variants (Soft, Crisp, Contrast) with UNOPS primitives mapped to PrimeNG semantic tokens</li>
+					<li>Configurable application shell with injection-token-based customization for navigation, logos, and layout modes</li>
+					<li>Tailwind 4 integration sharing a unified <code>@theme</code> palette with PrimeNG design tokens</li>
+					<li>Interactive Storybook documentation for every component, layout variant, and theme configuration</li>
+					<li>Comprehensive adoption guide with phased migration strategy for the OpportunityPlus application</li>
+					<li>Design-system maintenance ledger and boundary rules protecting against style drift</li>
+					<li>Dark mode support with accessibility-validated contrast ratios across all surface combinations</li>
+				</ul>
+				</section>
+
+				<section class="case-study-section">
+				<h2 class="section-title">Impact & Outcomes</h2>
+				<p class="intro-text">
+					The design system eliminated an entire category of visual bugs—inconsistent spacing, 
+					mismatched colors, and broken dark-mode surfaces—that had accumulated across the 
+					OpportunityPlus application. New features now inherit correct theming and layout behavior 
+					by default, reducing design-implementation review cycles.
+				</p>
+				<p class="intro-text">
+					Developer onboarding time for UI work dropped measurably. Instead of reverse-engineering 
+					scattered SCSS files and legacy overrides, new team members consult the Storybook, wire 
+					up the layout shell, and start building features within the design system's guardrails. 
+					The adoption guide and boundary documentation make the "right way" the easiest path.
+				</p>
+				<p class="intro-text">
+					The library's architecture—with its token-based theming and injection-token 
+					configuration—means it can serve future UNOPS Angular products beyond OpportunityPlus 
+					without forking. The Spectrum design language that began with earlier projects (PleaseAI, 
+					Data Portal) now has a production-grade Angular implementation that teams can install 
+					from npm and configure in minutes.
+				</p>
+				<p class="intro-text">
+					This project represents the full arc from design-system vision to shipped, adopted 
+					infrastructure—bridging the gap between Figma specifications and the Angular component 
+					library that developers actually import every day.
+				</p>
+				</section>
+			</div>
+		</section>
+
+		<footer class="subpage-footer">
+			<div class="social-links social-links--design">
+				<a href="https://www.linkedin.com/in/emarogobete/" target="_blank" rel="noopener" class="social-link social-link--design"><img src="../img/common/social/linked.svg" alt="LinkedIn"></a>
+				<a href="https://github.com/emavoo" target="_blank" rel="noopener" class="social-link social-link--design"><img src="../img/common/social/Social Icons-3.svg" alt="GitHub"></a>
+				<a href="https://dribbble.com/emarogobete" target="_blank" rel="noopener" class="social-link social-link--design"><img src="../img/common/social/dribble.svg" alt="Dribbble"></a>
+				<a href="https://behance.net/emarogobete" target="_blank" rel="noopener" class="social-link social-link--design"><img src="../img/common/social/Behance.svg" alt="Behance"></a>
+			</div>
+		</footer>
+	</main>
+</body>
+
+</html>

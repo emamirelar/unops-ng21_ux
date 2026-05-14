@@ -25,8 +25,8 @@ import { FooterMainComponent } from '../../components/footer-main/footer-main';
                         <div app-breadcrumb></div>
                         <router-outlet></router-outlet>
                     </main>
-                    <ux-footer-main class="footer-sticky" />
                 </div>
+                <ux-footer-main class="footer-sticky" />
             </div>
         </div>
         <app-configurator />

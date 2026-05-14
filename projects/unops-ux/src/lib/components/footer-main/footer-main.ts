@@ -32,10 +32,10 @@ import { FooterService } from '../../layout/footer.service';
         }
     `,
     template: `
-        @if (!copyrightOnly() && footerService.content(); as tpl) {
-            <ng-container [ngTemplateOutlet]="tpl" />
-        } @else {
+        @if (copyrightOnly()) {
             <span>&#169; UNOPS {{ copyrightYear }}</span>
+        } @else if (footerService.content(); as tpl) {
+            <ng-container [ngTemplateOutlet]="tpl" />
         }
     `
 })
