@@ -13,17 +13,10 @@ import { FooterService } from '../../layout/footer.service';
             display: flex;
             align-items: center;
             height: 3rem;
-            padding: 1rem;
             background: var(--p-primary-50);
             font-size: var(--font-size-xs, 0.75rem);
             line-height: 1.2;
             color: var(--p-text-color);
-        }
-
-        @media screen and (min-width: 992px) {
-            :host {
-                padding: 1rem 2rem;
-            }
         }
 
         :host-context(:root[class*='app-dark']) {
@@ -36,13 +29,28 @@ import { FooterService } from '../../layout/footer.service';
             bottom: 0;
             z-index: 10;
         }
+
+        .footer-inner {
+            width: 100%;
+            max-width: 1540px;
+            margin-inline: auto;
+            padding: 1rem;
+        }
+
+        @media screen and (min-width: 780px) {
+            .footer-inner {
+                padding: 1rem 3rem;
+            }
+        }
     `,
     template: `
-        @if (copyrightOnly()) {
-            <span>&#169; UNOPS {{ copyrightYear }}</span>
-        } @else if (footerService.content(); as tpl) {
-            <ng-container [ngTemplateOutlet]="tpl" />
-        }
+        <div class="footer-inner">
+            @if (copyrightOnly()) {
+                <span>&#169; UNOPS {{ copyrightYear }}</span>
+            } @else if (footerService.content(); as tpl) {
+                <ng-container [ngTemplateOutlet]="tpl" />
+            }
+        </div>
     `
 })
 export class FooterMainComponent {

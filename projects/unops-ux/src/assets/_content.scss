@@ -79,5 +79,11 @@
 
     ux-footer-main {
         flex-shrink: 0;
+
+        .footer-inner {
+            @media screen and (min-width: 780px) {
+                padding-inline: 2rem;
+            }
+        }
     }
 }
