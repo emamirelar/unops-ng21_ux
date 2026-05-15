@@ -26,63 +26,34 @@ interface FilterTag {
         <div class="flex flex-col gap-6">
             <h1 class="text-deepsea-500 dark:text-surface-0 text-2xl font-extrabold leading-8 m-0">Contacts</h1>
 
-            <div class="flex flex-col items-start justify-start gap-3">
+            <div class="flex flex-col gap-3">
                 <p-iconfield class="w-full sm:w-72">
                     <p-inputicon styleClass="pi pi-search" />
                     <input pInputText [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search contacts..." class="w-full! py-2! rounded-xl!" />
                 </p-iconfield>
 
-                <div class="flex items-center flex-wrap gap-2">
-                    @for (tag of filterTags(); track tag.group + ':' + tag.value) {
-                        <p-tag
-                            [value]="tag.label"
-                            severity="secondary"
-                            styleClass="cursor-pointer transition-colors px-2 py-1"
-                            [class]="isTagActive(tag) ? 'tag-filter-active' : ''"
-                            (click)="toggleTag(tag)"
-                        />
-                    }
-                    @if (hasActiveFilters()) {
-                        <p-tag
-                            value="Clear"
-                            icon="pi pi-times"
-                            severity="secondary"
-                            styleClass="cursor-pointer transition-colors px-2 py-1"
-                            (click)="clearFilters()"
-                        />
-                    }
-                </div>
-            </div>
-
-            <div class="p-4 border border-surface rounded-2xl">
-                <div class="flex items-center justify-between mb-4 animate-fade-in">
-                    <div class="flex items-center text-surface-700 dark:text-surface-300 flex-wrap gap-6 text-sm">
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-users text-base! leading-normal!"></i>
-                            <span>{{ filteredContacts().length }} Contacts</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-check-circle text-base! leading-normal!"></i>
-                            <span>{{ activeCount() }} Active</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-building text-base! leading-normal!"></i>
-                            <span>{{ organizationCount() }} Organizations</span>
-                        </div>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                    <div class="flex items-center flex-wrap gap-2">
+                        <p-tag [value]="filteredContacts().length + ' Contacts'" icon="pi pi-users" severity="secondary" />
+                        <p-tag [value]="activeCount() + ' Active'" icon="pi pi-check-circle" severity="secondary" />
+                        <p-tag [value]="organizationCount() + ' Organizations'" icon="pi pi-building" severity="secondary" />
                     </div>
-                    <p-select-button [(ngModel)]="layout" [options]="layoutOptions" [allowEmpty]="false">
+                    <p-select-button [(ngModel)]="layout" [options]="layoutOptions" [allowEmpty]="false" class="shrink-0 self-end sm:self-auto">
                         <ng-template #item let-option>
                             <i class="pi" [class.pi-bars]="option === 'list'" [class.pi-table]="option === 'grid'"></i>
                         </ng-template>
                     </p-select-button>
                 </div>
+            </div>
+
+            <div class="p-4 border border-surface rounded-2xl">
             <p-dataview [value]="filteredContacts()" [layout]="layout" [pt]="{ header: { class: 'p-0! hidden' }, content: { class: 'bg-transparent!' } }">
 
                 <ng-template #list let-items>
                     <div class="flex flex-col">
                         @for (item of items; track item.id; let i = $index) {
                             <div
-                                class="flex flex-col sm:flex-row sm:items-center p-4 gap-4 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up"
+                                class="flex flex-row items-start sm:items-center px-0 sm:px-4 py-4 gap-4 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors animate-fade-in-up"
                                 [style.animation-delay.ms]="i * 50"
                                 [class.border-t]="i !== 0"
                                 [class.border-surface]="i !== 0"
@@ -94,9 +65,10 @@ interface FilterTag {
 
                                 <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-4">
                                     <div class="flex flex-col gap-1 min-w-0">
-                                        <div class="flex items-center gap-2">
+                                        <div class="flex items-center gap-2 flex-wrap min-w-0">
                                             <span class="text-surface-900 dark:text-surface-0 text-base font-semibold">{{ item.firstName }} {{ item.lastName }}</span>
                                             <span class="text-surface-600 dark:text-surface-300 text-sm">({{ item.organization }})</span>
+                                            <span class="pi pi-chevron-right text-surface-400 text-sm shrink-0"></span>
                                         </div>
                                         <div class="flex items-center gap-3 text-sm text-surface-600 dark:text-surface-300">
                                             @if (item.title) {
@@ -118,7 +90,6 @@ interface FilterTag {
                                         @if (item.status) {
                                             <p-tag [value]="item.status" [styleClass]="getStatusClass(item.status)" />
                                         }
-                                        <span class="pi pi-chevron-right text-surface-400 text-sm"></span>
                                     </div>
                                 </div>
                             </div>
