@@ -21,6 +21,7 @@ import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDir
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
 
+
 interface Member {
     name?: string;
     image: string;
@@ -182,6 +183,56 @@ interface TeamMember {
 
             <!-- ═══ OVERVIEW TAB ═══ -->
             <ng-template uxDetailTab="overview">
+
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- ENTITY COMPLETION METER -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <div class="card flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Opportunity Completion Steps</span>
+                            </div>
+                        </div>
+                        <span class="text-2xl font-bold text-surface-900 dark:text-surface-0">{{ completionFilledTotal() }}/{{ completionTotalRecords }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 flex-wrap">
+                        @for (step of completionSteps(); track $index) {
+                            @if (step.type === 'mandatory' && step.filled) {
+                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-500 text-white text-xs cursor-pointer"
+                                      [pTooltip]="step.name" tooltipPosition="top">
+                                    <i class="pi pi-check text-[10px]"></i>
+                                </span>
+                            } @else if (step.type === 'optional' && step.filled) {
+                                <span class="inline-block w-6 h-6 rounded-full bg-blue-500 cursor-pointer"
+                                      [pTooltip]="step.name" tooltipPosition="top"></span>
+                            } @else {
+                                <span class="inline-block w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer"
+                                      [pTooltip]="step.name + ' (missing)'" tooltipPosition="top"></span>
+                            }
+                        }
+                    </div>
+
+                    <div class="flex items-center gap-6 mt-1">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-green-500 text-white">
+                                <i class="pi pi-check text-[8px]"></i>
+                            </span>
+                            <span class="text-sm text-surface-600 dark:text-surface-300">Mandatory:</span>
+                            <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionMandatory.filled }}/{{ completionMandatory.total }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-block w-4 h-4 rounded-full bg-blue-500 shrink-0"></span>
+                            <span class="text-sm text-surface-600 dark:text-surface-300">Optional:</span>
+                            <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionOptional.filled }}/{{ completionOptional.total }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-surface-600 dark:text-surface-300">Total:</span>
+                            <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionTotalRecords }}</span>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- ═══════════════════════════════════════════════ -->
                 <!-- OVERVIEW SECTION -->
@@ -1040,6 +1091,65 @@ export class Opportunity {
         { value: 'team', label: 'Team' },
         { value: 'beneficiaries', label: 'Beneficiaries' }
     ];
+
+    // ─── Entity Completion (Mandatory / Optional out of total records) ───
+    completionTotalRecords = 30;
+    completionMandatory = { filled: 3, total: 3 };
+    completionOptional = { filled: 12, total: 27 };
+
+    mandatoryRecords = [
+        { name: 'Title', filled: true },
+        { name: 'Description', filled: true },
+        { name: 'Focal Point', filled: true }
+    ];
+
+    optionalRecords = [
+        { name: 'Budget', filled: true },
+        { name: 'Duration', filled: true },
+        { name: 'Start Date', filled: true },
+        { name: 'End Date', filled: true },
+        { name: 'Funding Source', filled: true },
+        { name: 'Implementing Partner', filled: true },
+        { name: 'Country', filled: true },
+        { name: 'Region', filled: true },
+        { name: 'Sector', filled: true },
+        { name: 'Sub-Sector', filled: true },
+        { name: 'SDG Goals', filled: true },
+        { name: 'Target Beneficiaries', filled: true },
+        { name: 'Risk Assessment', filled: false },
+        { name: 'Procurement Plan', filled: false },
+        { name: 'M&E Framework', filled: false },
+        { name: 'Stakeholder Map', filled: false },
+        { name: 'Communication Plan', filled: false },
+        { name: 'Exit Strategy', filled: false },
+        { name: 'Sustainability Plan', filled: false },
+        { name: 'Gender Analysis', filled: false },
+        { name: 'Environmental Screening', filled: false },
+        { name: 'Legal Framework', filled: false },
+        { name: 'Partnership Agreement', filled: false },
+        { name: 'Workplan', filled: false },
+        { name: 'Deliverables', filled: false },
+        { name: 'Quality Assurance', filled: false },
+        { name: 'Lessons Learned', filled: false }
+    ];
+
+    completionSteps = computed(() => {
+        const steps: { type: 'mandatory' | 'optional'; filled: boolean; name: string }[] = [];
+        for (const rec of this.mandatoryRecords) {
+            steps.push({ type: 'mandatory', filled: rec.filled, name: rec.name });
+        }
+        for (const rec of this.optionalRecords) {
+            steps.push({ type: 'optional', filled: rec.filled, name: rec.name });
+        }
+        return steps;
+    });
+
+    completionFilledTotal = computed(() =>
+        this.completionMandatory.filled + this.completionOptional.filled
+    );
+    completionTotal = computed(() =>
+        Math.round((this.completionFilledTotal() / this.completionTotalRecords) * 100)
+    );
 
     // ─── Analysis Stats ───
     analysisStats = [

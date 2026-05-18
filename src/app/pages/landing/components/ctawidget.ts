@@ -3,15 +3,16 @@ import { LazyImageWidget } from '@/app/pages/landing/components/lazyimagewidget'
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AnimateOnScrollModule } from 'primeng/animateonscroll';
 
 @Component({
     selector: 'app-cta-widget',
     standalone: true,
-    imports: [CommonModule, LazyImageWidget, RouterLink],
+    imports: [CommonModule, LazyImageWidget, RouterLink, AnimateOnScrollModule],
     host: { class: 'block' },
     template: `
         <section class="py-10 lg:py-28 landing-container mx-auto">
-            <div class="relative overflow-hidden pr-8 sm:pr-0 pt-8 sm:pt-16 xl:pt-20 pb-8 sm:pb-20 xl:pb-24 pl-8 sm:pl-12 xl:pl-20 w-full bg-surface-50 dark:bg-surface-900 rounded-2xl flex items-start sm:flex-row flex-col gap-16 sm:gap-8 lg:gap-14">
+            <div pAnimateOnScroll enterClass="animate-enter fade-in-10 animate-duration-1000" leaveClass="animate-leave fade-out-0" class="relative overflow-hidden pr-8 sm:pr-0 pt-8 sm:pt-16 xl:pt-20 pb-8 sm:pb-20 xl:pb-24 pl-8 sm:pl-12 xl:pl-20 w-full bg-surface-50 dark:bg-surface-900 rounded-2xl flex items-start sm:flex-row flex-col gap-16 sm:gap-8 lg:gap-14">
                 <div class="relative z-10 sm:flex-1 lg:max-w-md xl:max-w-140">
                     <h3 class="title-h5 lg:title-h3 max-w-60 sm:max-w-72 lg:max-w-md text-left!">Now, It's Time to Take Action!</h3>
                     <p class="mt-4 body-small lg:body-large text-left! max-w-sm md:max-w-none">

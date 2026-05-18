@@ -10,6 +10,11 @@ export default [
                 loadComponent: () => import('./opportunities').then((c) => c.Opportunities)
             },
             {
+                path: 'empty',
+                loadComponent: () => import('./opportunity-empty').then((c) => c.OpportunityEmpty),
+                data: { breadcrumb: 'Empty State' }
+            },
+            {
                 path: ':id',
                 loadComponent: () => import('./opportunity').then((c) => c.Opportunity),
                 data: { breadcrumb: 'Details' }

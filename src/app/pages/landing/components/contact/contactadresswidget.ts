@@ -1,16 +1,17 @@
 import { LazyImageWidget } from '@/app/pages/landing/components/lazyimagewidget';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { AnimateOnScrollModule } from 'primeng/animateonscroll';
 
 @Component({
     selector: 'app-contact-adress-widget',
     standalone: true,
-    imports: [CommonModule, LazyImageWidget],
+    imports: [CommonModule, LazyImageWidget, AnimateOnScrollModule],
     host: { class: 'block' },
     template: `
         <section class="landing-container mx-auto py-10 lg:py-20">
             <div class="max-w-xl lg:max-w-6xl mx-auto flex lg:flex-row flex-col gap-7">
-                <div *ngFor="let data of contactInfo; let index = index" class="flex-1 p-3.5 rounded-3xl border border-surface-200 dark:border-surface-800 shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+                <div *ngFor="let data of contactInfo; let index = index" pAnimateOnScroll enterClass="animate-enter fade-in-10 slide-in-from-b-20 animate-duration-1000" leaveClass="animate-leave fade-out-0" class="flex-1 p-3.5 rounded-3xl border border-surface-200 dark:border-surface-800 shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
                     <app-lazy-image-widget className="max-h-96 w-full h-full object-cover rounded-2xl shadow-[0px_1px_2px_0px_rgba(69,69,69,0.24),0px_0px_0px_1px_rgba(71,71,71,0.08)]" [src]="data.image" alt="Contact Address Image" />
                     <div class="py-6 px-3.5 lg:p-7">
                         <span class="title-h7">{{ data.title }}</span>

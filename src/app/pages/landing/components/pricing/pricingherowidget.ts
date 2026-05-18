@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AnimateOnScrollModule } from 'primeng/animateonscroll';
 
 @Component({
     selector: 'app-pricing-hero-widget',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, AnimateOnScrollModule],
     host: { class: 'block' },
     template: `
         <section class="animate-fadein animate-duration-300 animate-ease-in landing-container mx-auto relative lg:pb-14 lg:pt-52 pt-36 pb-10">
@@ -25,8 +26,10 @@ import { CommonModule } from '@angular/common';
             <div class="flex flex-wrap gap-7 mx-auto max-w-lg md:max-w-4xl xl:max-w-full">
                 <div
                     *ngFor="let data of pricingData; let i = index"
-                    class="w-full min-w-full sm:min-w-100 flex-1 p-6 border border-surface-200 dark:border-surface-800 rounded-3xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)] animate-fade-in-up"
-                    [style.animation-delay.ms]="i * 80"
+                    pAnimateOnScroll
+                    enterClass="animate-enter fade-in-10 slide-in-from-b-20 animate-duration-1000"
+                    leaveClass="animate-leave fade-out-0"
+                    class="w-full min-w-full sm:min-w-100 flex-1 p-6 border border-surface-200 dark:border-surface-800 rounded-3xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]"
                 >
                     <div class="w-fit py-1 px-4 rounded-full bg-surface-200 dark:bg-surface-800 font-medium uppercase text-surface-950 dark:text-surface-0">
                         {{ data.type }}
