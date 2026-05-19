@@ -175,19 +175,19 @@
   @keyframes ai-bg-move {
     0%,
     100% {
-      background-color: #cce5ff;
+      background-color: var(--color-ai-50, #f0edff);
     }
     50% {
-      background-color: #ffedf8;
+      background-color: var(--color-cherry-50, #e6c7d9);
     }
   }
   @keyframes ai-fg-move {
     0%,
     100% {
-      fill: #d0eeff;
+      fill: var(--color-ai-200, #cdc2ff);
     }
     50% {
-      fill: #e6c7d9;
+      fill: var(--color-cherry-100, #d6a5c2);
     }
   }
 }
@@ -377,6 +377,18 @@
   --color-midnight-850: #001E31;
   --color-midnight-900: #001d2f;
   --color-midnight-950: #00121e;
+
+  --color-ai-50: #f0edff;
+  --color-ai-100: #e4deff;
+  --color-ai-200: #cdc2ff;
+  --color-ai-300: #b0a0ff;
+  --color-ai-400: #9378ff;
+  --color-ai-500: #7c5cfc;
+  --color-ai-600: #6a44f0;
+  --color-ai-700: #5835d4;
+  --color-ai-800: #482dac;
+  --color-ai-900: #3b278a;
+  --color-ai-950: #24185e;
 
   --color-cherry-50: #e6c7d9;
   --color-cherry-100: #d6a5c2;

@@ -20,6 +20,7 @@ import { DocumentsCard, DocumentItem } from '../documents';
 import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, FooterService, PillTabsComponent } from '@unopsitg/ux';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { DrawerModule } from 'primeng/drawer';
 
 
 interface Member {
@@ -160,7 +161,8 @@ interface TeamMember {
         DetailTabDirective,
         PillTabsComponent,
         TooltipModule,
-        ProgressBarModule
+        ProgressBarModule,
+        DrawerModule,
     ],
     providers: [ConfirmationService, MessageService],
     template: `
@@ -199,31 +201,23 @@ interface TeamMember {
 
                     <div class="flex items-center gap-1 flex-wrap">
                         @for (step of completionSteps(); track $index) {
-                            @if (step.type === 'mandatory' && step.filled) {
-                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-500 text-white text-xs cursor-pointer"
-                                      [pTooltip]="step.name" tooltipPosition="top">
-                                    <i class="pi pi-check text-[10px]"></i>
-                                </span>
-                            } @else if (step.type === 'optional' && step.filled) {
-                                <span class="inline-block w-6 h-6 rounded-full bg-blue-500 cursor-pointer"
-                                      [pTooltip]="step.name" tooltipPosition="top"></span>
-                            } @else {
-                                <span class="inline-block w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer"
-                                      [pTooltip]="step.name + ' (missing)'" tooltipPosition="top"></span>
-                            }
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full cursor-pointer"
+                                  [class]="getDotStyle(step).bg"
+                                  [pTooltip]="step.name + (step.filled ? '' : ' (missing)')" tooltipPosition="top"
+                                  (click)="openStepDrawer($index)">
+                                <i class="pi text-[10px]" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
+                            </span>
                         }
                     </div>
 
                     <div class="flex items-center gap-6 mt-1">
                         <div class="flex items-center gap-2">
-                            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-green-500 text-white">
-                                <i class="pi pi-check text-[8px]"></i>
-                            </span>
+                            <span class="inline-block w-4 h-4 rounded-full shrink-0" [class]="dotStyles.mandatoryFilled.bg"></span>
                             <span class="text-sm text-surface-600 dark:text-surface-300">Mandatory:</span>
                             <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionMandatory.filled }}/{{ completionMandatory.total }}</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="inline-block w-4 h-4 rounded-full bg-blue-500 shrink-0"></span>
+                            <span class="inline-block w-4 h-4 rounded-full shrink-0" [class]="dotStyles.optionalFilled.bg"></span>
                             <span class="text-sm text-surface-600 dark:text-surface-300">Optional:</span>
                             <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionOptional.filled }}/{{ completionOptional.total }}</span>
                         </div>
@@ -979,6 +973,83 @@ interface TeamMember {
         <p-confirmdialog header="Confirmation" />
         <app-task-drawer [(visible)]="isTaskDrawerVisible" [task]="selectedTask" [mode]="taskDrawerMode" (save)="handleTaskDrawerSave($event)" (cancel)="handleTaskDrawerCancel()" />
 
+        <!-- Step Completion Drawer -->
+        <p-drawer [(visible)]="isStepDrawerVisible" position="right" styleClass="w-full! md:w-[420px]!" appendTo="body">
+            @if (selectedStep(); as step) {
+                <ng-template #header>
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full" [class]="getDotStyle(step).bg">
+                            <i class="pi text-sm" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
+                        </span>
+                        <div class="flex flex-col">
+                            <span class="font-semibold text-surface-900 dark:text-surface-0">{{ step.name }}</span>
+                            <span class="text-sm text-surface-400">
+                                {{ step.type === 'mandatory' ? 'Mandatory' : 'Optional' }}
+                                · {{ step.filled ? 'Completed' : 'Missing' }}
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <div class="flex flex-col gap-5">
+                    <div class="flex items-center gap-4">
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-xs text-surface-500 dark:text-surface-400">Type</span>
+                            <span class="text-sm font-medium text-surface-900 dark:text-surface-0">{{ step.type === 'mandatory' ? 'Mandatory' : 'Optional' }}</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-xs text-surface-500 dark:text-surface-400">Status</span>
+                            <span class="text-sm font-medium" [class]="step.filled ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'">
+                                {{ step.filled ? 'Completed' : 'Missing' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    @if (!step.filled) {
+                        @for (field of step.fields; track field.label) {
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">{{ field.label }}</label>
+                                <input type="text" pInputText [(ngModel)]="stepDrawerValues[field.label]" [placeholder]="field.placeholder" class="w-full" />
+                                @if (field.aiSuggestions?.length) {
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        <i class="pi pi-sparkles text-ai-500 dark:text-ai-400 text-xs"></i>
+                                        @for (suggestion of field.aiSuggestions; track suggestion) {
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium
+                                                       bg-ai-50 dark:bg-ai-900/30 text-ai-700 dark:text-ai-300
+                                                       border border-ai-200 dark:border-ai-700/50
+                                                       hover:bg-ai-100 dark:hover:bg-ai-800/40 hover:border-ai-300 dark:hover:border-ai-600
+                                                       transition-colors cursor-pointer"
+                                                (click)="stepDrawerValues[field.label] = suggestion"
+                                            >
+                                                {{ suggestion }}
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <div class="card bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+                            <div class="flex items-start gap-3">
+                                <i class="pi pi-exclamation-triangle text-orange-500 mt-0.5"></i>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-sm font-semibold text-orange-700 dark:text-orange-300">Missing Record</span>
+                                    <span class="text-xs text-orange-600 dark:text-orange-400">Complete the fields above to register this entry.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 mt-2 justify-end">
+                            <p-button label="Cancel" icon="pi pi-times" [outlined]="true" severity="secondary" (onClick)="isStepDrawerVisible = false" />
+                            <p-button label="Save" icon="pi pi-check" (onClick)="saveStepDrawer()" />
+                        </div>
+                    }
+                </div>
+            }
+        </p-drawer>
+
         <!-- Unified Task Item Template -->
         <ng-template #taskItem let-task="task" let-isLast="isLast">
             <div class="flex flex-col">
@@ -1092,54 +1163,137 @@ export class Opportunity {
         { value: 'beneficiaries', label: 'Beneficiaries' }
     ];
 
+    // ─── Dot Styles (single source of truth for completion dots) ───
+    dotStyles = {
+        mandatoryFilled: { bg: 'bg-green-200 dark:bg-green-700', text: 'text-green-800 dark:text-green-50', icon: 'pi-check' },
+        optionalFilled:  { bg: 'bg-blue-200 dark:bg-blue-700',  text: 'text-blue-800 dark:text-blue-50', icon: 'pi-asterisk' },
+        missing:         { bg: 'bg-gray-200 dark:bg-gray-700', text: 'text-surface-800 dark:text-surface-50', icon: 'pi-question' }
+    };
+
+    getDotStyle(step: { type: 'mandatory' | 'optional'; filled: boolean }) {
+        if (step.filled) return step.type === 'mandatory' ? this.dotStyles.mandatoryFilled : this.dotStyles.optionalFilled;
+        return this.dotStyles.missing;
+    }
+
     // ─── Entity Completion (Mandatory / Optional out of total records) ───
     completionTotalRecords = 30;
     completionMandatory = { filled: 3, total: 3 };
     completionOptional = { filled: 12, total: 27 };
 
-    mandatoryRecords = [
-        { name: 'Title', filled: true },
-        { name: 'Description', filled: true },
-        { name: 'Focal Point', filled: true }
+    mandatoryRecords: { name: string; filled: boolean; fields: { label: string; placeholder: string; aiSuggestions?: string[] }[] }[] = [
+        { name: 'Title', filled: true, fields: [] },
+        { name: 'Description', filled: true, fields: [] },
+        { name: 'Focal Point', filled: true, fields: [] }
     ];
 
-    optionalRecords = [
-        { name: 'Budget', filled: true },
-        { name: 'Duration', filled: true },
-        { name: 'Start Date', filled: true },
-        { name: 'End Date', filled: true },
-        { name: 'Funding Source', filled: true },
-        { name: 'Implementing Partner', filled: true },
-        { name: 'Country', filled: true },
-        { name: 'Region', filled: true },
-        { name: 'Sector', filled: true },
-        { name: 'Sub-Sector', filled: true },
-        { name: 'SDG Goals', filled: true },
-        { name: 'Target Beneficiaries', filled: true },
-        { name: 'Risk Assessment', filled: false },
-        { name: 'Procurement Plan', filled: false },
-        { name: 'M&E Framework', filled: false },
-        { name: 'Stakeholder Map', filled: false },
-        { name: 'Communication Plan', filled: false },
-        { name: 'Exit Strategy', filled: false },
-        { name: 'Sustainability Plan', filled: false },
-        { name: 'Gender Analysis', filled: false },
-        { name: 'Environmental Screening', filled: false },
-        { name: 'Legal Framework', filled: false },
-        { name: 'Partnership Agreement', filled: false },
-        { name: 'Workplan', filled: false },
-        { name: 'Deliverables', filled: false },
-        { name: 'Quality Assurance', filled: false },
-        { name: 'Lessons Learned', filled: false }
+    optionalRecords: { name: string; filled: boolean; fields: { label: string; placeholder: string; aiSuggestions?: string[] }[] }[] = [
+        { name: 'Budget', filled: true, fields: [] },
+        { name: 'Duration', filled: true, fields: [] },
+        { name: 'Start Date', filled: true, fields: [] },
+        { name: 'End Date', filled: true, fields: [] },
+        { name: 'Funding Source', filled: true, fields: [] },
+        { name: 'Implementing Partner', filled: true, fields: [] },
+        { name: 'Country', filled: true, fields: [] },
+        { name: 'Region', filled: true, fields: [] },
+        { name: 'Sector', filled: true, fields: [] },
+        { name: 'Sub-Sector', filled: true, fields: [] },
+        { name: 'SDG Goals', filled: true, fields: [] },
+        { name: 'Target Beneficiaries', filled: true, fields: [] },
+        { name: 'Vendor Documentation', filled: false, fields: [
+            { label: 'Vendor Name', placeholder: 'e.g. Acme Equipment Ltd.', aiSuggestions: ['Acme Equipment Ltd.', 'Toray Industries', 'Veolia Water Technologies'] },
+            { label: 'Document Type', placeholder: 'e.g. Compliance form, Certificate', aiSuggestions: ['Compliance Form', 'Import Certificate', 'Quality Assurance Certificate'] },
+            { label: 'Due Date', placeholder: 'e.g. 2026-06-01', aiSuggestions: ['2026-06-01', '2026-06-15'] }
+        ]},
+        { name: 'Risk Assessment', filled: false, fields: [
+            { label: 'Risk Category', placeholder: 'e.g. Schedule, Financial, Operational', aiSuggestions: ['Schedule', 'Financial', 'Operational'] },
+            { label: 'Probability', placeholder: 'e.g. High, Medium, Low', aiSuggestions: ['High', 'Medium', 'Low'] },
+            { label: 'Impact', placeholder: 'e.g. Critical, Major, Minor', aiSuggestions: ['Critical', 'Major', 'Minor'] },
+            { label: 'Mitigation Strategy', placeholder: 'Describe mitigation approach...', aiSuggestions: ['Accelerate vendor onboarding timeline', 'Add buffer to critical-path milestones'] }
+        ]},
+        { name: 'Stakeholder Alignment', filled: false, fields: [
+            { label: 'Stakeholder Group', placeholder: 'e.g. Legal, Engineering, Finance', aiSuggestions: ['Legal', 'Engineering', 'Finance'] },
+            { label: 'Alignment Issue', placeholder: 'Describe the misalignment...', aiSuggestions: ['Pending legal review of partnership terms', 'Budget allocation dispute'] },
+            { label: 'Resolution Owner', placeholder: 'e.g. Project Manager', aiSuggestions: ['Project Manager', 'Legal Counsel', 'Programme Director'] }
+        ]},
+        { name: 'Scope Change Control', filled: false, fields: [
+            { label: 'Change Request Title', placeholder: 'e.g. Additional site survey', aiSuggestions: ['Additional site survey', 'Extended water testing phase'] },
+            { label: 'Requested By', placeholder: 'e.g. Field Operations', aiSuggestions: ['Field Operations', 'Quality Assurance', 'Engineering'] },
+            { label: 'Impact on Budget', placeholder: 'e.g. +$50,000', aiSuggestions: ['+$50,000', '+$25,000', 'No impact'] },
+            { label: 'Impact on Timeline', placeholder: 'e.g. +2 weeks', aiSuggestions: ['+2 weeks', '+1 week', 'No impact'] },
+            { label: 'Justification', placeholder: 'Why is this change needed?', aiSuggestions: ['Regulatory compliance requirement', 'Quality baseline not met in initial tests'] }
+        ]},
+        { name: 'Software Licenses', filled: false, fields: [
+            { label: 'Software Name', placeholder: 'e.g. AutoCAD, JIRA', aiSuggestions: ['AutoCAD', 'JIRA', 'MS Project'] },
+            { label: 'Current License Count', placeholder: 'e.g. 15', aiSuggestions: ['15', '10', '25'] },
+            { label: 'Annual Cost', placeholder: 'e.g. $12,000', aiSuggestions: ['$12,000', '$8,500'] }
+        ]},
+        { name: 'Resource Allocation', filled: false, fields: [
+            { label: 'Team / Department', placeholder: 'e.g. Legal, Engineering', aiSuggestions: ['Legal', 'Engineering', 'Procurement'] },
+            { label: 'Current Allocation %', placeholder: 'e.g. 140%', aiSuggestions: ['140%', '120%', '100%'] },
+            { label: 'Required Capacity', placeholder: 'e.g. 2 FTEs', aiSuggestions: ['2 FTEs', '3 FTEs'] },
+            { label: 'Timeframe', placeholder: 'e.g. June 2026', aiSuggestions: ['June 2026', 'July 2026'] }
+        ]},
+        { name: 'Regulatory Compliance', filled: false, fields: [
+            { label: 'Regulation Name', placeholder: 'e.g. Water Sanitization Act 2026', aiSuggestions: ['Water Sanitization Act 2026', 'Environmental Impact Regulation'] },
+            { label: 'Effective Date', placeholder: 'e.g. 2026-07-15', aiSuggestions: ['2026-07-15', '2026-08-01'] },
+            { label: 'Affected Operations', placeholder: 'e.g. East Africa filtration sites', aiSuggestions: ['East Africa filtration sites', 'All regional installations'] },
+            { label: 'Compliance Action Required', placeholder: 'Describe required actions...', aiSuggestions: ['Update filtration protocols', 'Submit revised environmental assessment'] }
+        ]},
+        { name: 'Project Timeline', filled: false, fields: [
+            { label: 'Milestone', placeholder: 'e.g. Equipment delivery', aiSuggestions: ['Equipment delivery', 'Site preparation complete', 'Phase 1 sign-off'] },
+            { label: 'Original Date', placeholder: 'e.g. 2026-08-01', aiSuggestions: ['2026-08-01', '2026-09-01'] },
+            { label: 'Revised Date', placeholder: 'e.g. 2026-07-15', aiSuggestions: ['2026-07-15', '2026-08-15'] },
+            { label: 'Reason for Change', placeholder: 'e.g. Ahead of schedule', aiSuggestions: ['Ahead of schedule', 'Vendor delay', 'Weather disruption'] }
+        ]},
+        { name: 'Community Engagement', filled: false, fields: [
+            { label: 'Community Board', placeholder: 'e.g. Local Water Committee', aiSuggestions: ['Local Water Committee', 'Village Council', 'Regional Water Authority'] },
+            { label: 'Last Update Date', placeholder: 'e.g. 2026-03-30', aiSuggestions: ['2026-03-30', '2026-04-15'] },
+            { label: 'Next Scheduled Update', placeholder: 'e.g. 2026-05-30', aiSuggestions: ['2026-05-30', '2026-06-15'] },
+            { label: 'Communication Channel', placeholder: 'e.g. Newsletter, Town Hall', aiSuggestions: ['Newsletter', 'Town Hall', 'Community Radio'] }
+        ]},
+        { name: 'Weather Mitigation Plan', filled: false, fields: [
+            { label: 'Weather Risk', placeholder: 'e.g. Monsoon season', aiSuggestions: ['Monsoon season', 'Typhoon season', 'Extreme heat'] },
+            { label: 'Affected Activity', placeholder: 'e.g. Foundation pouring', aiSuggestions: ['Foundation pouring', 'Outdoor installation', 'Transport logistics'] },
+            { label: 'Mitigation Action', placeholder: 'e.g. Accelerate schedule', aiSuggestions: ['Accelerate schedule', 'Use weather-resistant materials', 'Stage equipment indoors'] },
+            { label: 'Deadline to Mitigate', placeholder: 'e.g. 2026-06-15', aiSuggestions: ['2026-06-15', '2026-06-01'] }
+        ]},
+        { name: 'Quality Assurance Report', filled: false, fields: [
+            { label: 'Test Phase', placeholder: 'e.g. Initial water testing', aiSuggestions: ['Initial water testing', 'Secondary filtration test', 'Final quality audit'] },
+            { label: 'Result', placeholder: 'e.g. 98% efficiency', aiSuggestions: ['98% efficiency', '95% efficiency', '99.2% purity'] },
+            { label: 'Baseline Requirement', placeholder: 'e.g. 95%', aiSuggestions: ['95%', '90%', '97%'] }
+        ]},
+        { name: 'Legal Review', filled: false, fields: [
+            { label: 'Review Subject', placeholder: 'e.g. Partnership agreement terms', aiSuggestions: ['Partnership agreement terms', 'Procurement contract review', 'IP rights assessment'] },
+            { label: 'Reviewing Party', placeholder: 'e.g. UNOPS Legal', aiSuggestions: ['UNOPS Legal', 'External Counsel', 'Government of Japan Legal'] },
+            { label: 'Target Completion', placeholder: 'e.g. 2026-06-01', aiSuggestions: ['2026-06-01', '2026-05-15'] }
+        ]},
+        { name: 'Signing Agreement', filled: false, fields: [
+            { label: 'Agreement Title', placeholder: 'e.g. Japan Funding Agreement', aiSuggestions: ['Japan Funding Agreement', 'Water Purification Partnership MoU'] },
+            { label: 'Counterparty', placeholder: 'e.g. Government of Japan', aiSuggestions: ['Government of Japan', 'JICA', 'Ministry of Foreign Affairs'] },
+            { label: 'Target Signing Date', placeholder: 'e.g. 2026-04-01', aiSuggestions: ['2026-04-01', '2026-04-15'] },
+            { label: 'Blocking Issue', placeholder: 'e.g. Pending legal reviews', aiSuggestions: ['Pending legal reviews', 'Awaiting budget approval', 'No blocking issues'] }
+        ]},
+        { name: 'Communication Plan', filled: false, fields: [
+            { label: 'Audience', placeholder: 'e.g. Partners, Beneficiaries', aiSuggestions: ['Partners', 'Beneficiaries', 'Donors & Stakeholders'] },
+            { label: 'Frequency', placeholder: 'e.g. Monthly', aiSuggestions: ['Weekly', 'Bi-weekly', 'Monthly'] },
+            { label: 'Channel', placeholder: 'e.g. Email, Newsletter', aiSuggestions: ['Email', 'Newsletter', 'Quarterly Report'] },
+            { label: 'Responsible Person', placeholder: 'e.g. Communications Officer', aiSuggestions: ['Communications Officer', 'Project Manager', 'Stakeholder Liaison'] }
+        ]},
+        { name: 'Procurement Plan', filled: false, fields: [
+            { label: 'Item / Service', placeholder: 'e.g. Filtration equipment', aiSuggestions: ['Filtration equipment', 'Water testing kits', 'Transport & logistics'] },
+            { label: 'Estimated Cost', placeholder: 'e.g. $500,000', aiSuggestions: ['$500,000', '$250,000', '$750,000'] },
+            { label: 'Procurement Method', placeholder: 'e.g. Competitive bidding', aiSuggestions: ['Competitive bidding', 'Direct procurement', 'Framework agreement'] },
+            { label: 'Target Award Date', placeholder: 'e.g. 2026-07-01', aiSuggestions: ['2026-07-01', '2026-07-15'] }
+        ]}
     ];
 
     completionSteps = computed(() => {
-        const steps: { type: 'mandatory' | 'optional'; filled: boolean; name: string }[] = [];
+        const steps: { type: 'mandatory' | 'optional'; filled: boolean; name: string; fields: { label: string; placeholder: string; aiSuggestions?: string[] }[] }[] = [];
         for (const rec of this.mandatoryRecords) {
-            steps.push({ type: 'mandatory', filled: rec.filled, name: rec.name });
+            steps.push({ type: 'mandatory', filled: rec.filled, name: rec.name, fields: rec.fields });
         }
         for (const rec of this.optionalRecords) {
-            steps.push({ type: 'optional', filled: rec.filled, name: rec.name });
+            steps.push({ type: 'optional', filled: rec.filled, name: rec.name, fields: rec.fields });
         }
         return steps;
     });
@@ -1150,6 +1304,27 @@ export class Opportunity {
     completionTotal = computed(() =>
         Math.round((this.completionFilledTotal() / this.completionTotalRecords) * 100)
     );
+
+    // ─── Step Drawer ───
+    isStepDrawerVisible = false;
+    selectedStepIndex = signal<number | null>(null);
+    stepDrawerValues: Record<string, string> = {};
+
+    selectedStep = computed(() => {
+        const idx = this.selectedStepIndex();
+        if (idx === null) return null;
+        return this.completionSteps()[idx] ?? null;
+    });
+
+    openStepDrawer(index: number) {
+        this.selectedStepIndex.set(index);
+        this.stepDrawerValues = {};
+        this.isStepDrawerVisible = true;
+    }
+
+    saveStepDrawer() {
+        this.isStepDrawerVisible = false;
+    }
 
     // ─── Analysis Stats ───
     analysisStats = [

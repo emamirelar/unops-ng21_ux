@@ -40,7 +40,7 @@ export interface AiInsight {
                 <div class="flex items-center justify-between cursor-pointer shrink-0 pr-2" (click)="expanded.set(!expanded())">
                     <div class="flex items-center gap-3">
                         <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
-                            <i class="pi pi-sparkles text-blue-800 dark:text-blue-300"></i>
+                            <i class="pi pi-sparkles text-ai-600 dark:text-ai-300"></i>
                         </div>
                         <div class="flex flex-col">
                             <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">{{ title() }}</h4>
