@@ -4552,6 +4552,7 @@ img.flag {
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --font-weight-extrabold: 800;
+    --font-weight-black: 900;
     --tracking-tight: -0.025em;
     --tracking-wide: 0.025em;
     --tracking-wider: 0.05em;
@@ -7020,6 +7021,9 @@ img.flag {
       border-color: color-mix(in srgb, var(--p-primary-600) calc(100% * 1), transparent);
     }
   }
+  .border-red-400 {
+    border-color: var(--color-red-400);
+  }
   .border-surface {
     border-color: var(--p-content-border-color);
   }
@@ -7217,9 +7221,6 @@ img.flag {
   }
   .bg-gray-100 {
     background-color: var(--color-gray-100);
-  }
-  .bg-gray-200 {
-    background-color: var(--color-gray-200);
   }
   .bg-gray-500 {
     background-color: var(--color-gray-500);
@@ -8432,8 +8433,8 @@ img.flag {
     font-size: var(--text-xs) !important;
     line-height: var(--tw-leading, var(--text-xs--line-height)) !important;
   }
-  .text-\[10px\] {
-    font-size: 10px;
+  .text-\[3px\] {
+    font-size: 3px;
   }
   .\!leading-normal {
     --tw-leading: var(--leading-normal) !important;
@@ -8506,6 +8507,10 @@ img.flag {
   .\!font-normal {
     --tw-font-weight: var(--font-weight-normal) !important;
     font-weight: var(--font-weight-normal) !important;
+  }
+  .font-black {
+    --tw-font-weight: var(--font-weight-black);
+    font-weight: var(--font-weight-black);
   }
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);
@@ -12214,6 +12219,11 @@ img.flag {
       }
     }
   }
+  .dark\:border-red-500 {
+    &:where([class*="app-dark"], [class*="app-dark"] *) {
+      border-color: var(--color-red-500);
+    }
+  }
   .dark\:border-surface-0 {
     &:where([class*="app-dark"], [class*="app-dark"] *) {
       border-color: var(--p-surface-0);
@@ -12381,11 +12391,6 @@ img.flag {
   .dark\:bg-cherry-900 {
     &:where([class*="app-dark"], [class*="app-dark"] *) {
       background-color: var(--color-cherry-900);
-    }
-  }
-  .dark\:bg-gray-700 {
-    &:where([class*="app-dark"], [class*="app-dark"] *) {
-      background-color: var(--color-gray-700);
     }
   }
   .dark\:bg-gray-900 {
