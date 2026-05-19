@@ -468,7 +468,7 @@ import { DocumentsCard } from '../documents';
 
                 <div class="card flex flex-col gap-3">
                     <div class="flex items-center gap-2">
-                        <i class="pi pi-sparkles text-primary"></i>
+                        <i class="pi pi-sparkles text-ai-500 dark:text-ai-400"></i>
                         <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">AI Sidebar Sections</span>
                     </div>
                     <div class="flex flex-col gap-2">

@@ -1,8 +1,8 @@
 .ux-ai-card-bg {
-  --ux-ai-bg-from: #cce5ff;
-  --ux-ai-bg-to: rgb(255, 236, 254);
-  --ux-ai-fg-from: rgb(188, 214, 255);
-  --ux-ai-fg-to: rgb(246, 216, 255);
+  --ux-ai-bg-from: var(--color-ai-50, #f0edff);
+  --ux-ai-bg-to: var(--color-cherry-50, #e6c7d9);
+  --ux-ai-fg-from: var(--color-ai-200, #cdc2ff);
+  --ux-ai-fg-to: var(--color-cherry-100, #d6a5c2);
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -12,10 +12,10 @@
 }
 
 [class*='app-dark'] .ux-ai-card-bg {
-  --ux-ai-bg-from: rgb(0, 32, 69);
-  --ux-ai-bg-to: rgb(47, 18, 116);
-  --ux-ai-fg-from: rgb(0, 20, 47);
-  --ux-ai-fg-to: rgb(76, 1, 71);
+  --ux-ai-bg-from: var(--color-ai-950, #24185e);
+  --ux-ai-bg-to: var(--color-cherry-950, #26081a);
+  --ux-ai-fg-from: var(--color-ai-900, #3b278a);
+  --ux-ai-fg-to: var(--color-cherry-900, #3d0c29);
 }
 
 .ux-ai-card-bg > :not(svg) {

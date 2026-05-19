@@ -205,7 +205,11 @@ interface TeamMember {
                                   [class]="getDotStyle(step).bg"
                                   [pTooltip]="step.name + (step.filled ? '' : ' (missing)')" tooltipPosition="top"
                                   (click)="openStepDrawer($index)">
-                                <i class="pi text-[10px]" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
+                                @if (getDotStyle(step).icon) {
+                                    <i class="pi text-[3px]" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
+                                } @else {
+                                    <span class="text-sm font-black leading-none" [class]="getDotStyle(step).text">!</span>
+                                }
                             </span>
                         }
                     </div>
@@ -979,7 +983,11 @@ interface TeamMember {
                 <ng-template #header>
                     <div class="flex items-center gap-3">
                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-full" [class]="getDotStyle(step).bg">
-                            <i class="pi text-sm" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
+                            @if (getDotStyle(step).icon) {
+                                <i class="pi text-sm" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
+                            } @else {
+                                <span class="text-sm font-black leading-none" [class]="getDotStyle(step).text">!</span>
+                            }
                         </span>
                         <div class="flex flex-col">
                             <span class="font-semibold text-surface-900 dark:text-surface-0">{{ step.name }}</span>
@@ -1165,25 +1173,29 @@ export class Opportunity {
 
     // ─── Dot Styles (single source of truth for completion dots) ───
     dotStyles = {
-        mandatoryFilled: { bg: 'bg-green-200 dark:bg-green-700', text: 'text-green-800 dark:text-green-50', icon: 'pi-check' },
-        optionalFilled:  { bg: 'bg-blue-200 dark:bg-blue-700',  text: 'text-blue-800 dark:text-blue-50', icon: 'pi-asterisk' },
-        missing:         { bg: 'bg-gray-200 dark:bg-gray-700', text: 'text-surface-800 dark:text-surface-50', icon: 'pi-question' }
+        mandatoryFilled:  { bg: 'bg-green-200 dark:bg-green-700', text: 'text-green-800 dark:text-green-50', icon: 'pi-check' },
+        optionalFilled:   { bg: 'bg-blue-200 dark:bg-blue-700',  text: 'text-blue-800 dark:text-blue-50', icon: 'pi-info' },
+        mandatoryMissing: { bg: 'bg-transparent border-2 border-red-400 dark:border-red-500', text: 'text-red-500 dark:text-red-400', icon: 'pi-plus' },
+        optionalMissing:  { bg: 'bg-transparent border-2 border-surface-300 dark:border-surface-600', text: 'text-surface-500 dark:text-surface-400', icon: 'pi-info' }
     };
 
     getDotStyle(step: { type: 'mandatory' | 'optional'; filled: boolean }) {
         if (step.filled) return step.type === 'mandatory' ? this.dotStyles.mandatoryFilled : this.dotStyles.optionalFilled;
-        return this.dotStyles.missing;
+        return step.type === 'mandatory' ? this.dotStyles.mandatoryMissing : this.dotStyles.optionalMissing;
     }
 
     // ─── Entity Completion (Mandatory / Optional out of total records) ───
     completionTotalRecords = 30;
-    completionMandatory = { filled: 3, total: 3 };
+    completionMandatory = { filled: 2, total: 3 };
     completionOptional = { filled: 12, total: 27 };
 
     mandatoryRecords: { name: string; filled: boolean; fields: { label: string; placeholder: string; aiSuggestions?: string[] }[] }[] = [
         { name: 'Title', filled: true, fields: [] },
         { name: 'Description', filled: true, fields: [] },
-        { name: 'Focal Point', filled: true, fields: [] }
+        { name: 'Focal Point', filled: false, fields: [
+            { label: 'Focal Point Name', placeholder: 'e.g. Maria Santos', aiSuggestions: ['Maria Santos', 'O. Martinez', 'J. Anderson'] },
+            { label: 'Role', placeholder: 'e.g. Project Manager', aiSuggestions: ['Project Manager', 'Programme Officer', 'Team Lead'] }
+        ] }
     ];
 
     optionalRecords: { name: string; filled: boolean; fields: { label: string; placeholder: string; aiSuggestions?: string[] }[] }[] = [
