@@ -103,13 +103,6 @@ export class DetailTabDirective {
         .ux-dl__tablist {
             display: flex;
             overflow: hidden;
-            padding-inline: 0.75rem;
-        }
-        @media screen and (min-width: 640px) {
-            .ux-dl__tablist { padding-inline: 1rem; }
-        }
-        @media screen and (min-width: 1024px) {
-            .ux-dl__tablist { padding-inline: 1.5rem; }
         }
 
         .ux-dl__mobile-tabs {
@@ -154,7 +147,7 @@ export class DetailTabDirective {
                     <p-tablist
                         class="flex-shrink-0 ux-dl__tablist"
                         [style.display]="isMobile() ? 'none' : null"
-                        [pt]="{ tabList: { class: 'pl-0 p-0' } }"
+                        [pt]="{ tabList: { class: 'p-0' } }"
                     >
                         @for (tab of tabs(); track tab.value) {
                             <p-tab [value]="tab.value">
