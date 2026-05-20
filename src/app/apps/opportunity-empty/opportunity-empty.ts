@@ -4,12 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
-import { TableModule } from 'primeng/table';
-import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
-import { MeterGroupModule } from 'primeng/metergroup';
-import { AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, FooterService, PillTabsComponent } from '@unopsitg/ux';
-import { DocumentsCard } from '../documents';
+import { AiInsightsCardComponent, CompletionStepsComponent, DetailLayoutComponent, DetailTabDirective, DocumentsCardComponent, FooterService, PillTabsComponent, TaskDrawerComponent } from '@unopsitg/ux';
 
 @Component({
     selector: 'app-opportunity-empty',
@@ -20,15 +16,14 @@ import { DocumentsCard } from '../documents';
         ButtonModule,
         TagModule,
         AvatarModule,
-        TableModule,
-        PaginatorModule,
         InputTextModule,
-        MeterGroupModule,
         AiInsightsCardComponent,
+        CompletionStepsComponent,
         DetailLayoutComponent,
         DetailTabDirective,
         PillTabsComponent,
-        DocumentsCard
+        DocumentsCardComponent,
+        TaskDrawerComponent
     ],
     template: `
         <ux-detail-layout [tabs]="detailTabs" [(activeTab)]="activeTab">
@@ -49,72 +44,26 @@ import { DocumentsCard } from '../documents';
                     <span>This page showcases every section and component in its empty / no-data state.</span>
                 </div>
             </div>
-            <div ux-detail-header-meta>
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-surface-500 dark:text-surface-400 pb-2">
-                    <span class="inline-flex items-center gap-1.5">
-                        <i class="pi pi-hashtag text-surface-400"></i>
-                        <strong>ID:</strong> —
-                    </span>
-                    <span class="text-surface-300 dark:text-surface-600 hidden sm:inline">|</span>
-                    <span class="inline-flex items-center gap-1.5">
-                        <i class="pi pi-user text-surface-400"></i>
-                        <strong>Manager:</strong> Not assigned
-                    </span>
-                    <span class="text-surface-300 dark:text-surface-600 hidden sm:inline">|</span>
-                    <span class="inline-flex items-center gap-1.5">
-                        <i class="pi pi-building text-surface-400"></i>
-                        <strong>Org Unit:</strong> Not assigned
-                    </span>
-                    <span class="text-surface-300 dark:text-surface-600 hidden sm:inline">|</span>
-                    <span class="inline-flex items-center gap-1.5">
-                        <i class="pi pi-calendar text-surface-400"></i>
-                        <strong>Target Signing:</strong> Not set
-                    </span>
-                </div>
-            </div>
+            <div ux-detail-header-meta></div>
 
             <!-- ═══════════════════════════════════════════════════ -->
             <!-- OVERVIEW TAB                                       -->
             <!-- ═══════════════════════════════════════════════════ -->
             <ng-template uxDetailTab="overview">
 
-                <!-- Entry Progress (empty) -->
-                <div class="card flex flex-col gap-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-900/20">
-                                <i class="pi pi-chart-pie text-lg text-primary-500"></i>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Entry Progress</span>
-                            </div>
-                        </div>
-                        <span class="text-2xl font-bold text-surface-400 dark:text-surface-500">0%</span>
-                    </div>
-                    <p-meter-group [value]="emptyCompletionSegments" styleClass="mb-0">
-                        <ng-template #label>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3 mt-3">
-                                @for (seg of emptyCompletionSegments; track seg.label) {
-                                    <div class="flex items-center gap-2">
-                                        <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0 bg-surface-200 dark:bg-surface-600"></span>
-                                        <span class="text-xs text-surface-400 dark:text-surface-500">{{ seg.label }}</span>
-                                        <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 ml-auto">0%</span>
-                                    </div>
-                                }
-                            </div>
-                        </ng-template>
-                    </p-meter-group>
-                    <div class="empty-state">
-                        <i class="pi pi-chart-bar text-3xl text-surface-300 dark:text-surface-600"></i>
-                        <span class="empty-state-title">No progress tracked yet</span>
-                        <span class="empty-state-desc">Progress is calculated automatically as you fill in the opportunity sections: Budget & Finance, Documentation, Stakeholders, Compliance, and Timeline.</span>
-                    </div>
-                </div>
+                <!-- Entity Completion Steps (empty — mirrors filled-page dot design) -->
+                <ux-completion-steps
+                    title="Opportunity Completion Steps"
+                    [steps]="completionSteps()"
+                    [mandatory]="completionMandatory"
+                    [optional]="completionOptional"
+                    [totalRecords]="completionTotalRecords"
+                />
 
                 <!-- Overview Description (empty) -->
                 <div class="card">
                     <div class="empty-state">
-                        <i class="pi pi-align-left text-3xl text-surface-300 dark:text-surface-600"></i>
+                        <i class="pi pi-align-left text-3xl text-surface-500 dark:text-surface-400"></i>
                         <span class="empty-state-title">No overview description</span>
                         <span class="empty-state-desc">Provide a summary of the opportunity — describe the programme's goals, target beneficiaries, implementation approach, and expected outcomes. This is the first section reviewers and approvers will read.</span>
                     </div>
@@ -123,19 +72,19 @@ import { DocumentsCard } from '../documents';
                 <!-- Budget & Finance Cards (empty) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                     <div class="card flex flex-col gap-1 min-w-0">
-                        <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Proposed Budget</span>
-                        <span class="text-base sm:text-lg font-bold text-surface-300 dark:text-surface-600">$0</span>
-                        <span class="text-xs text-surface-400 dark:text-surface-500">Enter the total proposed budget for this opportunity</span>
+                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Proposed Budget</span>
+                        <span class="text-base sm:text-lg font-bold text-surface-500 dark:text-surface-400">$0</span>
+                        <span class="text-xs text-surface-500 dark:text-surface-400">Enter the total proposed budget for this opportunity</span>
                     </div>
                     <div class="card flex flex-col gap-1 min-w-0">
-                        <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Total Funded</span>
-                        <span class="text-base sm:text-lg font-bold text-surface-300 dark:text-surface-600">$0</span>
-                        <span class="text-xs text-surface-400 dark:text-surface-500">Funding totals are derived from confirmed partner contributions</span>
+                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Total Funded</span>
+                        <span class="text-base sm:text-lg font-bold text-surface-500 dark:text-surface-400">$0</span>
+                        <span class="text-xs text-surface-500 dark:text-surface-400">Funding totals are derived from confirmed partner contributions</span>
                     </div>
                     <div class="card flex flex-col gap-1 min-w-0">
-                        <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Unfunded</span>
-                        <span class="text-base sm:text-lg font-bold text-surface-300 dark:text-surface-600">$0</span>
-                        <span class="text-xs text-surface-400 dark:text-surface-500">The gap between the proposed budget and confirmed funding</span>
+                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Unfunded</span>
+                        <span class="text-base sm:text-lg font-bold text-surface-500 dark:text-surface-400">$0</span>
+                        <span class="text-xs text-surface-500 dark:text-surface-400">The gap between the proposed budget and confirmed funding</span>
                     </div>
                 </div>
 
@@ -144,11 +93,11 @@ import { DocumentsCard } from '../documents';
                     @for (stat of emptyAnalysisStats; track stat.label) {
                         <div class="card flex flex-col gap-1 min-w-0">
                             <div class="flex items-center gap-2">
-                                <i class="pi text-sm text-surface-300 dark:text-surface-600" [ngClass]="stat.icon"></i>
-                                <span class="text-xs font-medium text-surface-400 dark:text-surface-500 uppercase tracking-wide">{{ stat.label }}</span>
+                                <i class="pi text-sm text-surface-500 dark:text-surface-400" [ngClass]="stat.icon"></i>
+                                <span class="text-xs font-medium text-surface-600 dark:text-surface-300 uppercase tracking-wide">{{ stat.label }}</span>
                             </div>
-                            <span class="text-lg sm:text-xl font-bold text-surface-300 dark:text-surface-600">0</span>
-                            <span class="text-xs text-surface-400 dark:text-surface-500">{{ stat.hint }}</span>
+                            <span class="text-lg sm:text-xl font-bold text-surface-500 dark:text-surface-400">0</span>
+                            <span class="text-xs text-surface-500 dark:text-surface-400">{{ stat.hint }}</span>
                         </div>
                     }
                 </div>
@@ -166,17 +115,17 @@ import { DocumentsCard } from '../documents';
                     <div class="flex flex-col gap-5 p-2">
                         <div class="flex flex-col lg:flex-row lg:gap-10 gap-5">
                             <div class="flex flex-col gap-1">
-                                <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Proposed Initiative Type</span>
-                                <span class="text-sm text-surface-300 dark:text-surface-600 italic">Not specified</span>
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Proposed Initiative Type</span>
+                                <span class="text-sm text-surface-500 dark:text-surface-400 italic">Not specified</span>
                             </div>
                             <div class="flex flex-col gap-1">
-                                <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Delivery Modality</span>
-                                <span class="text-sm text-surface-300 dark:text-surface-600 italic">Not specified</span>
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Delivery Modality</span>
+                                <span class="text-sm text-surface-500 dark:text-surface-400 italic">Not specified</span>
                             </div>
                         </div>
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-briefcase text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-briefcase text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No deliverables defined</span>
                                 <span class="empty-state-desc">Add the products and services this opportunity will deliver. Each deliverable should include a name, hierarchy classification, service line, quantity, and whether procurement is required.</span>
                             </div>
@@ -190,22 +139,22 @@ import { DocumentsCard } from '../documents';
                         <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">
                             @for (dateField of emptyDateFields; track dateField.label) {
                                 <div class="card flex flex-col gap-1 sm:min-w-[140px] sm:flex-1">
-                                    <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">{{ dateField.label }}</span>
-                                    <span class="text-base font-bold text-surface-300 dark:text-surface-600">—</span>
-                                    <span class="text-xs text-surface-400 dark:text-surface-500">{{ dateField.hint }}</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">{{ dateField.label }}</span>
+                                    <span class="text-base font-bold text-surface-500 dark:text-surface-400">—</span>
+                                    <span class="text-xs text-surface-500 dark:text-surface-400">{{ dateField.hint }}</span>
                                 </div>
                             }
                         </div>
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-calendar text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-calendar text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No signing date notes</span>
                                 <span class="empty-state-desc">Add any important notes or conditions related to the signing date — e.g. dependencies on partner due diligence, approvals, or external timelines.</span>
                             </div>
                         </div>
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-flag text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-flag text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No key milestones</span>
                                 <span class="empty-state-desc">Define the major milestones for this opportunity: creation, submission deadline, target signing, implementation start, mid-term review, and target delivery date. These form the timeline view.</span>
                             </div>
@@ -218,7 +167,7 @@ import { DocumentsCard } from '../documents';
                     <div class="flex flex-col gap-4 p-2">
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-globe text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-globe text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No implementation countries</span>
                                 <span class="empty-state-desc">Select the countries where this opportunity will be implemented. Each country entry will show its continent, region, responsible org unit, classification tags (HCA, SIDS, LDC), and UNSDCF status.</span>
                             </div>
@@ -231,7 +180,7 @@ import { DocumentsCard } from '../documents';
                     <div class="flex flex-col gap-6 p-2">
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-book text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-book text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No context & challenges</span>
                                 <span class="empty-state-desc">Describe the context and challenges this opportunity addresses — the problem statement, affected populations, root causes, and why intervention is needed now.</span>
                             </div>
@@ -239,18 +188,18 @@ import { DocumentsCard } from '../documents';
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="card flex flex-col gap-1">
-                                <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Impact</span>
-                                <span class="text-sm text-surface-300 dark:text-surface-600 italic">No impact statement defined. Describe the long-term change this opportunity aims to achieve.</span>
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Impact</span>
+                                <span class="text-sm text-surface-500 dark:text-surface-400 italic">No impact statement defined. Describe the long-term change this opportunity aims to achieve.</span>
                             </div>
                             <div class="card flex flex-col gap-1">
-                                <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Outcomes</span>
-                                <span class="text-sm text-surface-300 dark:text-surface-600 italic">No outcomes defined. List the measurable results expected at the end of implementation.</span>
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Outcomes</span>
+                                <span class="text-sm text-surface-500 dark:text-surface-400 italic">No outcomes defined. List the measurable results expected at the end of implementation.</span>
                             </div>
                         </div>
 
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-check-circle text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-check-circle text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No cross-cutting concerns assessed</span>
                                 <span class="empty-state-desc">Indicate applicability of cross-cutting concerns: Gender Equality, Human Rights, Disability Inclusion, Environmental Sustainability, Climate Change, and Conflict Sensitivity.</span>
                             </div>
@@ -258,7 +207,7 @@ import { DocumentsCard } from '../documents';
 
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-flag text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-flag text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No SDG alignment</span>
                                 <span class="empty-state-desc">Link relevant Sustainable Development Goals (SDGs) to this opportunity. Mark one as primary and any others as secondary, and specify the relevant SDG targets.</span>
                             </div>
@@ -279,7 +228,7 @@ import { DocumentsCard } from '../documents';
                     <div class="flex flex-col gap-5 p-2">
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-building text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-building text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No funding partners</span>
                                 <span class="empty-state-desc">Add the organisations providing financial contributions. Each funding partner needs: name, confirmation status, contribution amount (USD), percentage share, due diligence status and expiry, and any linked agreements.</span>
                             </div>
@@ -287,7 +236,7 @@ import { DocumentsCard } from '../documents';
 
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-building text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-building text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No client partners</span>
                                 <span class="empty-state-desc">Add the client organisations for this opportunity. Client partners are the government or institutional entities that will benefit from or co-implement the programme. Include due diligence status.</span>
                             </div>
@@ -301,13 +250,13 @@ import { DocumentsCard } from '../documents';
                         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                             <div class="xl:col-span-2 flex flex-col gap-6">
                                 <div class="flex flex-col gap-3">
-                                    <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Opportunity Manager</span>
+                                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Opportunity Manager</span>
                                     <div class="card">
                                         <div class="empty-state-inline">
                                             <p-avatar icon="pi pi-user" shape="circle" styleClass="w-10 h-10 bg-surface-100 dark:bg-surface-700 text-surface-400" />
                                             <div class="flex flex-col">
-                                                <span class="text-sm font-semibold text-surface-300 dark:text-surface-600">Not assigned</span>
-                                                <span class="text-xs text-surface-400 dark:text-surface-500">Assign the person responsible for managing and progressing this opportunity through the workflow.</span>
+                                                <span class="text-sm font-semibold text-surface-500 dark:text-surface-400">Not assigned</span>
+                                                <span class="text-xs text-surface-500 dark:text-surface-400">Assign the person responsible for managing and progressing this opportunity through the workflow.</span>
                                             </div>
                                         </div>
                                     </div>
@@ -315,7 +264,7 @@ import { DocumentsCard } from '../documents';
 
                                 <div class="card">
                                     <div class="empty-state">
-                                        <i class="pi pi-users text-3xl text-surface-300 dark:text-surface-600"></i>
+                                        <i class="pi pi-users text-3xl text-surface-500 dark:text-surface-400"></i>
                                         <span class="empty-state-title">No collaborators</span>
                                         <span class="empty-state-desc">Add team members who will collaborate on this opportunity. Include their name, position, role (e.g. Collaborator, Technical Advisor), and areas of expertise.</span>
                                     </div>
@@ -323,10 +272,10 @@ import { DocumentsCard } from '../documents';
                             </div>
 
                             <div class="flex flex-col gap-3">
-                                <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Decision-Making Pathway</span>
+                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Decision-Making Pathway</span>
                                 <div class="card">
                                     <div class="empty-state">
-                                        <i class="pi pi-sitemap text-3xl text-surface-300 dark:text-surface-600"></i>
+                                        <i class="pi pi-sitemap text-3xl text-surface-500 dark:text-surface-400"></i>
                                         <span class="empty-state-title">No approval pathway</span>
                                         <span class="empty-state-desc">The decision-making pathway shows the sequence of approvals needed: manager submission, head of programme review, regional director approval, and portfolio review committee (for large opportunities).</span>
                                     </div>
@@ -341,24 +290,24 @@ import { DocumentsCard } from '../documents';
                     <div class="flex flex-col gap-5 p-2">
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div class="card flex flex-col gap-1">
-                                <span class="text-xs text-surface-400 dark:text-surface-500">Direct Beneficiaries</span>
-                                <span class="text-lg font-bold text-surface-300 dark:text-surface-600">—</span>
-                                <span class="text-xs text-surface-400 dark:text-surface-500">Number of people who directly receive services</span>
+                                <span class="text-xs text-surface-500 dark:text-surface-400">Direct Beneficiaries</span>
+                                <span class="text-lg font-bold text-surface-500 dark:text-surface-400">—</span>
+                                <span class="text-xs text-surface-500 dark:text-surface-400">Number of people who directly receive services</span>
                             </div>
                             <div class="card flex flex-col gap-1">
-                                <span class="text-xs text-surface-400 dark:text-surface-500">Indirect Beneficiaries</span>
-                                <span class="text-lg font-bold text-surface-300 dark:text-surface-600">—</span>
-                                <span class="text-xs text-surface-400 dark:text-surface-500">Number of people who benefit indirectly (e.g. households, communities)</span>
+                                <span class="text-xs text-surface-500 dark:text-surface-400">Indirect Beneficiaries</span>
+                                <span class="text-lg font-bold text-surface-500 dark:text-surface-400">—</span>
+                                <span class="text-xs text-surface-500 dark:text-surface-400">Number of people who benefit indirectly (e.g. households, communities)</span>
                             </div>
                             <div class="card flex flex-col gap-1">
-                                <span class="text-xs text-surface-400 dark:text-surface-500">Total Beneficiaries</span>
-                                <span class="text-lg font-bold text-surface-300 dark:text-surface-600">—</span>
-                                <span class="text-xs text-surface-400 dark:text-surface-500">Sum of direct and indirect beneficiaries</span>
+                                <span class="text-xs text-surface-500 dark:text-surface-400">Total Beneficiaries</span>
+                                <span class="text-lg font-bold text-surface-500 dark:text-surface-400">—</span>
+                                <span class="text-xs text-surface-500 dark:text-surface-400">Sum of direct and indirect beneficiaries</span>
                             </div>
                         </div>
                         <div class="card">
                             <div class="empty-state">
-                                <i class="pi pi-heart text-3xl text-surface-300 dark:text-surface-600"></i>
+                                <i class="pi pi-heart text-3xl text-surface-500 dark:text-surface-400"></i>
                                 <span class="empty-state-title">No beneficiary description</span>
                                 <span class="empty-state-desc">Describe the target beneficiary population — who they are, where they live, the specific challenges they face, and any priority demographics (e.g. women, children, displaced persons).</span>
                             </div>
@@ -374,7 +323,7 @@ import { DocumentsCard } from '../documents';
             <ng-template uxDetailTab="risk">
                 <div class="card">
                     <div class="empty-state">
-                        <i class="pi pi-shield text-3xl text-surface-300 dark:text-surface-600"></i>
+                        <i class="pi pi-shield text-3xl text-surface-500 dark:text-surface-400"></i>
                         <span class="empty-state-title">No risks identified</span>
                         <span class="empty-state-desc">Add risks associated with this opportunity. For each risk, provide: title, category (Operational, Legal, External, Social), probability (Low/Medium/High), impact level, proximity, response type, description, and whether it qualifies as an organisational high risk.</span>
                     </div>
@@ -382,7 +331,7 @@ import { DocumentsCard } from '../documents';
 
                 <div class="card">
                     <div class="empty-state">
-                        <i class="pi pi-file-edit text-3xl text-surface-300 dark:text-surface-600"></i>
+                        <i class="pi pi-file-edit text-3xl text-surface-500 dark:text-surface-400"></i>
                         <span class="empty-state-title">No opportunity statement</span>
                         <span class="empty-state-desc">The AI-generated opportunity statement summarises the opportunity's scope, risks, stakeholders, and strategic alignment. It is generated once enough data is entered across all sections, and can be regenerated or manually edited.</span>
                     </div>
@@ -396,9 +345,9 @@ import { DocumentsCard } from '../documents';
 
                 <!-- Activity Feed (empty) -->
                 <div class="card">
-                    <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide px-2 pt-2">Latest Activity</span>
+                    <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide px-2 pt-2">Latest Activity</span>
                     <div class="empty-state py-8">
-                        <i class="pi pi-history text-3xl text-surface-300 dark:text-surface-600"></i>
+                        <i class="pi pi-history text-3xl text-surface-500 dark:text-surface-400"></i>
                         <span class="empty-state-title">No activity yet</span>
                         <span class="empty-state-desc">The activity feed tracks all changes to the opportunity: document uploads, funding confirmations, date changes, stage transitions, budget updates, and SDG linkages. Activity is recorded automatically as the team works on the opportunity.</span>
                     </div>
@@ -407,9 +356,9 @@ import { DocumentsCard } from '../documents';
                 <!-- Source Interactions (empty) -->
                 <div class="card">
                     <div class="flex flex-col gap-3">
-                        <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Source Interactions</span>
+                        <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Source Interactions</span>
                         <div class="empty-state">
-                            <i class="pi pi-link text-3xl text-surface-300 dark:text-surface-600"></i>
+                            <i class="pi pi-link text-3xl text-surface-500 dark:text-surface-400"></i>
                             <span class="empty-state-title">No related interactions</span>
                             <span class="empty-state-desc">Link the meetings, field visits, workshops, and consultations that led to this opportunity. Each interaction shows its title, type, date, status, and participants.</span>
                         </div>
@@ -424,7 +373,7 @@ import { DocumentsCard } from '../documents';
                             <p-tag value="0" styleClass="text-xs font-semibold" />
                         </div>
                         <div class="empty-state">
-                            <i class="pi pi-comments text-3xl text-surface-300 dark:text-surface-600"></i>
+                            <i class="pi pi-comments text-3xl text-surface-500 dark:text-surface-400"></i>
                             <span class="empty-state-title">No comments</span>
                             <span class="empty-state-desc">Use the collaboration section to discuss the opportunity with team members. Comments support mentions, are visible to all collaborators, and are retained as part of the decision record.</span>
                         </div>
@@ -442,11 +391,11 @@ import { DocumentsCard } from '../documents';
                 <div class="card">
                     <div class="flex flex-col gap-6">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-wide">Tasks</span>
-                            <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600" />
+                            <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Tasks</span>
+                            <p-button icon="pi pi-plus" label="New Task" [outlined]="true" size="small" styleClass="!text-primary-600 !border-primary-600" (onClick)="isTaskDrawerVisible = true" />
                         </div>
                         <div class="empty-state">
-                            <i class="pi pi-check-square text-3xl text-surface-300 dark:text-surface-600"></i>
+                            <i class="pi pi-check-square text-3xl text-surface-500 dark:text-surface-400"></i>
                             <span class="empty-state-title">No tasks created</span>
                             <span class="empty-state-desc">Create tasks to track work items for this opportunity: documentation preparation, partner coordination, site assessments, budget finalisation, and approval follow-ups. Tasks can be assigned to team members with start and end dates.</span>
                         </div>
@@ -454,7 +403,7 @@ import { DocumentsCard } from '../documents';
                 </div>
 
                 <!-- Documents (empty — uses existing DocumentsCard with no data) -->
-                <app-documents-card [documents]="[]" />
+                <ux-documents-card [documents]="[]" />
 
             </ng-template>
 
@@ -475,10 +424,10 @@ import { DocumentsCard } from '../documents';
                         @for (section of emptySidebarSections; track section.label) {
                             <div class="rounded-lg border border-dashed border-surface-300 dark:border-surface-600 p-3">
                                 <div class="flex items-center gap-2 mb-1">
-                                    <i class="pi text-xs text-surface-400" [ngClass]="section.icon"></i>
+                                    <i class="pi text-xs text-surface-500" [ngClass]="section.icon"></i>
                                     <span class="text-xs font-semibold text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{ section.label }}</span>
                                 </div>
-                                <span class="text-xs text-surface-400 dark:text-surface-500">{{ section.hint }}</span>
+                                <span class="text-xs text-surface-500 dark:text-surface-400">{{ section.hint }}</span>
                             </div>
                         }
                     </div>
@@ -486,6 +435,8 @@ import { DocumentsCard } from '../documents';
             </ng-container>
 
         </ux-detail-layout>
+
+        <ux-task-drawer [(visible)]="isTaskDrawerVisible" [task]="null" mode="create" />
 
         <ng-template #footerContent>
             <div class="footer-desktop">
@@ -523,12 +474,12 @@ import { DocumentsCard } from '../documents';
         .empty-state-desc {
             font-size: 0.75rem;
             line-height: 1.5;
-            color: var(--p-surface-400);
+            color: var(--p-surface-500);
             max-width: 36rem;
         }
 
         :host-context(.dark) .empty-state-desc {
-            color: var(--p-surface-500);
+            color: var(--p-surface-300);
         }
 
         .empty-state-inline {
@@ -576,13 +527,60 @@ export class OpportunityEmpty {
         { value: 'beneficiaries', label: 'Beneficiaries' }
     ];
 
-    emptyCompletionSegments = [
-        { label: 'Budget & Finance', value: 0, color: 'var(--p-surface-200)' },
-        { label: 'Documentation', value: 0, color: 'var(--p-surface-200)' },
-        { label: 'Stakeholders', value: 0, color: 'var(--p-surface-200)' },
-        { label: 'Compliance & Legal', value: 0, color: 'var(--p-surface-200)' },
-        { label: 'Timeline', value: 0, color: 'var(--p-surface-200)' }
+    // ─── Task Drawer ───
+    isTaskDrawerVisible = false;
+
+    // ─── Completion Steps (all unfilled for empty state) ───
+    completionTotalRecords = 30;
+    completionMandatory = { filled: 0, total: 3 };
+    completionOptional = { filled: 0, total: 27 };
+
+    mandatoryRecords = [
+        { name: 'Title', filled: false },
+        { name: 'Description', filled: false },
+        { name: 'Focal Point', filled: false }
     ];
+
+    optionalRecords = [
+        { name: 'Budget', filled: false },
+        { name: 'Duration', filled: false },
+        { name: 'Start Date', filled: false },
+        { name: 'End Date', filled: false },
+        { name: 'Funding Source', filled: false },
+        { name: 'Implementing Partner', filled: false },
+        { name: 'Country', filled: false },
+        { name: 'Region', filled: false },
+        { name: 'Sector', filled: false },
+        { name: 'Sub-Sector', filled: false },
+        { name: 'SDG Goals', filled: false },
+        { name: 'Target Beneficiaries', filled: false },
+        { name: 'Vendor Documentation', filled: false },
+        { name: 'Risk Assessment', filled: false },
+        { name: 'Stakeholder Alignment', filled: false },
+        { name: 'Scope Change Control', filled: false },
+        { name: 'Software Licenses', filled: false },
+        { name: 'Resource Allocation', filled: false },
+        { name: 'Regulatory Compliance', filled: false },
+        { name: 'Environmental Assessment', filled: false },
+        { name: 'Quality Assurance', filled: false },
+        { name: 'Training Plan', filled: false },
+        { name: 'Communication Plan', filled: false },
+        { name: 'Monitoring Framework', filled: false },
+        { name: 'Exit Strategy', filled: false },
+        { name: 'Sustainability Plan', filled: false },
+        { name: 'Procurement Plan', filled: false }
+    ];
+
+    completionSteps = computed(() => {
+        const steps: { type: 'mandatory' | 'optional'; filled: boolean; name: string }[] = [];
+        for (const rec of this.mandatoryRecords) {
+            steps.push({ type: 'mandatory', filled: rec.filled, name: rec.name });
+        }
+        for (const rec of this.optionalRecords) {
+            steps.push({ type: 'optional', filled: rec.filled, name: rec.name });
+        }
+        return steps;
+    });
 
     emptyAnalysisStats = [
         { label: 'Countries', icon: 'pi-globe', hint: 'Add implementation countries in the Scope > Where section' },

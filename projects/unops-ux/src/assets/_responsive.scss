@@ -174,7 +174,7 @@
     .layout-sidebar {
         position: absolute;
         z-index: 999;
-        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
+        box-shadow: 0 0 1rem color-mix(in srgb, var(--p-surface-950) 15%, transparent);
         left: 0;
         transform: translateX(-100%);
 
@@ -199,7 +199,7 @@
 
         .layout-mask {
             display: block;
-            animation: fadein var(--layout-section-transition-duration);
+            animation: fade-in var(--transition-duration);
         }
     }
 

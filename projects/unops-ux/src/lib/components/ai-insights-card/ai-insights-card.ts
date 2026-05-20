@@ -71,7 +71,7 @@ export interface AiInsight {
                                         <div class="flex flex-col gap-2 flex-1 min-w-0">
                                             <div class="flex flex-col gap-1">
                                                 <span class="text-midnight-500 dark:text-surface-0 text-sm font-bold leading-[21px]">{{ insight.title }}</span>
-                                                <p class="text-[#2b638b] dark:text-surface-300 text-sm leading-normal">{{ insight.description }}</p>
+                                                <p class="text-midnight-400 dark:text-surface-300 text-sm leading-normal">{{ insight.description }}</p>
                                             </div>
                                             <button
                                                 class="flex items-center gap-1.5 text-darkblue-500 dark:text-primary-400 text-sm font-semibold cursor-pointer hover:underline bg-transparent border-none p-0 w-fit"
@@ -92,8 +92,8 @@ export interface AiInsight {
                                     [first]="first()"
                                     (onPageChange)="page.set($event.page ?? 0)"
                                     [pageLinkSize]="3"
-                                    styleClass="w-full border-none! bg-transparent!"
-                                    [pt]="{ root: { class: 'bg-transparent! relative! w-full! justify-center!' } }"
+                                    styleClass="w-full"
+                                    [pt]="{ root: { class: 'justify-center' } }"
                                 />
                             </div>
                         </div>

@@ -16,7 +16,7 @@ import { SelectModule } from 'primeng/select';
             <div class="flex flex-col mt-7">
                 <div class="flex gap-6">
                     <div class="flex flex-col items-center">
-                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05);]">
+                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-subtle">
                             <i class="pi pi-dollar text-blue-600 text-2xl!"></i>
                         </span>
                         <span class="min-h-14 w-px bg-(--surface-border)"></span>
@@ -28,7 +28,7 @@ import { SelectModule } from 'primeng/select';
                 </div>
                 <div class="flex gap-6">
                     <div class="flex flex-col items-center">
-                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05);]">
+                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-subtle">
                             <i class="pi pi-download text-orange-600 text-2xl!"></i>
                         </span>
                         <span class="min-h-14 w-px bg-(--surface-border)"></span>
@@ -40,7 +40,7 @@ import { SelectModule } from 'primeng/select';
                 </div>
                 <div class="flex gap-6">
                     <div class="flex flex-col items-center">
-                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05);]">
+                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-subtle">
                             <i class="pi pi-question-circle text-violet-600 text-2xl!"></i>
                         </span>
                         <span class="min-h-14 w-px bg-(--surface-border)"></span>
@@ -52,7 +52,7 @@ import { SelectModule } from 'primeng/select';
                 </div>
                 <div class="flex gap-6">
                     <div class="flex flex-col items-center">
-                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05);]">
+                        <span class="w-14 h-14 flex items-center justify-center border border-surface rounded-xl shadow-subtle">
                             <i class="pi pi-comment text-blue-600 text-2xl!"></i>
                         </span>
                     </div>

@@ -33,7 +33,7 @@ import { SelectModule } from 'primeng/select';
         class: 'flex w-full flex-wrap gap-7'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-select {
                 padding-right: 0.375rem;
                 border-radius: 0.5rem;

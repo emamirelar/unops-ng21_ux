@@ -80,7 +80,7 @@ import { AvatarModule } from 'primeng/avatar';
         class: 'card xl:w-auto w-full xl:flex-1 mb-0! flex-1 px-7! pb-7! pt-6! border rounded-3xl border-surface flex flex-col justify-between overflow-hidden'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-datatable {
                 .p-datatable-thead > tr th {
                     background: transparent;

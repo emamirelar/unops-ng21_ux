@@ -64,7 +64,7 @@ import { TagModule } from 'primeng/tag';
         class: 'xl:w-auto w-full xl:pl-6 pt-6 xl:pt-0 min-w-80 flex flex-col justify-between gap-10'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-select {
                 padding-right: 0.375rem;
                 border-radius: 0.5rem;

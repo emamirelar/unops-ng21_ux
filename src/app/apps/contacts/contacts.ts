@@ -29,7 +29,7 @@ interface FilterTag {
             <div class="flex flex-col gap-3">
                 <p-iconfield class="w-full sm:w-72">
                     <p-inputicon styleClass="pi pi-search" />
-                    <input pInputText [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search contacts..." class="w-full! py-2! rounded-xl!" />
+                    <input pInputText [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Search contacts..." class="w-full" />
                 </p-iconfield>
 
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
@@ -47,7 +47,7 @@ interface FilterTag {
             </div>
 
             <div class="p-4 border border-surface rounded-2xl">
-            <p-dataview [value]="filteredContacts()" [layout]="layout" [pt]="{ header: { class: 'p-0! hidden' }, content: { class: 'bg-transparent!' } }">
+            <p-dataview [value]="filteredContacts()" [layout]="layout" [pt]="{ header: { class: 'hidden' } }">
 
                 <ng-template #list let-items>
                     <div class="flex flex-col">

@@ -14,7 +14,7 @@ import { ChartModule } from 'primeng/chart';
         class: 'max-h-80! min-h-72 min-w-[640px] w-full overflow-auto h-full cursor-pointer'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             p-chart {
                 height: 100%;
                 canvas {
@@ -215,7 +215,7 @@ export class MultiLineChart {
                                 'transition-all',
                                 'duration-[0.05s]',
                                 'pointer-events-none',
-                                'shadow-[0px_16px_32px_-12px_rgba(88,92,95,0.10)]'
+                                'shadow-tooltip'
                             );
                             chart.canvas.parentNode.appendChild(tooltipEl);
                         }

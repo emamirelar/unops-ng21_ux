@@ -7,7 +7,7 @@ import { FooterMainComponent } from '../../components/footer-main/footer-main';
 import { AppMenu } from './app.menu';
 import { AppTopbar } from './app.topbar';
 
-const BREAKPOINT = 992;
+const BREAKPOINT = 1024;
 
 @Component({
     selector: '[app-sidebar]',

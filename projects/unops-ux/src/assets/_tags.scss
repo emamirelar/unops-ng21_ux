@@ -8,7 +8,6 @@
 .tag-status-active.p-tag {
     border-color: var(--color-babygreen-300);
     background-color: var(--color-babygreen-50);
-    border-color: var(--color-babygreen-300);
     color: var(--color-babygreen-900);
 }
 
@@ -21,6 +20,7 @@
 
 .tag-status-closed.p-tag {
     border-color: var(--color-deepsea-500);
+    background-color: var(--color-gray-300);
     color: var(--color-deepsea-500);
 }
 

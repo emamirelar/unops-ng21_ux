@@ -2,12 +2,13 @@ import { trackByFn } from '@/app/lib/utils';
 import { MiniLineChart } from '@/app/pages/dashboards/charts/minilinechart';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { brandPrimitives } from '@unopsitg/ux';
 
 @Component({
     selector: 'opportunity-stat-card-widget',
     imports: [CommonModule, MiniLineChart],
     template: `@for (data of datasets; track trackByFn()) {
-        <div class="card flex-1 mb-0! p-0! min-w-48 rounded-2xl shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="card flex-1 mb-0! p-0! min-w-48 rounded-2xl shadow-subtle">
             <div class="px-4 pt-3.5 pb-1">
                 <div class="flex items-start gap-2">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center" [ngClass]="data.iconBg">
@@ -43,8 +44,8 @@ export class OpportunityStatCardWidget {
             icon: 'pi-briefcase',
             iconBg: 'bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
             data: [142, 168, 195, 210, 238, 252, 261, 278, 284],
-            borderColor: 'rgb(0, 146, 209)',
-            bgColor: ['rgba(0,146,209,0.3)', 'rgba(0,146,209,0)']
+            borderColor: brandPrimitives.blue[500],
+            bgColor: [brandPrimitives.blue[500] + '4d', brandPrimitives.blue[500] + '00']
         },
         {
             cardData: {
@@ -57,8 +58,8 @@ export class OpportunityStatCardWidget {
             icon: 'pi-dollar',
             iconBg: 'bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300',
             data: [680, 750, 820, 910, 980, 1050, 1120, 1180, 1240],
-            borderColor: 'rgb(76, 159, 56)',
-            bgColor: ['rgba(76,159,56,0.3)', 'rgba(76,159,56,0)']
+            borderColor: brandPrimitives.green[500],
+            bgColor: [brandPrimitives.green[500] + '4d', brandPrimitives.green[500] + '00']
         },
         {
             cardData: {
@@ -71,8 +72,8 @@ export class OpportunityStatCardWidget {
             icon: 'pi-globe',
             iconBg: 'bg-ocean-50 text-ocean-700 dark:bg-ocean-900 dark:text-ocean-300',
             data: [42, 45, 48, 52, 55, 58, 61, 64, 67],
-            borderColor: 'rgb(78, 195, 224)',
-            bgColor: ['rgba(78,195,224,0.3)', 'rgba(78,195,224,0)']
+            borderColor: brandPrimitives.ocean[500],
+            bgColor: [brandPrimitives.ocean[500] + '4d', brandPrimitives.ocean[500] + '00']
         },
         {
             cardData: {
@@ -85,8 +86,8 @@ export class OpportunityStatCardWidget {
             icon: 'pi-chart-line',
             iconBg: 'bg-cherry-50 text-cherry-700 dark:bg-cherry-900 dark:text-cherry-300',
             data: [78, 76, 80, 74, 77, 73, 75, 71, 72],
-            borderColor: 'rgb(153, 30, 102)',
-            bgColor: ['rgba(153,30,102,0.3)', 'rgba(153,30,102,0)']
+            borderColor: brandPrimitives.cherry[500],
+            bgColor: [brandPrimitives.cherry[500] + '4d', brandPrimitives.cherry[500] + '00']
         }
     ];
 

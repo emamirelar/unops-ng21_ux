@@ -1,14 +1,12 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { booleanAttribute, Component, computed, inject, Input, model, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { $t, updatePreset, updateSurfacePalette } from '@primeuix/themes';
-import { brandPresets as brandPresetMap } from '../../theme/brand-theme';
+import { brandPrimitives, brandPresets as brandPresetMap } from '../../theme/brand-theme';
 import { PrimeNG } from 'primeng/config';
 import { DrawerModule } from 'primeng/drawer';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { LayoutService } from '../layout.service';
 
 declare type KeyOfType<T> = keyof T extends infer U ? U : never;
@@ -33,7 +31,7 @@ declare type SurfacesType = {
 
 @Component({
     selector: 'app-configurator',
-    imports: [CommonModule, FormsModule, SelectButtonModule, DrawerModule, ToggleSwitchModule, RadioButtonModule],
+    imports: [CommonModule, FormsModule, SelectButtonModule, DrawerModule, RadioButtonModule],
     template: `
         <p-drawer [(visible)]="configSidebarVisible" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" header="Settings" appendTo="body">
             <div class="flex flex-col gap-6">
@@ -88,12 +86,12 @@ declare type SurfacesType = {
                 </div>
                 <div *ngIf="!simple && location === 'app'" class="flex flex-col gap-2">
                     <span class="text-lg text-muted-color font-semibold">Card Style</span>
-                    <p-selectbutton [ngModel]="cardStyle()" (ngModelChange)="onCardStyleChange($event)" [options]="cardStyleOptions" optionLabel="name" optionValue="value" [allowEmpty]="false" [allowEmpty]="false" />
+                    <p-selectbutton [ngModel]="cardStyle()" (ngModelChange)="onCardStyleChange($event)" [options]="cardStyleOptions" optionLabel="name" optionValue="value" [allowEmpty]="false" />
                 </div>
 
                 <div *ngIf="!simple && location === 'app'" class="flex flex-col gap-2">
                     <span class="text-lg text-muted-color font-semibold">Menu Theme</span>
-                    <p-selectbutton [ngModel]="menuTheme()" (ngModelChange)="onMenuThemeChange($event)" [options]="menuThemeOptions" optionLabel="name" optionValue="value" [allowEmpty]="false" [allowEmpty]="false" />
+                    <p-selectbutton [ngModel]="menuTheme()" (ngModelChange)="onMenuThemeChange($event)" [options]="menuThemeOptions" optionLabel="name" optionValue="value" [allowEmpty]="false" />
                 </div>
 
                 <div *ngIf="!simple && location === 'app'">
@@ -112,29 +110,15 @@ declare type SurfacesType = {
                             </div>
                             <div class="flex">
                                 <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="overlay" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('overlay')" inputId="overlay"></p-radiobutton>
-                                    <label for="overlay">Overlay</label>
-                                </div>
-                                <div class="flex items-center gap-2 w-6/12">
                                     <p-radiobutton name="menuMode" value="slim" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('slim')" inputId="slim"></p-radiobutton>
                                     <label for="slim">Slim</label>
                                 </div>
-                            </div>
-                            <div class="flex">
                                 <div class="flex items-center gap-2 w-6/12">
                                     <p-radiobutton name="menuMode" value="compact" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('compact')" inputId="compact"></p-radiobutton>
                                     <label for="compact">Compact</label>
                                 </div>
-                                <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="reveal" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('reveal')" inputId="reveal"></p-radiobutton>
-                                    <label for="reveal">Reveal</label>
-                                </div>
                             </div>
                             <div class="flex">
-                                <div class="flex items-center gap-2 w-6/12">
-                                    <p-radiobutton name="menuMode" value="drawer" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('drawer')" inputId="drawer"></p-radiobutton>
-                                    <label for="drawer">Drawer</label>
-                                </div>
                                 <div class="flex items-center gap-2 w-6/12">
                                     <p-radiobutton name="menuMode" value="horizontal" [ngModel]="menuMode()" (ngModelChange)="setMenuMode('horizontal')" inputId="horizontal"></p-radiobutton>
                                     <label for="horizontal">Horizontal</label>
@@ -152,15 +136,11 @@ export class AppConfigurator implements OnInit {
 
     @Input() location: string = 'app';
 
-    router = inject(Router);
-
     config: PrimeNG = inject(PrimeNG);
 
     layoutService: LayoutService = inject(LayoutService);
 
     platformId = inject(PLATFORM_ID);
-
-    primeng = inject(PrimeNG);
 
     presetKeys = Object.keys(brandPresetMap) as (keyof typeof brandPresetMap)[];
 
@@ -193,42 +173,10 @@ export class AppConfigurator implements OnInit {
         }
     }
 
-    surfaces: SurfacesType[] = [
-        {
-            name: 'gray',
-            palette: {
-                0: '#ffffff',
-                50: '#e5e6e6',
-                100: '#d5d6d7',
-                200: '#c6c7c8',
-                300: '#b6b8b9',
-                400: '#a7a8aa',
-                500: '#97999b',
-                600: '#808284',
-                700: '#6a6b6d',
-                800: '#535455',
-                900: '#3c3d3e',
-                950: '#262627'
-            }
-        },
-        {
-            name: 'darkblue',
-            palette: {
-                0: '#ffffff',
-                50: '#D0EEFF',
-                100: '#B7E2F9',
-                200: '#73abc7',
-                300: '#73abc7',
-                400: '#4d94b8',
-                500: '#267da9',
-                600: '#00669a',
-                700: '#005783',
-                800: '#00476c',
-                900: '#00293e',
-                950: '#001a27'
-            }
-        }
-    ];
+    surfaces: SurfacesType[] = ['gray', 'darkblue'].map(name => ({
+        name,
+        palette: { 0: '#ffffff', ...brandPrimitives[name as keyof typeof brandPrimitives] }
+    }));
 
     selectedPrimaryColor = computed(() => {
         return this.layoutService.layoutConfig().primary;

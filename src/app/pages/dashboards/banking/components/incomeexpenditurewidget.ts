@@ -3,6 +3,7 @@ import { MultiLineChart } from '@/app/pages/dashboards/charts/multilinechart';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { brandPrimitives } from '@unopsitg/ux';
 
 @Component({
     selector: 'income-expenditure-widget',
@@ -26,9 +27,9 @@ export class IncomeExpenditureWidget {
 
     labels = ['Income', 'Expenditure'];
 
-    bgColors = [undefined, ['rgba(165,243,252,0.4)', 'rgba(165,243,252,0)']];
+    bgColors = [undefined, [brandPrimitives.ocean[100] + '66', brandPrimitives.ocean[100] + '00']];
 
-    borderColors = [undefined, 'rgb(8,145,178)'];
+    borderColors = [undefined, brandPrimitives.ocean[700]];
 
     options = [
         { name: 'Weekly', value: 'week' },

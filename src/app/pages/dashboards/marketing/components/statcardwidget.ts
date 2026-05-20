@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
+import { brandPrimitives } from '@unopsitg/ux';
 import { TagModule } from 'primeng/tag';
 
 @Component({
@@ -29,7 +30,7 @@ import { TagModule } from 'primeng/tag';
         class: 'grid grid-cols-1 xl:grid-cols-3 divide-y xl:divide-y-0 xl:divide-x divide-(--surface-border)'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-select {
                 padding-right: 0.375rem;
                 border-radius: 0.5rem;
@@ -100,8 +101,8 @@ export class StatCardWidget {
                 percent: '12',
                 positive: false
             },
-            borderColor: 'rgb(190,18,60)',
-            bgColor: ['rgba(190,18,60,0.1)', 'rgba(190,18,60,0)'],
+            borderColor: brandPrimitives.cherry[500],
+            bgColor: [brandPrimitives.cherry[500] + '1a', brandPrimitives.cherry[500] + '00'],
             datasets: generateRandomData('2023-10-27T00:00:00', '2024-11-03T00:00:00', 4, 1500, 3200)
         },
         {
@@ -112,9 +113,9 @@ export class StatCardWidget {
                 percent: '32',
                 positive: true
             },
-            borderColor: 'rgb(21,128,61)',
+            borderColor: brandPrimitives.green[600],
             currency: '',
-            bgColor: ['rgba(21,128,61,0.1)', 'rgba(21,128,61,0)'],
+            bgColor: [brandPrimitives.green[600] + '1a', brandPrimitives.green[600] + '00'],
             datasets: generateRandomData('2000-10-27T00:00:00', '2023-11-03T00:00:00', 4, 1400, 5000)
         }
     ];

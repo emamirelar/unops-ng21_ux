@@ -64,7 +64,7 @@ import { TagModule } from 'primeng/tag';
         class: 'card xl:w-auto w-full xl:flex-1 mb-0! flex-1 px-4! sm:px-7! pb-4! sm:pb-7! pt-4! sm:pt-6! rounded-3xl flex flex-col justify-between overflow-hidden'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-datatable {
                 .p-datatable-thead > tr th {
                     background: transparent;

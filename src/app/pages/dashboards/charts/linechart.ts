@@ -197,7 +197,7 @@ export class LineChart {
                                 '-translate-x-1/2',
                                 'transition-all',
                                 'duration-[0.05s]',
-                                'shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]'
+                                'shadow-subtle'
                             );
                             chart.canvas.parentNode.appendChild(tooltipEl);
                         }

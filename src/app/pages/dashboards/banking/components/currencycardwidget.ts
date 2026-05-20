@@ -2,13 +2,14 @@ import { trackByFn } from '@/app/lib/utils';
 import { MiniLineChart } from '@/app/pages/dashboards/charts/minilinechart';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { brandPrimitives } from '@unopsitg/ux';
 
 @Component({
     selector: 'currency-card-widget',
     standalone: true,
     imports: [CommonModule, MiniLineChart],
     template: `@for (data of datasets; track trackByFn()) {
-        <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]">
+        <div class="card flex-1 mb-0! p-0! min-w-64 rounded-2xl border border-surface shadow-subtle">
             <div class="px-4 pt-3.5 pb-1">
                 <div class="flex items-start gap-2">
                     <span class="flex-1 label-medium">{{ data.cardData.title }}</span>
@@ -48,8 +49,8 @@ export class CurrencyCardWidget {
                 value: '£27.789,56',
                 percent: '32'
             },
-            borderColor: 'rgb(234, 88, 12)',
-            bgColor: ['rgba(234,88,12,0.3)', 'rgba(234,88,12,0)'],
+            borderColor: brandPrimitives.orange[500],
+            bgColor: [brandPrimitives.orange[500] + '4d', brandPrimitives.orange[500] + '00'],
             data: [22000, 29000, 18000, 6000, 29000, 12000, 30000, 24000, 31000]
         },
         {
@@ -59,8 +60,8 @@ export class CurrencyCardWidget {
                 value: '€17.864,12',
                 percent: '24'
             },
-            borderColor: 'rgb(37, 99, 235)',
-            bgColor: ['rgba(37,99,235,0.3)', 'rgba(37,99,235,0)'],
+            borderColor: brandPrimitives.blue[600],
+            bgColor: [brandPrimitives.blue[600] + '4d', brandPrimitives.blue[600] + '00'],
             data: [8000, 20000, 10000, 17000, 16001, 5001, 21000, 19000, 17500]
         },
         {
@@ -70,8 +71,8 @@ export class CurrencyCardWidget {
                 value: '₺142.847,23 ',
                 percent: '17'
             },
-            borderColor: 'rgb(124, 58, 237)',
-            bgColor: ['rgba(124,58,237,0.3)', 'rgba(124,58,237,0)'],
+            borderColor: brandPrimitives.ai[600],
+            bgColor: [brandPrimitives.ai[600] + '4d', brandPrimitives.ai[600] + '00'],
             data: [10000, 14000, 25000, 12500, 15500, 28000, 12000, 14500, 29500]
         }
     ];

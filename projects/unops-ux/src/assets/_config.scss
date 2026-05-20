@@ -18,7 +18,7 @@
     overflow: hidden;
     cursor: pointer;
     z-index: 999;
-    box-shadow: -0.25rem 0 1rem rgba(0, 0, 0, 0.15);
+    box-shadow: -0.25rem 0 1rem color-mix(in srgb, var(--p-surface-950) 15%, transparent);
 
     &.config-link {
         font-size: 1rem;
@@ -45,8 +45,8 @@
 }
 
 .app-config-button {
-    border: 1px solid var(--border-color);
-    background-color: var(--card-background);
+    border: 1px solid var(--surface-border);
+    background-color: var(--surface-overlay);
     position: relative;
     z-index: 0;
     border-radius: 0px;

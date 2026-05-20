@@ -17,10 +17,10 @@ let aiCardBgFilterId = 0;
     },
     styles: `
         :host {
-            --ux-ai-bg-from: var(--color-ai-50, #f0edff);
-            --ux-ai-bg-to: var(--color-cherry-50, #e6c7d9);
-            --ux-ai-fg-from: var(--color-ai-200, #cdc2ff);
-            --ux-ai-fg-to: var(--color-cherry-100, #d6a5c2);
+            --ux-ai-bg-from: var(--color-ai-50);
+            --ux-ai-bg-to: var(--color-cherry-50);
+            --ux-ai-fg-from: var(--color-ai-200);
+            --ux-ai-fg-to: var(--color-cherry-100);
             position: relative;
             overflow: hidden;
             isolation: isolate;
@@ -30,10 +30,10 @@ let aiCardBgFilterId = 0;
         }
 
         :host-context([class*='app-dark']) {
-            --ux-ai-bg-from: var(--color-ai-950, #24185e);
-            --ux-ai-bg-to: var(--color-cherry-950, #26081a);
-            --ux-ai-fg-from: var(--color-ai-900, #3b278a);
-            --ux-ai-fg-to: var(--color-cherry-900, #3d0c29);
+            --ux-ai-bg-from: var(--color-ai-950);
+            --ux-ai-bg-to: var(--color-cherry-950);
+            --ux-ai-fg-from: var(--color-ai-900);
+            --ux-ai-fg-to: var(--color-cherry-900);
         }
 
         :host > :not(svg) {

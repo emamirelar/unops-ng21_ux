@@ -8,9 +8,9 @@
     --d-menuitem-text-color: var(--p-primary-700);
     --d-menuitem-icon-color: var(--p-primary-700);
     --d-menuitem-hover-bg: var(--surface-hover);
-    --d-menuitem-active-bg: rgba(2, 44, 78, 0.177);
+    --d-menuitem-active-bg: color-mix(in srgb, var(--color-midnight-700) 18%, transparent);
     --d-menuitem-active-text-color: var(--p-primary-600);
     --d-menuitem-active-route-text-color: var(--p-primary-700);
     --d-menuitem-active-border: 0.5px solid var(--p-primary-200);
-    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(90, 184, 255, 0.218);
+    --d-menuitem-focus-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-blue-400) 22%, transparent);
 }

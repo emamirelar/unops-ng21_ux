@@ -8,7 +8,7 @@
     --d-menuitem-text-color: var(--p-text-color);
     --d-menuitem-icon-color: var(--p-primary-700);
     --d-menuitem-hover-bg: var(--surface-hover);
-    --d-menuitem-active-bg: rgba(0, 61, 114, 0.387);
+    --d-menuitem-active-bg: color-mix(in srgb, var(--color-midnight-600) 39%, transparent);
     --d-menuitem-active-text-color: var(--p-primary-600);
     --d-menuitem-active-route-text-color: var(--p-primary-700);
     --d-menuitem-active-border: 0.5px solid var(--surface-border);
@@ -18,14 +18,14 @@
 .app-dark .layout-sidebar-dark {
     --d-sidebar-border: 1px solid var(--p-surface-700);
     --d-app-name-color: var(--p-surface-0);
-    --d-menu-separator-border: 1px solid rgba(255, 255, 255, 0.15);
+    --d-menu-separator-border: 1px solid color-mix(in srgb, var(--p-surface-0) 15%, transparent);
     --d-menuitem-root-text-color: var(--p-surface-0);
     --d-menuitem-text-color: var(--p-surface-0);
     --d-menuitem-icon-color: var(--color-ocean-300);
-    --d-menuitem-hover-bg: rgba(14, 114, 157, 0.3);
-    --d-menuitem-active-bg: rgba(0, 61, 114, 0.387);
+    --d-menuitem-hover-bg: color-mix(in srgb, var(--color-ocean-700) 30%, transparent);
+    --d-menuitem-active-bg: color-mix(in srgb, var(--color-midnight-600) 39%, transparent);
     --d-menuitem-active-text-color: var(--p-surface-0);
     --d-menuitem-active-route-text-color: var(--p-surface-0);
     --d-menuitem-active-border: 0.5px solid var(--p-surface-700);
-    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(1, 26, 46, 0.45);
+    --d-menuitem-focus-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-midnight-800) 45%, transparent);
 }

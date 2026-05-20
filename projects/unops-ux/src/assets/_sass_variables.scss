@@ -1,2 +1,8 @@
 $breakpoint: 1024px !default;
-$sidebarShadow: 0px 1px 2px 0px rgba(18, 18, 23, 0.05) !default;
+$sidebarShadow: 0px 1px 2px 0px color-mix(in srgb, var(--p-surface-950) 5%, transparent) !default;
+$flyoutShadow:
+    0px 56px 16px 0px color-mix(in srgb, var(--p-surface-950) 0%, transparent),
+    0px 36px 14px 0px color-mix(in srgb, var(--p-surface-950) 1%, transparent),
+    0px 20px 12px 0px color-mix(in srgb, var(--p-surface-950) 2%, transparent),
+    0px 9px 9px 0px color-mix(in srgb, var(--p-surface-950) 3%, transparent),
+    0px 2px 5px 0px color-mix(in srgb, var(--p-surface-950) 4%, transparent) !default;

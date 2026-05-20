@@ -3,6 +3,7 @@ import { BarChart } from '@/app/pages/dashboards/charts/barchart';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { brandPrimitives } from '@unopsitg/ux';
 import { SelectModule } from 'primeng/select';
 
 @Component({
@@ -23,7 +24,7 @@ import { SelectModule } from 'primeng/select';
         class: 'card mb-0! h-96 min-w-80 flex flex-col p-6 border border-surface rounded-2xl overflow-hidden'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-select {
                 padding-right: 0.375rem;
                 border-radius: 0.5rem;
@@ -68,7 +69,7 @@ import { SelectModule } from 'primeng/select';
 export class OverviewWidget {
     labels = ['Fashion', 'Electronics', 'Home'];
 
-    bgColors = ['rgba(151,163,182,1)', 'rgba(205,213,224,1)', 'rgba(227,232,239,1)'];
+    bgColors = [brandPrimitives.gray[400], brandPrimitives.gray[300], brandPrimitives.gray[200]];
 
     randomData = generateRandomMultiData('2020-10-27T00:00:00', '2023-11-03T00:00:00', 4, 10, 150, 3);
 

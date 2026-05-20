@@ -109,7 +109,7 @@ import { TagModule } from 'primeng/tag';
         class: 'w-full overflow-auto'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-datatable {
                 .p-datatable-thead > tr th {
                     background: transparent;

@@ -122,7 +122,7 @@ interface User {
                         </tr>
                     </ng-template>
                 </p-table>
-                <p-menu #actionMenu [model]="menuItems()" [popup]="true" styleClass="w-48!" appendTo="body" />
+                <p-menu #actionMenu [model]="menuItems()" [popup]="true" styleClass="w-48" appendTo="body" />
             </div>
 
             <!-- Edit User Dialog -->

@@ -37,7 +37,7 @@ import { TextareaModule } from 'primeng/textarea';
                                 </div>
                                 <div class="flex items-center gap-3 text-surface-0">
                                     <i class="pi pi-envelope text-lg! leading-none!"></i>
-                                    <span class="body-small text-surface-0">contact&#64;primetek.com.tr</span>
+                                    <span class="body-small text-surface-0">contact&#64;UNOPS.com.tr</span>
                                 </div>
                                 <div class="flex items-center gap-3 text-surface-0">
                                     <i class="pi pi-map-marker text-lg! leading-none!"></i>

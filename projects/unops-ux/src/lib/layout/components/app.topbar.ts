@@ -1,7 +1,7 @@
 import { LayoutService } from '../layout.service';
 import { TOPBAR_MOBILE_LOGO } from '../tokens';
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
@@ -80,11 +80,11 @@ interface NotificationsBars {
                         <i class="pi pi-bell"></i>
                     </a>
                     <div
-                        class="list-none m-0 rounded-2xl border border-surface fixed sm:absolute bg-surface-0 dark:bg-surface-900 overflow-hidden hidden origin-top w-[calc(100vw-2rem)] sm:w-88 mt-2 z-50 top-auto left-4 sm:left-auto sm:right-0 shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                        class="list-none m-0 rounded-2xl border border-surface fixed sm:absolute bg-surface-0 dark:bg-surface-900 overflow-hidden hidden origin-top w-[calc(100vw-2rem)] sm:w-88 mt-2 z-50 top-auto left-4 sm:left-auto sm:right-0 shadow-flyout"
                     >
                         <div class="p-4 flex items-center justify-between border-b border-surface">
                             <span class="label-small text-surface-950 dark:text-surface-0">Notifications</span>
-                            <button pRipple class="py-1 px-2 text-surface-950 dark:text-surface-0 label-x-small hover:bg-emphasis border border-surface rounded-lg shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)] transition-all">Mark all as read</button>
+                            <button pRipple class="py-1 px-2 text-surface-950 dark:text-surface-0 label-x-small hover:bg-emphasis border border-surface rounded-lg shadow-subtle transition-all">Mark all as read</button>
                         </div>
                         <div class="flex items-center border-b border-surface">
                             @for (item of notificationsBars(); track item.id; let i = $index) {
@@ -134,7 +134,7 @@ interface NotificationsBars {
                         </svg>
                     </a>
                     <div
-                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-44 mt-2 right-4 sm:right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-44 mt-2 right-4 sm:right-0 z-999 top-auto shadow-flyout"
                     >
                         <ul class="flex flex-col gap-1">
                             @for (lang of languages(); track lang.code) {
@@ -160,7 +160,7 @@ interface NotificationsBars {
                     </a>
                     <div
                         #profilePanel
-                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-[0px_56px_16px_0px_rgba(0,0,0,0.00),0px_36px_14px_0px_rgba(0,0,0,0.01),0px_20px_12px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-flyout"
                         [class.hidden]="!profileMenuOpen()"
                         [class.animate-scalein]="profileMenuOpen()"
                     >
@@ -211,7 +211,7 @@ interface NotificationsBars {
                                 </a>
                             </li>
                             <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
+                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false); onConfigButtonClick()">
                                     <i class="pi pi-cog"></i>
                                     <span>Settings</span>
                                 </a>
@@ -246,7 +246,7 @@ interface NotificationsBars {
         </a>
     </div>`
 })
-export class AppTopbar implements AfterViewChecked, AfterViewInit {
+export class AppTopbar implements AfterViewChecked {
     layoutService = inject(LayoutService);
 
     readonly mobileLogoConfig = inject(TOPBAR_MOBILE_LOGO);
@@ -418,51 +418,6 @@ export class AppTopbar implements AfterViewChecked, AfterViewInit {
     closeSearch() {
         this.searchActive.set(false);
     }
-
-    // #region agent log
-    ngAfterViewInit() {
-        setTimeout(() => {
-            const topbar = document.querySelector('.layout-topbar') as HTMLElement;
-            const topbarRight = document.querySelector('.topbar-right') as HTMLElement;
-            const content = document.querySelector('.layout-content') as HTMLElement;
-            const contentInside = document.querySelector('.layout-content-wrapper-inside') as HTMLElement;
-            const wrapper = document.querySelector('.layout-wrapper') as HTMLElement;
-
-            const topbarStyles = topbar ? getComputedStyle(topbar) : null;
-            const contentStyles = content ? getComputedStyle(content) : null;
-            const wrapperStyles = wrapper ? getComputedStyle(wrapper) : null;
-
-            const data = {
-                viewport: { width: window.innerWidth, height: window.innerHeight },
-                docScrollWidth: document.documentElement.scrollWidth,
-                hasHorizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
-                topbar: topbar ? {
-                    boxSizing: topbarStyles!.boxSizing,
-                    padding: topbarStyles!.padding,
-                    paddingRight: topbarStyles!.paddingRight,
-                    paddingLeft: topbarStyles!.paddingLeft,
-                    width: topbarStyles!.width,
-                    rect: topbar.getBoundingClientRect()
-                } : null,
-                topbarRight: topbarRight ? { rect: topbarRight.getBoundingClientRect() } : null,
-                content: content ? {
-                    padding: contentStyles!.padding,
-                    paddingRight: contentStyles!.paddingRight,
-                    rect: content.getBoundingClientRect()
-                } : null,
-                contentInside: contentInside ? { rect: contentInside.getBoundingClientRect() } : null,
-                wrapper: wrapper ? {
-                    flexWrap: wrapperStyles!.flexWrap,
-                    flexDirection: wrapperStyles!.flexDirection,
-                    width: wrapperStyles!.width,
-                    overflowX: wrapperStyles!.overflowX
-                } : null
-            };
-
-            fetch('http://127.0.0.1:7278/ingest/09818c15-01b3-40a5-8a07-65bd2be63fb7',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'7b7a04'},body:JSON.stringify({sessionId:'7b7a04',location:'app.topbar.ts:ngAfterViewInit',message:'Layout measurement',data,timestamp:Date.now(),hypothesisId:'H1-H5'})}).catch(()=>{});
-        }, 1500);
-    }
-    // #endregion
 
     ngAfterViewChecked() {
         if (this.shouldFocusSearch && this.searchInput) {

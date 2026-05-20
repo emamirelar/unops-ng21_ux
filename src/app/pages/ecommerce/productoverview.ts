@@ -475,7 +475,7 @@ interface Size {
                                                         </div>
                                                         <div class="relative shrink-0">
                                                             <p-button icon="pi pi-ellipsis-v" [text]="true" size="small" severity="secondary" (onClick)="toggleReviewMenu($event, $index)" styleClass="p-2! h-auto!" />
-                                                            <p-menu #reviewMenu [model]="reviewMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                                            <p-menu #reviewMenu [model]="reviewMenuItems" [popup]="true" styleClass="w-48" appendTo="body" />
                                                         </div>
                                                     </div>
                                                     <div class="text-surface-600 dark:text-surface-300 text-base font-normal leading-normal">"{{ review.comment }}"</div>

@@ -12,7 +12,7 @@ import { ChartModule } from 'primeng/chart';
         class: 'h-full w-full px-1 cursor-pointer'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             p-chart {
                 height: 5rem;
                 canvas {
@@ -127,8 +127,8 @@ export class MiniLineChart {
                     borderColor: this.borderColor() ?? (darkMode ? '#FAFAFA' : '#030616'),
                     tension: 0.2,
                     borderWidth: 1.2,
-                    pointBorderColor: 'rgba(0, 0, 0, 0)',
-                    pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+                    pointBorderColor: 'transparent',
+                    pointBackgroundColor: 'transparent',
                     pointHoverBackgroundColor: this.borderColor() ?? (darkMode ? 'var(--p-surface-0)' : '#030616'),
                     pointHoverBorderColor: darkMode ? '#030616' : '#FFF',
                     pointBorderWidth: 0,
@@ -197,7 +197,7 @@ export class MiniLineChart {
                                 '-translate-x-1/2',
                                 'transition-all',
                                 'duration-[0.05s]',
-                                'shadow-[0px_1px_2px_0px_rgba(18,18,23,0.05)]'
+                                'shadow-subtle'
                             );
                             chart.canvas.parentNode.appendChild(tooltipEl);
                         }

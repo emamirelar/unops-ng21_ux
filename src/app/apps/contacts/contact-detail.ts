@@ -6,9 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { TagModule } from 'primeng/tag';
 import { PanelModule } from 'primeng/panel';
-import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab, FooterService } from '@unopsitg/ux';
+import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab, DocumentsCardComponent, FooterService } from '@unopsitg/ux';
 import { Contact, ContactService, getContactStatusClass } from './contact.service';
-import { DocumentsCard } from '../documents';
 
 const INTERACTION_ICONS: Record<string, string> = {
     Meeting: 'pi pi-calendar',
@@ -28,7 +27,7 @@ const INTERACTION_COLORS: Record<string, string> = {
 
 @Component({
     selector: 'app-contact-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiInsightsCardComponent, DocumentsCard, PanelModule, DetailLayoutComponent, DetailTabDirective],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, PaginatorModule, RouterModule, AiInsightsCardComponent, DocumentsCardComponent, PanelModule, DetailLayoutComponent, DetailTabDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (contact(); as c) {
@@ -333,7 +332,7 @@ const INTERACTION_COLORS: Record<string, string> = {
                     }
 
                     <!-- Documents -->
-                    <app-documents-card />
+                    <ux-documents-card />
 
                     <!-- Record Information -->
                     <div class="card">

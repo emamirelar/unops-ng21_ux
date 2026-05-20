@@ -3,6 +3,7 @@ import { MultiLineChart } from '@/app/pages/dashboards/charts/multilinechart';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
+import { brandPrimitives } from '@unopsitg/ux';
 
 @Component({
     selector: 'sales-overview-widget',
@@ -22,7 +23,7 @@ import { SelectModule } from 'primeng/select';
         class: 'flex-1 xl:pr-6 pb-6 xl:pb-0 min-w-80 flex flex-col overflow-hidden'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             .p-select {
                 padding-right: 0.375rem;
                 border-radius: 0.5rem;
@@ -82,7 +83,7 @@ export class SalesOverviewWidget {
         currency: '$',
         labels: ['Income', 'Expenses'],
         datasets: generateRandomMultiData('2020-10-27T00:00:00', '2023-11-03T00:00:00', 4, 2000, 3000, 2, true),
-        bgColors: [undefined, ['rgba(165,243,252,0.4)', 'rgba(165,243,252,0)']],
-        borderColors: [undefined, 'rgb(8,145,178)']
+        bgColors: [undefined, [brandPrimitives.ocean[100] + '66', brandPrimitives.ocean[100] + '00']],
+        borderColors: [undefined, brandPrimitives.ocean[700]]
     };
 }

@@ -3,6 +3,7 @@ import { MultiLineChart } from '@/app/pages/dashboards/charts/multilinechart';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { brandPrimitives } from '@unopsitg/ux';
 
 @Component({
     selector: 'opportunity-trends-widget',
@@ -25,9 +26,9 @@ export class OpportunityTrendsWidget {
 
     labels = ['New Opportunities', 'Closed / Signed'];
 
-    bgColors = [undefined, ['rgba(76,159,56,0.3)', 'rgba(76,159,56,0)']];
+    bgColors = [undefined, [brandPrimitives.green[500] + '4d', brandPrimitives.green[500] + '00']];
 
-    borderColors = [undefined, 'rgb(76,159,56)'];
+    borderColors = [undefined, brandPrimitives.green[500]];
 
     options = [
         { name: 'Weekly', value: 'week' },

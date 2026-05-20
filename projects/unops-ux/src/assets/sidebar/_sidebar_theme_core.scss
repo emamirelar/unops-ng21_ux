@@ -67,11 +67,11 @@
 @media screen and (min-width: $breakpoint) {
     .layout-horizontal {
         .layout-topbar {
-            background: linear-gradient(356deg, var(--color-deepsea-700, #091521) -0.06%, var(--color-midnight-300, #4d809f) 25.26%, var(--color-blue-150, #99D3ED) 79.33%);
-            color: var(--p-surface-0);
+            background: transparent;
+            color: var(--text-color);
 
             .topbar-separator {
-                border-left: var(--d-menu-separator-border);
+                border-left: 1px solid var(--surface-border);
             }
 
             .topbar-menu {
@@ -79,27 +79,27 @@
                     &.right-sidebar-item {
                         > a {
                             background: transparent;
-                            color: var(--d-menuitem-text-color);
+                            color: var(--text-color);
 
                             &:hover {
-                                background: var(--d-menuitem-hover-bg);
+                                background: var(--surface-hover);
                             }
 
                             &:focus {
-                                box-shadow: var(--d-menuitem-focus-shadow);
+                                box-shadow: var(--focus-ring-shadow);
                             }
                         }
                     }
 
                     > a {
-                        color: var(--d-menuitem-text-color);
+                        color: var(--text-color);
 
                         &:hover {
-                            background: var(--d-menuitem-hover-bg);
+                            background: var(--surface-hover);
                         }
 
                         &:focus {
-                            box-shadow: var(--d-menuitem-focus-shadow);
+                            box-shadow: var(--focus-ring-shadow);
                         }
 
                         .topbar-badge {
@@ -107,26 +107,26 @@
                             color: var(--primary-contrast-color);
                         }
                     }
-
-                    > ul {
-                        &.notifications-menu {
-                            .notification-detail {
-                                color: var(--d-menuitem-root-text-color);
-                            }
-                        }
-                    }
                 }
             }
         }
 
         .layout-sidebar {
+            background: transparent;
             background-image: none;
 
             .layout-menu {
                 .layout-root-menuitem {
+                    > a {
+                        color: var(--text-color);
+
+                        &:hover {
+                            background: var(--surface-hover);
+                        }
+                    }
+
                     > ul {
-                        background: var(--d-sidebar-bg-color);
-                        background-image: linear-gradient(180deg, var(--d-sidebar-bg-color) 10%, var(--d-sidebar-bg-color-alt) 100%);
+                        background: var(--popover-background);
                     }
                 }
             }

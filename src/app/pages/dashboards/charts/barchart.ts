@@ -14,7 +14,7 @@ import { ChartModule } from 'primeng/chart';
         class: 'h-full w-full cursor-pointer min-w-[640px] max-h-80'
     },
     styles: `
-        :host ::ng-deep {
+        :host :deep {
             p-chart {
                 height: 100%;
                 canvas {
@@ -210,7 +210,7 @@ export class BarChart {
                                 'transition-all',
                                 'duration-[0.05s]',
                                 'pointer-events-none',
-                                'shadow-[0px_16px_32px_-12px_rgba(88,92,95,0.10)]'
+                                'shadow-tooltip'
                             );
                             chart.canvas.parentNode.appendChild(tooltipEl);
                         }

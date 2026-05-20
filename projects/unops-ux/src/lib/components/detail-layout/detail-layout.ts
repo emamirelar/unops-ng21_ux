@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, ContentChildren, DestroyRef, Directive, ElementRef, inject, input, model, PLATFORM_ID, QueryList, signal, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ContentChildren, DestroyRef, Directive, inject, input, model, PLATFORM_ID, QueryList, signal, TemplateRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
@@ -100,25 +100,18 @@ export class DetailTabDirective {
             opacity: 0;
         }
 
-        :host :deep p-tablist {
+        .ux-dl__tablist {
             display: flex;
             overflow: hidden;
             background: var(--p-surface-950);
             padding-inline: 0.75rem;
         }
         @media screen and (min-width: 640px) {
-            :host :deep p-tablist {
-                padding-inline: 1rem;
-            }
+            .ux-dl__tablist { padding-inline: 1rem; }
         }
         @media screen and (min-width: 1024px) {
-            :host :deep p-tablist {
-                padding-inline: 1.5rem;
-            }
+            .ux-dl__tablist { padding-inline: 1.5rem; }
         }
-        :host :deep p-tablist .p-tablist-content { width: 100%; }
-        :host :deep p-tablist .p-tablist-tab-list { width: 100%; padding: 0 0 0 2rem; }
-        :host :deep p-tab { flex: 1; justify-content: center; }
 
         .ux-dl__mobile-tabs {
             position: sticky;
@@ -159,9 +152,13 @@ export class DetailTabDirective {
                     }
 
                     <!-- Desktop: horizontal tab bar (outside scroll → stays fixed below header) -->
-                    <p-tablist class="flex-shrink-0" [style.display]="isMobile() ? 'none' : null">
+                    <p-tablist
+                        class="flex-shrink-0 ux-dl__tablist"
+                        [style.display]="isMobile() ? 'none' : null"
+                        [pt]="{ content: { class: 'w-full' }, tabList: { class: 'w-full pl-8 p-0' } }"
+                    >
                         @for (tab of tabs(); track tab.value) {
-                            <p-tab [value]="tab.value">
+                            <p-tab [value]="tab.value" [pt]="{ root: { class: 'flex-1 justify-center' } }">
                                 @if (tab.icon) {
                                     <i [class]="tab.icon" class="mr-2 text-sm"></i>
                                 }
@@ -227,8 +224,6 @@ export class DetailLayoutComponent {
     /** True once the scrollable body has been scrolled past the threshold. */
     readonly scrolled = signal(false);
 
-    private elRef = inject(ElementRef);
-
     constructor() {
         if (isPlatformBrowser(inject(PLATFORM_ID))) {
             const mql = window.matchMedia('(max-width: 1023px)');
@@ -238,31 +233,6 @@ export class DetailLayoutComponent {
             inject(DestroyRef).onDestroy(() => mql.removeEventListener('change', handler));
         }
 
-        // #region agent log
-        afterNextRender(() => {
-            const host = this.elRef.nativeElement as HTMLElement;
-            const layoutContent = host.closest('.layout-content');
-            const layoutContentWrapper = host.closest('.layout-content-wrapper');
-            const wrapperInside = host.closest('.layout-content-wrapper-inside');
-            const footerWrapper = host.querySelector('[class*="z-100"]') || host.lastElementChild?.lastElementChild;
-            const sidebar = host.querySelector('aside');
-            const scrollArea = host.querySelector('.ux-dl__scroll');
-            const appFooterEl = layoutContentWrapper?.querySelector('[app-footer]');
-            const cs = (el: Element | null | undefined) => el ? getComputedStyle(el) : null;
-            const data = {
-                layoutContent: layoutContent ? { paddingBottom: cs(layoutContent)!.paddingBottom, paddingTop: cs(layoutContent)!.paddingTop, height: layoutContent.getBoundingClientRect().height, bottom: layoutContent.getBoundingClientRect().bottom } : null,
-                wrapperInside: wrapperInside ? { paddingBottom: cs(wrapperInside)!.paddingBottom, height: wrapperInside.getBoundingClientRect().height, bottom: wrapperInside.getBoundingClientRect().bottom } : null,
-                host: { paddingBottom: cs(host)!.paddingBottom, height: host.getBoundingClientRect().height, bottom: host.getBoundingClientRect().bottom },
-                footerWrapper: footerWrapper ? { paddingBottom: cs(footerWrapper)!.paddingBottom, marginBottom: cs(footerWrapper)!.marginBottom, height: footerWrapper.getBoundingClientRect().height, bottom: footerWrapper.getBoundingClientRect().bottom, classes: footerWrapper.className } : null,
-                sidebar: sidebar ? { paddingBottom: cs(sidebar)!.paddingBottom, height: sidebar.getBoundingClientRect().height } : null,
-                scrollArea: scrollArea ? { paddingBottom: cs(scrollArea)!.paddingBottom, height: scrollArea.getBoundingClientRect().height, bottom: scrollArea.getBoundingClientRect().bottom } : null,
-                appFooter: appFooterEl ? { height: appFooterEl.getBoundingClientRect().height, display: cs(appFooterEl)!.display } : 'not found',
-                viewportHeight: window.innerHeight,
-            };
-            console.log('[DEBUG-694fea] Footer layout computed styles', JSON.stringify(data, null, 2));
-            fetch('http://127.0.0.1:7278/ingest/09818c15-01b3-40a5-8a07-65bd2be63fb7',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'694fea'},body:JSON.stringify({sessionId:'694fea',location:'detail-layout.ts:afterNextRender',message:'Footer layout computed styles',data,timestamp:Date.now(),hypothesisId:'H1-H2-H3-H4'})}).catch(()=>{});
-        });
-        // #endregion
     }
 
     /** Tab content templates provided by the consumer. */

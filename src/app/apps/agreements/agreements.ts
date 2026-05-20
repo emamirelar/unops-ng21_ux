@@ -90,7 +90,7 @@ interface Agreement {
                     </div>
 
                     <div class="bg-surface-0 dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-600 overflow-hidden">
-                        <p-dataview [value]="paginatedAgreements()" layout="list" [pt]="{ header: { class: 'p-0! hidden' }, content: { class: 'bg-transparent!' } }">
+                        <p-dataview [value]="paginatedAgreements()" layout="list" [pt]="{ header: { class: 'hidden' } }">
                             <ng-template #list let-items>
                                 <div class="flex flex-col">
                                     @for (item of items; track item.id; let i = $index) {
@@ -121,7 +121,7 @@ interface Agreement {
                                                 <div class="flex items-center gap-2 shrink-0">
                                                     <p-button icon="pi pi-download" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="$event.stopPropagation()" />
                                                     <p-button icon="pi pi-ellipsis-h" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="onTableMenuToggle($event, item, dataviewMenu); $event.stopPropagation()" />
-                                                    <p-menu #dataviewMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                                    <p-menu #dataviewMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48" appendTo="body" />
                                                 </div>
                                             </div>
                                         </div>
@@ -191,7 +191,7 @@ interface Agreement {
                                                         </div>
                                                         <div>
                                                             <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-h" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="activityMenu.toggle($event)" />
-                                                            <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                                            <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48" appendTo="body" />
                                                         </div>
                                                     </div>
                                                     <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
@@ -236,7 +236,7 @@ interface Agreement {
                                     <i class="pi text-2xl! text-surface-500 dark:text-surface-300" [ngClass]="pinned.icon"></i>
                                     <div>
                                         <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
-                                        <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                        <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48" appendTo="body" />
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-1">
@@ -341,7 +341,7 @@ interface Agreement {
                                             <div class="flex justify-between items-start mb-2">
                                                 <span class="text-surface-950 dark:text-surface-0 text-base font-medium">{{ comment.author }}</span>
                                                 <p-button icon="pi pi-ellipsis-h" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="commentMenu.toggle($event)" />
-                                                <p-menu #commentMenu [model]="createCommentMenuItems(comment.id)" [popup]="true" styleClass="w-48!" />
+                                                <p-menu #commentMenu [model]="createCommentMenuItems(comment.id)" [popup]="true" styleClass="w-48" />
                                             </div>
                                             <p class="text-surface-600 dark:text-surface-300 text-sm mb-2">{{ comment.content }}</p>
                                             <span class="text-surface-600 dark:text-surface-300 text-sm">{{ comment.time }}</span>
@@ -491,13 +491,13 @@ export class Agreements {
     ];
 
     storageData: StorageData[] = [
-        { id: 1, type: 'Service', count: 42, color: '#0092d1', shadowColor: 'rgba(0,146,209,0.16)', flexValue: 42 },
-        { id: 2, type: 'NDA', count: 38, color: '#e85c0e', shadowColor: 'rgba(232,92,14,0.16)', flexValue: 38 },
-        { id: 3, type: 'License', count: 27, color: '#00a997', shadowColor: 'rgba(0,169,151,0.16)', flexValue: 27 },
-        { id: 4, type: 'Vendor', count: 21, color: '#991e66', shadowColor: 'rgba(153,30,102,0.16)', flexValue: 21 },
-        { id: 5, type: 'Partnership', count: 15, color: '#4c9f38', shadowColor: 'rgba(76,159,56,0.16)', flexValue: 15 },
-        { id: 6, type: 'Lease', count: 12, color: '#ffc215', shadowColor: 'rgba(255,194,21,0.16)', flexValue: 12 },
-        { id: 7, type: 'Other', count: 9, color: '#da291c', shadowColor: 'rgba(218,41,28,0.16)', flexValue: 9 }
+        { id: 1, type: 'Service', count: 42, color: 'var(--color-blue-500)', shadowColor: 'color-mix(in srgb, var(--color-blue-500) 16%, transparent)', flexValue: 42 },
+        { id: 2, type: 'NDA', count: 38, color: 'var(--color-orange-500)', shadowColor: 'color-mix(in srgb, var(--color-orange-500) 16%, transparent)', flexValue: 38 },
+        { id: 3, type: 'License', count: 27, color: 'var(--color-teal-500)', shadowColor: 'color-mix(in srgb, var(--color-teal-500) 16%, transparent)', flexValue: 27 },
+        { id: 4, type: 'Vendor', count: 21, color: 'var(--color-cherry-500)', shadowColor: 'color-mix(in srgb, var(--color-cherry-500) 16%, transparent)', flexValue: 21 },
+        { id: 5, type: 'Partnership', count: 15, color: 'var(--color-green-500)', shadowColor: 'color-mix(in srgb, var(--color-green-500) 16%, transparent)', flexValue: 15 },
+        { id: 6, type: 'Lease', count: 12, color: 'var(--color-yellow-500)', shadowColor: 'color-mix(in srgb, var(--color-yellow-500) 16%, transparent)', flexValue: 12 },
+        { id: 7, type: 'Other', count: 9, color: 'var(--color-red-500)', shadowColor: 'color-mix(in srgb, var(--color-red-500) 16%, transparent)', flexValue: 9 }
     ];
 
     totalAgreements = computed(() => this.storageData.reduce((sum, item) => sum + item.count, 0));

@@ -1,4 +1,4 @@
-import { Partner, AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab, FooterService } from '@unopsitg/ux';
+import { Partner, AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab, DocumentsCardComponent, DocumentItem, FooterService } from '@unopsitg/ux';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,6 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { getPartnerApprovalClass, getPartnerStatusClass, PartnerService } from './partner.service';
-import { DocumentsCard, DocumentItem } from '../documents';
 
 const COUNTRY_TO_FLAG: Record<string, string> = {
     japan: 'jp', switzerland: 'ch', denmark: 'dk', belgium: 'be',
@@ -38,7 +37,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
 @Component({
     selector: 'app-partner-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiInsightsCardComponent, DocumentsCard, DetailLayoutComponent, DetailTabDirective],
+    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiInsightsCardComponent, DocumentsCardComponent, DetailLayoutComponent, DetailTabDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (partner(); as p) {
@@ -271,7 +270,7 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                         </div>
 
                         <!-- Documents -->
-                        <app-documents-card class="animate-fade-in-up stagger-2" [documents]="partnerDocuments()" />
+                        <ux-documents-card class="animate-fade-in-up stagger-2" [documents]="partnerDocuments()" />
 
                         <!-- Metadata -->
                         <div class="card flex flex-col gap-4 animate-fade-in-up stagger-3">

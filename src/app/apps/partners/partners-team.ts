@@ -12,28 +12,7 @@ import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CardModule } from 'primeng/card';
 import { Partner } from '@unopsitg/ux';
-
-const STATUS_CLASSES: Record<string, string> = {
-    Active: '!bg-babygreen-100 !text-babygreen-900 dark:!bg-babygreen-900 dark:!text-babygreen-300',
-    Draft: '!bg-yellow-100 !text-yellow-900 dark:!bg-yellow-900 dark:!text-yellow-300',
-    Closed: '!bg-deepsea-100 !text-deepsea-500 dark:!bg-deepsea-800 dark:!text-deepsea-100',
-    Archived: '!bg-gray-100 !text-gray-700 dark:!bg-gray-900 dark:!text-gray-300'
-};
-
-const APPROVAL_CLASSES: Record<string, string> = {
-    Approved: '!bg-olive-100 !text-olive-700 dark:!bg-olive-900 dark:!text-olive-300',
-    NotApproved: '!bg-red-100 !text-red-800 dark:!bg-red-950 dark:!text-red-300'
-};
-
-const FALLBACK_CLASS = '!bg-gray-100 !text-gray-700 dark:!bg-gray-900 dark:!text-gray-300';
-
-function getTeamStatusClass(status: string): string {
-    return STATUS_CLASSES[status] ?? FALLBACK_CLASS;
-}
-
-function getTeamApprovalClass(status: string): string {
-    return APPROVAL_CLASSES[status] ?? FALLBACK_CLASS;
-}
+import { getPartnerStatusClass, getPartnerApprovalClass } from './partner.service';
 
 const MOCK_TEAM_PARTNERS: Partner[] = [
     { id: '1', name: '3DF Three Disease Fund', shortName: '3DF', partnerCategoryName: 'MPI', liaisonOfficeName: 'Other Partners', status: 'Active', partnerApprovalStatus: 'Approved', keyGlobalPartner: false },
@@ -88,7 +67,7 @@ interface FilterTag {
           [ngModel]="searchQuery()"
           (ngModelChange)="searchQuery.set($event)"
           placeholder="Search partners..."
-          class="w-full! py-2! rounded-xl!"
+          class="w-full"
         />
       </p-iconfield>
 
@@ -145,7 +124,7 @@ interface FilterTag {
     <p-dataview
       [value]="filteredPartners()"
       [layout]="layout"
-      [pt]="{ header: { class: 'p-0! hidden' }, content: { class: 'bg-transparent!' } }"
+      [pt]="{ header: { class: 'hidden' } }"
     >
       <ng-template #list let-items>
         <div class="flex flex-col">
@@ -338,6 +317,6 @@ export class PartnersTeam {
         this.activeCategoryFilters.set(new Set());
     }
 
-    getStatusClass = getTeamStatusClass;
-    getApprovalClass = getTeamApprovalClass;
+    getStatusClass = getPartnerStatusClass;
+    getApprovalClass = getPartnerApprovalClass;
 }

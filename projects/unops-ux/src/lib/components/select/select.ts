@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, input, model, output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 
 @Component({
     selector: 'ux-select',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     imports: [FormsModule, SelectModule],
     host: { class: 'ux-select' },
     styles: `
-        .ux-select .p-select {
+        :host :deep .p-select {
             border-radius: var(--p-content-border-radius, 0.375rem);
             font-family: var(--p-font-family, 'Noto Sans', sans-serif);
             font-size: var(--font-size-sm, 0.875rem);
@@ -17,33 +16,33 @@ import { SelectModule } from 'primeng/select';
             padding: 0.5rem 1.5rem;
         }
 
-        .ux-select .p-select:not(.p-disabled):hover {
+        :host :deep .p-select:not(.p-disabled):hover {
             border-color: var(--p-primary-400);
         }
 
-        .ux-select .p-select:not(.p-disabled).p-focus {
+        :host :deep .p-select:not(.p-disabled).p-focus {
             border-color: var(--p-primary-500);
             box-shadow: 0 0 0 2px color-mix(in srgb, var(--p-primary-500) 20%, transparent);
         }
 
-        .ux-select .p-select-label {
+        :host :deep .p-select-label {
             font-size: var(--font-size-sm, 0.875rem);
             color: var(--p-text-color);
         }
 
-        .ux-select .p-select-label.p-placeholder {
+        :host :deep .p-select-label.p-placeholder {
             color: var(--p-text-muted-color);
         }
 
-        .ux-select .p-select-dropdown {
+        :host :deep .p-select-dropdown {
             color: var(--p-text-muted-color);
         }
 
-        :root[class*='app-dark'] .ux-select .p-select:not(.p-disabled):hover {
+        :host-context(:root[class*='app-dark']) :deep .p-select:not(.p-disabled):hover {
             border-color: var(--p-primary-300);
         }
 
-        :root[class*='app-dark'] .ux-select .p-select:not(.p-disabled).p-focus {
+        :host-context(:root[class*='app-dark']) :deep .p-select:not(.p-disabled).p-focus {
             border-color: var(--p-primary-400);
             box-shadow: 0 0 0 2px color-mix(in srgb, var(--p-primary-400) 25%, transparent);
         }

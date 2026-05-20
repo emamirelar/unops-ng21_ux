@@ -163,7 +163,7 @@ import { TagModule } from 'primeng/tag';
         </div>
     </div>`,
     styles: `
-        ::ng-deep {
+        :host :deep {
             .p-orderlist-list-container {
                 width: 100%;
             }

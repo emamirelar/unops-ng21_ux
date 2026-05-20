@@ -5,69 +5,29 @@
         flex-direction: column;
         width: 100%;
 
+        .layout-body {
+            flex-direction: column;
+        }
+
         .layout-content {
             .layout-breadcrumb {
                 display: flex;
                 margin-bottom: 1rem;
             }
         }
-        .layout-topbar {
-            width: auto;
-            background: transparent;
-            border: none;
-            padding: 1rem;
-            .topbar-left {
-                display: none;
-                .horizontal-logo {
-                    display: block;
-                    height: 2rem;
-                    cursor: pointer;
-                }
 
-                .menu-button {
-                    display: none;
-                }
-
-                .viewname {
-                    display: none;
-                }
-
-                .topbar-separator {
-                    display: block;
-                }
-            }
-
-            .topbar-main .layout-breadcrumb {
-                display: none;
-            }
-
-            .topbar-right {
-                display: flex;
-                justify-content: flex-end;
-
-                .topbar-menu {
-                    .profile-item {
-                        > a {
-                            padding: 0;
-
-                            img {
-                                margin: 0;
-                            }
-                        }
-                        .profile-name {
-                            display: none;
-                        }
-                    }
-                }
-            }
+        > [app-topbar] {
+            display: none;
         }
+
         .layout-content-wrapper .layout-topbar {
             display: none;
         }
 
         .layout-sidebar {
             width: 100%;
-            height: auto;
+            height: 3.5rem;
+            flex-shrink: 0;
             overflow: visible;
             flex-direction: row;
             align-items: center;
@@ -76,16 +36,96 @@
             border: 0 none;
             transition: none;
             padding: 0 1rem;
-            border-radius: 0 0 1.5rem 1.5rem;
             border-right: none;
-            border-bottom: var(--d-sidebar-border);
+            border-bottom: 1px solid var(--surface-border);
+            background: transparent;
 
             .layout-menu-container {
-                overflow: auto;
+                overflow-x: auto;
+                overflow-y: clip;
                 flex: 1;
+                min-width: 0;
+                order: 0;
+                scrollbar-width: none;
 
                 &::-webkit-scrollbar {
                     display: none;
+                }
+            }
+
+            > [app-topbar] {
+                display: contents;
+            }
+
+            .layout-topbar {
+                display: contents;
+
+                .mobile-menu-button {
+                    display: none;
+                }
+
+                .mobile-logo {
+                    display: none;
+                }
+
+                .topbar-left {
+                    display: flex;
+                    align-items: center;
+                    flex-shrink: 0;
+                    order: -1;
+                    padding-right: 1rem;
+
+                    .topbar-sidebar-section {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.75rem;
+                        padding-left: 0.375rem;
+                        width: auto;
+
+                        .topbar-menu-toggle {
+                            display: none;
+                        }
+                    }
+
+                    .topbar-logo-separator {
+                        display: block;
+                    }
+                }
+
+                .topbar-main {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    order: 1;
+                    flex-shrink: 0;
+                    flex: none;
+                    padding: 0;
+                    padding-left: 1rem;
+
+                    > [app-breadcrumb],
+                    > .layout-breadcrumb {
+                        display: none;
+                    }
+
+                    .topbar-right {
+                        display: flex;
+                        justify-content: flex-end;
+
+                        .topbar-menu {
+                            .profile-item {
+                                > a {
+                                    padding: 0;
+
+                                    img {
+                                        margin: 0;
+                                    }
+                                }
+                                .profile-name {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -128,6 +168,10 @@
                 border-radius: var(--border-radius);
                 position: relative;
 
+                &:first-child {
+                    display: none;
+                }
+
                 > .layout-menuitem-root-text {
                     display: none;
                 }
@@ -167,12 +211,7 @@
                     min-width: 15rem;
                     background: var(--popover-background) !important;
                     border: 1px solid var(--popover-border-color);
-                    box-shadow:
-                        0px 56px 16px 0px rgba(0, 0, 0, 0),
-                        0px 36px 14px 0px rgba(0, 0, 0, 0.01),
-                        0px 20px 12px 0px rgba(0, 0, 0, 0.02),
-                        0px 9px 9px 0px rgba(0, 0, 0, 0.03),
-                        0px 2px 5px 0px rgba(0, 0, 0, 0.04);
+                    box-shadow: $flyoutShadow;
                     border-radius: 1rem;
                     padding: 0.5rem;
                     overflow: auto;
@@ -196,24 +235,6 @@
                         }
                     }
                 }
-            }
-        }
-    }
-    .layout-sidebar-primary.layout-horizontal {
-        .layout-topbar .topbar-right .topbar-menu .app-config-button {
-            color: var(--p-surface-0);
-            &::after,
-            &::before {
-                border-color: var(--p-surface-0);
-            }
-        }
-    }
-    .layout-sidebar-dark.layout-horizontal {
-        .layout-topbar .topbar-right .topbar-menu .app-config-button {
-            color: var(--p-surface-0);
-            &::after,
-            &::before {
-                border-color: var(--p-surface-0);
             }
         }
     }

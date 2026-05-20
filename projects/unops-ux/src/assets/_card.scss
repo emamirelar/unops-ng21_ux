@@ -1,4 +1,6 @@
 // ── Card base ──
+// NOTE: `.card` is a layout-level utility class, NOT PrimeNG's `<p-card>`.
+// PrimeNG `<p-card>` is styled via `components.card` in brand-theme.ts.
 
 .card {
     background: var(--surface-card);
@@ -14,6 +16,13 @@
 
 :root[class*='app-dark'] .card {
     border-color: var(--surface-border);
+}
+
+// Flush variant: removes inner padding and bottom margin for host-level cards
+// (e.g. dashboard widgets embedded in a grid).
+.card-flush {
+    padding: 0;
+    margin-bottom: 0;
 }
 
 // ── Layout fill variants ──

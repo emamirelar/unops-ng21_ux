@@ -20,7 +20,7 @@ import { Component, Input } from '@angular/core';
                 </svg>
             </div>
             <div class="relative z-20 landing-container mx-auto md:pt-20 md:pb-14 py-8">
-                <div class="text-center body-small">© {{ currentYear }} PrimeTek</div>
+                <div class="text-center body-small">© {{ currentYear }} UNOPS</div>
             </div>
         </section>
     `

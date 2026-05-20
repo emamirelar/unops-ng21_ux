@@ -15,9 +15,7 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { TaskDrawer } from '../tasklist/task-drawer';
-import { DocumentsCard, DocumentItem } from '../documents';
-import { AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, FooterService, PillTabsComponent } from '@unopsitg/ux';
+import { AiInsight, AiInsightsCardComponent, CompletionStepsComponent, DetailLayoutComponent, DetailTabDirective, DocumentsCardComponent, DocumentItem, FooterService, PillTabsComponent, TaskDrawerComponent } from '@unopsitg/ux';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DrawerModule } from 'primeng/drawer';
@@ -154,9 +152,10 @@ interface TeamMember {
         TableModule,
         PaginatorModule,
         ConfirmDialogModule,
-        TaskDrawer,
-        DocumentsCard,
+        TaskDrawerComponent,
+        DocumentsCardComponent,
         AiInsightsCardComponent,
+        CompletionStepsComponent,
         DetailLayoutComponent,
         DetailTabDirective,
         PillTabsComponent,
@@ -189,48 +188,15 @@ interface TeamMember {
                 <!-- ═══════════════════════════════════════════════ -->
                 <!-- ENTITY COMPLETION METER -->
                 <!-- ═══════════════════════════════════════════════ -->
-                <div class="card flex flex-col gap-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="flex flex-col">
-                                <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Opportunity Completion Steps</span>
-                            </div>
-                        </div>
-                        <span class="text-2xl font-bold text-surface-900 dark:text-surface-0">{{ completionFilledTotal() }}/{{ completionTotalRecords }}</span>
-                    </div>
-
-                    <div class="flex items-center gap-1 flex-wrap">
-                        @for (step of completionSteps(); track $index) {
-                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full cursor-pointer"
-                                  [class]="getDotStyle(step).bg"
-                                  [pTooltip]="step.name + (step.filled ? '' : ' (missing)')" tooltipPosition="top"
-                                  (click)="openStepDrawer($index)">
-                                @if (getDotStyle(step).icon) {
-                                    <i class="pi text-[3px]" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
-                                } @else {
-                                    <span class="text-sm font-black leading-none" [class]="getDotStyle(step).text">!</span>
-                                }
-                            </span>
-                        }
-                    </div>
-
-                    <div class="flex items-center gap-6 mt-1">
-                        <div class="flex items-center gap-2">
-                            <span class="inline-block w-4 h-4 rounded-full shrink-0" [class]="dotStyles.mandatoryFilled.bg"></span>
-                            <span class="text-sm text-surface-600 dark:text-surface-300">Mandatory:</span>
-                            <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionMandatory.filled }}/{{ completionMandatory.total }}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="inline-block w-4 h-4 rounded-full shrink-0" [class]="dotStyles.optionalFilled.bg"></span>
-                            <span class="text-sm text-surface-600 dark:text-surface-300">Optional:</span>
-                            <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionOptional.filled }}/{{ completionOptional.total }}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-surface-600 dark:text-surface-300">Total:</span>
-                            <span class="text-sm font-semibold text-surface-900 dark:text-surface-0">{{ completionTotalRecords }}</span>
-                        </div>
-                    </div>
-                </div>
+                <ux-completion-steps
+                    title="Opportunity Completion Steps"
+                    [steps]="completionSteps()"
+                    [mandatory]="completionMandatory"
+                    [optional]="completionOptional"
+                    [totalRecords]="completionTotalRecords"
+                    [interactive]="true"
+                    (stepClick)="openStepDrawer($event)"
+                />
 
                 <!-- ═══════════════════════════════════════════════ -->
                 <!-- OVERVIEW SECTION -->
@@ -881,13 +847,13 @@ interface TeamMember {
                             <input pInputText [(ngModel)]="taskSearchQuery" placeholder="Search tasks" class="w-full" />
                         </p-iconfield>
 
-                        <p-accordion [(value)]="openTaskPanels" [multiple]="true" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
+                        <p-accordion [(value)]="openTaskPanels" [multiple]="true">
                             @if (inProgressTasks().length > 0) {
-                                <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent! hover:bg-yellow-50! dark:hover:bg-yellow-700/20! rounded-lg transition-colors' } }">
+                                <p-accordionpanel value="1">
+                                    <p-accordionheader [pt]="{ root: { class: 'hover:bg-yellow-50 dark:hover:bg-yellow-700/20 rounded-lg transition-colors' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-clock text-sm text-yellow-500"></i>
-                                            <h5 class="title-h5 text-left!">In Progress</h5>
+                                            <h5 class="title-h5 text-left">In Progress</h5>
                                         </div>
                                     </p-accordionheader>
                                     <p-accordioncontent [pt]="accordionContentPT">
@@ -903,11 +869,11 @@ interface TeamMember {
                             <p-divider />
 
                             @if (pendingTasks().length > 0) {
-                                <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent! hover:bg-blue-50! dark:hover:bg-blue-700/20! rounded-lg transition-colors' } }">
+                                <p-accordionpanel value="0">
+                                    <p-accordionheader [pt]="{ root: { class: 'hover:bg-blue-50 dark:hover:bg-blue-700/20 rounded-lg transition-colors' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-inbox text-sm text-blue-500"></i>
-                                            <h5 class="title-h5 text-left!">Not Started</h5>
+                                            <h5 class="title-h5 text-left">Not Started</h5>
                                         </div>
                                     </p-accordionheader>
                                     <p-accordioncontent [pt]="accordionContentPT">
@@ -923,11 +889,11 @@ interface TeamMember {
                             <p-divider />
 
                             @if (completedTasks().length > 0) {
-                                <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none! bg-transparent!' } }">
-                                    <p-accordionheader [pt]="{ root: { class: 'pl-0! bg-transparent! hover:bg-green-50! dark:hover:bg-green-700/20! rounded-lg transition-colors' } }">
+                                <p-accordionpanel value="2">
+                                    <p-accordionheader [pt]="{ root: { class: 'hover:bg-green-50 dark:hover:bg-green-700/20 rounded-lg transition-colors' } }">
                                         <div class="flex items-center gap-3 px-2">
                                             <i class="pi pi-check-circle text-sm text-green-500"></i>
-                                            <h5 class="title-h5 text-left!">Completed</h5>
+                                            <h5 class="title-h5 text-left">Completed</h5>
                                         </div>
                                     </p-accordionheader>
                                     <p-accordioncontent [pt]="accordionContentPT">
@@ -955,7 +921,7 @@ interface TeamMember {
                     searchPlaceholder="Search AI insights, risks, or optimizations..."
                 />
 
-                <app-documents-card [documents]="documents()" />
+                <ux-documents-card [documents]="documents()" />
             </ng-container>
 
         </ux-detail-layout>
@@ -975,7 +941,7 @@ interface TeamMember {
         </ng-template>
 
         <p-confirmdialog header="Confirmation" />
-        <app-task-drawer [(visible)]="isTaskDrawerVisible" [task]="selectedTask" [mode]="taskDrawerMode" (save)="handleTaskDrawerSave($event)" (cancel)="handleTaskDrawerCancel()" />
+        <ux-task-drawer [(visible)]="isTaskDrawerVisible" [task]="selectedTask" [mode]="taskDrawerMode" (save)="handleTaskDrawerSave($event)" (cancel)="handleTaskDrawerCancel()" />
 
         <!-- Step Completion Drawer -->
         <p-drawer [(visible)]="isStepDrawerVisible" position="right" styleClass="w-full! md:w-[420px]!" appendTo="body">
@@ -983,8 +949,10 @@ interface TeamMember {
                 <ng-template #header>
                     <div class="flex items-center gap-3">
                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-full" [class]="getDotStyle(step).bg">
-                            @if (getDotStyle(step).icon) {
-                                <i class="pi text-sm" [class]="getDotStyle(step).icon + ' ' + getDotStyle(step).text"></i>
+                            @if (getDotStyle(step).icon === 'pi') {
+                                <i class="pi text-sm" [class]="getDotStyle(step).iconClass + ' ' + getDotStyle(step).text"></i>
+                            } @else if (getDotStyle(step).icon === 'material') {
+                                <span class="material-symbols-outlined leading-none" style="font-size:20px;transform:scale(0.9)" [class]="getDotStyle(step).text">{{ getDotStyle(step).iconClass }}</span>
                             } @else {
                                 <span class="text-sm font-black leading-none" [class]="getDotStyle(step).text">!</span>
                             }
@@ -1106,28 +1074,28 @@ interface TeamMember {
         </ng-template>
     `,
     styles: `
-        :host ::ng-deep .p-datatable th:first-child,
-        :host ::ng-deep .p-datatable td:first-child {
+        :host :deep .p-datatable th:first-child,
+        :host :deep .p-datatable td:first-child {
             padding-left: 0;
             padding-right: 0;
         }
 
-        :host ::ng-deep .p-datatable th,
-        :host ::ng-deep .p-datatable td {
+        :host :deep .p-datatable th,
+        :host :deep .p-datatable td {
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
         }
 
-        :host ::ng-deep .p-datatable th:nth-child(3),
-        :host ::ng-deep .p-datatable td:nth-child(3) {
+        :host :deep .p-datatable th:nth-child(3),
+        :host :deep .p-datatable td:nth-child(3) {
             padding-left: 0;
             padding-right: 0;
         }
 
-        :host ::ng-deep .p-datatable .p-datatable-thead > tr,
-        :host ::ng-deep .p-datatable .p-datatable-thead > tr > th,
-        :host ::ng-deep .p-datatable .p-datatable-tbody > tr,
-        :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+        :host :deep .p-datatable .p-datatable-thead > tr,
+        :host :deep .p-datatable .p-datatable-thead > tr > th,
+        :host :deep .p-datatable .p-datatable-tbody > tr,
+        :host :deep .p-datatable .p-datatable-tbody > tr > td {
             background: transparent;
         }
 
@@ -1173,10 +1141,10 @@ export class Opportunity {
 
     // ─── Dot Styles (single source of truth for completion dots) ───
     dotStyles = {
-        mandatoryFilled:  { bg: 'bg-green-200 dark:bg-green-700', text: 'text-green-800 dark:text-green-50', icon: 'pi-check' },
-        optionalFilled:   { bg: 'bg-blue-200 dark:bg-blue-700',  text: 'text-blue-800 dark:text-blue-50', icon: 'pi-info' },
-        mandatoryMissing: { bg: 'bg-transparent border-2 border-red-400 dark:border-red-500', text: 'text-red-500 dark:text-red-400', icon: 'pi-plus' },
-        optionalMissing:  { bg: 'bg-transparent border-2 border-surface-300 dark:border-surface-600', text: 'text-surface-500 dark:text-surface-400', icon: 'pi-info' }
+        mandatoryFilled:  { bg: 'bg-green-200 dark:bg-green-700', text: 'text-green-800 dark:text-green-50', icon: 'pi', iconClass: 'pi-check' },
+        optionalFilled:   { bg: 'bg-blue-200 dark:bg-blue-700',  text: 'text-blue-800 dark:text-blue-50', icon: 'material', iconClass: 'info_i' },
+        mandatoryMissing: { bg: 'bg-transparent border-2 border-red-400 dark:border-red-500', text: 'text-red-500 dark:text-red-400', icon: 'pi', iconClass: 'pi-plus' },
+        optionalMissing:  { bg: 'bg-transparent border-2 border-surface-300 dark:border-surface-600', text: 'text-surface-500 dark:text-surface-400', icon: 'material', iconClass: 'info_i' }
     };
 
     getDotStyle(step: { type: 'mandatory' | 'optional'; filled: boolean }) {
@@ -1473,7 +1441,7 @@ export class Opportunity {
     taskSearchQuery = model('');
     /** Default matches `activeTaskFilter` "All": expand every section that has tasks. */
     openTaskPanels = model<string[]>(['1', '0', '2']);
-    accordionContentPT = { root: { class: 'overflow-hidden bg-transparent!' }, content: { class: 'bg-transparent!' } };
+    accordionContentPT = { root: { class: 'overflow-hidden' } };
     isTaskDrawerVisible = false;
     selectedTask: Task | null = null;
     taskDrawerMode: 'create' | 'edit' = 'create';

@@ -107,7 +107,7 @@ interface Document {
                                                                 </div>
                                                                 <div>
                                                                     <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-h" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="activityMenu.toggle($event)" />
-                                                                    <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                                                    <p-menu #activityMenu [model]="feedMenuItems" [popup]="true" styleClass="w-48" appendTo="body" />
                                                                 </div>
                                                             </div>
                                                             <p class="text-surface-600 dark:text-surface-300 text-sm leading-tight">{{ activity.description }}</p>
@@ -175,7 +175,7 @@ interface Document {
                                             <i class="pi text-2xl! text-surface-400 dark:text-surface-300" [ngClass]="pinned.icon"></i>
                                             <div>
                                                 <p-button [rounded]="true" [text]="true" icon="pi pi-ellipsis-v" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="pinnedMenu.toggle($event)" />
-                                                <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                                <p-menu #pinnedMenu [model]="pinnedMenuItems" [popup]="true" styleClass="w-48" appendTo="body" />
                                             </div>
                                         </div>
                                         <div class="flex flex-col gap-1">
@@ -249,7 +249,7 @@ interface Document {
                                     <div class="flex items-center gap-1">
                                         <p-button icon="pi pi-download" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" />
                                         <p-button icon="pi pi-ellipsis-h" [rounded]="true" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="onTableMenuToggle($event, doc, tableMenu)" />
-                                        <p-menu #tableMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48!" appendTo="body" />
+                                        <p-menu #tableMenu [model]="tableMenuItems" [popup]="true" styleClass="w-48" appendTo="body" />
                                     </div>
                                 </td>
                             </tr>
@@ -343,7 +343,7 @@ interface Document {
                                             <div class="flex justify-between items-start mb-2">
                                                 <span class="text-surface-950 dark:text-surface-0 text-base font-medium">{{ comment.author }}</span>
                                                 <p-button icon="pi pi-ellipsis-h" [text]="true" size="small" severity="secondary" styleClass="cursor-pointer" (onClick)="commentMenu.toggle($event)" />
-                                                <p-menu #commentMenu [model]="createCommentMenuItems(comment.id)" [popup]="true" styleClass="w-48!" />
+                                                <p-menu #commentMenu [model]="createCommentMenuItems(comment.id)" [popup]="true" styleClass="w-48" />
                                             </div>
                                             <p class="text-surface-600 dark:text-surface-300 text-sm mb-2">{{ comment.content }}</p>
                                             <span class="text-surface-600 dark:text-surface-300 text-sm">{{ comment.time }}</span>
@@ -377,12 +377,12 @@ interface Document {
         </div>
     `,
     styles: `
-        :host-context(.app-dark) ::ng-deep .files-table .p-datatable-thead > tr > th {
+        :host-context(.app-dark) :deep .files-table .p-datatable-thead > tr > th {
             color: var(--p-surface-0);
             border-color: var(--p-content-border-color);
         }
 
-        :host-context(.app-dark) ::ng-deep .files-table .p-datatable-tbody > tr > td {
+        :host-context(.app-dark) :deep .files-table .p-datatable-tbody > tr > td {
             color: var(--p-surface-200);
             border-color: var(--p-content-border-color);
         }

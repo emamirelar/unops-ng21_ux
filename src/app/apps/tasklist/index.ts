@@ -13,7 +13,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AccordionModule } from 'primeng/accordion';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { TaskDrawer } from './task-drawer';
+import { TaskDrawerComponent } from '@unopsitg/ux';
 
 interface Member {
     name?: string;
@@ -34,7 +34,7 @@ interface Task {
 @Component({
     selector: 'app-tasklist',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, CheckboxModule, InputTextModule, IconFieldModule, InputIconModule, TagModule, DividerModule, AvatarModule, AvatarGroupModule, AccordionModule, ConfirmDialogModule, TaskDrawer],
+    imports: [CommonModule, FormsModule, ButtonModule, CheckboxModule, InputTextModule, IconFieldModule, InputIconModule, TagModule, DividerModule, AvatarModule, AvatarGroupModule, AccordionModule, ConfirmDialogModule, TaskDrawerComponent],
     providers: [ConfirmationService],
     template: `
         <div class="flex flex-col lg:flex-row h-full bg-surface-0 dark:bg-surface-900 card animate-fade-in-up">
@@ -119,13 +119,10 @@ interface Task {
                         [value]="openPanels"
                         [multiple]="true"
                         styleClass="w-full"
-                        [pt]="{
-                            root: { class: 'border-none!' }
-                        }"
                     >
                         <!-- Pending Tasks -->
                         @if (pendingTasks().length > 0) {
-                            <p-accordionpanel value="0" [pt]="{ root: { class: 'border-none!' } }">
+                            <p-accordionpanel value="0">
                                 <p-accordionheader>
                                     <div class="flex items-center gap-4 px-4 lg:px-6">
                                         <h2 class="text-surface-900 dark:text-surface-0 text-lg font-semibold">{{ pendingTasks().length }} Tasks Pending</h2>
@@ -143,7 +140,7 @@ interface Task {
 
                         <!-- In Progress Tasks -->
                         @if (inProgressTasks().length > 0) {
-                            <p-accordionpanel value="1" [pt]="{ root: { class: 'border-none!' } }">
+                            <p-accordionpanel value="1">
                                 <p-accordionheader>
                                     <div class="flex items-center gap-4 px-4 lg:px-6">
                                         <h2 class="text-surface-900 dark:text-surface-0 text-lg font-semibold">{{ inProgressTasks().length }} Tasks In Progress</h2>
@@ -161,7 +158,7 @@ interface Task {
 
                         <!-- Completed Tasks -->
                         @if (completedTasks().length > 0) {
-                            <p-accordionpanel value="2" [pt]="{ root: { class: 'border-none!' } }">
+                            <p-accordionpanel value="2">
                                 <p-accordionheader>
                                     <div class="flex items-center gap-4 px-4 lg:px-6">
                                         <h2 class="text-surface-900 dark:text-surface-0 text-lg font-semibold">{{ completedTasks().length }} Tasks Completed</h2>
@@ -188,7 +185,7 @@ interface Task {
 
             <p-confirmdialog />
 
-            <app-task-drawer [(visible)]="isDrawerVisible" [task]="selectedTask" [mode]="drawerMode" (save)="handleDrawerSave($event)" (cancel)="handleDrawerCancel()" />
+            <ux-task-drawer [(visible)]="isDrawerVisible" [task]="selectedTask" [mode]="drawerMode" (save)="handleDrawerSave($event)" (cancel)="handleDrawerCancel()" />
         </div>
 
         <!-- Task Item Template -->
