@@ -1,5 +1,5 @@
 import { LayoutService } from '../layout.service';
-import { TOPBAR_MOBILE_LOGO } from '../tokens';
+import { TOPBAR_MOBILE_LOGO, TOPBAR_LANGUAGE_CONFIG, TOPBAR_PROFILE_MENU_CONFIG, TOPBAR_NOTIFICATION_CONFIG } from '../tokens';
 import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, HostListener, inject, model, signal, ViewChild, ChangeDetectionStrategy, AfterViewChecked } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -76,50 +76,100 @@ interface NotificationsBars {
                     </a>
                 </li>
                 <li class="right-sidebar-item static sm:relative z-50" #notificationsItem>
-                    <a class="right-sidebar-button" aria-label="Notifications" (click)="toggleDropdown('notifications', $event)">
-                        <span class="w-2 h-2 rounded-full bg-red-500 absolute top-2 right-2.5"></span>
+                    <a class="right-sidebar-button" aria-label="Notifications" (click)="toggleDropdown('notifications', $event); onNotificationBellClick()">
+                        @if (notifConfig && notifConfig.unreadCount() > 0) {
+                            <span class="w-2 h-2 rounded-full bg-red-500 absolute top-2 right-2.5"></span>
+                        } @else if (!notifConfig) {
+                            <span class="w-2 h-2 rounded-full bg-red-500 absolute top-2 right-2.5"></span>
+                        }
                         <i class="pi pi-bell"></i>
                     </a>
                     @if (activeDropdown() === 'notifications') {
                         <div
                             class="list-none m-0 rounded-2xl border border-surface fixed sm:absolute bg-surface-0 dark:bg-surface-900 overflow-hidden origin-top w-[calc(100vw-2rem)] sm:w-88 mt-2 z-50 top-auto left-4 sm:left-auto sm:right-0 shadow-flyout animate-scalein"
                         >
-                            <div class="p-4 flex items-center justify-between border-b border-surface">
-                                <span class="label-small text-surface-950 dark:text-surface-0">Notifications</span>
-                                <button pRipple class="py-1 px-2 text-surface-950 dark:text-surface-0 label-x-small hover:bg-emphasis border border-surface rounded-lg shadow-subtle transition-all">Mark all as read</button>
-                            </div>
-                            <div class="flex items-center border-b border-surface">
-                                @for (item of notificationsBars(); track item.id; let i = $index) {
-                                    <button
-                                        [ngClass]="{ 'border-surface-950 dark:border-surface-0': selectedNotificationBar() === item.id, 'border-transparent': selectedNotificationBar() !== item.id }"
-                                        class="px-3.5 py-2 inline-flex items-center border-b gap-2"
-                                        (click)="selectedNotificationBar.set(item.id)"
-                                    >
-                                        <span [ngClass]="{ 'text-surface-950 dark:text-surface-0': selectedNotificationBar() === item.id }" class="label-small">{{ item.label }}</span>
-                                        <p-badge *ngIf="item?.badge" [value]="item.badge" severity="success" size="small" class="rounded-md!" />
-                                    </button>
-                                }
-                            </div>
-                            <ul class="flex flex-col divide-y divide-(--surface-border) max-h-80 overflow-auto">
-                                @for (item of selectedNotificationsBarData(); track item.name; let i = $index) {
-                                    <li>
-                                        <div class="flex items-center gap-3 px-4 sm:px-6 py-3.5 cursor-pointer hover:bg-emphasis transition-all">
-                                            <p-overlay-badge value="" severity="danger" class="inline-flex">
-                                                <p-avatar [label]="item.initials" size="large" styleClass="rounded-lg" />
-                                            </p-overlay-badge>
-                                            <div class="flex items-center gap-3">
-                                                <div class="flex flex-col">
-                                                    <span class="label-small text-left text-surface-950 dark:text-surface-0">{{ item.name }}</span>
-                                                    <span class="label-xsmall text-left line-clamp-1">{{ item.description }}</span>
-                                                    <span class="label-xsmall text-left">{{ item.time }}</span>
+                            @if (notifConfig) {
+                                <div class="p-4 flex items-center justify-between border-b border-surface">
+                                    <span class="label-small text-surface-950 dark:text-surface-0">Notifications</span>
+                                    <button pRipple class="py-1 px-2 text-surface-950 dark:text-surface-0 label-x-small hover:bg-emphasis border border-surface rounded-lg shadow-subtle transition-all" (click)="notifConfig.onMarkAllAsRead()">Mark all as read</button>
+                                </div>
+                                <div class="flex items-center border-b border-surface">
+                                    @for (tab of notifConfig.tabs(); track tab.id) {
+                                        <button
+                                            [ngClass]="{ 'border-surface-950 dark:border-surface-0': notifConfig.selectedTab() === tab.id, 'border-transparent': notifConfig.selectedTab() !== tab.id }"
+                                            class="px-3.5 py-2 inline-flex items-center border-b gap-2"
+                                            (click)="notifConfig.onTabChange(tab.id)"
+                                        >
+                                            <span [ngClass]="{ 'text-surface-950 dark:text-surface-0': notifConfig.selectedTab() === tab.id }" class="label-small">{{ tab.label }}</span>
+                                            <p-badge *ngIf="tab.badge" [value]="tab.badge" severity="success" size="small" class="rounded-md!" />
+                                        </button>
+                                    }
+                                </div>
+                                <ul class="flex flex-col divide-y divide-(--surface-border) max-h-80 overflow-auto">
+                                    @if (notifConfig.items().length === 0) {
+                                        <li class="px-4 sm:px-6 py-8 text-center">
+                                            <i class="pi pi-bell-slash text-2xl text-surface-400 mb-2"></i>
+                                            <p class="label-small text-surface-400">No {{ notifConfig.selectedTab() === 'unread' ? 'unread ' : '' }}notifications</p>
+                                        </li>
+                                    } @else {
+                                        @for (item of notifConfig.items(); track item.id) {
+                                            <li>
+                                                <div class="flex items-center gap-3 px-4 sm:px-6 py-3.5 cursor-pointer hover:bg-emphasis transition-all" (click)="notifConfig.onItemClick(item)">
+                                                    <div class="flex items-center justify-center w-10 h-10 rounded-lg flex-shrink-0" [ngClass]="item.isRead ? 'bg-surface-100 dark:bg-surface-800' : 'bg-primary/10'">
+                                                        <i [class]="item.icon || 'pi pi-bell'" [ngClass]="item.isRead ? 'text-surface-500' : 'text-primary'"></i>
+                                                    </div>
+                                                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                                                        <div class="flex flex-col flex-1 min-w-0">
+                                                            <span class="label-small text-left line-clamp-2" [ngClass]="item.isRead ? '' : 'text-surface-950 dark:text-surface-0 font-semibold'">{{ item.message }}</span>
+                                                            <span class="label-xsmall text-left">{{ item.time }}</span>
+                                                        </div>
+                                                        @if (!item.isRead) {
+                                                            <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <p-badge *ngIf="item.new" value="" severity="success" />
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            } @else {
+                                <div class="p-4 flex items-center justify-between border-b border-surface">
+                                    <span class="label-small text-surface-950 dark:text-surface-0">Notifications</span>
+                                    <button pRipple class="py-1 px-2 text-surface-950 dark:text-surface-0 label-x-small hover:bg-emphasis border border-surface rounded-lg shadow-subtle transition-all">Mark all as read</button>
+                                </div>
+                                <div class="flex items-center border-b border-surface">
+                                    @for (item of notificationsBars(); track item.id; let i = $index) {
+                                        <button
+                                            [ngClass]="{ 'border-surface-950 dark:border-surface-0': selectedNotificationBar() === item.id, 'border-transparent': selectedNotificationBar() !== item.id }"
+                                            class="px-3.5 py-2 inline-flex items-center border-b gap-2"
+                                            (click)="selectedNotificationBar.set(item.id)"
+                                        >
+                                            <span [ngClass]="{ 'text-surface-950 dark:text-surface-0': selectedNotificationBar() === item.id }" class="label-small">{{ item.label }}</span>
+                                            <p-badge *ngIf="item?.badge" [value]="item.badge" severity="success" size="small" class="rounded-md!" />
+                                        </button>
+                                    }
+                                </div>
+                                <ul class="flex flex-col divide-y divide-(--surface-border) max-h-80 overflow-auto">
+                                    @for (item of selectedNotificationsBarData(); track item.name; let i = $index) {
+                                        <li>
+                                            <div class="flex items-center gap-3 px-4 sm:px-6 py-3.5 cursor-pointer hover:bg-emphasis transition-all">
+                                                <p-overlay-badge value="" severity="danger" class="inline-flex">
+                                                    <p-avatar [label]="item.initials" size="large" styleClass="rounded-lg" />
+                                                </p-overlay-badge>
+                                                <div class="flex items-center gap-3">
+                                                    <div class="flex flex-col">
+                                                        <span class="label-small text-left text-surface-950 dark:text-surface-0">{{ item.name }}</span>
+                                                        <span class="label-xsmall text-left line-clamp-1">{{ item.description }}</span>
+                                                        <span class="label-xsmall text-left">{{ item.time }}</span>
+                                                    </div>
+                                                    <p-badge *ngIf="item.new" value="" severity="success" />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <span *ngIf="i !== notifications().length - 1"></span>
-                                    </li>
-                                }
-                            </ul>
+                                            <span *ngIf="i !== notifications().length - 1"></span>
+                                        </li>
+                                    }
+                                </ul>
+                            }
                         </div>
                     }
                 </li>
@@ -206,36 +256,35 @@ interface NotificationsBars {
                                         }
                                     </li>
                                 </div>
-                                <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
-                                        <i class="pi pi-user"></i>
-                                        <span>Profile</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown(); onConfigButtonClick()">
-                                        <i class="pi pi-cog"></i>
-                                        <span>Settings</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
-                                        <i class="pi pi-calendar"></i>
-                                        <span>Calendar</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
-                                        <i class="pi pi-inbox"></i>
-                                        <span>Inbox</span>
-                                    </a>
-                                </li>
-                                <li class="border-t border-surface mt-1 pt-1">
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
-                                        <i class="pi pi-power-off"></i>
-                                        <span>Log out</span>
-                                    </a>
-                                </li>
+                                @if (profileMenuConfig) {
+                                    @for (item of profileMenuConfig.items; track item.id) {
+                                        <li [class.border-t]="item.separator" [class.border-surface]="item.separator" [class.mt-1]="item.separator" [class.pt-1]="item.separator">
+                                            <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown(); item.command()">
+                                                <i [class]="item.icon"></i>
+                                                <span>{{ item.label }}</span>
+                                            </a>
+                                        </li>
+                                    }
+                                } @else {
+                                    <li>
+                                        <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
+                                            <i class="pi pi-user"></i>
+                                            <span>Profile</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown(); onConfigButtonClick()">
+                                            <i class="pi pi-cog"></i>
+                                            <span>Settings</span>
+                                        </a>
+                                    </li>
+                                    <li class="border-t border-surface mt-1 pt-1">
+                                        <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
+                                            <i class="pi pi-power-off"></i>
+                                            <span>Log out</span>
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     }
@@ -359,13 +408,17 @@ export class AppTopbar implements AfterViewChecked {
         }
     ]);
 
-    languages = signal([
+    private readonly langConfig = inject(TOPBAR_LANGUAGE_CONFIG, { optional: true });
+    readonly profileMenuConfig = inject(TOPBAR_PROFILE_MENU_CONFIG, { optional: true });
+    readonly notifConfig = inject(TOPBAR_NOTIFICATION_CONFIG, { optional: true });
+
+    languages = signal(this.langConfig?.languages ?? [
         { code: 'en', label: 'English', flag: '\u{1F1EC}\u{1F1E7}' },
         { code: 'fr', label: 'French', flag: '\u{1F1EB}\u{1F1F7}' },
         { code: 'es', label: 'Spanish', flag: '\u{1F1EA}\u{1F1F8}' }
     ]);
 
-    selectedLanguage = signal('en');
+    selectedLanguage = signal(this.langConfig?.defaultLanguage ?? 'en');
 
     selectedNotificationBar = model(this.notificationsBars()[0].id ?? 'inbox');
 
@@ -396,7 +449,12 @@ export class AppTopbar implements AfterViewChecked {
 
     selectLanguage(code: string) {
         this.selectedLanguage.set(code);
+        this.langConfig?.onLanguageChange?.(code);
         this.closeDropdown();
+    }
+
+    onNotificationBellClick() {
+        this.notifConfig?.onPanelOpen?.();
     }
 
     toggleDropdown(id: DropdownId, event: Event) {

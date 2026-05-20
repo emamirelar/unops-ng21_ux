@@ -1,6 +1,6 @@
 {
     "name": "@unopsitg/ux",
-    "version": "21.0.20",
+    "version": "21.0.21",
     "description": "UNOPS Angular 21 layout shell, brand theme (PrimeNG / PrimeUIX), and shared types",
     "keywords": ["angular", "unops", "primeng", "layout"],
     "license": "UNLICENSED",

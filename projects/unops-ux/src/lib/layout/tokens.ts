@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, Signal } from '@angular/core';
 import type { IsActiveMatchOptions, QueryParamsHandling } from '@angular/router';
 
 /**
@@ -64,3 +64,62 @@ export const TOPBAR_MOBILE_LOGO = new InjectionToken<TopbarMobileLogoConfig>('UN
         alt: 'UNOPS'
     })
 });
+
+export interface TopbarLanguageItem {
+    code: string;
+    label: string;
+    flag: string;
+}
+
+export interface TopbarLanguageConfig {
+    languages: TopbarLanguageItem[];
+    defaultLanguage?: string;
+    onLanguageChange?: (code: string) => void;
+}
+
+export const TOPBAR_LANGUAGE_CONFIG = new InjectionToken<TopbarLanguageConfig>('UNOPS_UX_TOPBAR_LANGUAGE_CONFIG');
+
+export interface TopbarProfileMenuItem {
+    id: string;
+    label: string;
+    icon: string;
+    separator?: boolean;
+    command: () => void;
+}
+
+export interface TopbarProfileMenuConfig {
+    items: TopbarProfileMenuItem[];
+}
+
+export const TOPBAR_PROFILE_MENU_CONFIG = new InjectionToken<TopbarProfileMenuConfig>('UNOPS_UX_TOPBAR_PROFILE_MENU_CONFIG');
+
+export interface TopbarNotificationItem {
+    id: number;
+    message: string;
+    category: string;
+    time: string;
+    isRead: boolean;
+    entity?: string;
+    entityId?: number;
+    icon?: string;
+}
+
+export interface TopbarNotificationTab {
+    id: string;
+    label: string;
+    badge?: string;
+}
+
+export interface TopbarNotificationConfig {
+    tabs: Signal<TopbarNotificationTab[]>;
+    items: Signal<TopbarNotificationItem[]>;
+    selectedTab: Signal<string>;
+    unreadCount: Signal<number>;
+    onTabChange: (tabId: string) => void;
+    onItemClick: (item: TopbarNotificationItem) => void;
+    onMarkAsRead: (item: TopbarNotificationItem) => void;
+    onMarkAllAsRead: () => void;
+    onPanelOpen?: () => void;
+}
+
+export const TOPBAR_NOTIFICATION_CONFIG = new InjectionToken<TopbarNotificationConfig>('UNOPS_UX_TOPBAR_NOTIFICATION_CONFIG');
