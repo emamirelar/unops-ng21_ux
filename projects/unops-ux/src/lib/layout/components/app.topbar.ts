@@ -11,8 +11,9 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { RippleModule } from 'primeng/ripple';
-import { StyleClassModule } from 'primeng/styleclass';
 import { AppBreadcrumb } from './app.breadcrumb';
+
+type DropdownId = 'notifications' | 'language' | 'profile' | null;
 
 interface NotificationsBars {
     id: string;
@@ -22,7 +23,7 @@ interface NotificationsBars {
 
 @Component({
     selector: '[app-topbar]',
-    imports: [RouterModule, CommonModule, StyleClassModule, AppBreadcrumb, InputTextModule, ButtonModule, IconFieldModule, InputIconModule, RippleModule, BadgeModule, OverlayBadgeModule, AvatarModule],
+    imports: [RouterModule, CommonModule, AppBreadcrumb, InputTextModule, ButtonModule, IconFieldModule, InputIconModule, RippleModule, BadgeModule, OverlayBadgeModule, AvatarModule],
     template: `<div class="layout-topbar">
         <button type="button" class="mobile-menu-button" aria-label="Toggle navigation menu" (click)="onMenuButtonClick()">
             <i class="pi pi-bars"></i>
@@ -74,56 +75,56 @@ interface NotificationsBars {
                         <i [class]="isDarkTheme() ? 'pi pi-sun' : 'pi pi-moon'"></i>
                     </a>
                 </li>
-                <li class="right-sidebar-item static sm:relative z-50">
-                    <a class="right-sidebar-button" aria-label="Notifications" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
+                <li class="right-sidebar-item static sm:relative z-50" #notificationsItem>
+                    <a class="right-sidebar-button" aria-label="Notifications" (click)="toggleDropdown('notifications', $event)">
                         <span class="w-2 h-2 rounded-full bg-red-500 absolute top-2 right-2.5"></span>
                         <i class="pi pi-bell"></i>
                     </a>
-                    <div
-                        class="list-none m-0 rounded-2xl border border-surface fixed sm:absolute bg-surface-0 dark:bg-surface-900 overflow-hidden hidden origin-top w-[calc(100vw-2rem)] sm:w-88 mt-2 z-50 top-auto left-4 sm:left-auto sm:right-0 shadow-flyout"
-                    >
-                        <div class="p-4 flex items-center justify-between border-b border-surface">
-                            <span class="label-small text-surface-950 dark:text-surface-0">Notifications</span>
-                            <button pRipple class="py-1 px-2 text-surface-950 dark:text-surface-0 label-x-small hover:bg-emphasis border border-surface rounded-lg shadow-subtle transition-all">Mark all as read</button>
-                        </div>
-                        <div class="flex items-center border-b border-surface">
-                            @for (item of notificationsBars(); track item.id; let i = $index) {
-                                <button
-                                    [ngClass]="{ 'border-surface-950 dark:border-surface-0': selectedNotificationBar() === item.id, 'border-transparent': selectedNotificationBar() !== item.id }"
-                                    class="px-3.5 py-2 inline-flex items-center border-b gap-2"
-                                    (click)="selectedNotificationBar.set(item.id)"
-                                >
-                                    <span [ngClass]="{ 'text-surface-950 dark:text-surface-0': selectedNotificationBar() === item.id }" class="label-small">{{ item.label }}</span>
-                                    <p-badge *ngIf="item?.badge" [value]="item.badge" severity="success" size="small" class="rounded-md!" />
-                                </button>
-                            }
-                        </div>
-                        <ul class="flex flex-col divide-y divide-(--surface-border) max-h-80 overflow-auto">
-                            @for (item of selectedNotificationsBarData(); track item.name; let i = $index) {
-                                <li>
-                                    <div class="flex items-center gap-3 px-4 sm:px-6 py-3.5 cursor-pointer hover:bg-emphasis transition-all">
-                                        <p-overlay-badge value="" severity="danger" class="inline-flex">
-                                            <p-avatar size="large">
-                                                <img [src]="item.image" [alt]="item.name" class="rounded-lg" />
-                                            </p-avatar>
-                                        </p-overlay-badge>
-                                        <div class="flex items-center gap-3">
-                                            <div class="flex flex-col">
-                                                <span class="label-small text-left text-surface-950 dark:text-surface-0">{{ item.name }}</span>
-                                                <span class="label-xsmall text-left line-clamp-1">{{ item.description }}</span>
-                                                <span class="label-xsmall text-left">{{ item.time }}</span>
+                    @if (activeDropdown() === 'notifications') {
+                        <div
+                            class="list-none m-0 rounded-2xl border border-surface fixed sm:absolute bg-surface-0 dark:bg-surface-900 overflow-hidden origin-top w-[calc(100vw-2rem)] sm:w-88 mt-2 z-50 top-auto left-4 sm:left-auto sm:right-0 shadow-flyout animate-scalein"
+                        >
+                            <div class="p-4 flex items-center justify-between border-b border-surface">
+                                <span class="label-small text-surface-950 dark:text-surface-0">Notifications</span>
+                                <button pRipple class="py-1 px-2 text-surface-950 dark:text-surface-0 label-x-small hover:bg-emphasis border border-surface rounded-lg shadow-subtle transition-all">Mark all as read</button>
+                            </div>
+                            <div class="flex items-center border-b border-surface">
+                                @for (item of notificationsBars(); track item.id; let i = $index) {
+                                    <button
+                                        [ngClass]="{ 'border-surface-950 dark:border-surface-0': selectedNotificationBar() === item.id, 'border-transparent': selectedNotificationBar() !== item.id }"
+                                        class="px-3.5 py-2 inline-flex items-center border-b gap-2"
+                                        (click)="selectedNotificationBar.set(item.id)"
+                                    >
+                                        <span [ngClass]="{ 'text-surface-950 dark:text-surface-0': selectedNotificationBar() === item.id }" class="label-small">{{ item.label }}</span>
+                                        <p-badge *ngIf="item?.badge" [value]="item.badge" severity="success" size="small" class="rounded-md!" />
+                                    </button>
+                                }
+                            </div>
+                            <ul class="flex flex-col divide-y divide-(--surface-border) max-h-80 overflow-auto">
+                                @for (item of selectedNotificationsBarData(); track item.name; let i = $index) {
+                                    <li>
+                                        <div class="flex items-center gap-3 px-4 sm:px-6 py-3.5 cursor-pointer hover:bg-emphasis transition-all">
+                                            <p-overlay-badge value="" severity="danger" class="inline-flex">
+                                                <p-avatar [label]="item.initials" size="large" styleClass="rounded-lg" />
+                                            </p-overlay-badge>
+                                            <div class="flex items-center gap-3">
+                                                <div class="flex flex-col">
+                                                    <span class="label-small text-left text-surface-950 dark:text-surface-0">{{ item.name }}</span>
+                                                    <span class="label-xsmall text-left line-clamp-1">{{ item.description }}</span>
+                                                    <span class="label-xsmall text-left">{{ item.time }}</span>
+                                                </div>
+                                                <p-badge *ngIf="item.new" value="" severity="success" />
                                             </div>
-                                            <p-badge *ngIf="item.new" value="" severity="success" />
                                         </div>
-                                    </div>
-                                    <span *ngIf="i !== notifications().length - 1"></span>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+                                        <span *ngIf="i !== notifications().length - 1"></span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
                 </li>
-                <li class="right-sidebar-item static sm:relative">
-                    <a class="right-sidebar-button relative z-50" aria-label="Change language" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveActiveClass="animate-fadeout" leaveToClass="hidden" [hideOnOutsideClick]="true">
+                <li class="right-sidebar-item static sm:relative" #languageItem>
+                    <a class="right-sidebar-button relative z-50" aria-label="Change language" (click)="toggleDropdown('language', $event)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="m5 8 6 6"/>
                             <path d="m4 14 6-6 2-3"/>
@@ -133,109 +134,111 @@ interface NotificationsBars {
                             <path d="M14 18h6"/>
                         </svg>
                     </a>
-                    <div
-                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 hidden origin-top w-44 mt-2 right-4 sm:right-0 z-999 top-auto shadow-flyout"
-                    >
-                        <ul class="flex flex-col gap-1">
-                            @for (lang of languages(); track lang.code) {
-                                <li>
-                                    <a
-                                        class="label-small dark:text-surface-400 flex gap-2.5 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer"
-                                        [class.text-surface-950]="selectedLanguage() === lang.code"
-                                        [class.dark:text-surface-0]="selectedLanguage() === lang.code"
-                                        [class.font-semibold]="selectedLanguage() === lang.code"
-                                        (click)="selectLanguage(lang.code)"
-                                    >
-                                        <span class="text-lg">{{ lang.flag }}</span>
-                                        <span>{{ lang.label }}</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </li>
-                <li class="profile-item static sm:relative" #profileItem>
-                    <a class="right-sidebar-button relative z-50" aria-label="User profile menu" (click)="toggleProfileMenu($event)">
-                        <p-avatar icon="pi pi-user" styleClass="w-10! h-10!" />
-                    </a>
-                    <div
-                        #profilePanel
-                        class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-flyout"
-                        [class.hidden]="!profileMenuOpen()"
-                        [class.animate-scalein]="profileMenuOpen()"
-                    >
-                        <ul class="flex flex-col gap-1">
-                            <div class="mobile-profile-actions">
-                                <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false); openSearch()">
-                                        <i class="pi pi-search"></i>
-                                        <span>Search</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false); toggleDarkMode()">
-                                        <i [class]="isDarkTheme() ? 'pi pi-sun' : 'pi pi-moon'"></i>
-                                        <span>{{ isDarkTheme() ? 'Light Mode' : 'Dark Mode' }}</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer relative" (click)="profileMenuOpen.set(false)">
-                                        <i class="pi pi-bell"></i>
-                                        <span>Notifications</span>
-                                        <span class="w-2 h-2 rounded-full bg-red-500 ml-auto"></span>
-                                    </a>
-                                </li>
-                                <li class="border-b border-surface pb-1 mb-1">
-                                    <span class="label-xsmall px-2.5 py-1 text-surface-400">Language</span>
-                                    @for (lang of languages(); track lang.code) {
+                    @if (activeDropdown() === 'language') {
+                        <div
+                            class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 origin-top w-44 mt-2 right-4 sm:right-0 z-999 top-auto shadow-flyout animate-scalein"
+                        >
+                            <ul class="flex flex-col gap-1">
+                                @for (lang of languages(); track lang.code) {
+                                    <li>
                                         <a
-                                            class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer"
+                                            class="label-small dark:text-surface-400 flex gap-2.5 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer"
                                             [class.text-surface-950]="selectedLanguage() === lang.code"
                                             [class.dark:text-surface-0]="selectedLanguage() === lang.code"
                                             [class.font-semibold]="selectedLanguage() === lang.code"
-                                            (click)="profileMenuOpen.set(false); selectLanguage(lang.code)"
+                                            (click)="selectLanguage(lang.code)"
                                         >
                                             <span class="text-lg">{{ lang.flag }}</span>
                                             <span>{{ lang.label }}</span>
-                                            @if (selectedLanguage() === lang.code) {
-                                                <i class="pi pi-check ml-auto text-xs"></i>
-                                            }
                                         </a>
-                                    }
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </li>
+                <li class="profile-item static sm:relative" #profileItem>
+                    <a class="right-sidebar-button relative z-50" aria-label="User profile menu" (click)="toggleDropdown('profile', $event)">
+                        <p-avatar icon="pi pi-user" styleClass="w-10! h-10!" />
+                    </a>
+                    @if (activeDropdown() === 'profile') {
+                        <div
+                            #profilePanel
+                            class="list-none p-2 m-0 rounded-2xl border border-surface overflow-hidden fixed sm:absolute bg-surface-0 dark:bg-surface-900 origin-top w-52 mt-2 right-4 sm:right-0 z-999 top-auto shadow-flyout animate-scalein"
+                        >
+                            <ul class="flex flex-col gap-1">
+                                <div class="mobile-profile-actions">
+                                    <li>
+                                        <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown(); openSearch()">
+                                            <i class="pi pi-search"></i>
+                                            <span>Search</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown(); toggleDarkMode()">
+                                            <i [class]="isDarkTheme() ? 'pi pi-sun' : 'pi pi-moon'"></i>
+                                            <span>{{ isDarkTheme() ? 'Light Mode' : 'Dark Mode' }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer relative" (click)="closeDropdown()">
+                                            <i class="pi pi-bell"></i>
+                                            <span>Notifications</span>
+                                            <span class="w-2 h-2 rounded-full bg-red-500 ml-auto"></span>
+                                        </a>
+                                    </li>
+                                    <li class="border-b border-surface pb-1 mb-1">
+                                        <span class="label-xsmall px-2.5 py-1 text-surface-400">Language</span>
+                                        @for (lang of languages(); track lang.code) {
+                                            <a
+                                                class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer"
+                                                [class.text-surface-950]="selectedLanguage() === lang.code"
+                                                [class.dark:text-surface-0]="selectedLanguage() === lang.code"
+                                                [class.font-semibold]="selectedLanguage() === lang.code"
+                                                (click)="closeDropdown(); selectLanguage(lang.code)"
+                                            >
+                                                <span class="text-lg">{{ lang.flag }}</span>
+                                                <span>{{ lang.label }}</span>
+                                                @if (selectedLanguage() === lang.code) {
+                                                    <i class="pi pi-check ml-auto text-xs"></i>
+                                                }
+                                            </a>
+                                        }
+                                    </li>
+                                </div>
+                                <li>
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
+                                        <i class="pi pi-user"></i>
+                                        <span>Profile</span>
+                                    </a>
                                 </li>
-                            </div>
-                            <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
-                                    <i class="pi pi-user"></i>
-                                    <span>Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false); onConfigButtonClick()">
-                                    <i class="pi pi-cog"></i>
-                                    <span>Settings</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
-                                    <i class="pi pi-calendar"></i>
-                                    <span>Calendar</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
-                                    <i class="pi pi-inbox"></i>
-                                    <span>Inbox</span>
-                                </a>
-                            </li>
-                            <li class="border-t border-surface mt-1 pt-1">
-                                <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="profileMenuOpen.set(false)">
-                                    <i class="pi pi-power-off"></i>
-                                    <span>Log out</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                                <li>
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown(); onConfigButtonClick()">
+                                        <i class="pi pi-cog"></i>
+                                        <span>Settings</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
+                                        <i class="pi pi-calendar"></i>
+                                        <span>Calendar</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
+                                        <i class="pi pi-inbox"></i>
+                                        <span>Inbox</span>
+                                    </a>
+                                </li>
+                                <li class="border-t border-surface mt-1 pt-1">
+                                    <a class="label-small dark:text-surface-400 flex gap-2 py-2 px-2.5 rounded-lg items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer" (click)="closeDropdown()">
+                                        <i class="pi pi-power-off"></i>
+                                        <span>Log out</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    }
                 </li>
                 </ul>
             </div>
@@ -264,13 +267,14 @@ export class AppTopbar implements AfterViewChecked {
     isSidebarPinned = computed(() => this.layoutService.isSidebarPinned());
 
     searchActive = signal(false);
-    profileMenuOpen = signal(false);
+    activeDropdown = signal<DropdownId>(null);
     private shouldFocusSearch = false;
 
     @ViewChild('menubutton') menuButton!: ElementRef;
     @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+    @ViewChild('notificationsItem') notificationsItem!: ElementRef;
+    @ViewChild('languageItem') languageItem!: ElementRef;
     @ViewChild('profileItem') profileItem!: ElementRef;
-    @ViewChild('profilePanel') profilePanel!: ElementRef;
 
     notificationsBars = signal<NotificationsBars[]>([
         {
@@ -293,21 +297,21 @@ export class AppTopbar implements AfterViewChecked {
             id: 'inbox',
             data: [
                 {
-                    image: 'demo/images/avatar/avatar-square-m-2.jpg',
+                    initials: 'ML',
                     name: 'Michael Lee',
                     description: 'You have a new message from the support team regarding your recent inquiry.',
                     time: '1 hour ago',
                     new: true
                 },
                 {
-                    image: 'demo/images/avatar/avatar-square-f-1.jpg',
+                    initials: 'AJ',
                     name: 'Alice Johnson',
                     description: 'Your report has been successfully submitted and is under review.',
                     time: '10 minutes ago',
                     new: true
                 },
                 {
-                    image: 'demo/images/avatar/avatar-square-f-2.jpg',
+                    initials: 'ED',
                     name: 'Emily Davis',
                     description: 'The project deadline has been updated to September 30th. Please check the details.',
                     time: 'Yesterday at 4:35 PM',
@@ -319,14 +323,14 @@ export class AppTopbar implements AfterViewChecked {
             id: 'general',
             data: [
                 {
-                    image: 'demo/images/avatar/avatar-square-f-1.jpg',
+                    initials: 'AJ',
                     name: 'Alice Johnson',
                     description: 'Reminder: Your subscription is about to expire in 3 days. Renew now to avoid interruption.',
                     time: '30 minutes ago',
                     new: true
                 },
                 {
-                    image: 'demo/images/avatar/avatar-square-m-2.jpg',
+                    initials: 'ML',
                     name: 'Michael Lee',
                     description: 'The server maintenance has been completed successfully. No further downtime is expected.',
                     time: 'Yesterday at 2:15 PM',
@@ -338,14 +342,14 @@ export class AppTopbar implements AfterViewChecked {
             id: 'archived',
             data: [
                 {
-                    image: 'demo/images/avatar/avatar-square-m-1.jpg',
+                    initials: 'LB',
                     name: 'Lucas Brown',
                     description: 'Your appointment with Dr. Anderson has been confirmed for October 12th at 10:00 AM.',
                     time: '1 week ago',
                     new: true
                 },
                 {
-                    image: 'demo/images/avatar/avatar-square-f-2.jpg',
+                    initials: 'ED',
                     name: 'Emily Davis',
                     description: 'The document you uploaded has been successfully archived for future reference.',
                     time: '2 weeks ago',
@@ -356,9 +360,9 @@ export class AppTopbar implements AfterViewChecked {
     ]);
 
     languages = signal([
-        { code: 'en', label: 'English', flag: '🇬🇧' },
-        { code: 'fr', label: 'French', flag: '🇫🇷' },
-        { code: 'es', label: 'Spanish', flag: '🇪🇸' }
+        { code: 'en', label: 'English', flag: '\u{1F1EC}\u{1F1E7}' },
+        { code: 'fr', label: 'French', flag: '\u{1F1EB}\u{1F1F7}' },
+        { code: 'es', label: 'Spanish', flag: '\u{1F1EA}\u{1F1F8}' }
     ]);
 
     selectedLanguage = signal('en');
@@ -392,21 +396,32 @@ export class AppTopbar implements AfterViewChecked {
 
     selectLanguage(code: string) {
         this.selectedLanguage.set(code);
+        this.closeDropdown();
     }
 
-    toggleProfileMenu(event: Event) {
+    toggleDropdown(id: DropdownId, event: Event) {
         event.stopPropagation();
-        this.profileMenuOpen.update((open) => !open);
+        this.activeDropdown.update((current) => (current === id ? null : id));
+    }
+
+    closeDropdown() {
+        this.activeDropdown.set(null);
     }
 
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent) {
-        if (!this.profileMenuOpen()) return;
+        if (!this.activeDropdown()) return;
 
         const target = event.target as Node;
-        const insideProfile = this.profileItem?.nativeElement?.contains(target);
-        if (!insideProfile) {
-            this.profileMenuOpen.set(false);
+        const containers = [
+            this.notificationsItem?.nativeElement,
+            this.languageItem?.nativeElement,
+            this.profileItem?.nativeElement
+        ];
+
+        const insideAny = containers.some((el) => el?.contains(target));
+        if (!insideAny) {
+            this.closeDropdown();
         }
     }
 
