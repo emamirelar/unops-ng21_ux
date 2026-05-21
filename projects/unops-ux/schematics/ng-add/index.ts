@@ -12,12 +12,16 @@ interface Schema {
   darkMode?: boolean;
 }
 
-const PEER_DEPS: Record<string, string> = {
+const RUNTIME_DEPS: Record<string, string> = {
   primeng: '^21.0.4',
   '@primeuix/themes': '^2.0.0',
   primeicons: '^7.0.0',
+};
+
+const DEV_DEPS: Record<string, string> = {
   '@tailwindcss/postcss': '^4.0.0',
-  'tailwindcss': '^4.0.0',
+  tailwindcss: '^4.0.0',
+  postcss: '^8.4.0',
 };
 
 const STYLES_ENTRIES = [
@@ -57,10 +61,19 @@ function addPeerDependencies(): Rule {
     if (!pkg.dependencies) {
       pkg.dependencies = {};
     }
+    if (!pkg.devDependencies) {
+      pkg.devDependencies = {};
+    }
 
-    for (const [name, version] of Object.entries(PEER_DEPS)) {
-      if (!pkg.dependencies[name] && !pkg.devDependencies?.[name]) {
+    for (const [name, version] of Object.entries(RUNTIME_DEPS)) {
+      if (!pkg.dependencies[name] && !pkg.devDependencies[name]) {
         pkg.dependencies[name] = version;
+      }
+    }
+
+    for (const [name, version] of Object.entries(DEV_DEPS)) {
+      if (!pkg.dependencies[name] && !pkg.devDependencies[name]) {
+        pkg.devDependencies[name] = version;
       }
     }
 
@@ -92,8 +105,8 @@ function createTailwindWrapper(): Rule {
     tree.create(
       path,
       [
-        '@import "../node_modules/@unopsitg/ux/assets/tailwind.css";',
-        '@source "../node_modules/@unopsitg/ux/fesm2022";',
+        '@import "tailwindcss";',
+        '@import "@unopsitg/ux/tailwind";',
         '',
       ].join('\n')
     );
@@ -233,9 +246,17 @@ This project uses the @unopsitg/ux Angular library for its layout shell, brand t
 ## Critical Integration Invariants
 
 1. **PostCSS config must be JSON format** — use \`.postcssrc.json\`, never \`.mjs\`. Angular 21 esbuild silently ignores \`.mjs\` configs.
-2. **Never put \`@source\` directives in \`.scss\` files** — Sass copies them as inert text. Use \`src/tailwind.css\` (a plain CSS file) for Tailwind directives.
-3. **The \`src/tailwind.css\` wrapper** resolves \`@source\` paths from the project root where Angular runs PostCSS. Do not reference the library's \`assets/tailwind.css\` directly in \`angular.json\`.
-4. **Shell utilities** (\`.hidden\`, \`.animate-scalein\`, \`.animate-fadeout\`) are shipped as real CSS in the library. Do not redefine them.
+2. **\`assets/tailwind.css\` is a Tailwind v4 source file** (not pre-compiled CSS). It contains \`@plugin\`, \`@source\`, \`@theme\`, and \`@utility\` directives that must be processed by \`@tailwindcss/postcss\`. Never add it directly to \`angular.json\` styles — it will be inlined as raw text with no utility generation.
+3. **Use \`src/tailwind.css\`** as the entry point. It imports \`tailwindcss\` and \`@unopsitg/ux/tailwind\` via the package exports. This file IS processed by PostCSS because it lives in \`src/\`.
+4. **Never put \`@source\` directives in \`.scss\` files** — Sass copies them as inert text.
+5. **Shell utilities** (\`.hidden\`, \`.animate-scalein\`, \`.animate-fadeout\`) are shipped as real CSS in the library. Do not redefine them.
+
+## Correct src/tailwind.css
+
+\`\`\`css
+@import "tailwindcss";
+@import "@unopsitg/ux/tailwind";
+\`\`\`
 
 ## Available Injection Tokens
 

@@ -6,7 +6,7 @@ This file is for AI coding assistants (Cursor, Claude Code, Copilot, etc.) worki
 
 - **Layout shell** — full application chrome (sidebar, topbar, breadcrumb, configurator)
 - **Brand theme** — PrimeNG / PrimeUIX preset (`BrandSoft`) with UNOPS brand colors
-- **Tailwind CSS** — design tokens, custom utilities, and component animations
+- **Tailwind CSS** — design tokens, custom utilities, and component animations (Tailwind v4 source file)
 - **Shared types** — demo data interfaces
 
 ## Quick setup (or run `ng add @unopsitg/ux`)
@@ -18,8 +18,8 @@ This file is for AI coding assistants (Cursor, Claude Code, Copilot, etc.) worki
 
 2. Create `src/tailwind.css`:
    ```css
-   @import "../node_modules/@unopsitg/ux/assets/tailwind.css";
-   @source "../node_modules/@unopsitg/ux/fesm2022";
+   @import "tailwindcss";
+   @import "@unopsitg/ux/tailwind";
    ```
 
 3. In `angular.json` styles:
@@ -32,7 +32,12 @@ This file is for AI coding assistants (Cursor, Claude Code, Copilot, etc.) worki
    { "glob": "**/*", "input": "node_modules/@unopsitg/ux/assets/opp", "output": "assets/opp" }
    ```
 
-5. In `app.config.ts` providers:
+5. Install dev dependencies:
+   ```bash
+   npm install -D @tailwindcss/postcss tailwindcss postcss
+   ```
+
+6. In `app.config.ts` providers:
    ```typescript
    import { providePrimeNG } from 'primeng/config';
    import { BrandSoft, TOPBAR_PROFILE_MENU_CONFIG, LayoutService } from '@unopsitg/ux';
@@ -42,10 +47,19 @@ This file is for AI coding assistants (Cursor, Claude Code, Copilot, etc.) worki
 
 ## Critical rules
 
+- **NEVER** add `node_modules/@unopsitg/ux/assets/tailwind.css` directly to `angular.json` styles — Angular's esbuild does NOT run PostCSS on node_modules CSS, so all directives pass through as raw text and zero utilities are generated.
+- **ALWAYS** use `src/tailwind.css` with `@import "@unopsitg/ux/tailwind"` — this lives in the source tree where PostCSS processes it.
 - **NEVER** put `@source` directives in `.scss` files — Sass passes them through as inert text.
 - **NEVER** use `postcss.config.mjs` — Angular 21 esbuild silently ignores it.
-- **NEVER** reference `node_modules/@unopsitg/ux/assets/tailwind.css` directly in `angular.json` — use the `src/tailwind.css` wrapper for correct `@source` path resolution.
 - Shell-critical utilities (`.hidden`, `.animate-scalein`, `.animate-fadeout`) ship as real CSS. Do not redefine them.
+
+## Package exports
+
+| Import path | Resolves to |
+|-------------|-------------|
+| `@unopsitg/ux` | `fesm2022/unopsitg-ux.mjs` (Angular library) |
+| `@unopsitg/ux/tailwind` | `assets/tailwind.css` (Tailwind v4 source) |
+| `@unopsitg/ux/styles` | `assets/styles.scss` (layout SCSS) |
 
 ## Injection tokens
 

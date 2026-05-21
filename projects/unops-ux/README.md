@@ -44,11 +44,25 @@ export const appConfig: ApplicationConfig = {
 
 ## Styles and assets
 
-Reference library SCSS/Tailwind and copy bundled logos into your app output:
+### Automated setup
 
-### PostCSS configuration
+```bash
+ng add @unopsitg/ux
+```
 
-Angular 21's `application` builder (esbuild) only loads JSON-format PostCSS configs. Create `.postcssrc.json` in the project root:
+This creates all required files and patches `angular.json` + `app.config.ts` automatically. The rest of this section documents the manual equivalent.
+
+### Understanding `assets/tailwind.css`
+
+The library ships `assets/tailwind.css` as a **Tailwind v4 source file** — it contains `@plugin`, `@source`, `@theme`, and `@utility` directives that must be processed by `@tailwindcss/postcss` to generate utility classes.
+
+> **Do NOT add `assets/tailwind.css` directly to angular.json styles.** Angular's esbuild/Vite builder does not run PostCSS on CSS files referenced from `node_modules` — it inlines them as raw text. All directives will appear literally in the browser output and zero utilities will be generated.
+
+### Manual setup
+
+#### 1. PostCSS configuration
+
+Angular 21's `application` builder only loads JSON-format PostCSS configs. Create `.postcssrc.json` in the project root:
 
 ```json
 {
@@ -58,9 +72,20 @@ Angular 21's `application` builder (esbuild) only loads JSON-format PostCSS conf
 }
 ```
 
-> **Warning:** `.mjs` configs (`postcss.config.mjs`) are silently ignored by esbuild. If Tailwind directives pass through unprocessed, check the config format first.
+> **Warning:** `.mjs` configs (`postcss.config.mjs`) are silently ignored by esbuild.
 
-### angular.json styles and assets
+#### 2. Tailwind entry point
+
+Create `src/tailwind.css` — this lives in your source tree so Angular **will** run PostCSS on it:
+
+```css
+@import "tailwindcss";
+@import "@unopsitg/ux/tailwind";
+```
+
+The `@unopsitg/ux/tailwind` export resolves to the library's `assets/tailwind.css` via the package `exports` field. The file includes brand tokens, custom utilities, and a `@source` directive that scans the library's compiled JS for class references.
+
+#### 3. angular.json styles and assets
 
 ```json
 "styles": [
@@ -75,23 +100,20 @@ Angular 21's `application` builder (esbuild) only loads JSON-format PostCSS conf
 ]
 ```
 
-### Tailwind content scan
+#### 4. Dev dependencies
 
-Library components use Tailwind utility classes. Tailwind 4 only generates utilities for classes it finds in scanned sources. The library's `assets/tailwind.css` contains a `@source "../fesm2022"` directive, but Angular resolves this relative to the **project root** — not the package directory. To fix path resolution, create a thin wrapper CSS file:
-
-```css
-/* src/tailwind.css */
-@import "../node_modules/@unopsitg/ux/assets/tailwind.css";
-@source "../node_modules/@unopsitg/ux/fesm2022";
+```bash
+npm install -D @tailwindcss/postcss tailwindcss postcss
 ```
 
-Reference `src/tailwind.css` in `angular.json` styles (as shown above) instead of the library file directly. The `@source` in your wrapper resolves from the project root where Angular actually runs PostCSS.
+### Troubleshooting
 
-> **Do not** put `@source` directives in `.scss` files — Sass copies them as inert text and PostCSS/Tailwind never processes them.
+- **Tailwind directives appear as raw text in browser CSS** — you added the library's CSS directly to `angular.json` instead of using `src/tailwind.css`.
+- **"The path './assets/tailwind.css' is not exported"** — upgrade to `@unopsitg/ux@21.2.0+` which adds the `./tailwind` export.
+- **Zero utilities generated** — verify `.postcssrc.json` exists (not `.mjs`) and `src/tailwind.css` is in the styles array.
+- **Do not** put `@source` directives in `.scss` files — Sass copies them as inert text.
 
-**Verify:** after `ng serve`, check the compiled CSS for `.flex { display: flex }`. If missing, the `@source` path is wrong.
-
-When developing **inside this monorepo**, use paths under `projects/unops-ux/src/assets/` instead of `node_modules`.
+**Verify:** after `ng serve`, inspect the compiled CSS for `.flex { display: flex }`. If missing, PostCSS is not running on your tailwind entry point.
 
 ## Tokens
 

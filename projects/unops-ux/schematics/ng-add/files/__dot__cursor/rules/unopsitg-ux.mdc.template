@@ -11,9 +11,17 @@ This project uses the @unopsitg/ux Angular library for its layout shell, brand t
 ## Critical Integration Invariants
 
 1. **PostCSS config must be JSON format** — use `.postcssrc.json`, never `.mjs`. Angular 21 esbuild silently ignores `.mjs` configs.
-2. **Never put `@source` directives in `.scss` files** — Sass copies them as inert text. Use `src/tailwind.css` (a plain CSS file) for Tailwind directives.
-3. **The `src/tailwind.css` wrapper** resolves `@source` paths from the project root where Angular runs PostCSS. Do not reference the library's `assets/tailwind.css` directly in `angular.json`.
-4. **Shell utilities** (`.hidden`, `.animate-scalein`, `.animate-fadeout`) are shipped as real CSS in the library. Do not redefine them.
+2. **`assets/tailwind.css` is a Tailwind v4 source file** (not pre-compiled CSS). It contains `@plugin`, `@source`, `@theme`, and `@utility` directives that must be processed by `@tailwindcss/postcss`. Never add it directly to `angular.json` styles — it will be inlined as raw text with no utility generation.
+3. **Use `src/tailwind.css`** as the entry point. It imports `tailwindcss` and `@unopsitg/ux/tailwind` via the package exports. This file IS processed by PostCSS because it lives in `src/`.
+4. **Never put `@source` directives in `.scss` files** — Sass copies them as inert text.
+5. **Shell utilities** (`.hidden`, `.animate-scalein`, `.animate-fadeout`) are shipped as real CSS in the library. Do not redefine them.
+
+## Correct src/tailwind.css
+
+```css
+@import "tailwindcss";
+@import "@unopsitg/ux/tailwind";
+```
 
 ## Available Injection Tokens
 
