@@ -13,7 +13,7 @@
         "storybook": "ng run unops-ng_ux:storybook",
         "build-storybook": "ng run unops-ng_ux:build-storybook",
         "check-compat": "bash scripts/check-compatibility.sh",
-        "build:lib": "ng build unops-ux && tsc -p projects/unops-ux/schematics/tsconfig.schematics.json && cp projects/unops-ux/schematics/collection.json dist/unops-ux/schematics/ && cp projects/unops-ux/schematics/package.json dist/unops-ux/schematics/ && cp projects/unops-ux/schematics/ng-add/schema.json dist/unops-ux/schematics/ng-add/"
+        "build:lib": "ng build unops-ux && tsc -p projects/unops-ux/schematics/tsconfig.schematics.json && cp projects/unops-ux/schematics/collection.json dist/unops-ux/schematics/ && cp projects/unops-ux/schematics/package.json dist/unops-ux/schematics/ && cp projects/unops-ux/schematics/ng-add/schema.json dist/unops-ux/schematics/ng-add/ && echo '# Nested package.json only needed for development\n**/package.json\n!schematics/package.json' > dist/unops-ux/.npmignore"
     },
     "private": true,
     "dependencies": {
