@@ -9,6 +9,11 @@
             "input": "./src/assets",
             "glob": "**/*",
             "output": "/assets"
+        },
+        {
+            "input": "./",
+            "glob": "AGENTS.md",
+            "output": "/"
         }
     ]
 }

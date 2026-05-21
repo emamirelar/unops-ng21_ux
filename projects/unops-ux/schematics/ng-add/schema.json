@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "SchematicsUnopsUxNgAdd",
+  "title": "UNOPS UX ng-add schematic",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The project to add @unopsitg/ux to.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "darkMode": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the app starts in dark mode."
+    }
+  },
+  "required": []
+}

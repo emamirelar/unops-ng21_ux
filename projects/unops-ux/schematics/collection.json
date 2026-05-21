@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Set up @unopsitg/ux in an Angular project",
+      "factory": "./ng-add/index#ngAdd",
+      "schema": "./ng-add/schema.json"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+@import "../node_modules/@unopsitg/ux/assets/tailwind.css";
+@source "../node_modules/@unopsitg/ux/fesm2022";

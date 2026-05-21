@@ -1,0 +1,35 @@
+---
+description: Integration rules for @unopsitg/ux library
+globs: ["**/*.{ts,html,scss,css,json}"]
+alwaysApply: false
+---
+
+# @unopsitg/ux Integration
+
+This project uses the @unopsitg/ux Angular library for its layout shell, brand theme, and shared components.
+
+## Critical Integration Invariants
+
+1. **PostCSS config must be JSON format** — use `.postcssrc.json`, never `.mjs`. Angular 21 esbuild silently ignores `.mjs` configs.
+2. **Never put `@source` directives in `.scss` files** — Sass copies them as inert text. Use `src/tailwind.css` (a plain CSS file) for Tailwind directives.
+3. **The `src/tailwind.css` wrapper** resolves `@source` paths from the project root where Angular runs PostCSS. Do not reference the library's `assets/tailwind.css` directly in `angular.json`.
+4. **Shell utilities** (`.hidden`, `.animate-scalein`, `.animate-fadeout`) are shipped as real CSS in the library. Do not redefine them.
+
+## Available Injection Tokens
+
+| Token | Purpose | Shape |
+|-------|---------|-------|
+| `MENU_MODEL` | Sidebar menu tree | `MenuItem[]` |
+| `SIDEBAR_LOGO` | Expanded/compact logo URLs | `{ expanded, compact, alt }` |
+| `TOPBAR_MOBILE_LOGO` | Mobile header logos | `{ light, dark }` |
+| `TOPBAR_PROFILE_MENU_CONFIG` | Profile dropdown items | `{ items: { id, label, icon, command?, separator? }[] }` |
+
+## Theme
+
+- `LayoutService.layoutConfig()` holds the active theme state.
+- `LayoutService.toggleDarkMode()` synchronizes `.app-dark` on `<html>`.
+- Use an `APP_INITIALIZER` to call `toggleDarkMode()` at startup to avoid a flash of wrong theme.
+
+## Full Documentation
+
+See `node_modules/@unopsitg/ux/README.md` for complete setup and configuration.
