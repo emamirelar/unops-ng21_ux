@@ -3,11 +3,13 @@
 .p-tab {
   border-radius: 1.5rem;
   font-size: var(--font-size-sm);
+  color: var(--d-menuitem-text-color);
 }
 
-// Use the same active/hover background as sidebar menu items.
+// Use the same active/hover background and text color as sidebar menu items.
 .p-tab-active {
   background: var(--d-menuitem-active-bg) !important;
+  color: var(--d-menuitem-active-text-color) !important;
 }
 .p-tab:not(.p-tab-active):not(.p-disabled):hover {
   background: var(--d-menuitem-hover-bg) !important;

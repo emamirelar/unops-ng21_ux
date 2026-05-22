@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 @plugin 'tailwindcss-primeui';
 
 @source "../fesm2022";

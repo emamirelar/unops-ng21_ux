@@ -258,7 +258,7 @@ interface TeamMember {
                                 <div class="flex flex-col lg:flex-row lg:gap-10 gap-5">
                                     <div class="flex flex-col gap-1">
                                         <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Proposed Initiative Type</span>
-                                        <span class="text-sm font-medium text-surface-900 dark:text-surface-0">Grant Support</span>
+                                        <span class="text-sm font-bold text-surface-900 dark:text-surface-0">Grant Support</span>
                                     </div>
                                     <div class="flex flex-col gap-1">
                                         <span class="text-xs font-semibold text-surface-600 dark:text-surface-300 uppercase tracking-wide">Delivery Modality</span>
@@ -1088,6 +1088,7 @@ interface TeamMember {
 
         :host :deep .p-datatable th:nth-child(3),
         :host :deep .p-datatable td:nth-child(3) {
+            background: transparent !important;
             padding-left: 0;
             padding-right: 0;
         }

@@ -28,7 +28,23 @@ export interface DocumentItem {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgClass, FormsModule, ButtonModule, FileUploadModule, IconFieldModule, InputIconModule, InputTextModule, MenuModule, TableModule, TagModule, PillTabsComponent, PanelModule],
     host: { class: 'ux-documents-card block' },
-    styles: ``,
+    styles: `
+        :host ::ng-deep .p-datatable-thead > tr > th {
+            vertical-align: top;
+            background: transparent;
+            text-align: left;
+            padding: 0.8rem 0.3rem 0.8rem 0;
+        }
+        :host ::ng-deep .p-datatable-tbody > tr > td {
+            background: var(--p-surface-ground);
+            padding: 0.8rem 0.3rem 0.8rem 0;
+        }
+
+        :host ::ng-deep .p-datatable-sort-icon {
+            width: 10px;
+            height: 10px;
+        }
+    `,
     template: `
         <div class="card flex flex-col overflow-hidden">
             <p-panel [toggleable]="true" [collapsed]="!expanded()" (collapsedChange)="expanded.set(!$event)" toggler="header">
@@ -36,7 +52,7 @@ export interface DocumentItem {
                     <i class="pi text-sm text-darkblue-500 dark:text-surface-0" [ngClass]="collapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
                 </ng-template>
                 <ng-template #header>
-                    <div class="flex items-center gap-3 flex-1">
+                    <div class="flex items-start gap-2 flex-1">
                         <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">
                             <i class="pi pi-folder text-deepsea-500 dark:text-surface-0"></i>
                         </div>
@@ -66,15 +82,15 @@ export interface DocumentItem {
                                 >
                                     <ng-template #header>
                                         <tr>
-                                            <th pSortableColumn="fileName" class="w-1/2">File Name <p-sortIcon field="fileName" /></th>
-                                            <th pSortableColumn="type" class="w-1/4">Type <p-sortIcon field="type" /></th>
-                                            <th class="w-1/4">Actions</th>
+                                            <th pSortableColumn="fileName" class="w-1/2">Name <p-sortIcon field="fileName" /></th>
+                                            <th pSortableColumn="type" class="w-1/6">Type <p-sortIcon field="type" /></th>
+                                            <th class="w-1/5">Actions</th>
                                         </tr>
                                     </ng-template>
                                     <ng-template #body let-doc>
                                         <tr>
                                             <td>
-                                                <div class="flex items-center gap-3 py-1 min-w-0">
+                                                <div class="flex items-center gap-1 py-1 pl-1 min-w-0">
                                                     <i class="pi text-xl text-surface-600 dark:text-surface-300 shrink-0" [ngClass]="doc.icon"></i>
                                                     <span class="text-surface-700 dark:text-surface-100 text-sm truncate">{{ doc.fileName }}</span>
                                                 </div>

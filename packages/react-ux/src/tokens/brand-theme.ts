@@ -116,6 +116,7 @@ const brandOverrides = {
             colorScheme: {
                 light: {
                     row: {
+                        background: 'transparent',
                         hoverBackground: '{surface.100}',
                         hoverColor: '{surface.950}'
                     }
