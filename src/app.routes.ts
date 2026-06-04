@@ -33,6 +33,11 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('@/app/pages/documentation/documentation').then((c) => c.Documentation)
             },
             {
+                path: 'showcase',
+                data: { breadcrumb: 'Component Showcase' },
+                loadComponent: () => import('@/app/pages/showcase/showcase').then((c) => c.Showcase)
+            },
+            {
                 path: 'pages',
                 loadChildren: () => import('@/app/pages/pages.routes')
             },

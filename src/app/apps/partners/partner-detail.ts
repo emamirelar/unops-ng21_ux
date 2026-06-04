@@ -1,8 +1,9 @@
 import { Partner, AiInsight, AiInsightsCardComponent, DetailLayoutComponent, DetailTabDirective, DetailTab, DocumentsCardComponent, DocumentItem, FooterService } from '@unopsitg/ux';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { DrawerModule } from 'primeng/drawer';
@@ -37,8 +38,15 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
 
 @Component({
     selector: 'app-partner-detail',
-    imports: [CommonModule, FormsModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiInsightsCardComponent, DocumentsCardComponent, DetailLayoutComponent, DetailTabDirective],
+    imports: [CommonModule, FormsModule, AccordionModule, ButtonModule, TagModule, DividerModule, DrawerModule, InputTextModule, PaginatorModule, SelectModule, TextareaModule, ToggleSwitchModule, RouterModule, AiInsightsCardComponent, DocumentsCardComponent, DetailLayoutComponent, DetailTabDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: `
+        :host ::ng-deep .p-accordionheader {
+            background: transparent !important;
+            background-color: transparent !important;
+            padding-block: 1.25rem;
+        }
+    `,
     template: `
         @if (partner(); as p) {
             <ux-detail-layout [tabs]="detailTabs" [(activeTab)]="activeTab">
@@ -106,135 +114,217 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                 <!-- Overview Tab -->
                 <ng-template uxDetailTab="overview">
 
-                        <!-- Partner Details -->
-                        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-1">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Partner Details</h4>
-                            </div>
+                        <!-- Accordion Summary -->
+                        <div class="card p-0 animate-fade-in-up stagger-1 overflow-hidden">
+                            <p-accordion [(value)]="openOverviewPanels" [multiple]="true">
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Partner ID</span>
-                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.id }}</span>
-                                </div>
-
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Full Name</span>
-                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.name }}</span>
-                                </div>
-
-                                @if (p.shortName) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Short Name</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.shortName }}</span>
-                                    </div>
-                                }
-
-                                @if (p.partnerDescription) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Description</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerDescription }}</span>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-
-                        <!-- Classification -->
-                        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-2">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-sitemap text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Classification</h4>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
-                                @if (p.partnerCategoryName) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Category</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryName }}</span>
-                                    </div>
-                                }
-
-                                @if (p.partnerCategoryCode) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Category Code</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryCode }}</span>
-                                    </div>
-                                }
-
-                                @if (p.partnerGroupName) {
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Group</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerGroupName }}</span>
-                                    </div>
-                                }
-
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Status</span>
-                                    <div>
-                                        @if (p.status) {
-                                            <p-tag [value]="p.status" [styleClass]="getStatusClass(p.status)" />
-                                        }
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Approval Status</span>
-                                    <div>
-                                        @if (p.partnerApprovalStatus) {
-                                            <p-tag [value]="getApprovalLabel(p.partnerApprovalStatus)" [styleClass]="getApprovalClass(p.partnerApprovalStatus)" />
-                                        }
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Key Global Partner</span>
-                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
-                                        @if (p.keyGlobalPartner) {
-                                            <i class="pi pi-check-circle text-green-500 mr-1"></i> Yes
-                                        } @else {
-                                            <i class="pi pi-minus-circle text-surface-400 mr-1"></i> No
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Location & Office -->
-                        <div class="card flex flex-col gap-5 animate-fade-in-up stagger-3">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-map-marker text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Location</h4>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
-                                @if (p.address1Country) {
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 shrink-0 overflow-hidden">
-                                            <img [src]="flagUrl()" [alt]="p.address1Country" class="w-7 h-7 object-contain" />
+                                <!-- Partner Details -->
+                                <p-accordionpanel value="partner-details">
+                                    <p-accordionheader>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-id-card text-deepsea-500 dark:text-surface-0"></i>
+                                            <span class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Partner Details</span>
                                         </div>
-                                        <div class="flex flex-col gap-0.5">
-                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.address1Country }}</span>
-                                            @if (p.address1City) {
-                                                <span class="text-surface-600 dark:text-surface-300 text-sm">{{ p.address1City }}</span>
+                                    </p-accordionheader>
+                                    <p-accordioncontent>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 p-5 pt-0">
+                                            <div class="flex flex-col gap-1">
+                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Partner ID</span>
+                                                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.id }}</span>
+                                            </div>
+
+                                            <div class="flex flex-col gap-1">
+                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Full Name</span>
+                                                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.name }}</span>
+                                            </div>
+
+                                            @if (p.shortName) {
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Short Name</span>
+                                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.shortName }}</span>
+                                                </div>
+                                            }
+
+                                            @if (p.partnerDescription) {
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Description</span>
+                                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerDescription }}</span>
+                                                </div>
                                             }
                                         </div>
-                                    </div>
-                                }
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
 
-                                @if (p.liaisonOfficeName) {
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 shrink-0">
-                                            <i class="pi pi-building text-surface-600 dark:text-surface-300"></i>
+                                <!-- Classification -->
+                                <p-accordionpanel value="classification">
+                                    <p-accordionheader>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-sitemap text-deepsea-500 dark:text-surface-0"></i>
+                                            <span class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Classification</span>
                                         </div>
-                                        <div class="flex flex-col gap-0.5">
-                                            <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.liaisonOfficeName }}</span>
-                                            <span class="text-surface-600 dark:text-surface-300 text-sm">Liaison Office</span>
+                                    </p-accordionheader>
+                                    <p-accordioncontent>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5 p-5 pt-0">
+                                            @if (p.partnerCategoryName) {
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Category</span>
+                                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryName }}</span>
+                                                </div>
+                                            }
+
+                                            @if (p.partnerCategoryCode) {
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Category Code</span>
+                                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerCategoryCode }}</span>
+                                                </div>
+                                            }
+
+                                            @if (p.partnerGroupName) {
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Group</span>
+                                                    <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">{{ p.partnerGroupName }}</span>
+                                                </div>
+                                            }
+
+                                            <div class="flex flex-col gap-1">
+                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Status</span>
+                                                <div>
+                                                    @if (p.status) {
+                                                        <p-tag [value]="p.status" [styleClass]="getStatusClass(p.status)" />
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div class="flex flex-col gap-1">
+                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Approval Status</span>
+                                                <div>
+                                                    @if (p.partnerApprovalStatus) {
+                                                        <p-tag [value]="getApprovalLabel(p.partnerApprovalStatus)" [styleClass]="getApprovalClass(p.partnerApprovalStatus)" />
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div class="flex flex-col gap-1">
+                                                <span class="text-xs font-semibold uppercase tracking-wider text-surface-600 dark:text-surface-300">Key Global Partner</span>
+                                                <span class="text-surface-900 dark:text-surface-0 text-sm font-medium">
+                                                    @if (p.keyGlobalPartner) {
+                                                        <i class="pi pi-check-circle text-green-500 mr-1"></i> Yes
+                                                    } @else {
+                                                        <i class="pi pi-minus-circle text-surface-400 mr-1"></i> No
+                                                    }
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
-                            </div>
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
+
+                                <!-- Location & Office -->
+                                <p-accordionpanel value="location">
+                                    <p-accordionheader>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-map-marker text-deepsea-500 dark:text-surface-0"></i>
+                                            <span class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Location</span>
+                                        </div>
+                                    </p-accordionheader>
+                                    <p-accordioncontent>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 p-5 pt-0">
+                                            @if (p.address1Country) {
+                                                <div class="flex items-start gap-3">
+                                                    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 shrink-0 overflow-hidden">
+                                                        <img [src]="flagUrl()" [alt]="p.address1Country" class="w-7 h-7 object-contain" />
+                                                    </div>
+                                                    <div class="flex flex-col gap-0.5">
+                                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.address1Country }}</span>
+                                                        @if (p.address1City) {
+                                                            <span class="text-surface-600 dark:text-surface-300 text-sm">{{ p.address1City }}</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            @if (p.liaisonOfficeName) {
+                                                <div class="flex items-center gap-3">
+                                                    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-100 dark:bg-surface-800 shrink-0">
+                                                        <i class="pi pi-building text-surface-600 dark:text-surface-300"></i>
+                                                    </div>
+                                                    <div class="flex flex-col gap-0.5">
+                                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.liaisonOfficeName }}</span>
+                                                        <span class="text-surface-600 dark:text-surface-300 text-sm">Liaison Office</span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
+
+                                <!-- Focal Point -->
+                                <p-accordionpanel value="focal-point">
+                                    <p-accordionheader>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-user text-deepsea-500 dark:text-surface-0"></i>
+                                            <span class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Focal Point</span>
+                                        </div>
+                                    </p-accordionheader>
+                                    <p-accordioncontent>
+                                        <div class="p-5 pt-0">
+                                            @if (p.partnerFocalPointName) {
+                                                <div class="flex items-center gap-3">
+                                                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 shrink-0">
+                                                        <i class="pi pi-user text-primary text-base"></i>
+                                                    </div>
+                                                    <div class="flex flex-col gap-0.5">
+                                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.partnerFocalPointName }}</span>
+                                                        <span class="text-surface-600 dark:text-surface-300 text-sm">Partner Focal Point</span>
+                                                    </div>
+                                                </div>
+                                            } @else {
+                                                <span class="text-surface-600 dark:text-surface-300 text-sm italic">No focal point assigned</span>
+                                            }
+                                        </div>
+                                    </p-accordioncontent>
+                                </p-accordionpanel>
+
+                            </p-accordion>
                         </div>
+                </ng-template>
+
+                <!-- Agreements Tab -->
+                <ng-template uxDetailTab="agreements">
+                    <div class="card flex flex-col items-center justify-center gap-4 py-16">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10">
+                            <i class="pi pi-file text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0">Agreements</h3>
+                        <p class="text-sm text-surface-600 dark:text-surface-300 m-0 text-center max-w-md">
+                            Related agreements and contracts with this partner will appear here.
+                        </p>
+                    </div>
+                </ng-template>
+
+                <!-- Contacts Tab -->
+                <ng-template uxDetailTab="contacts">
+                    <div class="card flex flex-col items-center justify-center gap-4 py-16">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10">
+                            <i class="pi pi-users text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0">Contacts</h3>
+                        <p class="text-sm text-surface-600 dark:text-surface-300 m-0 text-center max-w-md">
+                            People associated with this partner organization will appear here.
+                        </p>
+                    </div>
+                </ng-template>
+
+                <!-- Activity Tab -->
+                <ng-template uxDetailTab="activity">
+                    <div class="card flex flex-col items-center justify-center gap-4 py-16">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10">
+                            <i class="pi pi-history text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0">Activity</h3>
+                        <p class="text-sm text-surface-600 dark:text-surface-300 m-0 text-center max-w-md">
+                            Recent activity, interactions, and audit trail for this partner will appear here.
+                        </p>
+                    </div>
                 </ng-template>
 
                     <!-- Sidebar -->
@@ -247,68 +337,11 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                             searchPlaceholder="Search insights, risks, or recommendations..."
                         />
 
-                        <!-- Contact -->
-                        <div class="card flex flex-col gap-4 animate-fade-in-up stagger-1">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-user text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Focal Point</h4>
-                            </div>
-
-                            @if (p.partnerFocalPointName) {
-                                <div class="flex items-center gap-3">
-                                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 shrink-0">
-                                        <i class="pi pi-user text-primary text-base"></i>
-                                    </div>
-                                    <div class="flex flex-col gap-0.5">
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm font-semibold">{{ p.partnerFocalPointName }}</span>
-                                        <span class="text-surface-600 dark:text-surface-300 text-sm">Partner Focal Point</span>
-                                    </div>
-                                </div>
-                            } @else {
-                                <span class="text-surface-600 dark:text-surface-300 text-sm italic">No focal point assigned</span>
-                            }
-                        </div>
-
                         <!-- Documents -->
-                        <ux-documents-card class="animate-fade-in-up stagger-2" [documents]="partnerDocuments()" />
-
-                        <!-- Metadata -->
-                        <div class="card flex flex-col gap-4 animate-fade-in-up stagger-3">
-                            <div class="flex items-center gap-2">
-                                <i class="pi pi-clock text-deepsea-500 dark:text-surface-0"></i>
-                                <h4 class="title-h4 text-left text-deepsea-500 dark:text-surface-0">Record Info</h4>
-                            </div>
-
-                            <div class="flex flex-col gap-3">
-                                @if (p.createdDate) {
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-surface-600 dark:text-surface-300 text-xs font-semibold uppercase tracking-wider">Created</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm">{{ p.createdDate | date:'mediumDate' }}</span>
-                                    </div>
-                                }
-                                @if (p.lastModifiedDate) {
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-surface-600 dark:text-surface-300 text-xs font-semibold uppercase tracking-wider">Last Modified</span>
-                                        <span class="text-surface-900 dark:text-surface-0 text-sm">{{ p.lastModifiedDate | date:'mediumDate' }}</span>
-                                    </div>
-                                }
-                            </div>
-                        </div>
+                        <ux-documents-card class="animate-fade-in-up stagger-1" [documents]="partnerDocuments()" />
                     </ng-container>
 
             </ux-detail-layout>
-
-            <ng-template #footerContent>
-                <div class="flex items-center">
-                    <p-button
-                        icon="pi pi-chevron-left"
-                        label="Back to list"
-                        [text]="true"
-                        severity="secondary"
-                        routerLink="/apps/partners"
-                    />
-                </div>
-            </ng-template>
 
             <!-- Edit Partner Drawer -->
             <p-drawer [(visible)]="showEditDrawer" position="right" styleClass="w-full! max-w-[480px]!" appendTo="body">
@@ -402,14 +435,28 @@ const COUNTRY_TO_FLAG: Record<string, string> = {
                 <p-button label="Back to Partners" icon="pi pi-arrow-left" routerLink="/apps/partners" />
             </div>
         }
+
+        <ng-template #footerContent>
+            <div class="footer-desktop">
+                <span class="footer-item"><i class="pi pi-building text-xs"></i><span class="footer-item-content">Tokyo Office</span></span>
+                <span class="footer-item"><i class="pi pi-tag text-xs"></i><span class="footer-item-content">Government</span></span>
+                <span class="footer-item-wide"><span><strong>Created:</strong> Mar 15, 2024</span></span>
+                <span class="footer-item-wide"><span><strong>Last modified:</strong> Apr 10, 2026</span></span>
+            </div>
+
+            <div class="footer-mobile">
+                <span class="footer-item"><i class="pi pi-building text-xs"></i><span class="footer-item-content">Tokyo Office</span></span>
+                <span class="footer-item"><i class="pi pi-tag text-xs"></i><span class="footer-item-content">Government</span></span>
+            </div>
+        </ng-template>
     `
 })
-export class PartnerDetail implements OnInit {
+export class PartnerDetail implements OnInit, AfterViewInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private partnerService = inject(PartnerService);
     private footerService = inject(FooterService);
-    @ViewChild('footerContent', { static: true }) footerTpl!: TemplateRef<unknown>;
+    @ViewChild('footerContent') footerTpl!: TemplateRef<unknown>;
 
     partner = computed(() => {
         const id = this.partnerId();
@@ -418,9 +465,13 @@ export class PartnerDetail implements OnInit {
     });
 
     partnerId = signal<string | null>(null);
-    activeTab = 'overview';
+    activeTab = signal('overview');
+    openOverviewPanels = ['partner-details', 'classification', 'location', 'focal-point'];
     detailTabs: DetailTab[] = [
-        { value: 'overview', label: 'Overview', icon: 'pi pi-home' }
+        { value: 'overview', label: 'Overview', icon: 'pi pi-home' },
+        { value: 'agreements', label: 'Agreements', icon: 'pi pi-file' },
+        { value: 'contacts', label: 'Contacts', icon: 'pi pi-users' },
+        { value: 'activity', label: 'Activity', icon: 'pi pi-history' }
     ];
 
     showEditDrawer = false;
@@ -469,9 +520,12 @@ export class PartnerDetail implements OnInit {
     }
 
     ngOnInit() {
-        this.footerService.content.set(this.footerTpl);
         this.partnerService.getPartners();
         this.partnerId.set(this.route.snapshot.paramMap.get('id'));
+    }
+
+    ngAfterViewInit() {
+        this.footerService.content.set(this.footerTpl);
     }
 
     getStatusClass = getPartnerStatusClass;

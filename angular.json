@@ -35,7 +35,7 @@
             ],
             "styles": [
               "src/assets/styles.scss",
-              "projects/unops-ux/src/assets/tailwind.css"
+              "src/tailwind.css"
             ],
             "scripts": []
           },
@@ -114,7 +114,7 @@
             "port": 6006,
             "styles": [
               "src/assets/styles.scss",
-              "projects/unops-ux/src/assets/tailwind.css"
+              "src/tailwind.css"
             ]
           }
         },
@@ -133,7 +133,7 @@
             "outputDir": "storybook-static",
             "styles": [
               "src/assets/styles.scss",
-              "projects/unops-ux/src/assets/tailwind.css"
+              "src/tailwind.css"
             ]
           }
         },

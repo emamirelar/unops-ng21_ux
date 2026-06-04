@@ -245,6 +245,32 @@ const INTERACTION_COLORS: Record<string, string> = {
 
                 </ng-template>
 
+                <!-- Interactions Tab -->
+                <ng-template uxDetailTab="interactions">
+                    <div class="card flex flex-col items-center justify-center gap-4 py-16">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10">
+                            <i class="pi pi-comments text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0">Interactions</h3>
+                        <p class="text-sm text-surface-600 dark:text-surface-300 m-0 text-center max-w-md">
+                            Meetings, calls, emails, and other interactions with this contact will appear here.
+                        </p>
+                    </div>
+                </ng-template>
+
+                <!-- Activity Tab -->
+                <ng-template uxDetailTab="activity">
+                    <div class="card flex flex-col items-center justify-center gap-4 py-16">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10">
+                            <i class="pi pi-history text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0">Activity</h3>
+                        <p class="text-sm text-surface-600 dark:text-surface-300 m-0 text-center max-w-md">
+                            Recent activity and audit trail for this contact will appear here.
+                        </p>
+                    </div>
+                </ng-template>
+
                     <!-- Sidebar -->
                     <ng-container ux-detail-sidebar>
 
@@ -406,9 +432,11 @@ export class ContactDetail implements OnInit {
     @ViewChild('footerContent', { static: true }) footerTpl!: TemplateRef<unknown>;
 
     contactId = signal<string | null>(null);
-    activeTab = 'overview';
+    activeTab = signal('overview');
     detailTabs: DetailTab[] = [
-        { value: 'overview', label: 'Overview', icon: 'pi pi-home' }
+        { value: 'overview', label: 'Overview', icon: 'pi pi-home' },
+        { value: 'interactions', label: 'Interactions', icon: 'pi pi-comments' },
+        { value: 'activity', label: 'Activity', icon: 'pi pi-history' }
     ];
 
     contact = computed(() => {

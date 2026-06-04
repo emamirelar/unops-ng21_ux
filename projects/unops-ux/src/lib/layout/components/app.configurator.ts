@@ -1,6 +1,7 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { booleanAttribute, Component, computed, inject, Input, model, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { $t, updatePreset, updateSurfacePalette } from '@primeuix/themes';
 import { brandPrimitives, brandPresets as brandPresetMap } from '../../theme/brand-theme';
 import { PrimeNG } from 'primeng/config';
@@ -31,7 +32,7 @@ declare type SurfacesType = {
 
 @Component({
     selector: 'app-configurator',
-    imports: [CommonModule, FormsModule, SelectButtonModule, DrawerModule, RadioButtonModule],
+    imports: [CommonModule, FormsModule, RouterModule, SelectButtonModule, DrawerModule, RadioButtonModule],
     template: `
         <p-drawer [(visible)]="configSidebarVisible" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-80" header="Settings" appendTo="body">
             <div class="flex flex-col gap-6">
@@ -126,6 +127,13 @@ declare type SurfacesType = {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="border-t border-surface-200 dark:border-surface-700 pt-4">
+                    <a routerLink="/showcase" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors cursor-pointer no-underline" (click)="configSidebarVisible = false">
+                        <i class="pi pi-palette text-primary-500"></i>
+                        <span class="text-surface-900 dark:text-surface-0 font-medium">Component Showcase</span>
+                    </a>
                 </div>
             </div>
         </p-drawer>

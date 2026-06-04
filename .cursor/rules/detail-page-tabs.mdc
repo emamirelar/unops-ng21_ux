@@ -1,0 +1,77 @@
+---
+description: Every entity detail page must use ux-detail-layout with at least 2 tabs so the tab bar is always visible and positioned consistently
+globs: "**/apps/**/detail*.ts,**/apps/**/*-detail*.ts"
+alwaysApply: false
+---
+
+# Detail Page Tabs: Consistent Navigation
+
+Every "single record" detail page (Partner, Contact, Agreement, Opportunity, etc.) **must** use the `ux-detail-layout` component and declare **at least 2 tabs** so the tab bar is always visible.
+
+## Required pattern
+
+### 1. Import the layout and tab directive
+
+```typescript
+import { DetailLayoutComponent, DetailTabDirective, DetailTab } from '@unopsitg/ux';
+```
+
+Add both to the component's `imports` array.
+
+### 2. Declare tabs and activeTab
+
+```typescript
+detailTabs: DetailTab[] = [
+    { value: 'overview', label: 'Overview', icon: 'pi pi-home' },
+    { value: 'activity', label: 'Activity', icon: 'pi pi-history' },
+    // add entity-specific tabs as requested by product owners
+];
+activeTab = signal('overview');
+```
+
+### 3. Use ux-detail-layout in the template
+
+```html
+<ux-detail-layout [tabs]="detailTabs" [(activeTab)]="activeTab">
+
+    <div ux-detail-header>...</div>
+    <div ux-detail-header-meta></div>
+
+    <ng-template uxDetailTab="overview">...</ng-template>
+    <ng-template uxDetailTab="activity">...</ng-template>
+
+    <ng-container ux-detail-sidebar>...</ng-container>
+
+</ux-detail-layout>
+```
+
+## Rules
+
+1. **Always use `ux-detail-layout`** as the page shell for entity detail pages.
+2. **Minimum 2 tabs** — the component hides the tab bar when there is only 1 tab. Every detail page must show the tab bar for visual consistency.
+3. **`overview` is always the first tab** with value `'overview'` and icon `pi pi-home`.
+4. **Use `signal()` for `activeTab`** — not a plain string. This is consistent with Angular signals best practices and the Opportunity reference implementation.
+5. **Every declared tab needs a matching `ng-template [uxDetailTab]`** — if tab content is not yet implemented, use a placeholder empty-state card (icon + title + description).
+6. **Tab selection is product-driven** — developers add or remove tabs based on product owner requests. The tab values and labels are entity-specific.
+
+## Placeholder tab template
+
+When a tab is declared but content is not yet built, use this empty-state pattern:
+
+```html
+<ng-template uxDetailTab="mytab">
+    <div class="card flex flex-col items-center justify-center gap-4 py-16">
+        <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10">
+            <i class="pi pi-inbox text-primary text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0 m-0">Tab Title</h3>
+        <p class="text-sm text-surface-600 dark:text-surface-300 m-0 text-center max-w-md">
+            Description of what will appear here.
+        </p>
+    </div>
+</ng-template>
+```
+
+## Reference implementation
+
+See `src/app/apps/opportunity/opportunity.ts` for the canonical 5-tab example with full content, sub-tabs, and sidebar.
